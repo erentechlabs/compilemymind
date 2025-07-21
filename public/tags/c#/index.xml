@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>C# on Compile My Mind</title>
-    <link>http://localhost:1313/tags/c%23/</link>
+    <link>https://www.compilemymind.com/tags/c%23/</link>
     <description>Recent content in C# on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/c%23/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/c%23/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Java vs C#</title>
-      <link>http://localhost:1313/technology/java-vs-csharp/</link>
+      <link>https://www.compilemymind.com/technology/java-vs-csharp/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/technology/java-vs-csharp/</guid>
+      <guid>https://www.compilemymind.com/technology/java-vs-csharp/</guid>
       <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/technology/java-vs-csharp/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/technology/java-vs-csharp/featured.jpg" />
     </item>
     
   </channel>

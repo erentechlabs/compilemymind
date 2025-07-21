@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gaming on Compile My Mind</title>
-    <link>http://localhost:1313/gaming/</link>
+    <link>https://www.compilemymind.com/gaming/</link>
     <description>Recent content in Gaming on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Mon, 28 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/gaming/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 28 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/gaming/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>🎮 Top 10 Best Action Games on Steam</title>
-      <link>http://localhost:1313/gaming/top-10-action-games-on-steam/</link>
+      <link>https://www.compilemymind.com/gaming/top-10-action-games-on-steam/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/gaming/top-10-action-games-on-steam/</guid>
+      <guid>https://www.compilemymind.com/gaming/top-10-action-games-on-steam/</guid>
       <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/gaming/top-10-action-games-on-steam/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/gaming/top-10-action-games-on-steam/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 Top 10 Best Strategy Games on Steam</title>
-      <link>http://localhost:1313/gaming/top-10-strategy-games-on-steam/</link>
+      <link>https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/gaming/top-10-strategy-games-on-steam/</guid>
+      <guid>https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/</guid>
       <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/gaming/top-10-strategy-games-on-steam/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/featured.jpg" />
     </item>
     
   </channel>
