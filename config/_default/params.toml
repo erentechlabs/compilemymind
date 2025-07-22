@@ -170,3 +170,6 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
 [rssnext]
   # feedId = ""
   # userId = ""
+
+[advertisement]
+  advertisement.adsense = "ca-pub-6150876719010892"
