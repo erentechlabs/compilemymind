@@ -171,5 +171,7 @@ forgejoDefaultServer = "https://v8.next.forgejo.org"
   # feedId = ""
   # userId = ""
 
-[params.advertisement]
-  adsense = "ca-pub-6150876719010892"
+[advertisement]
+  advertisement.adsense = "ca-pub-6150876719010892"
+
+
