@@ -17,8 +17,8 @@ title = "Compile My Mind"
 
 [author]
   name = "Eren"
-#  email = "youremail@example.com"
-  #image = "author.png"
+# email = "youremail@example.com"
+# image = "author.png"
   imageQuality = 96
   headline = "Coding and Creating Practical Solutions Is My Passion!"
   bio = "I'm a software developer focused on backend with Java Spring, mobile apps with Flutter, and desktop tools with WPF. Always eager to learn and build useful projects that make life easier."
