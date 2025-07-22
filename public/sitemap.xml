@@ -3,37 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>http://localhost:1313/</loc>
+    <loc>https://compilemymind.com/</loc>
     <lastmod>2025-07-22T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>https://compilemymind.com/posts/</loc>
     <lastmod>2025-07-22T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/posts/top-10-action-games-on-steam/</loc>
+    <loc>https://compilemymind.com/posts/top-10-action-games-on-steam/</loc>
     <lastmod>2025-04-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/posts/top-10-strategy-games-on-steam/</loc>
+    <loc>https://compilemymind.com/posts/top-10-strategy-games-on-steam/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/posts/java-vs-csharp/</loc>
+    <loc>https://compilemymind.com/posts/java-vs-csharp/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://compilemymind.com/about/</loc>
     <lastmod>2023-11-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
