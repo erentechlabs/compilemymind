@@ -4,23 +4,25 @@ languageName = "English"
 weight = 1
 title = "Compile My Mind"
 
+
 [params]
   displayName = "EN"
   isoCode = "en"
   rtl = false
   dateFormat = "2 January 2006"
-  logo = "logo.png"
+  logo = "icon.png"
   # secondaryLogo = "img/secondary-logo.png"
-  # description = "My awesome website"
+  description = "As a software engineer who is interested in everything about technology and games, this is the website where I write and share things that interest me and that I want to share with you."
   # copyright = "Copy, _right?_ :thinking_face:"
 
-# [params.author]
-#   name = "Eren"
-#   email = "youremail@example.com"
-#   image = "img/blowfish_logo.png"
-#   imageQuality = 96
-#   headline = "I'm only human"
-#   bio = "A little bit about you"
+[author]
+  name = "Eren"
+#  email = "youremail@example.com"
+  #image = "author.png"
+  imageQuality = 96
+  headline = "Coding and Creating Practical Solutions Is My Passion!"
+  bio = "I'm a software developer focused on backend with Java Spring, mobile apps with Flutter, and desktop tools with WPF. Always eager to learn and build useful projects that make life easier."
+
 #   links = [
 #     { email = "mailto:hello@your_domain.com" },
 #     { link = "https://link-to-some-website.com/" },
@@ -58,7 +60,7 @@ title = "Compile My Mind"
 #     { soundcloud = "https://soundcloud.com/username" },
 #     { spotify = "https://open.spotify.com/user/userid" },
 #     { stack-overflow = "https://stackoverflow.com/users/userid/username" },
-#     { steam = "https://steamcommunity.com/profiles/userid" },
+#    { steam = "https://steamcommunity.com/profiles/userid" },
 #     { telegram = "https://t.me/username" },
 #     { threads = "https://www.threads.net/@username" },
 #     { tiktok = "https://tiktok.com/@username" },

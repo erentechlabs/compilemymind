@@ -2,41 +2,64 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Compile My Mind</title>
-    <link>https://www.compilemymind.com/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Mon, 28 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>🎮 Top 10 Best Action Games on Steam</title>
-      <link>https://www.compilemymind.com/gaming/top-10-action-games-on-steam/</link>
+      <link>http://localhost:1313/posts/top-10-action-games-on-steam/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/gaming/top-10-action-games-on-steam/</guid>
-      <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/gaming/top-10-action-games-on-steam/featured.jpg" />
+      <guid>http://localhost:1313/posts/top-10-action-games-on-steam/</guid>
+      <description>&lt;p&gt;Action games offer adrenaline-pumping experiences that test your reflexes, precision, and tactical thinking. From fast-paced shooters to open-world adventures, Steam is home to some of the best action titles available today. Here’s a detailed look at the &lt;strong&gt;Top 10 Action Games on Steam&lt;/strong&gt; that every action fan should experience.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/top-10-action-games-on-steam/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 Top 10 Best Strategy Games on Steam</title>
-      <link>https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/</link>
+      <link>http://localhost:1313/posts/top-10-strategy-games-on-steam/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/</guid>
-      <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/gaming/top-10-strategy-games-on-steam/featured.jpg" />
+      <guid>http://localhost:1313/posts/top-10-strategy-games-on-steam/</guid>
+      <description>&lt;p&gt;Strategy games challenge your mind, test your patience, and reward your planning skills. Whether you enjoy building empires, leading armies, or managing resources, Steam has some of the best strategy titles in gaming history. Here’s a detailed look at the &lt;strong&gt;Top 10 Strategy Games on Steam&lt;/strong&gt; that every strategy fan should try.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/top-10-strategy-games-on-steam/featured.jpg" />
     </item>
     
     <item>
       <title>Java vs C#</title>
-      <link>https://www.compilemymind.com/technology/java-vs-csharp/</link>
+      <link>http://localhost:1313/posts/java-vs-csharp/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/technology/java-vs-csharp/</guid>
-      <description></description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/technology/java-vs-csharp/featured.jpg" />
+      <guid>http://localhost:1313/posts/java-vs-csharp/</guid>
+      <description>&lt;h2 class=&#34;relative group&#34;&gt;Java vs C# 
+    &lt;div id=&#34;java-vs-c&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#java-vs-c&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h2&gt;
+&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;Java&lt;/strong&gt; and &lt;strong&gt;C#&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/java-vs-csharp/featured.jpg" />
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/about/</guid>
+      <description>&lt;h2 class=&#34;relative group&#34;&gt;👋 Welcome! 
+    &lt;div id=&#34;-welcome&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+&lt;/h2&gt;
+&lt;p&gt;I&amp;rsquo;m &lt;strong&gt;Eren Karaoğlu&lt;/strong&gt;, the creator and author behind &lt;strong&gt;Compile My Mind&lt;/strong&gt; — a place where I share my journey, ideas, projects, and thoughts around software development, game creation, and gaming in general.&lt;/p&gt;</description>
+      
     </item>
     
   </channel>

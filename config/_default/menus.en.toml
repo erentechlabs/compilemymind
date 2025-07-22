@@ -13,15 +13,15 @@
 
 
 [[main]]
-  name = "Technology"
-  pageRef = "technology"
-  weight = 1
+  name = "Posts"
+  pageRef = "posts"
+  weight = 10
 
 
 [[main]]
-  name = "Gaming"
-  pageRef = "gaming"
-  weight = 2
+  name = "About"
+  pageRef = "About"
+  weight = 20
 
 
 

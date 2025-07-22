@@ -3,13 +3,15 @@
 # https://blowfish.page/docs/getting-started/
 
 theme = "blowfish" 
-# baseURL = "https://your_domain.com/"
+baseURL = "https://compilemymind.com/"
 defaultContentLanguage = "en"
 
 # pluralizeListTitles = "true" # hugo function useful for non-english languages, find out more in  https://gohugo.io/getting-started/configuration/#pluralizelisttitles
 
 enableRobotsTXT = true
-summaryLength = 0
+pagination.pagerSize = 100
+summaryLength = 30
+
 
 buildDrafts = false
 buildFuture = false
@@ -19,17 +21,14 @@ enableEmoji = true
 # googleAnalytics = "G-XXXXXXXXX"
 
 
-[pagination]
-  pagerSize = 100
-
 [imaging]
   anchor = 'Center'
 
 [taxonomies]
   tag = "tags"
   category = "categories"
- # author = "authors"
- # series = "series"
+  author = "authors"
+  series = "series"
 
 [sitemap]
   changefreq = 'daily'
@@ -40,7 +39,8 @@ enableEmoji = true
   home = ["HTML", "RSS", "JSON"]
 
 [related]
-  threshold = 0
+  threshold = 1
+  includeNewer = true
   toLower = false
 
     [[related.indices]]
