@@ -70,6 +70,16 @@
     </item>
     
     <item>
+      <title>Comparison</title>
+      <link>http://localhost:1313/tags/comparison/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/comparison/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
       <title>Development</title>
       <link>http://localhost:1313/tags/development/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
@@ -95,6 +105,16 @@
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/tags/programming/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Python</title>
+      <link>http://localhost:1313/tags/python/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/python/</guid>
       <description></description>
       
     </item>

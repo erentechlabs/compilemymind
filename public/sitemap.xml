@@ -33,6 +33,12 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>http://localhost:1313/posts/why-i-like-java-more-than-python/</loc>
+    <lastmod>2025-03-28T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
     <loc>http://localhost:1313/about/</loc>
     <lastmod>2023-11-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>

@@ -1,7 +1,7 @@
 ---
 title: "Why I Like Java More Than Python"
 description: "A personal look at why Java can be preferred over Python, despite its strict rules, static typing, and powerful ecosystem."
-date: 2025-07-25
+date: 2025-03-28
 tags: ["Java", "Python", "Programming", "Software", "Development", "Comparison"]
 categories: ["technology"]
 ---

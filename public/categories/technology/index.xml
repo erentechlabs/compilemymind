@@ -28,5 +28,24 @@
       <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/java-vs-csharp/featured.jpg" />
     </item>
     
+    <item>
+      <title>Why I Like Java More Than Python</title>
+      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
+      <description>&lt;h2 class=&#34;relative group&#34;&gt;Why I Like Java More Than Python 
+    &lt;div id=&#34;why-i-like-java-more-than-python&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#why-i-like-java-more-than-python&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h2&gt;
+&lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
+    </item>
+    
   </channel>
 </rss>
