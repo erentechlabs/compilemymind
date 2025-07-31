@@ -2,7 +2,7 @@
 title: "Component vs Bean in Spring"
 description: "We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way."
 date: 2025-07-31
-tags: ["Java",, "Programming", "Software", "Development", "Comparison"]
+tags: ["Java", "Programming", "Software", "Development", "Comparison"]
 categories: ["technology"]
 ---
 
@@ -15,6 +15,7 @@ There are two common approaches:
 
 Although both serve the same end goal—registering a bean with the Spring container—they work in different ways and are used in different contexts. Let’s explore their differences with examples and best practices.
 
+---
 
 ## What is @Component?
 
@@ -40,7 +41,7 @@ public class AppConfig {
 }
 ```
 
-
+---
 
 ## What is @Bean?
 
@@ -69,6 +70,7 @@ public class AppConfig {
 | External Libraries   | Not suitable             | Suitable              |
 | Dependency Injection | Via constructor or field | Via method parameters |
 
+---
 
 ## When Should You Use Each?
 
@@ -87,6 +89,8 @@ public class AppConfig {
 2. You need to manually configure or customize the object.
 
 3. You want fine-grained control over bean creation.
+   
+---
 
 ## When Should You Use Each?
 
@@ -97,6 +101,7 @@ public class AppConfig {
 2. You want automatic discovery and registration.
 
 3. You’re organizing your app into layers (@Service, @Repository, etc.).
+   
 
 #### Use Bean when:
 
@@ -105,6 +110,8 @@ public class AppConfig {
 2. You need to manually configure or customize the object.
 
 3. You want fine-grained control over bean creation.
+   
+---
 
 ## Conclusion
 Both @Component and @Bean are essential tools for defining Spring beans, but they shine in different scenarios.
