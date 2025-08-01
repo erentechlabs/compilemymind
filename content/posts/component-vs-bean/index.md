@@ -92,27 +92,6 @@ public class AppConfig {
    
 ---
 
-## When Should You Use Each?
-
-#### Use Component when:
-
-1. You control the class source code.
-
-2. You want automatic discovery and registration.
-
-3. You’re organizing your app into layers (@Service, @Repository, etc.).
-   
-
-#### Use Bean when:
-
-1. You're working with external libraries or third-party classes.
-
-2. You need to manually configure or customize the object.
-
-3. You want fine-grained control over bean creation.
-   
----
-
 ## Conclusion
 Both @Component and @Bean are essential tools for defining Spring beans, but they shine in different scenarios.
 
