@@ -1,5 +1,5 @@
 ---
-title: "🎮 10 Strategy Games on Steam That Feel Like Age of Empires (But With a Twist)"
+title: "🎮 10 Strategy Games on Steam That Feel Like Age of Empires"
 description: "Love Age of Empires? Here's a bunch of RTS games on Steam you should definitely check out."
 date: 2025-04-04
 tags: ["Strategy Games", "Steam", "PC Gaming", "RTS", "Top 10"]
