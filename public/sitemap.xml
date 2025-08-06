@@ -4,7 +4,25 @@
 
   <url>
     <loc>http://localhost:1313/</loc>
-    <lastmod>2025-07-22T00:00:00+00:00</lastmod>
+    <lastmod>2025-08-06T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</loc>
+    <lastmod>2025-08-06T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/most-popular-games-on-steam-in-august/</loc>
+    <lastmod>2025-08-01T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/component-vs-bean/</loc>
+    <lastmod>2025-07-31T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
@@ -17,6 +35,12 @@
   <url>
     <loc>http://localhost:1313/posts/top-10-action-games-on-steam/</loc>
     <lastmod>2025-04-28T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>http://localhost:1313/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</loc>
+    <lastmod>2025-04-04T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>

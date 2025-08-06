@@ -16,7 +16,7 @@ There are several ways to solve this, but today I’ll walk you through a method
 
 ### Quick Refresher: What is a Stack?
 A Stack is a data structure that stores items in a ***last-in***, ***first-out (LIFO)*** manner. Think of it like a stack of plates—what goes in last comes out first. Here's a simple visual to imagine it:
-![alt text](../../../assets/images/technology/stack.png)
+![Stack](/images/technology/stack.jpg)
 
 Now let’s apply this to our parentheses validation problem.
 

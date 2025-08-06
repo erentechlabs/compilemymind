@@ -7,7 +7,157 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Mon, 28 Apr 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Algorithms</title>
+      <link>http://localhost:1313/tags/algorithms/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/algorithms/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Coding Interview</title>
+      <link>http://localhost:1313/tags/coding-interview/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/coding-interview/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Data Structures</title>
+      <link>http://localhost:1313/tags/data-structures/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/data-structures/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Java</title>
+      <link>http://localhost:1313/tags/java/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/java/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>LeetCode</title>
+      <link>http://localhost:1313/tags/leetcode/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/leetcode/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Programming</title>
+      <link>http://localhost:1313/tags/programming/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/programming/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Stack</title>
+      <link>http://localhost:1313/tags/stack/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/stack/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Gaming Trends</title>
+      <link>http://localhost:1313/tags/gaming-trends/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/gaming-trends/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Multiplayer</title>
+      <link>http://localhost:1313/tags/multiplayer/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/multiplayer/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>PC Gaming</title>
+      <link>http://localhost:1313/tags/pc-gaming/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/pc-gaming/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Steam</title>
+      <link>http://localhost:1313/tags/steam/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/steam/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Top Games</title>
+      <link>http://localhost:1313/tags/top-games/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/top-games/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Comparison</title>
+      <link>http://localhost:1313/tags/comparison/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/comparison/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Development</title>
+      <link>http://localhost:1313/tags/development/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/development/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Software</title>
+      <link>http://localhost:1313/tags/software/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/software/</guid>
+      <description></description>
+      
+    </item>
     
     <item>
       <title>Action Games</title>
@@ -30,31 +180,31 @@
     </item>
     
     <item>
-      <title>PC Gaming</title>
-      <link>http://localhost:1313/tags/pc-gaming/</link>
-      <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/pc-gaming/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Steam</title>
-      <link>http://localhost:1313/tags/steam/</link>
-      <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/steam/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
       <title>Top 10</title>
       <link>http://localhost:1313/tags/top-10/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/tags/top-10/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>RTS</title>
+      <link>http://localhost:1313/tags/rts/</link>
+      <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/rts/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>Strategy Games</title>
+      <link>http://localhost:1313/tags/strategy-games/</link>
+      <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/tags/strategy-games/</guid>
       <description></description>
       
     </item>
@@ -70,71 +220,11 @@
     </item>
     
     <item>
-      <title>Comparison</title>
-      <link>http://localhost:1313/tags/comparison/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/comparison/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Development</title>
-      <link>http://localhost:1313/tags/development/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/development/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Java</title>
-      <link>http://localhost:1313/tags/java/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/java/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Programming</title>
-      <link>http://localhost:1313/tags/programming/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/programming/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
       <title>Python</title>
       <link>http://localhost:1313/tags/python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>http://localhost:1313/tags/python/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Software</title>
-      <link>http://localhost:1313/tags/software/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/software/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Strategy Games</title>
-      <link>http://localhost:1313/tags/strategy-games/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>http://localhost:1313/tags/strategy-games/</guid>
       <description></description>
       
     </item>

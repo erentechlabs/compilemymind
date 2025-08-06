@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Top Games on Compile My Mind</title>
+    <link>http://localhost:1313/tags/top-games/</link>
+    <description>Recent content in Top Games on Compile My Mind</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    
+    <lastBuildDate>Fri, 01 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/top-games/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>🎮 The 20 Most Played Games on Steam (August 2025)</title>
+      <link>http://localhost:1313/posts/most-popular-games-on-steam-in-august/</link>
+      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/most-popular-games-on-steam-in-august/</guid>
+      <description>&lt;p&gt;Steam remains the digital heart of PC gaming. With millions of concurrent players at any given moment, its most-played charts offer a revealing glimpse into the tastes and trends shaping the community. From long-time champions to fresh viral hits, here’s a deep dive into &lt;strong&gt;the 20 most played games on Steam&lt;/strong&gt;, based on player data as of August 1, 2025.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/most-popular-games-on-steam-in-august/featured.jpg" />
+    </item>
+    
+  </channel>
+</rss>

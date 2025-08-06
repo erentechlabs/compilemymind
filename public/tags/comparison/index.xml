@@ -7,7 +7,17 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/comparison/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/comparison/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Component vs Bean in Spring</title>
+      <link>http://localhost:1313/posts/component-vs-bean/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
+      <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/component-vs-bean/featured.jpg" />
+    </item>
     
     <item>
       <title>Java vs C#</title>
