@@ -8,9 +8,8 @@ categories: ["technology"]
 
 Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: **Controller**, **Service**, and **Repository** annotations.
 
-#### visual representation
+
 ![Spring Layers](/images/technology/spring-layers.jpg)
----
 
 ## Why Layered Architecture?
 
