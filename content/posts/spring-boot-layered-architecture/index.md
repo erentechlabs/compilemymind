@@ -6,11 +6,9 @@ tags: ["Java", "Spring Boot", "Programming", "Software Development", "Architectu
 categories: ["technology"]
 ---
 
-# Java Spring Boot Layers: What Are @Controller, @Service, and @Repository?
-
 Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: **@Controller**, **@Service**, and **@Repository** annotations.
 
-![Spring Layers](../../../assets/images/technology/spring-layers.jpg)
+![Spring Layers](/images/technology/spring-layers.jpg)
 ---
 
 ## Why Layered Architecture?
