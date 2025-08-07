@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Best Practices on Compile My Mind</title>
+    <link>https://compilemymind.com/tags/best-practices/</link>
+    <description>Recent content in Best Practices on Compile My Mind</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    
+    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/tags/best-practices/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Understanding @Controller, @Service, and @Repository in Spring Boot</title>
+      <link>https://compilemymind.com/posts/spring-boot-layered-architecture/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://compilemymind.com/posts/spring-boot-layered-architecture/</guid>
+      <description>&lt;h1 class=&#34;relative group&#34;&gt;Java Spring Boot Layers: What Are @Controller, @Service, and @Repository? 
+    &lt;div id=&#34;java-spring-boot-layers-what-are-controller-service-and-repository&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
+    
+    &lt;span
+        class=&#34;absolute top-0 w-6 transition-opacity opacity-0 ltr:-left-6 rtl:-right-6 not-prose group-hover:opacity-100&#34;&gt;
+        &lt;a class=&#34;group-hover:text-primary-300 dark:group-hover:text-neutral-700 !no-underline&#34; href=&#34;#java-spring-boot-layers-what-are-controller-service-and-repository&#34; aria-label=&#34;Anchor&#34;&gt;#&lt;/a&gt;
+    &lt;/span&gt;        
+    
+&lt;/h1&gt;
+&lt;p&gt;Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: &lt;strong&gt;@Controller&lt;/strong&gt;, &lt;strong&gt;@Service&lt;/strong&gt;, and &lt;strong&gt;@Repository&lt;/strong&gt; annotations.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/spring-boot-layered-architecture/featured.png" />
+    </item>
+    
+  </channel>
+</rss>
