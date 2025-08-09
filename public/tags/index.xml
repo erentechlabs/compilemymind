@@ -2,289 +2,289 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Compile My Mind</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://compilemymind.com/tags/</link>
     <description>Recent content in Tags on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Algorithms</title>
-      <link>http://localhost:1313/tags/algorithms/</link>
+      <link>https://compilemymind.com/tags/algorithms/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/algorithms/</guid>
+      <guid>https://compilemymind.com/tags/algorithms/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Coding Interview</title>
-      <link>http://localhost:1313/tags/coding-interview/</link>
+      <link>https://compilemymind.com/tags/coding-interview/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/coding-interview/</guid>
+      <guid>https://compilemymind.com/tags/coding-interview/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Data Structures</title>
-      <link>http://localhost:1313/tags/data-structures/</link>
+      <link>https://compilemymind.com/tags/data-structures/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/data-structures/</guid>
+      <guid>https://compilemymind.com/tags/data-structures/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Java</title>
-      <link>http://localhost:1313/tags/java/</link>
+      <link>https://compilemymind.com/tags/java/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/java/</guid>
+      <guid>https://compilemymind.com/tags/java/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>LeetCode</title>
-      <link>http://localhost:1313/tags/leetcode/</link>
+      <link>https://compilemymind.com/tags/leetcode/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/leetcode/</guid>
+      <guid>https://compilemymind.com/tags/leetcode/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Problem Solving</title>
-      <link>http://localhost:1313/tags/problem-solving/</link>
+      <link>https://compilemymind.com/tags/problem-solving/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/problem-solving/</guid>
+      <guid>https://compilemymind.com/tags/problem-solving/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Programming</title>
-      <link>http://localhost:1313/tags/programming/</link>
+      <link>https://compilemymind.com/tags/programming/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/programming/</guid>
+      <guid>https://compilemymind.com/tags/programming/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Two Pointers</title>
-      <link>http://localhost:1313/tags/two-pointers/</link>
+      <link>https://compilemymind.com/tags/two-pointers/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/two-pointers/</guid>
+      <guid>https://compilemymind.com/tags/two-pointers/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Architecture</title>
-      <link>http://localhost:1313/tags/architecture/</link>
+      <link>https://compilemymind.com/tags/architecture/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/architecture/</guid>
+      <guid>https://compilemymind.com/tags/architecture/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Best Practices</title>
-      <link>http://localhost:1313/tags/best-practices/</link>
+      <link>https://compilemymind.com/tags/best-practices/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/best-practices/</guid>
+      <guid>https://compilemymind.com/tags/best-practices/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Software Development</title>
-      <link>http://localhost:1313/tags/software-development/</link>
+      <link>https://compilemymind.com/tags/software-development/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/software-development/</guid>
+      <guid>https://compilemymind.com/tags/software-development/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Spring Boot</title>
-      <link>http://localhost:1313/tags/spring-boot/</link>
+      <link>https://compilemymind.com/tags/spring-boot/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/spring-boot/</guid>
+      <guid>https://compilemymind.com/tags/spring-boot/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Stack</title>
-      <link>http://localhost:1313/tags/stack/</link>
+      <link>https://compilemymind.com/tags/stack/</link>
       <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/stack/</guid>
+      <guid>https://compilemymind.com/tags/stack/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Gaming Trends</title>
-      <link>http://localhost:1313/tags/gaming-trends/</link>
+      <link>https://compilemymind.com/tags/gaming-trends/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/gaming-trends/</guid>
+      <guid>https://compilemymind.com/tags/gaming-trends/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Multiplayer</title>
-      <link>http://localhost:1313/tags/multiplayer/</link>
+      <link>https://compilemymind.com/tags/multiplayer/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/multiplayer/</guid>
+      <guid>https://compilemymind.com/tags/multiplayer/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>PC Gaming</title>
-      <link>http://localhost:1313/tags/pc-gaming/</link>
+      <link>https://compilemymind.com/tags/pc-gaming/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/pc-gaming/</guid>
+      <guid>https://compilemymind.com/tags/pc-gaming/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Steam</title>
-      <link>http://localhost:1313/tags/steam/</link>
+      <link>https://compilemymind.com/tags/steam/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/steam/</guid>
+      <guid>https://compilemymind.com/tags/steam/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Top Games</title>
-      <link>http://localhost:1313/tags/top-games/</link>
+      <link>https://compilemymind.com/tags/top-games/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/top-games/</guid>
+      <guid>https://compilemymind.com/tags/top-games/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Comparison</title>
-      <link>http://localhost:1313/tags/comparison/</link>
+      <link>https://compilemymind.com/tags/comparison/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/comparison/</guid>
+      <guid>https://compilemymind.com/tags/comparison/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Development</title>
-      <link>http://localhost:1313/tags/development/</link>
+      <link>https://compilemymind.com/tags/development/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/development/</guid>
+      <guid>https://compilemymind.com/tags/development/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Software</title>
-      <link>http://localhost:1313/tags/software/</link>
+      <link>https://compilemymind.com/tags/software/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/software/</guid>
+      <guid>https://compilemymind.com/tags/software/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Action Games</title>
-      <link>http://localhost:1313/tags/action-games/</link>
+      <link>https://compilemymind.com/tags/action-games/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/action-games/</guid>
+      <guid>https://compilemymind.com/tags/action-games/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Gaming</title>
-      <link>http://localhost:1313/tags/gaming/</link>
+      <link>https://compilemymind.com/tags/gaming/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/gaming/</guid>
+      <guid>https://compilemymind.com/tags/gaming/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Top 10</title>
-      <link>http://localhost:1313/tags/top-10/</link>
+      <link>https://compilemymind.com/tags/top-10/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/top-10/</guid>
+      <guid>https://compilemymind.com/tags/top-10/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>RTS</title>
-      <link>http://localhost:1313/tags/rts/</link>
+      <link>https://compilemymind.com/tags/rts/</link>
       <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/rts/</guid>
+      <guid>https://compilemymind.com/tags/rts/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Strategy Games</title>
-      <link>http://localhost:1313/tags/strategy-games/</link>
+      <link>https://compilemymind.com/tags/strategy-games/</link>
       <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/strategy-games/</guid>
+      <guid>https://compilemymind.com/tags/strategy-games/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>C#</title>
-      <link>http://localhost:1313/tags/c%23/</link>
+      <link>https://compilemymind.com/tags/c%23/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/c%23/</guid>
+      <guid>https://compilemymind.com/tags/c%23/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Python</title>
-      <link>http://localhost:1313/tags/python/</link>
+      <link>https://compilemymind.com/tags/python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/python/</guid>
+      <guid>https://compilemymind.com/tags/python/</guid>
       <description></description>
       
     </item>

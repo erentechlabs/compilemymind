@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Stack on Compile My Mind</title>
-    <link>http://localhost:1313/tags/stack/</link>
+    <link>https://compilemymind.com/tags/stack/</link>
     <description>Recent content in Stack on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Wed, 06 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/stack/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/tags/stack/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>How to Solve LeetCode&#39;s Valid Parentheses Problem Using Stack in Java</title>
-      <link>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
+      <link>https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
       <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
+      <guid>https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
       <description>&lt;p&gt;LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊&lt;/p&gt;
 &lt;p&gt;Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
     </item>
     
   </channel>

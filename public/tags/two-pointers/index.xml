@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Two Pointers on Compile My Mind</title>
-    <link>http://localhost:1313/tags/two-pointers/</link>
+    <link>https://compilemymind.com/tags/two-pointers/</link>
     <description>Recent content in Two Pointers on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/two-pointers/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/tags/two-pointers/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>
-      <link>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</link>
+      <link>https://compilemymind.com/posts/remove-duplicates-from-sorted-array/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</guid>
+      <guid>https://compilemymind.com/posts/remove-duplicates-from-sorted-array/</guid>
       <description>&lt;p&gt;Removing duplicates from a sorted array is a common coding interview question.&lt;br&gt;
 It’s simple at first glance, but it’s also a great way to learn &lt;strong&gt;in-place array manipulation&lt;/strong&gt; and the &lt;strong&gt;two-pointer pattern&lt;/strong&gt;.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/remove-duplicates-from-sorted-array/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/remove-duplicates-from-sorted-array/featured.png" />
     </item>
     
   </channel>

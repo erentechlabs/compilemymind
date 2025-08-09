@@ -2,81 +2,81 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Compile My Mind</title>
-    <link>http://localhost:1313/posts/</link>
+    <link>https://compilemymind.com/posts/</link>
     <description>Recent content in Posts on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Tue, 22 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/posts/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>
-      <link>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</link>
+      <link>https://compilemymind.com/posts/remove-duplicates-from-sorted-array/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</guid>
+      <guid>https://compilemymind.com/posts/remove-duplicates-from-sorted-array/</guid>
       <description>&lt;p&gt;Removing duplicates from a sorted array is a common coding interview question.&lt;br&gt;
 It’s simple at first glance, but it’s also a great way to learn &lt;strong&gt;in-place array manipulation&lt;/strong&gt; and the &lt;strong&gt;two-pointer pattern&lt;/strong&gt;.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/remove-duplicates-from-sorted-array/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/remove-duplicates-from-sorted-array/featured.png" />
     </item>
     
     <item>
       <title>Understanding Controller, Service, and Repository in Spring Boot</title>
-      <link>http://localhost:1313/posts/spring-boot-layered-architecture/</link>
+      <link>https://compilemymind.com/posts/spring-boot-layered-architecture/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/spring-boot-layered-architecture/</guid>
+      <guid>https://compilemymind.com/posts/spring-boot-layered-architecture/</guid>
       <description>&lt;p&gt;Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: &lt;strong&gt;Controller&lt;/strong&gt;, &lt;strong&gt;Service&lt;/strong&gt;, and &lt;strong&gt;Repository&lt;/strong&gt; annotations.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/spring-boot-layered-architecture/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/spring-boot-layered-architecture/featured.png" />
     </item>
     
     <item>
       <title>How to Solve LeetCode&#39;s Valid Parentheses Problem Using Stack in Java</title>
-      <link>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
+      <link>https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
       <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
+      <guid>https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
       <description>&lt;p&gt;LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊&lt;/p&gt;
 &lt;p&gt;Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 The 20 Most Played Games on Steam (August 2025)</title>
-      <link>http://localhost:1313/posts/most-popular-games-on-steam-in-august/</link>
+      <link>https://compilemymind.com/posts/most-popular-games-on-steam-in-august/</link>
       <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/most-popular-games-on-steam-in-august/</guid>
+      <guid>https://compilemymind.com/posts/most-popular-games-on-steam-in-august/</guid>
       <description>&lt;p&gt;Steam remains the digital heart of PC gaming. With millions of concurrent players at any given moment, its most-played charts offer a revealing glimpse into the tastes and trends shaping the community. From long-time champions to fresh viral hits, here’s a deep dive into &lt;strong&gt;the 20 most played games on Steam&lt;/strong&gt;, based on player data as of August 1, 2025.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/most-popular-games-on-steam-in-august/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/most-popular-games-on-steam-in-august/featured.jpg" />
     </item>
     
     <item>
       <title>Component vs Bean in Spring</title>
-      <link>http://localhost:1313/posts/component-vs-bean/</link>
+      <link>https://compilemymind.com/posts/component-vs-bean/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
+      <guid>https://compilemymind.com/posts/component-vs-bean/</guid>
       <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/component-vs-bean/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/component-vs-bean/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 Top 10 Best Action Games on Steam</title>
-      <link>http://localhost:1313/posts/top-10-action-games-on-steam/</link>
+      <link>https://compilemymind.com/posts/top-10-action-games-on-steam/</link>
       <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/top-10-action-games-on-steam/</guid>
+      <guid>https://compilemymind.com/posts/top-10-action-games-on-steam/</guid>
       <description>&lt;p&gt;Action games offer adrenaline-pumping experiences that test your reflexes, precision, and tactical thinking. From fast-paced shooters to open-world adventures, Steam is home to some of the best action titles available today. Here’s a detailed look at the &lt;strong&gt;Top 10 Action Games on Steam&lt;/strong&gt; that every action fan should experience.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/top-10-action-games-on-steam/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/top-10-action-games-on-steam/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 10 Strategy Games on Steam That Feel Like Age of Empires</title>
-      <link>http://localhost:1313/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</link>
+      <link>https://compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</link>
       <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</guid>
+      <guid>https://compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</guid>
       <description>&lt;h2 class=&#34;relative group&#34;&gt;🛡️ Age of Empires Fans, This One’s for You 
     &lt;div id=&#34;-age-of-empires-fans-this-ones-for-you&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
     
@@ -89,25 +89,25 @@ It’s simple at first glance, but it’s also a great way to learn &lt;strong&g
 &lt;p&gt;If you’re the type who thinks,&lt;br&gt;
 &lt;em&gt;“Let me gather some wood, boom my economy, build a castle and rush the enemy before they even make a barracks,”&lt;/em&gt;&lt;br&gt;
 —then welcome, my friend.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/featured.jpg" />
     </item>
     
     <item>
       <title>🎮 Top 10 Best Strategy Games on Steam</title>
-      <link>http://localhost:1313/posts/top-10-strategy-games-on-steam/</link>
+      <link>https://compilemymind.com/posts/top-10-strategy-games-on-steam/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/top-10-strategy-games-on-steam/</guid>
+      <guid>https://compilemymind.com/posts/top-10-strategy-games-on-steam/</guid>
       <description>&lt;p&gt;Strategy games challenge your mind, test your patience, and reward your planning skills. Whether you enjoy building empires, leading armies, or managing resources, Steam has some of the best strategy titles in gaming history. Here’s a detailed look at the &lt;strong&gt;Top 10 Strategy Games on Steam&lt;/strong&gt; that every strategy fan should try.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/top-10-strategy-games-on-steam/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/top-10-strategy-games-on-steam/featured.jpg" />
     </item>
     
     <item>
       <title>Java vs C#</title>
-      <link>http://localhost:1313/posts/java-vs-csharp/</link>
+      <link>https://compilemymind.com/posts/java-vs-csharp/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/java-vs-csharp/</guid>
+      <guid>https://compilemymind.com/posts/java-vs-csharp/</guid>
       <description>&lt;h2 class=&#34;relative group&#34;&gt;Java vs C# 
     &lt;div id=&#34;java-vs-c&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
     
@@ -118,15 +118,15 @@ It’s simple at first glance, but it’s also a great way to learn &lt;strong&g
     
 &lt;/h2&gt;
 &lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;Java&lt;/strong&gt; and &lt;strong&gt;C#&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/java-vs-csharp/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/java-vs-csharp/featured.jpg" />
     </item>
     
     <item>
       <title>Why I Like Java More Than Python</title>
-      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
+      <link>https://compilemymind.com/posts/why-i-like-java-more-than-python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
+      <guid>https://compilemymind.com/posts/why-i-like-java-more-than-python/</guid>
       <description>&lt;h2 class=&#34;relative group&#34;&gt;Why I Like Java More Than Python 
     &lt;div id=&#34;why-i-like-java-more-than-python&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
     
@@ -137,7 +137,7 @@ It’s simple at first glance, but it’s also a great way to learn &lt;strong&g
     
 &lt;/h2&gt;
 &lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/why-i-like-java-more-than-python/featured.png" />
     </item>
     
   </channel>
