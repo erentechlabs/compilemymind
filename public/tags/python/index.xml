@@ -2,19 +2,19 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on Compile My Mind</title>
-    <link>https://compilemymind.com/tags/python/</link>
+    <link>http://localhost:1313/tags/python/</link>
     <description>Recent content in Python on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://compilemymind.com/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/python/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Why I Like Java More Than Python</title>
-      <link>https://compilemymind.com/posts/why-i-like-java-more-than-python/</link>
+      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://compilemymind.com/posts/why-i-like-java-more-than-python/</guid>
+      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
       <description>&lt;h2 class=&#34;relative group&#34;&gt;Why I Like Java More Than Python 
     &lt;div id=&#34;why-i-like-java-more-than-python&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
     
@@ -25,7 +25,7 @@
     
 &lt;/h2&gt;
 &lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://compilemymind.com/posts/why-i-like-java-more-than-python/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
     </item>
     
   </channel>
