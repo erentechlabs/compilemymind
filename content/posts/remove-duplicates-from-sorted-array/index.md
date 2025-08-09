@@ -1,5 +1,5 @@
 ---
-title: "Remove Duplicates from Sorted Array – Step-by-Step Guide"
+title: "Remove Duplicates from Sorted Array — The Two-Pointer Solution"
 description: "Learn how to remove duplicates from a sorted array in Java, explained step-by-step with a beginner-friendly approach using the two-pointer technique."
 date: 2025-08-09
 tags: ["Java", "Algorithms", "Data Structures", "Problem Solving", "Coding Interview", "Two Pointers", "LeetCode", "Programming"]
