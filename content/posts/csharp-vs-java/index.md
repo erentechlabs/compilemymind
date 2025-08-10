@@ -64,7 +64,7 @@ When it comes to object-oriented programming languages, **C#** and **Java** are 
 
 - **C#**:
   - **Windows Applications**: C# is the language of choice for desktop applications on Windows, particularly using **WinUI", **WPF** and **WinForms**.
-  - **Web Development**: **ASP.NET Core** is a robust framework for web development with C#, used for building scalable and high-performance web applications.
+  - **Web Development**: **ASP.NET** is a robust framework for web development with C#, used for building scalable and high-performance web applications.
   - **Game Development**: C# is widely used in game development, particularly with the **Unity** engine.
   - **Cross-Platform Development**: C# with **.NET MAUI** allows for the creation of cross-platform mobile applications.
 
@@ -72,7 +72,7 @@ When it comes to object-oriented programming languages, **C#** and **Java** are 
 
 - **Java**: Java has a massive and mature community, with a strong presence in **enterprise applications**, **Android development**, and **backend systems**. There is always high demand for Java developers, especially for roles in enterprise environments, big data, and cloud computing.
 
-- **C#**: C# is widely used within the **Microsoft ecosystem** and is also increasingly popular in the **gaming** industry due to Unity. The rise of **.NET Core** has made C# a strong candidate for cloud-based applications and cross-platform development, making C# developers highly sought after, particularly in game development and enterprise application development.
+- **C#**: C# is widely used within the **Microsoft ecosystem** and is also increasingly popular in the **gaming** industry due to Unity. The rise of **.NET** has made C# a strong candidate for cloud-based applications and cross-platform development, making C# developers highly sought after, particularly in game development and enterprise application development.
 
 ## Conclusion
 
