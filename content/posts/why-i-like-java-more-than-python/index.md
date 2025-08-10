@@ -6,8 +6,6 @@ tags: ["Java", "Python", "Programming", "Software", "Development", "Comparison"]
 categories: ["technology"]
 ---
 
-## Why I Like Java More Than Python
-
 Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.
 
 ---

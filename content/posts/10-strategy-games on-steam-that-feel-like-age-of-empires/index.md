@@ -7,8 +7,6 @@ categories: ["gaming"]
 #featuredImage: "/images/banners/strategy-games-banner.jpg"
 ---
 
-## 🛡️ Age of Empires Fans, This One’s for You
-
 If you’re the type who thinks,  
 *“Let me gather some wood, boom my economy, build a castle and rush the enemy before they even make a barracks,”*  
 —then welcome, my friend.
