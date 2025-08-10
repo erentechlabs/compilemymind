@@ -2,7 +2,7 @@
 title: "🎮 Top 10 Best Strategy Games on Steam"
 description: "Discover the ultimate list of the best strategy games available on Steam."
 date: 2025-03-28
-tags: ["Strategy Games", "Steam", "PC Gaming", "Top 10", "Gaming", ""Game Recommendations"]
+tags: ["Strategy Games", "Steam", "PC Gaming", "Top 10", "Gaming", "Game Recommendations"]
 categories: ["gaming"]
 #featuredImage: "/images/banners/strategy-games-banner.jpg"
 ---
