@@ -220,5 +220,7 @@
   {{ with .Site.Params.advertisement.adsense }}
     <meta name="google-adsense-account" content="{{ . }}">
   {{ end }}
+
+  {{ partial "ads" .}}
   
 </head>

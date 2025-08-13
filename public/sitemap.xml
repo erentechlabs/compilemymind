@@ -3,79 +3,85 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
   <url>
-    <loc>https://compilemymind.com/</loc>
+    <loc>https://www.compilemymind.com/</loc>
+    <lastmod>2025-08-10T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.compilemymind.com/posts/top-10-nintendo-switch-games/</loc>
+    <lastmod>2025-08-10T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/</loc>
     <lastmod>2025-08-09T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/remove-duplicates-from-sorted-array/</loc>
-    <lastmod>2025-08-09T00:00:00+00:00</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://compilemymind.com/posts/spring-boot-layered-architecture/</loc>
+    <loc>https://www.compilemymind.com/posts/spring-boot-layered-architecture/</loc>
     <lastmod>2025-08-07T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</loc>
+    <loc>https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</loc>
     <lastmod>2025-08-06T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/most-popular-games-on-steam-in-august/</loc>
+    <loc>https://www.compilemymind.com/posts/most-popular-games-on-steam-in-august/</loc>
     <lastmod>2025-08-01T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/component-vs-bean/</loc>
+    <loc>https://www.compilemymind.com/posts/component-vs-bean/</loc>
     <lastmod>2025-07-31T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/</loc>
+    <loc>https://www.compilemymind.com/posts/</loc>
     <lastmod>2025-07-22T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/top-10-action-games-on-steam/</loc>
+    <loc>https://www.compilemymind.com/posts/top-10-action-games-on-steam/</loc>
     <lastmod>2025-04-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</loc>
+    <loc>https://www.compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</loc>
     <lastmod>2025-04-04T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/top-10-strategy-games-on-steam/</loc>
+    <loc>https://www.compilemymind.com/posts/top-10-strategy-games-on-steam/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/java-vs-csharp/</loc>
+    <loc>https://www.compilemymind.com/posts/csharp-vs-java/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/posts/why-i-like-java-more-than-python/</loc>
+    <loc>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</loc>
     <lastmod>2025-03-28T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://compilemymind.com/about/</loc>
+    <loc>https://www.compilemymind.com/about/</loc>
     <lastmod>2023-11-27T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
