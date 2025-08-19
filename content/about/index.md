@@ -1,6 +1,6 @@
 ---
 title: "About"
-date: 2023-11-27
+date: 2025-08-19
 draft: false
 
 showDate : false
@@ -22,17 +22,16 @@ layoutBackgroundHeaderSpace: false
 
 ## 👋 Welcome!
 
-I'm **Eren Karaoğlu**, the creator and author behind **Compile My Mind** — a place where I share my journey, ideas, projects, and thoughts around software development, game creation, and gaming in general.
+I'm **Eren Karaoğlu**, the creator and author behind **Compile My Mind** — a place where I share my journey, ideas, projects, and thoughts around technology, computing, and information systems.  
 
-I’m a software developer who loves building meaningful, well-structured, and user-focused applications. From designing robust backend systems with **Java Spring**, to crafting sleek mobile interfaces with **Flutter**, building desktop tools with **WPF**, or even developing my own **indie games** — I enjoy solving real-world problems through code and creativity.
+I’m passionate about building meaningful, well-structured, and user-focused solutions. Whether it’s developing applications, designing systems, or exploring new technologies, I enjoy solving real-world problems and learning along the way.  
 
-I also love talking about the games I play, discovering hidden gems, and sharing recommendations based on experience and mood. Whether it's development or just gaming for fun, I'm always looking to learn, grow, and connect with others who share the same passion.
+My curiosity goes beyond software — I value understanding how different areas of computing connect, from hardware to systems to emerging innovations. For me, technology is both a tool and a passion that drives continuous growth and creativity.  
 
-## 💡 What Am I About?
+## 💡 Who am I?
 
-I love building practical, scalable, and well-structured applications. Whether it’s designing APIs with Spring Boot, creating responsive UIs with Flutter, or building desktop tools with WPF, I enjoy solving real-world problems through clean and efficient code.
-
-My focus is always on maintainability, performance, and continuous learning. I'm constantly exploring new technologies to sharpen my skills and create better solutions.
+I love building practical, scalable, and well-structured solutions. My focus is always on clarity, maintainability, and performance.  
+Beyond just coding, I’m constantly exploring new technologies, experimenting, and striving to understand the broader world of information systems.  
 
 ## 🎓 Education
 
@@ -61,7 +60,7 @@ Currently studying law and legal systems part-time to gain broader interdiscipli
     text-align: center;
     vertical-align: middle;
     word-wrap: break-word;
-    border: none; /* Çizgileri kaldır */
+    border: none; 
   }
   .customEntitityLogo {
     max-height: 50px;
@@ -99,56 +98,49 @@ Currently studying law and legal systems part-time to gain broader interdiscipli
 
 ## 🧠 Skills & Expertise
 
-### Software Development
+### Core Competencies
 
-- **Languages:** Java, Dart, C#, SQL  
-- **Frameworks:** Spring Boot, Flutter, WPF  
+- Software development & system design  
+- Database management & integration  
+- Clean architecture & maintainable code  
+- Strong debugging & analytical skills  
+- Effective communication & teamwork  
+
+### Technical Knowledge
+
+- **Languages:** Java, C#, Dart, SQL  
+- **Frameworks & Tools:** Spring Boot, Flutter, WPF, Git, Postman  
 - **Frontend:** HTML, CSS, JavaScript  
 - **Databases:** PostgreSQL, MySQL, SQLite  
-- **Tools:** Git, IntelliJ, Visual Studio, VS Code, Postman  
 
-### Platforms
+### Focus Areas
 
-- **Mobile:** Flutter (Android/iOS)  
-- **Desktop:** WPF (.NET, MVVM)  
-- **Backend:** Spring Boot (REST APIs, business logic)
-
-### Strengths
-
-- Clean architecture & maintainable code  
-- API design & integration  
-- Strong debugging & analytical skills  
-- Effective communication & teamwork
+- Building practical and scalable solutions  
+- Continuous learning and exploring new technologies  
+- Bridging different areas of computing (software, systems, hardware)  
 
 ## 📁 Projects
 
-### 🖥️ WPF (Desktop)
+Here are some of the projects I’ve worked on — each reflecting my interest in solving problems and building useful solutions:
 
-- **SceneShift**  
-  A modern wallpaper utility built with **WPF and MVVM**. Users can **search for wallpapers online** and apply them with **a single click**. Includes resolution filtering, local history, and smooth background transitions.
+- **SceneShift (Desktop, WPF)**  
+  A modern wallpaper utility that allows users to search, filter, and apply wallpapers with ease. Includes resolution filtering, history, and smooth transitions.  
 
-### 📱 Flutter (Mobile)
+- **Wallpaper Changer (Mobile, Flutter)**  
+  A simple and lightweight wallpaper management app that lets users change, organize, and manage their device wallpapers with ease. Focused on usability and smooth performance.
 
-- **Reminder+**  
-  A goal-focused productivity and task management app. Lets users **create tasks**, **set targets**, and **track progress** over time. Designed with a clean, cross-platform Flutter UI.
+- **Reminder+ (Mobile, Flutter)**  
+  A productivity app for goal-focused task management, helping users track progress and manage their daily workflow.  
 
-- **Weekly Dish**  
-  An **AI-powered weekly meal planner** that generates personalized menus. Features include **dynamic shopping lists**, **nutritional info**, and adjustable portions — making meal prep smarter and easier.
+- **Weekly Dish (Mobile, Flutter)**  
+  An AI-powered meal planner that generates weekly menus, shopping lists, and nutritional insights.  
 
-- **MoodMate (Movie App)**  
-  An emotion-based content recommendation app. Users select their **current mood**, and the app suggests fitting **movies, TV series, or books** using a lightweight AI engine.
+- **NeutronDB (Backend, Java Spring)**  
+  A lightweight backend system with RESTful APIs for tracking compatibility and performance data — inspired by community-driven feedback platforms.  
 
-### 🌐 Java Spring (Backend)
-
-- **NeutronDB**  
-  Inspired by **ProtonDB**, NeutronDB is a lightweight backend system built with **Spring Boot**. It tracks compatibility and performance data with RESTful API endpoints. Ideal for community feedback systems or benchmarking platforms.
-
-<!--
-## 🤝 Let’s Connect
-
-I'm open to collaboration, freelance work, or new opportunities. Feel free to reach out anytime:
-
-- 📧 [Email](mailto:eren0_karaoglu1@outlook.com)  
--->
-
+- **MapCycle (Backend, Java Spring)**  
+  A community-driven cycling application where users can **sign up, log in, and authenticate via JWT**.  
+  Users can **create and share routes**, as well as **join rides organized by others**.  
+  Focused on secure authentication, route management, and collaborative participation.
+  
 ---

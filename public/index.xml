@@ -2,140 +2,87 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Compile My Mind</title>
-    <link>https://www.compilemymind.com/</link>
+    <link>http://localhost:1313/</link>
     <description>Recent content on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Sun, 10 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Best Switch Games 2025: 10 Must-Play Nintendo Exclusives</title>
-      <link>https://www.compilemymind.com/posts/top-10-nintendo-switch-games/</link>
-      <pubDate>Sun, 10 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/top-10-nintendo-switch-games/</guid>
-      <description>&lt;p&gt;The Nintendo Switch isn’t just another console. It’s a bridge between worlds — between home and on-the-go, between nostalgia and innovation, between simple fun and deep, immersive adventures.&lt;/p&gt;
-&lt;p&gt;And while its hybrid design is impressive, what truly sets it apart is its library. Nintendo’s first-party games, in particular, are masterclasses in creativity, charm, and craftsmanship.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/top-10-nintendo-switch-games/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>
-      <link>https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/</guid>
-      <description>&lt;p&gt;Removing duplicates from a sorted array is a common coding interview question.&lt;br&gt;
-It’s simple at first glance, but it’s also a great way to learn &lt;strong&gt;in-place array manipulation&lt;/strong&gt; and the &lt;strong&gt;two-pointer pattern&lt;/strong&gt;.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/featured.png" />
-    </item>
-    
-    <item>
-      <title>Understanding Controller, Service, and Repository in Spring Boot</title>
-      <link>https://www.compilemymind.com/posts/spring-boot-layered-architecture/</link>
-      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/spring-boot-layered-architecture/</guid>
-      <description>&lt;p&gt;Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: &lt;strong&gt;Controller&lt;/strong&gt;, &lt;strong&gt;Service&lt;/strong&gt;, and &lt;strong&gt;Repository&lt;/strong&gt; annotations.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/spring-boot-layered-architecture/featured.png" />
-    </item>
-    
-    <item>
-      <title>How to Solve LeetCode&#39;s Valid Parentheses Problem Using Stack in Java</title>
-      <link>https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
-      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
-      <description>&lt;p&gt;LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊&lt;/p&gt;
-&lt;p&gt;Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>🎮 The 20 Most Played Games on Steam (August 2025)</title>
-      <link>https://www.compilemymind.com/posts/most-popular-games-on-steam-in-august/</link>
-      <pubDate>Fri, 01 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/most-popular-games-on-steam-in-august/</guid>
-      <description>&lt;p&gt;Steam remains the digital heart of PC gaming. With millions of concurrent players at any given moment, its most-played charts offer a revealing glimpse into the tastes and trends shaping the community. From long-time champions to fresh viral hits, here’s a deep dive into &lt;strong&gt;the 20 most played games on Steam&lt;/strong&gt;, based on player data as of August 1, 2025.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/most-popular-games-on-steam-in-august/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>Component vs Bean in Spring</title>
-      <link>https://www.compilemymind.com/posts/component-vs-bean/</link>
-      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/component-vs-bean/</guid>
-      <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/component-vs-bean/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>🎮 Top 10 Best Action Games on Steam</title>
-      <link>https://www.compilemymind.com/posts/top-10-action-games-on-steam/</link>
-      <pubDate>Mon, 28 Apr 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/top-10-action-games-on-steam/</guid>
-      <description>&lt;p&gt;Action games offer adrenaline-pumping experiences that test your reflexes, precision, and tactical thinking. From fast-paced shooters to open-world adventures, Steam is home to some of the best action titles available today. Here’s a detailed look at the &lt;strong&gt;Top 10 Action Games on Steam&lt;/strong&gt; that every action fan should experience.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/top-10-action-games-on-steam/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>🎮 10 Strategy Games on Steam That Feel Like Age of Empires</title>
-      <link>https://www.compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</link>
-      <pubDate>Fri, 04 Apr 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/</guid>
-      <description>&lt;p&gt;If you’re the type who thinks,&lt;br&gt;
-&lt;em&gt;“Let me gather some wood, boom my economy, build a castle and rush the enemy before they even make a barracks,”&lt;/em&gt;&lt;br&gt;
-—then welcome, my friend.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/10-strategy-games-on-steam-that-feel-like-age-of-empires/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>🎮 Top 10 Best Strategy Games on Steam</title>
-      <link>https://www.compilemymind.com/posts/top-10-strategy-games-on-steam/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/top-10-strategy-games-on-steam/</guid>
-      <description>&lt;p&gt;Strategy games challenge your mind, test your patience, and reward your planning skills. Whether you enjoy building empires, leading armies, or managing resources, Steam has some of the best strategy titles in gaming history. Here’s a detailed look at the &lt;strong&gt;Top 10 Strategy Games on Steam&lt;/strong&gt; that every strategy fan should try.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/top-10-strategy-games-on-steam/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>C# vs Java</title>
-      <link>https://www.compilemymind.com/posts/csharp-vs-java/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/csharp-vs-java/</guid>
-      <description>&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;C#&lt;/strong&gt; and &lt;strong&gt;Java&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/csharp-vs-java/featured.jpg" />
-    </item>
-    
-    <item>
-      <title>Why I Like Java More Than Python</title>
-      <link>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</guid>
-      <description>&lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/why-i-like-java-more-than-python/featured.png" />
-    </item>
+    <lastBuildDate>Tue, 19 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>About</title>
-      <link>https://www.compilemymind.com/about/</link>
-      <pubDate>Mon, 27 Nov 2023 00:00:00 +0000</pubDate>
+      <link>http://localhost:1313/about/</link>
+      <pubDate>Tue, 19 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/about/</guid>
+      <guid>http://localhost:1313/about/</guid>
       <description>&lt;h2 class=&#34;relative group&#34;&gt;👋 Welcome! 
     &lt;div id=&#34;-welcome&#34; class=&#34;anchor&#34;&gt;&lt;/div&gt;
     
 &lt;/h2&gt;
-&lt;p&gt;I&amp;rsquo;m &lt;strong&gt;Eren Karaoğlu&lt;/strong&gt;, the creator and author behind &lt;strong&gt;Compile My Mind&lt;/strong&gt; — a place where I share my journey, ideas, projects, and thoughts around software development, game creation, and gaming in general.&lt;/p&gt;</description>
+&lt;p&gt;I&amp;rsquo;m &lt;strong&gt;Eren Karaoğlu&lt;/strong&gt;, the creator and author behind &lt;strong&gt;Compile My Mind&lt;/strong&gt; — a place where I share my journey, ideas, projects, and thoughts around technology, computing, and information systems.&lt;/p&gt;</description>
       
+    </item>
+    
+    <item>
+      <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>
+      <link>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</link>
+      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</guid>
+      <description>&lt;p&gt;Removing duplicates from a sorted array is a common coding interview question.&lt;br&gt;
+It’s simple at first glance, but it’s also a great way to learn &lt;strong&gt;in-place array manipulation&lt;/strong&gt; and the &lt;strong&gt;two-pointer pattern&lt;/strong&gt;.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/remove-duplicates-from-sorted-array/featured.png" />
+    </item>
+    
+    <item>
+      <title>Understanding Controller, Service, and Repository in Spring Boot</title>
+      <link>http://localhost:1313/posts/spring-boot-layered-architecture/</link>
+      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/spring-boot-layered-architecture/</guid>
+      <description>&lt;p&gt;Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: &lt;strong&gt;Controller&lt;/strong&gt;, &lt;strong&gt;Service&lt;/strong&gt;, and &lt;strong&gt;Repository&lt;/strong&gt; annotations.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/spring-boot-layered-architecture/featured.png" />
+    </item>
+    
+    <item>
+      <title>How to Solve LeetCode&#39;s Valid Parentheses Problem Using Stack in Java</title>
+      <link>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
+      <description>&lt;p&gt;LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊&lt;/p&gt;
+&lt;p&gt;Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
+    </item>
+    
+    <item>
+      <title>Component vs Bean in Spring</title>
+      <link>http://localhost:1313/posts/component-vs-bean/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
+      <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/component-vs-bean/featured.jpg" />
+    </item>
+    
+    <item>
+      <title>C# vs Java</title>
+      <link>http://localhost:1313/posts/csharp-vs-java/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/csharp-vs-java/</guid>
+      <description>&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;C#&lt;/strong&gt; and &lt;strong&gt;Java&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/csharp-vs-java/featured.jpg" />
+    </item>
+    
+    <item>
+      <title>Why I Like Java More Than Python</title>
+      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
+      <description>&lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
     </item>
     
   </channel>

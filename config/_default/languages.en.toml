@@ -12,7 +12,7 @@ title = "Compile My Mind"
   dateFormat = "2 January 2006"
   logo = "icon.png"
   # secondaryLogo = "img/secondary-logo.png"
-  description = "As a software engineer who is interested in everything about technology and games, this is the website where I write and share things that interest me and that I want to share with you."
+  description = "As someone deeply passionate about technology and the digital world, this website is where I share my journey, ideas, and insights on the things I explore and create."
   # copyright = "Copy, _right?_ :thinking_face:"
 
 [author]
@@ -20,8 +20,8 @@ title = "Compile My Mind"
 # email = "youremail@example.com"
 # image = "author.png"
   imageQuality = 96
-  headline = "Coding and Creating Practical Solutions Is My Passion!"
-  bio = "I'm a software developer focused on backend with Java Spring, mobile apps with Flutter, and desktop tools with WPF. Always eager to learn and build useful projects that make life easier."
+  headline = "Passionate About Technology, Computing, and Creating Solutions!"
+  bio = "I'm a technology enthusiast and developer who loves exploring every aspect of computing. From software to systems and beyond, I enjoy learning, experimenting, and building meaningful solutions."
 
 #   links = [
 #     { email = "mailto:hello@your_domain.com" },

@@ -1,13 +1,11 @@
 ---
-description: "I provide in-depth knowledge on gaming, technology and other tech topics on this website."
+description: "Here, I explore and provide insights into technology, information systems, and different aspects of the computer world."
 ---
 
 ## 👋 Welcome!
 
-I'm **Eren Karaoğlu**, the creator and author behind **Compile My Mind** — a place where I share my journey, ideas, projects, and thoughts around software development, game creation, and gaming in general.
+I’m Eren Karaoğlu, the creator and author of Compile My Mind — a place where I share my journey, ideas, and projects in the world of technology, computing, and information systems.
 
-I’m a software developer who loves building meaningful, well-structured, and user-focused applications. From designing robust backend systems with **Java Spring**, to crafting sleek mobile interfaces with **Flutter**, building desktop tools with **WPF**, or even developing my own **indie games** — I enjoy solving real-world problems through code and creativity.
+I’m deeply passionate about technology and computers. From software development to exploring systems, from working with hardware to discovering new technologies, I enjoy engaging with every aspect of the digital world. For me, it’s not just about using technology — it’s about understanding it, creating with it, and sharing it with others.
 
-I also love talking about the games I play, discovering hidden gems, and sharing recommendations based on experience and mood. Whether it's development or just gaming for fun, I'm always looking to learn, grow, and connect with others who share the same passion.
-
-
+I always value learning, improving myself, and connecting with people who share the same passion for technology. Compile My Mind is my space to share this journey and connect with like-minded individuals.
