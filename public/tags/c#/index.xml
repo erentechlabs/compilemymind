@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>C# on Compile My Mind</title>
-    <link>http://localhost:1313/tags/c%23/</link>
+    <link>https://www.compilemymind.com/tags/c%23/</link>
     <description>Recent content in C# on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/c%23/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 28 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/c%23/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>C# vs Java</title>
-      <link>http://localhost:1313/posts/csharp-vs-java/</link>
+      <link>https://www.compilemymind.com/posts/csharp-vs-java/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/csharp-vs-java/</guid>
+      <guid>https://www.compilemymind.com/posts/csharp-vs-java/</guid>
       <description>&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;C#&lt;/strong&gt; and &lt;strong&gt;Java&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/csharp-vs-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/csharp-vs-java/featured.jpg" />
     </item>
     
   </channel>

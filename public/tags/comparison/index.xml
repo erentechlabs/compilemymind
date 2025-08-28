@@ -2,41 +2,41 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Comparison on Compile My Mind</title>
-    <link>http://localhost:1313/tags/comparison/</link>
+    <link>https://www.compilemymind.com/tags/comparison/</link>
     <description>Recent content in Comparison on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/comparison/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 31 Jul 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/comparison/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Component vs Bean in Spring</title>
-      <link>http://localhost:1313/posts/component-vs-bean/</link>
+      <link>https://www.compilemymind.com/posts/component-vs-bean/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
+      <guid>https://www.compilemymind.com/posts/component-vs-bean/</guid>
       <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/component-vs-bean/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/component-vs-bean/featured.jpg" />
     </item>
     
     <item>
       <title>C# vs Java</title>
-      <link>http://localhost:1313/posts/csharp-vs-java/</link>
+      <link>https://www.compilemymind.com/posts/csharp-vs-java/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/csharp-vs-java/</guid>
+      <guid>https://www.compilemymind.com/posts/csharp-vs-java/</guid>
       <description>&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;C#&lt;/strong&gt; and &lt;strong&gt;Java&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/csharp-vs-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/csharp-vs-java/featured.jpg" />
     </item>
     
     <item>
       <title>Why I Like Java More Than Python</title>
-      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
+      <link>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
+      <guid>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</guid>
       <description>&lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/why-i-like-java-more-than-python/featured.png" />
     </item>
     
   </channel>
