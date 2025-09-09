@@ -42,13 +42,23 @@ Completed technical high school education focused on software, networking, and h
 {{< timelineItem icon="graduation-cap" header="Atılım University" subheader="B.Sc. in Information Systems Engineering" >}}
 Graduated with a solid foundation in programming, database management, systems design, and project coordination.
 {{< /timelineItem >}}
-{{< timelineItem icon="scale-balanced" header="Anadolu University" subheader="Associate Degree in Justice (Ongoing)" >}}
-Currently studying law and legal systems part-time to gain broader interdisciplinary knowledge.  
+{{< timelineItem icon="code" header="Gazi University" subheader="M.Sc. in Information Systems (Ongoing)" >}}
+Currently pursuing a master's degree with a focus on advanced system design, enterprise applications, and research in information technologies.
+{{< /timelineItem >}}
+{{< timelineItem icon="graduation-cap" header="Istanbul University" subheader="Associate Degree in Computer Programming" >}}
+Graduated with strong skills in programming, software development, and applied computing practices.
+{{< /timelineItem >}}
+{{< timelineItem icon="code" header="Ankara University" subheader="Associate Degree in Web Design & Coding" >}}
+Graduated with expertise in frontend development, user interface design, and modern web technologies.
+{{< /timelineItem >}}
+{{< timelineItem icon="graduation-cap" header="Anadolu University" subheader="Associate Degree in Justice" >}}
+Graduated with knowledge of law, legal systems, and interdisciplinary studies.
 {{< /timelineItem >}}
 {{< /timeline >}}
 
----
 
+
+---
 <style>
   table {
     border-collapse: collapse;
@@ -85,13 +95,28 @@ Currently studying law and legal systems part-time to gain broader interdiscipli
     </tr>
     <tr>
       <td><img class="customEntitityLogo" style="background-color:transparent" src="schools_icon/atilim.png" alt="Atılım University"/></td>
-      <td>Information Systems Engineering</td>
+      <td>Information Systems Engineering (B.Sc.)</td>
+      <td>Graduated</td>
+    </tr>
+    <tr>
+      <td><img class="customEntitityLogo" style="background-color:transparent" src="schools_icon/gazi.png" alt="Gazi University"/></td>
+      <td>Information Systems (M.Sc.)</td>
+      <td>Currently Studying</td>
+    </tr>
+    <tr>
+      <td><img class="customEntitityLogo" style="background-color:transparent" src="schools_icon/istanbul.png" alt="Istanbul University"/></td>
+      <td>Computer Programming (Associate Degree)</td>
+      <td>Graduated</td>
+    </tr>
+    <tr>
+      <td><img class="customEntitityLogo" style="background-color:transparent" src="schools_icon/ankara.png" alt="Ankara University"/></td>
+      <td>Web Design & Coding (Associate Degree)</td>
       <td>Graduated</td>
     </tr>
     <tr>
       <td><img class="customEntitityLogo" style="background-color:transparent" src="schools_icon/anadolu.png" alt="Anadolu University"/></td>
       <td>Justice (Associate Degree)</td>
-      <td>Currently Studying</td>
+      <td>Graduated</td>
     </tr>
   </tbody>
 </table>
