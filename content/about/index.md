@@ -22,16 +22,16 @@ layoutBackgroundHeaderSpace: false
 
 ## 👋 Welcome!
 
-I'm **Eren Karaoğlu**, the creator and author behind **Compile My Mind** — a place where I share my journey, ideas, projects, and thoughts around technology, computing, and information systems.  
+I’m **Eren Karaoğlu**, a **Java Backend Developer** and the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in the world of software.  
 
-I’m passionate about building meaningful, well-structured, and user-focused solutions. Whether it’s developing applications, designing systems, or exploring new technologies, I enjoy solving real-world problems and learning along the way.  
+I’m passionate about building **scalable, reliable, and maintainable applications**. My focus is on clean architecture, efficient systems, and practical solutions that solve real-world problems.  
 
-My curiosity goes beyond software — I value understanding how different areas of computing connect, from hardware to systems to emerging innovations. For me, technology is both a tool and a passion that drives continuous growth and creativity.  
+Technology for me is not just a tool — it’s a passion. I enjoy learning new frameworks, experimenting with ideas, and constantly improving my skills as a developer.  
 
 ## 💡 Who am I?
 
-I love building practical, scalable, and well-structured solutions. My focus is always on clarity, maintainability, and performance.  
-Beyond just coding, I’m constantly exploring new technologies, experimenting, and striving to understand the broader world of information systems.  
+I specialize in **backend development with Java and Spring Boot**, and I enjoy working on projects that involve **APIs, databases, and system design**.  
+Beyond backend work, I explore frontend technologies and mobile frameworks to broaden my perspective and build more complete solutions.  
 
 ## 🎓 Education
 
@@ -100,11 +100,11 @@ Currently studying law and legal systems part-time to gain broader interdiscipli
 
 ### Core Competencies
 
-- Software development & system design  
-- Database management & integration  
+- Backend software development (Java, Spring Boot)  
+- RESTful API design & integration  
+- Database modeling & management  
 - Clean architecture & maintainable code  
-- Strong debugging & analytical skills  
-- Effective communication & teamwork  
+- Debugging, optimization & problem-solving  
 
 ### Technical Knowledge
 
@@ -115,9 +115,9 @@ Currently studying law and legal systems part-time to gain broader interdiscipli
 
 ### Focus Areas
 
-- Building practical and scalable solutions  
-- Continuous learning and exploring new technologies  
-- Bridging different areas of computing (software, systems, hardware)  
+- Java backend development with Spring Boot  
+- Building scalable APIs & data-driven applications  
+- Continuous learning & exploring new technologies  
 
 ## 📁 Projects
 

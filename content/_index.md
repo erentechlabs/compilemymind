@@ -1,11 +1,11 @@
 ---
-description: "Here, I explore and provide insights into technology, information systems, and different aspects of the computer world."
+description: "Here, I share my journey in coding, system design, and exploring new technologies that shape the world of software."
 ---
 
 ## 👋 Welcome!
 
-I’m Eren Karaoğlu, the creator and author of Compile My Mind — a place where I share my journey, ideas, and projects in the world of technology, computing, and information systems.
+I’m Eren Karaoğlu, the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in software development and technology.  
 
-I’m deeply passionate about technology and computers. From software development to exploring systems, from working with hardware to discovering new technologies, I enjoy engaging with every aspect of the digital world. For me, it’s not just about using technology — it’s about understanding it, creating with it, and sharing it with others.
+I’m passionate about coding, system design, and exploring new technologies. For me, it’s not just about using tools — it’s about understanding how they work, building with them, and sharing what I learn along the way.  
 
-I always value learning, improving myself, and connecting with people who share the same passion for technology. Compile My Mind is my space to share this journey and connect with like-minded individuals.
+What drives me is the excitement of learning, improving, and connecting with people who share the same passion. Through Compile My Mind, I document my growth as a developer and collaborate with like-minded tech enthusiasts.
