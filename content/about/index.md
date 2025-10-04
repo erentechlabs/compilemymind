@@ -1,5 +1,5 @@
 ---
-title: "About"
+title: "About Me"
 date: 2025-08-19
 draft: false
 
@@ -22,7 +22,7 @@ layoutBackgroundHeaderSpace: false
 
 ## 👋 Welcome!
 
-I’m **Eren Karaoğlu**, a **Java Backend Developer** and the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in the world of software.  
+I’m **Eren**, a **Java Backend Developer** and the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in the world of software.  
 
 I’m passionate about building **scalable, reliable, and maintainable applications**. My focus is on clean architecture, efficient systems, and practical solutions that solve real-world problems.  
 
