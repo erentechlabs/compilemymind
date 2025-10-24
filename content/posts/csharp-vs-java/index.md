@@ -2,7 +2,7 @@
 title: "C# vs Java"
 description: "A detailed comparison between Java and C#, two of the most popular programming languages. Explore their strengths, weaknesses, use cases, and key differences."
 date: 2025-03-28
-tags: ["Programming", "C#", "Java", "Software", "Development",  "Comparison"]
+tags: ["java", "csharp", "comparison"]
 categories: ["technology"]
 #featuredImage: "/images/banners/java-vs-csharp-banner.jpg"
 ---

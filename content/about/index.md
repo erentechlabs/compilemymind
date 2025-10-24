@@ -22,15 +22,15 @@ layoutBackgroundHeaderSpace: false
 
 ## 👋 Welcome!
 
-I’m **Eren**, a **Java Backend Developer** and the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in the world of software.  
+I’m Eren, a Java Backend Developer and the creator of Compile My Mind, a space where I share my journey, projects, and ideas in the world of software.  
 
-I’m passionate about building **scalable, reliable, and maintainable applications**. My focus is on clean architecture, efficient systems, and practical solutions that solve real-world problems.  
+I’m passionate about building scalable, reliable, and maintainable applications. My focus is on clean architecture, efficient systems, and practical solutions that solve real-world problems.  
 
 Technology for me is not just a tool — it’s a passion. I enjoy learning new frameworks, experimenting with ideas, and constantly improving my skills as a developer.  
 
 ## 💡 Who am I?
 
-I specialize in **backend development with Java and Spring Boot**, and I enjoy working on projects that involve **APIs, databases, and system design**.  
+I specialize in backend development with Java and Spring Boot, and I enjoy working on projects that involve APIs, databases, and system design.  
 Beyond backend work, I explore frontend technologies and mobile frameworks to broaden my perspective and build more complete solutions.  
 
 ## 🎓 Education

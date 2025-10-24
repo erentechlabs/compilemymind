@@ -2,7 +2,7 @@
 title: "Component vs Bean in Spring"
 description: "We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way."
 date: 2025-07-31
-tags: ["Java", "Programming", "Software", "Development", "Comparison"]
+tags: ["java", "spring", "spring-beans"]
 categories: ["technology"]
 ---
 

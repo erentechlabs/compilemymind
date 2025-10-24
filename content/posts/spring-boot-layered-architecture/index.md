@@ -2,7 +2,7 @@
 title: "Understanding Controller, Service, and Repository in Spring Boot"
 description: "An in-depth look at the core layers of Spring Boot applications: Controller, Service, and Repository annotations. Learn their roles, how they interact, and best practices for building clean, maintainable code."
 date: 2025-08-07
-tags: ["Java", "Spring Boot", "Programming", "Software Development", "Architecture", "Best Practices"]
+tags: ["java", "spring-boot", "architecture", "best-practices"]
 categories: ["technology"]
 ---
 
