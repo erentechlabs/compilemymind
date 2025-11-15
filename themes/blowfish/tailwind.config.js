@@ -2,9 +2,10 @@ module.exports = {
   content: [
     "./layouts/**/*.html",
     "./content/**/*.{html,md}",
+    "./node_modules/tw-elements/js/**/*.js",
     "./themes/blowfish/layouts/**/*.html",
     "./themes/blowfish/content/**/*.{html,md}",
-    "./node_modules/tw-elements/js/**/*.js",
+    "./themes/blowfish/node_modules/tw-elements/js/**/*.js",
   ],
   darkMode: "class",
   theme: {
@@ -16,6 +17,7 @@ module.exports = {
       "2xl": "1536px",
     },
     colors: {
+      ...require('tailwindcss/colors'),
       transparent: "transparent",
       neutral: {
         DEFAULT: "rgba(var(--color-neutral), <alpha-value>)",

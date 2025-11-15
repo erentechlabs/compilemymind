@@ -7,7 +7,27 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/programming/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Spring Annotations Guide: @EnableScheduling, @Scheduled, @Async, @EnableAsync, @Service, and @Configuration Examples</title>
+      <link>https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</guid>
+      <description>&lt;p&gt;This post explains some of the most useful Spring annotations with minimal code you can paste into a project. We’ll cover what each annotation does, when to use it, and a short example.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/featured.png" />
+    </item>
+    
+    <item>
+      <title>What’s New in Java 25 (JDK 25)</title>
+      <link>https://www.compilemymind.com/posts/new-features-in-java-25/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/posts/new-features-in-java-25/</guid>
+      <description>&lt;p&gt;Java 25 (JDK 25) is here — and it’s an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I’ll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.&lt;/p&gt;</description>
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/new-features-in-java-25/featured.png" />
+    </item>
     
     <item>
       <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>

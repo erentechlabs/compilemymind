@@ -4,13 +4,19 @@
 
   <url>
     <loc>https://www.compilemymind.com/</loc>
-    <lastmod>2025-08-19T00:00:00+00:00</lastmod>
+    <lastmod>2025-10-24T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://www.compilemymind.com/about/</loc>
-    <lastmod>2025-08-19T00:00:00+00:00</lastmod>
+    <loc>https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</loc>
+    <lastmod>2025-10-24T00:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://www.compilemymind.com/posts/new-features-in-java-25/</loc>
+    <lastmod>2025-10-24T00:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.5</priority>
   </url>

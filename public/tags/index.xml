@@ -7,72 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Sat, 09 Aug 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/index.xml" rel="self" type="application/rss+xml" />
-    
-    <item>
-      <title>Algorithms</title>
-      <link>https://www.compilemymind.com/tags/algorithms/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/algorithms/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Coding Interview</title>
-      <link>https://www.compilemymind.com/tags/coding-interview/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/coding-interview/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Data Structures</title>
-      <link>https://www.compilemymind.com/tags/data-structures/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/data-structures/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Java</title>
-      <link>https://www.compilemymind.com/tags/java/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/java/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>LeetCode</title>
-      <link>https://www.compilemymind.com/tags/leetcode/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/leetcode/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Problem Solving</title>
-      <link>https://www.compilemymind.com/tags/problem-solving/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/problem-solving/</guid>
-      <description></description>
-      
-    </item>
+    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Programming</title>
       <link>https://www.compilemymind.com/tags/programming/</link>
-      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
       <guid>https://www.compilemymind.com/tags/programming/</guid>
       <description></description>
@@ -80,101 +20,41 @@
     </item>
     
     <item>
-      <title>Two Pointers</title>
-      <link>https://www.compilemymind.com/tags/two-pointers/</link>
+      <title>SoftwareDevelopment</title>
+      <link>https://www.compilemymind.com/tags/softwaredevelopment/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/tags/softwaredevelopment/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>SpringBoot</title>
+      <link>https://www.compilemymind.com/tags/springboot/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/tags/springboot/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>TechTrends</title>
+      <link>https://www.compilemymind.com/tags/techtrends/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/tags/techtrends/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>ProblemSolving</title>
+      <link>https://www.compilemymind.com/tags/problemsolving/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/two-pointers/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Architecture</title>
-      <link>https://www.compilemymind.com/tags/architecture/</link>
-      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/architecture/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Best Practices</title>
-      <link>https://www.compilemymind.com/tags/best-practices/</link>
-      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/best-practices/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Software Development</title>
-      <link>https://www.compilemymind.com/tags/software-development/</link>
-      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/software-development/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Spring Boot</title>
-      <link>https://www.compilemymind.com/tags/spring-boot/</link>
-      <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/spring-boot/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Stack</title>
-      <link>https://www.compilemymind.com/tags/stack/</link>
-      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/stack/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Comparison</title>
-      <link>https://www.compilemymind.com/tags/comparison/</link>
-      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/comparison/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Development</title>
-      <link>https://www.compilemymind.com/tags/development/</link>
-      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/development/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>Software</title>
-      <link>https://www.compilemymind.com/tags/software/</link>
-      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/software/</guid>
-      <description></description>
-      
-    </item>
-    
-    <item>
-      <title>C#</title>
-      <link>https://www.compilemymind.com/tags/c%23/</link>
-      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.compilemymind.com/tags/c%23/</guid>
+      <guid>https://www.compilemymind.com/tags/problemsolving/</guid>
       <description></description>
       
     </item>
@@ -185,6 +65,16 @@
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
       <guid>https://www.compilemymind.com/tags/python/</guid>
+      <description></description>
+      
+    </item>
+    
+    <item>
+      <title>TechComparison</title>
+      <link>https://www.compilemymind.com/tags/techcomparison/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.compilemymind.com/tags/techcomparison/</guid>
       <description></description>
       
     </item>

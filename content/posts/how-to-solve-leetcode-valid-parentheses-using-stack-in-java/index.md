@@ -2,7 +2,7 @@
 title: "How to Solve LeetCode's Valid Parentheses Problem Using Stack in Java"
 description: "In this post, we walk through a beginner-friendly solution to LeetCode's Valid Parentheses problem using the Stack data structure in Java. We explain the logic step by step, making it easy to follow and apply in interviews or practice."
 date: 2025-08-06
-tags: ["java", "algorithms", "stack", "leetcode"]
+tags: ["Programming", "ProblemSolving"]
 categories: ["technology"]
 ---
 

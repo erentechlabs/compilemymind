@@ -2,7 +2,7 @@
 title: "Spring Annotations Guide: @EnableScheduling, @Scheduled, @Async, @EnableAsync, @Service, and @Configuration Examples"
 description: "A practical guide to core Spring annotations with concise examples: scheduling tasks, async methods, component stereotypes, and Java-based configuration."
 date: 2025-10-24
-tags: ["java", "spring", "spring-boot", "spring-annotations"]
+tags: ["Programming", "SpringBoot", "SoftwareDevelopment"]
 categories: ["technology"]
 ---
 
