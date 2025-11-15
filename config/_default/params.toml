@@ -18,6 +18,7 @@ mainSections = ["posts"]
 # robots = ""
 
 disableImageOptimization = false
+defaultImageQuality = 75
 disableTextInHeader = false
 # backgroundImageWidth = 1200
 

@@ -23,6 +23,14 @@ googleAnalytics = "G-5ZP6VTDC0D"
 
 [imaging]
   anchor = 'Center'
+  quality = 75
+  resampleFilter = 'Lanczos'
+  
+  [imaging.exif]
+    disableDate = false
+    disableLatLong = true
+    includeFields = ""
+    excludeFields = ""
 
 [taxonomies]
   tag = "tags"
