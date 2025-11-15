@@ -2,93 +2,93 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Technology on Compile My Mind</title>
-    <link>https://www.compilemymind.com/categories/technology/</link>
+    <link>http://localhost:1313/categories/technology/</link>
     <description>Recent content in Technology on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/categories/technology/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/categories/technology/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Spring Annotations Guide: @EnableScheduling, @Scheduled, @Async, @EnableAsync, @Service, and @Configuration Examples</title>
-      <link>https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</link>
+      <link>http://localhost:1313/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</guid>
+      <guid>http://localhost:1313/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</guid>
       <description>&lt;p&gt;This post explains some of the most useful Spring annotations with minimal code you can paste into a project. We’ll cover what each annotation does, when to use it, and a short example.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/spring-annotations-scheduling-async-component-service-configuration-bean/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/spring-annotations-scheduling-async-component-service-configuration-bean/featured.png" />
     </item>
     
     <item>
       <title>What’s New in Java 25 (JDK 25)</title>
-      <link>https://www.compilemymind.com/posts/new-features-in-java-25/</link>
+      <link>http://localhost:1313/posts/new-features-in-java-25/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/new-features-in-java-25/</guid>
+      <guid>http://localhost:1313/posts/new-features-in-java-25/</guid>
       <description>&lt;p&gt;Java 25 (JDK 25) is here — and it’s an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I’ll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/new-features-in-java-25/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/new-features-in-java-25/featured.png" />
     </item>
     
     <item>
       <title>Remove Duplicates from Sorted Array — The Two-Pointer Solution</title>
-      <link>https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/</link>
+      <link>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/</guid>
+      <guid>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</guid>
       <description>&lt;p&gt;Removing duplicates from a sorted array is a common coding interview question.&lt;br&gt;
 It’s simple at first glance, but it’s also a great way to learn &lt;strong&gt;in-place array manipulation&lt;/strong&gt; and the &lt;strong&gt;two-pointer pattern&lt;/strong&gt;.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/remove-duplicates-from-sorted-array/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/remove-duplicates-from-sorted-array/featured.png" />
     </item>
     
     <item>
       <title>Understanding Controller, Service, and Repository in Spring Boot</title>
-      <link>https://www.compilemymind.com/posts/spring-boot-layered-architecture/</link>
+      <link>http://localhost:1313/posts/spring-boot-layered-architecture/</link>
       <pubDate>Thu, 07 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/spring-boot-layered-architecture/</guid>
+      <guid>http://localhost:1313/posts/spring-boot-layered-architecture/</guid>
       <description>&lt;p&gt;Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: &lt;strong&gt;Controller&lt;/strong&gt;, &lt;strong&gt;Service&lt;/strong&gt;, and &lt;strong&gt;Repository&lt;/strong&gt; annotations.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/spring-boot-layered-architecture/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/spring-boot-layered-architecture/featured.png" />
     </item>
     
     <item>
       <title>How to Solve LeetCode&#39;s Valid Parentheses Problem Using Stack in Java</title>
-      <link>https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
+      <link>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
       <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
+      <guid>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
       <description>&lt;p&gt;LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊&lt;/p&gt;
 &lt;p&gt;Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured.jpg" />
     </item>
     
     <item>
       <title>Component vs Bean in Spring</title>
-      <link>https://www.compilemymind.com/posts/component-vs-bean/</link>
+      <link>http://localhost:1313/posts/component-vs-bean/</link>
       <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/component-vs-bean/</guid>
+      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
       <description>&lt;p&gt;Spring Framework provides a powerful &lt;strong&gt;Dependency Injection (DI)&lt;/strong&gt; mechanism to manage application components. In this system, objects are managed by an &lt;strong&gt;IoC (Inversion of Control)&lt;/strong&gt; container. But how do we tell Spring which classes or objects it should manage?&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/component-vs-bean/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/component-vs-bean/featured.jpg" />
     </item>
     
     <item>
       <title>C# vs Java</title>
-      <link>https://www.compilemymind.com/posts/csharp-vs-java/</link>
+      <link>http://localhost:1313/posts/csharp-vs-java/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/csharp-vs-java/</guid>
+      <guid>http://localhost:1313/posts/csharp-vs-java/</guid>
       <description>&lt;p&gt;When it comes to object-oriented programming languages, &lt;strong&gt;C#&lt;/strong&gt; and &lt;strong&gt;Java&lt;/strong&gt; are two of the most widely used and highly regarded languages in the software development world. Despite their similarities, they have distinct differences that set them apart in terms of syntax, platform compatibility, performance, and ecosystem. This article will provide an in-depth comparison of Java and C# to help you decide which one is best for your next project.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/csharp-vs-java/featured.jpg" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/csharp-vs-java/featured.jpg" />
     </item>
     
     <item>
       <title>Why I Like Java More Than Python</title>
-      <link>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</link>
+      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/posts/why-i-like-java-more-than-python/</guid>
+      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
       <description>&lt;p&gt;Generally speaking, Java isn’t the most beloved language out there. It requires writing a lot more code, has many rules, and you often need to add extra libraries for things that come built-in with other languages. On top of that, Oracle’s history with licensing lawsuits has given Java a bad reputation among many developers. But despite all that, I still like Java more. I know its flaws, but its strengths mean more to me. Below, I want to explain why — with some practical reasons.&lt;/p&gt;</description>
-      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/why-i-like-java-more-than-python/featured.png" />
+      <media:content xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:1313/posts/why-i-like-java-more-than-python/featured.png" />
     </item>
     
   </channel>

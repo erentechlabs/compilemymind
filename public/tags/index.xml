@@ -2,79 +2,79 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Compile My Mind</title>
-    <link>https://www.compilemymind.com/tags/</link>
+    <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Compile My Mind</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     
-    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate><atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Programming</title>
-      <link>https://www.compilemymind.com/tags/programming/</link>
+      <link>http://localhost:1313/tags/programming/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/programming/</guid>
+      <guid>http://localhost:1313/tags/programming/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>SoftwareDevelopment</title>
-      <link>https://www.compilemymind.com/tags/softwaredevelopment/</link>
+      <link>http://localhost:1313/tags/softwaredevelopment/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/softwaredevelopment/</guid>
+      <guid>http://localhost:1313/tags/softwaredevelopment/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>SpringBoot</title>
-      <link>https://www.compilemymind.com/tags/springboot/</link>
+      <link>http://localhost:1313/tags/springboot/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/springboot/</guid>
+      <guid>http://localhost:1313/tags/springboot/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>TechTrends</title>
-      <link>https://www.compilemymind.com/tags/techtrends/</link>
+      <link>http://localhost:1313/tags/techtrends/</link>
       <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/techtrends/</guid>
+      <guid>http://localhost:1313/tags/techtrends/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>ProblemSolving</title>
-      <link>https://www.compilemymind.com/tags/problemsolving/</link>
+      <link>http://localhost:1313/tags/problemsolving/</link>
       <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/problemsolving/</guid>
+      <guid>http://localhost:1313/tags/problemsolving/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>Python</title>
-      <link>https://www.compilemymind.com/tags/python/</link>
+      <link>http://localhost:1313/tags/python/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/python/</guid>
+      <guid>http://localhost:1313/tags/python/</guid>
       <description></description>
       
     </item>
     
     <item>
       <title>TechComparison</title>
-      <link>https://www.compilemymind.com/tags/techcomparison/</link>
+      <link>http://localhost:1313/tags/techcomparison/</link>
       <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
       
-      <guid>https://www.compilemymind.com/tags/techcomparison/</guid>
+      <guid>http://localhost:1313/tags/techcomparison/</guid>
       <description></description>
       
     </item>
