@@ -165,7 +165,7 @@ Intel holds a slight edge in gaming, particularly in competitive esports titles 
 - Intel Core Ultra 9 285K: 35 minutes
 - **Winner: Intel (17% faster)**
 
-![Productivity Performance](productivity-performance.svg)
+![Productivity Performance](/productivity-performance.svg)
 
 ### Productivity Analysis
 
