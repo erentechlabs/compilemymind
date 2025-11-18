@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: bold 15px sans-serif; fill: #444; }
+      .value { font: bold 18px sans-serif; fill: #333; }
+      .amd-box { fill: #FFF5F5; stroke: #ED1C24; stroke-width: 3; }
+      .intel-box { fill: #F0F8FF; stroke: #0071C5; stroke-width: 3; }
+      .cost-label { font: 13px sans-serif; fill: #666; }
+      .cost-value { font: bold 16px sans-serif; fill: #333; }
+      .savings-badge { fill: #4CAF50; }
+      .savings-text { font: bold 16px sans-serif; fill: white; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" class="title">Total Cost of Ownership (3 Years)</text>
+  <text x="400" y="55" text-anchor="middle" class="subtitle">Including CPU, Motherboard, Cooler, and Electricity</text>
+  
+  <!-- AMD Column -->
+  <rect x="50" y="90" width="300" height="420" rx="10" class="amd-box"/>
+  <text x="200" y="120" text-anchor="middle" class="label" style="fill: #ED1C24; font-size: 20px;">AMD Ryzen 7 9700X</text>
+  
+  <!-- AMD Initial Costs -->
+  <text x="70" y="160" class="cost-label">CPU Price:</text>
+  <text x="320" y="160" text-anchor="end" class="cost-value">$359</text>
+  
+  <text x="70" y="190" class="cost-label">Motherboard (B650):</text>
+  <text x="320" y="190" text-anchor="end" class="cost-value">$150</text>
+  
+  <text x="70" y="220" class="cost-label">Cooler (Tower):</text>
+  <text x="320" y="220" text-anchor="end" class="cost-value">$50</text>
+  
+  <line x1="70" y1="235" x2="320" y2="235" stroke="#ED1C24" stroke-width="2"/>
+  
+  <text x="70" y="260" class="label">Initial Cost:</text>
+  <text x="320" y="260" text-anchor="end" class="value" style="fill: #ED1C24;">$559</text>
+  
+  <!-- AMD Operating Costs -->
+  <text x="70" y="310" class="cost-label">Electricity (Year 1):</text>
+  <text x="320" y="310" text-anchor="end" class="cost-value">$21</text>
+  
+  <text x="70" y="340" class="cost-label">Electricity (Year 2):</text>
+  <text x="320" y="340" text-anchor="end" class="cost-value">$21</text>
+  
+  <text x="70" y="370" class="cost-label">Electricity (Year 3):</text>
+  <text x="320" y="370" text-anchor="end" class="cost-value">$21</text>
+  
+  <line x1="70" y1="385" x2="320" y2="385" stroke="#ED1C24" stroke-width="2"/>
+  
+  <text x="70" y="410" class="label">3-Year Electricity:</text>
+  <text x="320" y="410" text-anchor="end" class="value" style="fill: #ED1C24;">$63</text>
+  
+  <!-- AMD Total -->
+  <rect x="60" y="430" width="270" height="60" rx="5" fill="#ED1C24"/>
+  <text x="195" y="455" text-anchor="middle" style="font: bold 16px sans-serif; fill: white;">TOTAL 3-YEAR COST</text>
+  <text x="195" y="480" text-anchor="middle" style="font: bold 28px sans-serif; fill: white;">$622</text>
+  
+  <!-- Intel Column -->
+  <rect x="450" y="90" width="300" height="420" rx="10" class="intel-box"/>
+  <text x="600" y="120" text-anchor="middle" class="label" style="fill: #0071C5; font-size: 20px;">Intel Core Ultra 7 265KF</text>
+  
+  <!-- Intel Initial Costs -->
+  <text x="470" y="160" class="cost-label">CPU Price:</text>
+  <text x="720" y="160" text-anchor="end" class="cost-value">$394</text>
+  
+  <text x="470" y="190" class="cost-label">Motherboard (Z890):</text>
+  <text x="720" y="190" text-anchor="end" class="cost-value">$250</text>
+  
+  <text x="470" y="220" class="cost-label">Cooler (240mm AIO):</text>
+  <text x="720" y="220" text-anchor="end" class="cost-value">$120</text>
+  
+  <line x1="470" y1="235" x2="720" y2="235" stroke="#0071C5" stroke-width="2"/>
+  
+  <text x="470" y="260" class="label">Initial Cost:</text>
+  <text x="720" y="260" text-anchor="end" class="value" style="fill: #0071C5;">$764</text>
+  
+  <!-- Intel Operating Costs -->
+  <text x="470" y="310" class="cost-label">Electricity (Year 1):</text>
+  <text x="720" y="310" text-anchor="end" class="cost-value">$46</text>
+  
+  <text x="470" y="340" class="cost-label">Electricity (Year 2):</text>
+  <text x="720" y="340" text-anchor="end" class="cost-value">$46</text>
+  
+  <text x="470" y="370" class="cost-label">Electricity (Year 3):</text>
+  <text x="720" y="370" text-anchor="end" class="cost-value">$46</text>
+  
+  <line x1="470" y1="385" x2="720" y2="385" stroke="#0071C5" stroke-width="2"/>
+  
+  <text x="470" y="410" class="label">3-Year Electricity:</text>
+  <text x="720" y="410" text-anchor="end" class="value" style="fill: #0071C5;">$138</text>
+  
+  <!-- Intel Total -->
+  <rect x="460" y="430" width="270" height="60" rx="5" fill="#0071C5"/>
+  <text x="595" y="455" text-anchor="middle" style="font: bold 16px sans-serif; fill: white;">TOTAL 3-YEAR COST</text>
+  <text x="595" y="480" text-anchor="middle" style="font: bold 28px sans-serif; fill: white;">$902</text>
+  
+  <!-- Savings Badge -->
+  <rect x="275" y="530" width="250" height="50" rx="10" class="savings-badge"/>
+  <text x="400" y="552" text-anchor="middle" class="savings-text">AMD SAVES YOU</text>
+  <text x="400" y="572" text-anchor="middle" style="font: bold 22px sans-serif; fill: white;">$280 (31%)</text>
+</svg>

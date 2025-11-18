@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 14px sans-serif; fill: #444; }
+      .value-4080 { font: bold 15px sans-serif; fill: #666; }
+      .value-super { font: bold 15px sans-serif; fill: #76B900; }
+      .bar-4080 { fill: #888; opacity: 0.7; }
+      .bar-super { fill: #76B900; opacity: 0.85; }
+    </style>
+  </defs>
+  
+  <text x="400" y="35" text-anchor="middle" class="title">Specifications Comparison</text>
+  
+  <rect x="250" y="50" width="25" height="15" class="bar-4080"/>
+  <text x="280" y="62" class="subtitle">RTX 4080</text>
+  <rect x="450" y="50" width="25" height="15" class="bar-super"/>
+  <text x="480" y="62" class="subtitle">RTX 4080 Super</text>
+  
+  <text x="20" y="110" class="label">CUDA Cores</text>
+  <rect x="150" y="95" width="243" height="22" class="bar-4080"/>
+  <text x="398" y="111" class="value-4080">9,728</text>
+  <rect x="150" y="122" width="256" height="22" class="bar-super"/>
+  <text x="411" y="138" class="value-super">10,240</text>
+  
+  <text x="20" y="175" class="label">Boost Clock (MHz)</text>
+  <rect x="150" y="160" width="250" height="22" class="bar-4080"/>
+  <text x="405" y="176" class="value-4080">2,505</text>
+  <rect x="150" y="187" width="255" height="22" class="bar-super"/>
+  <text x="410" y="203" class="value-super">2,550</text>
+  
+  <text x="20" y="240" class="label">Memory Speed</text>
+  <rect x="150" y="225" width="224" height="22" class="bar-4080"/>
+  <text x="379" y="241" class="value-4080">22.4 Gbps</text>
+  <rect x="150" y="252" width="230" height="22" class="bar-super"/>
+  <text x="385" y="268" class="value-super">23 Gbps</text>
+  
+  <text x="20" y="305" class="label">Memory Bandwidth</text>
+  <rect x="150" y="290" width="286" height="22" class="bar-4080"/>
+  <text x="441" y="306" class="value-4080">716 GB/s</text>
+  <rect x="150" y="317" width="294" height="22" class="bar-super"/>
+  <text x="449" y="333" class="value-super">736 GB/s</text>
+  
+  <text x="20" y="370" class="label">TDP (Watts)</text>
+  <rect x="150" y="355" width="160" height="22" class="bar-4080"/>
+  <text x="315" y="371" class="value-4080">320W</text>
+  <rect x="150" y="382" width="160" height="22" class="bar-super"/>
+  <text x="315" y="398" class="value-super">320W</text>
+  
+  <text x="20" y="435" class="label">Launch Price</text>
+  <rect x="150" y="420" width="240" height="22" class="bar-4080"/>
+  <text x="395" y="436" class="value-4080">$1,199</text>
+  <rect x="150" y="447" width="200" height="22" class="bar-super"/>
+  <text x="355" y="463" class="value-super">$999</text>
+  
+  <text x="400" y="490" text-anchor="middle" class="subtitle" style="font-size: 11px;">
+    Super offers 5% more performance at $200 lower MSRP
+  </text>
+</svg>

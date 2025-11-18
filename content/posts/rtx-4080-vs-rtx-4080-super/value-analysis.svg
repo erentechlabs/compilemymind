@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: bold 15px sans-serif; fill: #444; }
+      .price-big { font: bold 36px sans-serif; }
+      .feature-text { font: 13px sans-serif; fill: #555; }
+      .box-4080 { fill: #f5f5f5; stroke: #888; stroke-width: 3; }
+      .box-super { fill: #f0fff0; stroke: #76B900; stroke-width: 3; }
+      .value-badge { fill: #4CAF50; }
+    </style>
+  </defs>
+  
+  <text x="400" y="35" text-anchor="middle" class="title">Price & Value Analysis</text>
+  
+  <!-- RTX 4080 -->
+  <rect x="50" y="70" width="300" height="330" rx="15" class="box-4080"/>
+  <text x="200" y="105" text-anchor="middle" class="label" style="fill: #666; font-size: 20px;">RTX 4080</text>
+  <text x="200" y="150" text-anchor="middle" class="price-big" style="fill: #666;">$950-1,050</text>
+  <text x="200" y="175" text-anchor="middle" class="subtitle">Current Street Price</text>
+  
+  <text x="70" y="210" class="feature-text" style="font-weight: bold;">Status:</text>
+  <text x="70" y="235" class="feature-text">• Being phased out</text>
+  <text x="70" y="255" class="feature-text">• Discounted pricing</text>
+  <text x="70" y="275" class="feature-text">• 5-6% slower</text>
+  <text x="70" y="295" class="feature-text">• Mature drivers</text>
+  
+  <text x="70" y="330" class="feature-text" style="font-weight: bold;">Best For:</text>
+  <text x="70" y="350" class="feature-text">Finding deals under $900</text>
+  <text x="70" y="370" class="feature-text">Already own one</text>
+  
+  <!-- RTX 4080 Super -->
+  <rect x="450" y="70" width="300" height="330" rx="15" class="box-super"/>
+  <text x="600" y="105" text-anchor="middle" class="label" style="fill: #76B900; font-size: 20px;">RTX 4080 Super</text>
+  <text x="600" y="150" text-anchor="middle" class="price-big" style="fill: #76B900;">$999-1,099</text>
+  <text x="600" y="175" text-anchor="middle" class="subtitle">Current MSRP</text>
+  
+  <text x="470" y="210" class="feature-text" style="font-weight: bold;">Status:</text>
+  <text x="470" y="235" class="feature-text">• Current generation</text>
+  <text x="470" y="255" class="feature-text">• Better value at MSRP</text>
+  <text x="470" y="275" class="feature-text">• 5-6% faster</text>
+  <text x="470" y="295" class="feature-text">• More CUDA cores</text>
+  
+  <text x="470" y="330" class="feature-text" style="font-weight: bold;">Best For:</text>
+  <text x="470" y="350" class="feature-text">New builds</text>
+  <text x="470" y="370" class="feature-text">Best performance</text>
+  
+  <rect x="460" y="380" width="280" height="15" rx="5" class="value-badge"/>
+  <text x="600" y="392" text-anchor="middle" style="font: bold 14px sans-serif; fill: white;">Recommended Choice</text>
+  
+  <text x="400" y="430" text-anchor="middle" class="subtitle">
+    Super offers better value at MSRP, but 4080 is good if under $900
+  </text>
+</svg>

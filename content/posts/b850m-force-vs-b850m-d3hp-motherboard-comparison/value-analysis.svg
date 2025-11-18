@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: bold 15px sans-serif; fill: #444; }
+      .price-big { font: bold 36px sans-serif; }
+      .feature-text { font: 13px sans-serif; fill: #555; }
+      .value-text { font: bold 14px sans-serif; fill: #333; }
+      .force-box { fill: #fff5f0; stroke: #FF6B00; stroke-width: 3; }
+      .d3hp-box { fill: #f0fff0; stroke: #4CAF50; stroke-width: 3; }
+      .premium-badge { fill: #FF6B00; }
+      .value-badge { fill: #4CAF50; }
+      .badge-text { font: bold 14px sans-serif; fill: white; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" class="title">Price & Value Analysis</text>
+  
+  <!-- B850M FORCE -->
+  <rect x="50" y="70" width="300" height="480" rx="15" class="force-box"/>
+  
+  <!-- Badge -->
+  <rect x="120" y="85" width="160" height="35" rx="17" class="premium-badge"/>
+  <text x="200" y="108" text-anchor="middle" class="badge-text">PREMIUM CHOICE</text>
+  
+  <text x="200" y="145" text-anchor="middle" class="label" style="fill: #FF6B00; font-size: 20px;">B850M FORCE</text>
+  
+  <!-- Price -->
+  <text x="200" y="195" text-anchor="middle" class="price-big" style="fill: #FF6B00;">$180-220</text>
+  
+  <!-- What You Get -->
+  <text x="70" y="235" class="label">What You Get:</text>
+  
+  <text x="70" y="260" class="feature-text">✓ 16+1+2 Phase VRM (80A)</text>
+  <text x="70" y="280" class="feature-text">✓ Superior cooling solution</text>
+  <text x="70" y="300" class="feature-text">✓ 4x M.2 slots (3x PCIe 5.0)</text>
+  <text x="70" y="320" class="feature-text">✓ 10 USB ports (20Gbps Type-C)</text>
+  <text x="70" y="340" class="feature-text">✓ Premium audio (ALC1220-VB)</text>
+  <text x="70" y="360" class="feature-text">✓ Wi-Fi 6E support</text>
+  <text x="70" y="380" class="feature-text">✓ Q-Code debug LED</text>
+  <text x="70" y="400" class="feature-text">✓ Dual BIOS</text>
+  <text x="70" y="420" class="feature-text">✓ 7 fan headers</text>
+  <text x="70" y="440" class="feature-text">✓ Reinforced PCIe slot</text>
+  
+  <!-- Best For -->
+  <rect x="60" y="460" width="280" height="75" rx="8" fill="#FF6B00" opacity="0.1"/>
+  <text x="200" y="480" text-anchor="middle" class="label" style="fill: #FF6B00;">Best For:</text>
+  <text x="200" y="500" text-anchor="middle" class="feature-text">• Core Ultra 7/9 builds</text>
+  <text x="200" y="518" text-anchor="middle" class="feature-text">• Enthusiasts & overclockers</text>
+  <text x="200" y="536" text-anchor="middle" class="feature-text">• Future-proofing</text>
+  
+  <!-- B850M D3HP -->
+  <rect x="450" y="70" width="300" height="480" rx="15" class="d3hp-box"/>
+  
+  <!-- Badge -->
+  <rect x="530" y="85" width="140" height="35" rx="17" class="value-badge"/>
+  <text x="600" y="108" text-anchor="middle" class="badge-text">BEST VALUE</text>
+  
+  <text x="600" y="145" text-anchor="middle" class="label" style="fill: #4CAF50; font-size: 20px;">B850M D3HP</text>
+  
+  <!-- Price -->
+  <text x="600" y="195" text-anchor="middle" class="price-big" style="fill: #4CAF50;">$120-150</text>
+  
+  <!-- What You Get -->
+  <text x="470" y="235" class="label">What You Get:</text>
+  
+  <text x="470" y="260" class="feature-text">✓ 12+1+1 Phase VRM (60A)</text>
+  <text x="470" y="280" class="feature-text">✓ Standard cooling</text>
+  <text x="470" y="300" class="feature-text">✓ 3x M.2 slots (PCIe 4.0)</text>
+  <text x="470" y="320" class="feature-text">✓ 8 USB ports (10Gbps Type-C)</text>
+  <text x="470" y="340" class="feature-text">✓ Standard audio (ALC897)</text>
+  <text x="470" y="360" class="feature-text">✓ No Wi-Fi</text>
+  <text x="470" y="380" class="feature-text">✓ No debug LED</text>
+  <text x="470" y="400" class="feature-text">✓ Single BIOS</text>
+  <text x="470" y="420" class="feature-text">✓ 5 fan headers</text>
+  <text x="470" y="440" class="feature-text">✓ Standard PCIe slot</text>
+  
+  <!-- Best For -->
+  <rect x="460" y="460" width="280" height="75" rx="8" fill="#4CAF50" opacity="0.1"/>
+  <text x="600" y="480" text-anchor="middle" class="label" style="fill: #4CAF50;">Best For:</text>
+  <text x="600" y="500" text-anchor="middle" class="feature-text">• Core Ultra 5/7 builds</text>
+  <text x="600" y="518" text-anchor="middle" class="feature-text">• Budget-conscious builders</text>
+  <text x="600" y="536" text-anchor="middle" class="feature-text">• Value seekers</text>
+  
+  <!-- Price Difference -->
+  <rect x="250" y="565" width="300" height="25" rx="5" fill="#FFD700"/>
+  <text x="400" y="583" text-anchor="middle" style="font: bold 16px sans-serif; fill: #333;">
+    Price Difference: $60-70
+  </text>
+</svg>

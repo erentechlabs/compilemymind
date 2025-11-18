@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="gpuBattle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a1a;stop-opacity:1" />
+    </linearGradient>
+    <style>
+      .main-title { font: bold 58px sans-serif; fill: white; }
+      .subtitle { font: 28px sans-serif; fill: #e0e0e0; }
+      .vs-text { font: bold 90px sans-serif; fill: #FF6B00; }
+      .gpu-name { font: bold 38px sans-serif; fill: white; }
+      .spec-text { font: 19px sans-serif; fill: #b0b0b0; }
+      .price-text { font: bold 26px sans-serif; }
+      .nvidia-green { fill: #76B900; }
+      .amd-red { fill: #ED1C24; }
+    </style>
+  </defs>
+  
+  <rect width="1200" height="630" fill="url(#gpuBattle)"/>
+  
+  <text x="600" y="70" text-anchor="middle" class="main-title">$800 GPU SHOWDOWN</text>
+  <text x="600" y="110" text-anchor="middle" class="subtitle">NVIDIA vs AMD Battle</text>
+  
+  <text x="600" y="340" text-anchor="middle" class="vs-text">VS</text>
+  
+  <!-- NVIDIA Side -->
+  <rect x="50" y="180" width="480" height="300" rx="15" fill="#1a1a1a" stroke="#76B900" stroke-width="4"/>
+  
+  <rect x="80" y="210" width="120" height="90" rx="8" fill="#2a2a2a" stroke="#76B900" stroke-width="2"/>
+  <text x="140" y="265" text-anchor="middle" style="font: bold 28px sans-serif; fill: #76B900;">NVIDIA</text>
+  
+  <text x="220" y="240" class="gpu-name">RTX 4070 Ti</text>
+  <text x="220" y="280" style="font: bold 36px sans-serif; fill: #76B900;">SUPER</text>
+  
+  <text x="80" y="335" class="spec-text">• 8,448 CUDA Cores</text>
+  <text x="80" y="365" class="spec-text">• 16GB GDDR6X</text>
+  <text x="80" y="395" class="spec-text">• DLSS 3 + Ray Tracing</text>
+  <text x="80" y="425" class="spec-text">• 285W TDP</text>
+  
+  <text x="265" y="465" text-anchor="middle" class="price-text" style="fill: #76B900;">$799</text>
+  
+  <!-- AMD Side -->
+  <rect x="670" y="180" width="480" height="300" rx="15" fill="#1a1a1a" stroke="#ED1C24" stroke-width="4"/>
+  
+  <rect x="1000" y="210" width="120" height="90" rx="8" fill="#2a2a2a" stroke="#ED1C24" stroke-width="2"/>
+  <text x="1060" y="265" text-anchor="middle" style="font: bold 32px sans-serif; fill: #ED1C24;">AMD</text>
+  
+  <text x="700" y="240" class="gpu-name">Radeon</text>
+  <text x="700" y="280" style="font: bold 40px sans-serif; fill: #ED1C24;">RX 7900 XT</text>
+  
+  <text x="700" y="335" class="spec-text">• 5,376 Stream Processors</text>
+  <text x="700" y="365" class="spec-text">• 20GB GDDR6</text>
+  <text x="700" y="395" class="spec-text">• FSR 3 + Ray Tracing</text>
+  <text x="700" y="425" class="spec-text">• 315W TDP</text>
+  
+  <text x="910" y="465" text-anchor="middle" class="price-text" style="fill: #ED1C24;">$699</text>
+  
+  <rect x="250" y="520" width="700" height="80" rx="10" fill="#FF6B00" opacity="0.15"/>
+  <rect x="250" y="520" width="700" height="80" rx="10" fill="none" stroke="#FF6B00" stroke-width="2"/>
+  <text x="600" y="555" text-anchor="middle" style="font: bold 28px sans-serif; fill: #FF6B00;">
+    Ray Tracing vs Raw Performance
+  </text>
+  <text x="600" y="585" text-anchor="middle" style="font: 20px sans-serif; fill: #e0e0e0;">
+    Which $800 GPU offers the best value?
+  </text>
+</svg>

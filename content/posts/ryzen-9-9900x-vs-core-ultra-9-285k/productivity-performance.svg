@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .bench-label { font: 13px sans-serif; fill: #444; }
+      .score-label { font: bold 14px sans-serif; fill: #333; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .bar-intel { fill: #0071C5; opacity: 0.85; }
+      .winner-badge { fill: #FFD700; }
+      .winner-text { font: bold 11px sans-serif; fill: #333; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">Productivity & Multi-Threaded Performance</text>
+  
+  <rect x="300" y="55" width="25" height="15" class="bar-amd"/>
+  <text x="330" y="67" class="subtitle">Ryzen 9 9900X</text>
+  <rect x="520" y="55" width="25" height="15" class="bar-intel"/>
+  <text x="550" y="67" class="subtitle">Core Ultra 9 285K</text>
+  
+  <!-- Cinebench R23 Multi -->
+  <text x="10" y="120" class="bench-label">Cinebench R23</text>
+  <text x="10" y="135" class="bench-label">(Multi-Core)</text>
+  <rect x="200" y="105" width="295" height="18" class="bar-amd"/>
+  <text x="500" y="119" class="score-label">29,500</text>
+  <rect x="200" y="127" width="380" height="18" class="bar-intel"/>
+  <text x="585" y="141" class="score-label">38,000</text>
+  <rect x="590" y="127" width="55" height="18" class="winner-badge"/>
+  <text x="617" y="140" text-anchor="middle" class="winner-text">+28.8%</text>
+  
+  <!-- Cinebench R23 Single -->
+  <text x="10" y="190" class="bench-label">Cinebench R23</text>
+  <text x="10" y="205" class="bench-label">(Single-Core)</text>
+  <rect x="200" y="175" width="228" height="18" class="bar-amd"/>
+  <text x="433" y="189" class="score-label">2,280</text>
+  <rect x="200" y="197" width="235" height="18" class="bar-intel"/>
+  <text x="440" y="211" class="score-label">2,350</text>
+  <rect x="445" y="197" width="45" height="18" class="winner-badge"/>
+  <text x="467" y="210" text-anchor="middle" class="winner-text">+3.1%</text>
+  
+  <!-- Blender -->
+  <text x="10" y="260" class="bench-label">Blender</text>
+  <text x="10" y="275" class="bench-label">(Minutes)</text>
+  <rect x="200" y="245" width="105" height="18" class="bar-amd"/>
+  <text x="310" y="259" class="score-label">2.1</text>
+  <rect x="200" y="267" width="80" height="18" class="bar-intel"/>
+  <text x="285" y="281" class="score-label">1.6</text>
+  <rect x="290" y="267" width="45" height="18" class="winner-badge"/>
+  <text x="312" y="280" text-anchor="middle" class="winner-text">24% ↓</text>
+  
+  <!-- HandBrake -->
+  <text x="10" y="330" class="bench-label">HandBrake</text>
+  <text x="10" y="345" class="bench-label">4K H.265 (FPS)</text>
+  <rect x="200" y="315" width="124" height="18" class="bar-amd"/>
+  <text x="329" y="329" class="score-label">62</text>
+  <rect x="200" y="337" width="156" height="18" class="bar-intel"/>
+  <text x="361" y="351" class="score-label">78</text>
+  <rect x="366" y="337" width="45" height="18" class="winner-badge"/>
+  <text x="388" y="350" text-anchor="middle" class="winner-text">+26%</text>
+  
+  <!-- 7-Zip -->
+  <text x="10" y="400" class="bench-label">7-Zip</text>
+  <text x="10" y="415" class="bench-label">(MIPS)</text>
+  <rect x="200" y="385" width="256" height="18" class="bar-amd"/>
+  <text x="461" y="399" class="score-label">128,000</text>
+  <rect x="200" y="407" width="330" height="18" class="bar-intel"/>
+  <text x="535" y="421" class="score-label">165,000</text>
+  <rect x="540" y="407" width="50" height="18" class="winner-badge"/>
+  <text x="565" y="420" text-anchor="middle" class="winner-text">+29%</text>
+  
+  <!-- Premiere Pro -->
+  <text x="10" y="470" class="bench-label">Premiere Pro</text>
+  <text x="10" y="485" class="bench-label">4K Export (Min)</text>
+  <rect x="200" y="455" width="160" height="18" class="bar-amd"/>
+  <text x="365" y="469" class="score-label">3.2</text>
+  <rect x="200" y="477" width="135" height="18" class="bar-intel"/>
+  <text x="340" y="491" class="score-label">2.7</text>
+  <rect x="345" y="477" width="45" height="18" class="winner-badge"/>
+  <text x="367" y="490" text-anchor="middle" class="winner-text">16% ↓</text>
+  
+  <!-- Compilation -->
+  <text x="10" y="540" class="bench-label">Chromium Build</text>
+  <text x="10" y="555" class="bench-label">(Minutes)</text>
+  <rect x="200" y="525" width="210" height="18" class="bar-amd"/>
+  <text x="415" y="539" class="score-label">42</text>
+  <rect x="200" y="547" width="175" height="18" class="bar-intel"/>
+  <text x="380" y="561" class="score-label">35</text>
+  <rect x="385" y="547" width="45" height="18" class="winner-badge"/>
+  <text x="407" y="560" text-anchor="middle" class="winner-text">17% ↓</text>
+  
+  <!-- Summary -->
+  <text x="450" y="590" text-anchor="middle" class="subtitle" style="font-style: italic;">
+    Intel dominates multi-threaded workloads with 20-30% performance advantage
+  </text>
+</svg>

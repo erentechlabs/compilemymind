@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 450">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .game-label { font: 13px sans-serif; fill: #444; }
+      .fps-label { font: bold 14px sans-serif; fill: #333; }
+      .bar-4080 { fill: #888; opacity: 0.7; }
+      .bar-super { fill: #76B900; opacity: 0.85; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">Ray Tracing Performance - 4K RT Ultra</text>
+  <text x="450" y="55" text-anchor="middle" class="subtitle">With DLSS 3 Frame Generation</text>
+  
+  <rect x="280" y="70" width="25" height="15" class="bar-4080"/>
+  <text x="310" y="82" class="subtitle">RTX 4080</text>
+  <rect x="500" y="70" width="25" height="15" class="bar-super"/>
+  <text x="530" y="82" class="subtitle">RTX 4080 Super</text>
+  
+  <!-- Cyberpunk RT Overdrive -->
+  <text x="10" y="135" class="game-label">Cyberpunk</text>
+  <text x="10" y="150" class="game-label">RT Overdrive</text>
+  <rect x="150" y="120" width="89" height="18" class="bar-4080"/>
+  <text x="244" y="134" class="fps-label">89</text>
+  <rect x="150" y="142" width="94" height="18" class="bar-super"/>
+  <text x="249" y="156" class="fps-label">94</text>
+  
+  <!-- Portal RTX -->
+  <text x="10" y="205" class="game-label">Portal RTX</text>
+  <rect x="150" y="190" width="98" height="18" class="bar-4080"/>
+  <text x="253" y="204" class="fps-label">98</text>
+  <rect x="150" y="212" width="103" height="18" class="bar-super"/>
+  <text x="258" y="226" class="fps-label">103</text>
+  
+  <!-- Spider-Man RT -->
+  <text x="10" y="275" class="game-label">Spider-Man</text>
+  <text x="10" y="290" class="game-label">RT Very High</text>
+  <rect x="150" y="260" width="128" height="18" class="bar-4080"/>
+  <text x="283" y="274" class="fps-label">128</text>
+  <rect x="150" y="282" width="135" height="18" class="bar-super"/>
+  <text x="290" y="296" class="fps-label">135</text>
+  
+  <!-- Control RT -->
+  <text x="10" y="345" class="game-label">Control</text>
+  <text x="10" y="360" class="game-label">RT High</text>
+  <rect x="150" y="330" width="142" height="18" class="bar-4080"/>
+  <text x="297" y="344" class="fps-label">142</text>
+  <rect x="150" y="352" width="149" height="18" class="bar-super"/>
+  <text x="304" y="366" class="fps-label">149</text>
+  
+  <!-- Summary -->
+  <rect x="150" y="400" width="700" height="40" rx="5" fill="#76B900" opacity="0.1"/>
+  <text x="500" y="425" text-anchor="middle" class="subtitle" style="font-weight: bold;">
+    RTX 4080 Super maintains 5-6% advantage in ray tracing with DLSS 3 enabled
+  </text>
+</svg>

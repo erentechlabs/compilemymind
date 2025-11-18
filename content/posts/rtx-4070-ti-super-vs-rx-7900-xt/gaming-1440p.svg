@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .game-label { font: 13px sans-serif; fill: #444; }
+      .fps-label { font: bold 13px sans-serif; fill: #333; }
+      .bar-nvidia { fill: #76B900; opacity: 0.85; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .grid-line { stroke: #ddd; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">Gaming Performance - 1440p Ultra Settings</text>
+  
+  <rect x="280" y="55" width="25" height="15" class="bar-nvidia"/>
+  <text x="310" y="67" class="subtitle">RTX 4070 Ti Super</text>
+  <rect x="520" y="55" width="25" height="15" class="bar-amd"/>
+  <text x="550" y="67" class="subtitle">RX 7900 XT</text>
+  
+  <!-- Grid -->
+  <line x1="150" y1="90" x2="150" y2="600" class="grid-line"/>
+  <line x1="250" y1="90" x2="250" y2="600" class="grid-line"/>
+  <line x1="350" y1="90" x2="350" y2="600" class="grid-line"/>
+  <line x1="450" y1="90" x2="450" y2="600" class="grid-line"/>
+  <line x1="550" y1="90" x2="550" y2="600" class="grid-line"/>
+  <line x1="650" y1="90" x2="650" y2="600" class="grid-line"/>
+  <line x1="750" y1="90" x2="750" y2="600" class="grid-line"/>
+  
+  <!-- X-axis -->
+  <text x="150" y="620" text-anchor="middle" class="subtitle">0</text>
+  <text x="250" y="620" text-anchor="middle" class="subtitle">50</text>
+  <text x="350" y="620" text-anchor="middle" class="subtitle">100</text>
+  <text x="450" y="620" text-anchor="middle" class="subtitle">150</text>
+  <text x="550" y="620" text-anchor="middle" class="subtitle">200</text>
+  <text x="650" y="620" text-anchor="middle" class="subtitle">250</text>
+  <text x="750" y="620" text-anchor="middle" class="subtitle">300</text>
+  <text x="450" y="645" text-anchor="middle" class="subtitle">Frames Per Second (FPS)</text>
+  
+  <!-- COD MW3 -->
+  <text x="10" y="115" class="game-label">COD: MW3</text>
+  <rect x="150" y="100" width="178" height="12" class="bar-nvidia"/>
+  <text x="333" y="110" class="fps-label">178</text>
+  <rect x="150" y="115" width="185" height="12" class="bar-amd"/>
+  <text x="340" y="125" class="fps-label">185</text>
+  
+  <!-- Forza Horizon 5 -->
+  <text x="10" y="160" class="game-label">Forza H5</text>
+  <rect x="150" y="145" width="156" height="12" class="bar-nvidia"/>
+  <text x="311" y="155" class="fps-label">156</text>
+  <rect x="150" y="160" width="162" height="12" class="bar-amd"/>
+  <text x="317" y="170" class="fps-label">162</text>
+  
+  <!-- RE4 Remake -->
+  <text x="10" y="205" class="game-label">RE4 Remake</text>
+  <rect x="150" y="190" width="142" height="12" class="bar-nvidia"/>
+  <text x="297" y="200" class="fps-label">142</text>
+  <rect x="150" y="205" width="148" height="12" class="bar-amd"/>
+  <text x="303" y="215" class="fps-label">148</text>
+  
+  <!-- Spider-Man -->
+  <text x="10" y="250" class="game-label">Spider-Man</text>
+  <rect x="150" y="235" width="128" height="12" class="bar-nvidia"/>
+  <text x="283" y="245" class="fps-label">128</text>
+  <rect x="150" y="250" width="134" height="12" class="bar-amd"/>
+  <text x="289" y="260" class="fps-label">134</text>
+  
+  <!-- BG3 -->
+  <text x="10" y="295" class="game-label">BG3</text>
+  <rect x="150" y="280" width="118" height="12" class="bar-nvidia"/>
+  <text x="273" y="290" class="fps-label">118</text>
+  <rect x="150" y="295" width="122" height="12" class="bar-amd"/>
+  <text x="277" y="305" class="fps-label">122</text>
+  
+  <!-- RDR2 -->
+  <text x="10" y="340" class="game-label">RDR2</text>
+  <rect x="150" y="325" width="112" height="12" class="bar-nvidia"/>
+  <text x="267" y="335" class="fps-label">112</text>
+  <rect x="150" y="340" width="118" height="12" class="bar-amd"/>
+  <text x="273" y="350" class="fps-label">118</text>
+  
+  <!-- TLOU Part I -->
+  <text x="10" y="385" class="game-label">TLOU Part I</text>
+  <rect x="150" y="370" width="102" height="12" class="bar-nvidia"/>
+  <text x="257" y="380" class="fps-label">102</text>
+  <rect x="150" y="385" width="106" height="12" class="bar-amd"/>
+  <text x="261" y="395" class="fps-label">106</text>
+  
+  <!-- Cyberpunk -->
+  <text x="10" y="430" class="game-label">Cyberpunk</text>
+  <rect x="150" y="415" width="98" height="12" class="bar-nvidia"/>
+  <text x="253" y="425" class="fps-label">98</text>
+  <rect x="150" y="430" width="102" height="12" class="bar-amd"/>
+  <text x="257" y="440" class="fps-label">102</text>
+  
+  <!-- Hogwarts -->
+  <text x="10" y="475" class="game-label">Hogwarts</text>
+  <rect x="150" y="460" width="94" height="12" class="bar-nvidia"/>
+  <text x="249" y="470" class="fps-label">94</text>
+  <rect x="150" y="475" width="98" height="12" class="bar-amd"/>
+  <text x="253" y="485" class="fps-label">98</text>
+  
+  <!-- Starfield -->
+  <text x="10" y="520" class="game-label">Starfield</text>
+  <rect x="150" y="505" width="88" height="12" class="bar-nvidia"/>
+  <text x="243" y="515" class="fps-label">88</text>
+  <rect x="150" y="520" width="92" height="12" class="bar-amd"/>
+  <text x="247" y="530" class="fps-label">92</text>
+  
+  <!-- Average -->
+  <line x1="10" y1="550" x2="850" y2="550" stroke="#333" stroke-width="2"/>
+  <text x="10" y="575" class="game-label" style="font-weight: bold;">Average</text>
+  <rect x="150" y="560" width="122" height="15" class="bar-nvidia"/>
+  <text x="277" y="572" class="fps-label" style="font-size: 15px;">122</text>
+  <rect x="150" y="580" width="127" height="15" class="bar-amd"/>
+  <text x="282" y="592" class="fps-label" style="font-size: 15px;">127</text>
+  
+  <text x="450" y="615" text-anchor="middle" class="subtitle" style="font-style: italic;">
+    AMD RX 7900 XT leads by 4.1% in rasterization performance
+  </text>
+</svg>

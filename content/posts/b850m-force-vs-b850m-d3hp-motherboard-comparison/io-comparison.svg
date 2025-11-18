@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .board-label { font: bold 16px sans-serif; fill: #444; }
+      .port-label { font: 12px sans-serif; fill: #555; }
+      .count-label { font: bold 14px sans-serif; fill: #333; }
+      .usb-c { fill: #FF6B00; }
+      .usb-a { fill: #0071C5; }
+      .ethernet { fill: #4CAF50; }
+      .audio { fill: #9C27B0; }
+      .display { fill: #FF9800; }
+      .wifi { fill: #2196F3; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" class="title">Rear I/O Connectivity Comparison</text>
+  
+  <!-- B850M FORCE -->
+  <text x="225" y="75" text-anchor="middle" class="board-label" style="fill: #FF6B00;">B850M FORCE</text>
+  
+  <!-- I/O Panel representation -->
+  <rect x="50" y="90" width="350" height="180" rx="5" fill="#2a2a3e" stroke="#FF6B00" stroke-width="3"/>
+  
+  <!-- USB Type-C ports -->
+  <rect x="70" y="110" width="30" height="15" rx="3" class="usb-c"/>
+  <text x="85" y="140" text-anchor="middle" class="port-label">USB-C</text>
+  <text x="85" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">20Gbps</text>
+  
+  <rect x="110" y="110" width="30" height="15" rx="3" class="usb-c"/>
+  <text x="125" y="140" text-anchor="middle" class="port-label">USB-C</text>
+  <text x="125" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">10Gbps</text>
+  
+  <!-- USB Type-A ports -->
+  <rect x="150" y="110" width="20" height="15" rx="2" class="usb-a"/>
+  <rect x="175" y="110" width="20" height="15" rx="2" class="usb-a"/>
+  <rect x="200" y="110" width="20" height="15" rx="2" class="usb-a"/>
+  <rect x="225" y="110" width="20" height="15" rx="2" class="usb-a"/>
+  <text x="197" y="140" text-anchor="middle" class="port-label">4x USB 3.2</text>
+  <text x="197" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">Gen2 (10Gbps)</text>
+  
+  <rect x="255" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="280" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="305" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="330" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <text x="292" y="140" text-anchor="middle" class="port-label">4x USB 3.2</text>
+  <text x="292" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">Gen1 (5Gbps)</text>
+  
+  <!-- Display ports -->
+  <rect x="70" y="170" width="40" height="20" rx="3" class="display"/>
+  <text x="90" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">HDMI</text>
+  
+  <rect x="120" y="170" width="40" height="20" rx="3" class="display"/>
+  <text x="140" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">DP</text>
+  
+  <!-- Ethernet -->
+  <rect x="170" y="170" width="50" height="20" rx="3" class="ethernet"/>
+  <text x="195" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">2.5GbE</text>
+  
+  <!-- Wi-Fi -->
+  <rect x="230" y="170" width="50" height="20" rx="3" class="wifi"/>
+  <text x="255" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">Wi-Fi 6E</text>
+  
+  <!-- Audio -->
+  <rect x="290" y="170" width="60" height="20" rx="3" class="audio"/>
+  <text x="320" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">5x Audio</text>
+  
+  <rect x="360" y="170" width="30" height="20" rx="3" class="audio"/>
+  <text x="375" y="185" text-anchor="middle" style="font: bold 9px sans-serif; fill: white;">SPDIF</text>
+  
+  <!-- Summary -->
+  <text x="70" y="220" class="port-label" style="font-weight: bold;">Total USB Ports: 10</text>
+  <text x="70" y="240" class="port-label">• 2x USB Type-C (20Gbps + 10Gbps)</text>
+  <text x="70" y="255" class="port-label">• 8x USB Type-A (4x 10Gbps, 4x 5Gbps)</text>
+  
+  <!-- B850M D3HP -->
+  <text x="675" y="75" text-anchor="middle" class="board-label" style="fill: #4CAF50;">B850M D3HP</text>
+  
+  <!-- I/O Panel representation -->
+  <rect x="500" y="90" width="350" height="180" rx="5" fill="#2a2a3e" stroke="#4CAF50" stroke-width="3"/>
+  
+  <!-- USB Type-C port -->
+  <rect x="520" y="110" width="30" height="15" rx="3" class="usb-c"/>
+  <text x="535" y="140" text-anchor="middle" class="port-label">USB-C</text>
+  <text x="535" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">10Gbps</text>
+  
+  <!-- USB Type-A ports -->
+  <rect x="560" y="110" width="20" height="15" rx="2" class="usb-a"/>
+  <text x="570" y="140" text-anchor="middle" class="port-label">1x USB</text>
+  <text x="570" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">10Gbps</text>
+  
+  <rect x="590" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="615" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="640" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="665" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="690" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <rect x="715" y="110" width="20" height="15" rx="2" class="usb-a" opacity="0.7"/>
+  <text x="652" y="140" text-anchor="middle" class="port-label">6x USB 3.2</text>
+  <text x="652" y="153" text-anchor="middle" class="port-label" style="font-size: 10px;">Gen1 (5Gbps)</text>
+  
+  <!-- Display ports -->
+  <rect x="520" y="170" width="40" height="20" rx="3" class="display"/>
+  <text x="540" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">HDMI</text>
+  
+  <rect x="570" y="170" width="40" height="20" rx="3" class="display"/>
+  <text x="590" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">DP</text>
+  
+  <!-- Ethernet -->
+  <rect x="620" y="170" width="50" height="20" rx="3" class="ethernet"/>
+  <text x="645" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">2.5GbE</text>
+  
+  <!-- Audio -->
+  <rect x="680" y="170" width="60" height="20" rx="3" class="audio"/>
+  <text x="710" y="185" text-anchor="middle" style="font: bold 10px sans-serif; fill: white;">3x Audio</text>
+  
+  <!-- Summary -->
+  <text x="520" y="220" class="port-label" style="font-weight: bold;">Total USB Ports: 8</text>
+  <text x="520" y="240" class="port-label">• 1x USB Type-C (10Gbps)</text>
+  <text x="520" y="255" class="port-label">• 7x USB Type-A (1x 10Gbps, 6x 5Gbps)</text>
+  
+  <!-- Internal Headers Comparison -->
+  <text x="450" y="320" text-anchor="middle" class="title" style="font-size: 20px;">Internal Headers</text>
+  
+  <!-- FORCE Internal -->
+  <rect x="50" y="340" width="350" height="200" rx="10" fill="#fff5f0" stroke="#FF6B00" stroke-width="2"/>
+  <text x="225" y="365" text-anchor="middle" class="board-label" style="fill: #FF6B00;">B850M FORCE</text>
+  
+  <text x="70" y="395" class="port-label">Fan Headers:</text>
+  <text x="320" y="395" text-anchor="end" class="count-label" style="fill: #FF6B00;">7</text>
+  <text x="80" y="415" class="port-label" style="font-size: 11px;">• 1x CPU, 1x CPU_OPT, 5x SYS_FAN</text>
+  
+  <text x="70" y="445" class="port-label">USB Front Panel:</text>
+  <text x="320" y="445" text-anchor="end" class="count-label" style="fill: #FF6B00;">3</text>
+  <text x="80" y="465" class="port-label" style="font-size: 11px;">• 2x USB 3.2 Gen1, 1x USB-C Gen2</text>
+  
+  <text x="70" y="495" class="port-label">RGB Headers:</text>
+  <text x="320" y="495" text-anchor="end" class="count-label" style="fill: #FF6B00;">3</text>
+  <text x="80" y="515" class="port-label" style="font-size: 11px;">• 2x ARGB (5V), 1x RGB (12V)</text>
+  
+  <!-- D3HP Internal -->
+  <rect x="500" y="340" width="350" height="200" rx="10" fill="#f0fff0" stroke="#4CAF50" stroke-width="2"/>
+  <text x="675" y="365" text-anchor="middle" class="board-label" style="fill: #4CAF50;">B850M D3HP</text>
+  
+  <text x="520" y="395" class="port-label">Fan Headers:</text>
+  <text x="770" y="395" text-anchor="end" class="count-label" style="fill: #4CAF50;">5</text>
+  <text x="530" y="415" class="port-label" style="font-size: 11px;">• 1x CPU, 4x SYS_FAN</text>
+  
+  <text x="520" y="445" class="port-label">USB Front Panel:</text>
+  <text x="770" y="445" text-anchor="end" class="count-label" style="fill: #4CAF50;">2</text>
+  <text x="530" y="465" class="port-label" style="font-size: 11px;">• 1x USB 3.2 Gen1, 1x USB-C Gen2</text>
+  
+  <text x="520" y="495" class="port-label">RGB Headers:</text>
+  <text x="770" y="495" text-anchor="end" class="count-label" style="fill: #4CAF50;">2</text>
+  <text x="530" y="515" class="port-label" style="font-size: 11px;">• 1x ARGB (5V), 1x RGB (12V)</text>
+  
+  <!-- Verdict -->
+  <text x="450" y="575" text-anchor="middle" class="subtitle" style="font-style: italic;">
+    FORCE offers superior connectivity with more USB ports, better audio, and additional headers
+  </text>
+</svg>
