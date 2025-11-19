@@ -152,6 +152,7 @@ Both boards support DDR5 memory, but there are differences in capacity and overc
 
 **Winner: B850M FORCE** - More M.2 slots, better heatsinks, and superior expansion options.
 
+![Storage Comparison](storage-comparison.svg)
 
 ---
 

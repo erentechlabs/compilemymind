@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <linearGradient id="amdGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#ed1c24;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#ed1c24;stop-opacity:0.4" />
+    </linearGradient>
+    <linearGradient id="intelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#0071c5;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#0071c5;stop-opacity:0.4" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="600" fill="#1a1a1a"/>
+  
+  <!-- Title -->
+  <text x="450" y="40" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#ffffff" text-anchor="middle">
+    Productivity Performance Comparison
+  </text>
+  <text x="450" y="65" font-family="Arial, sans-serif" font-size="14" fill="#aaa" text-anchor="middle">
+    Higher is better (Intel leads in multi-threaded workloads)
+  </text>
+  
+  <!-- Grid lines -->
+  <line x1="150" y1="120" x2="150" y2="520" stroke="#444" stroke-width="2"/>
+  <line x1="150" y1="520" x2="850" y2="520" stroke="#444" stroke-width="2"/>
+  
+  <!-- Cinebench R23 Multi-Core -->
+  <text x="100" y="180" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" text-anchor="end">Cinebench R23</text>
+  <text x="100" y="195" font-family="Arial, sans-serif" font-size="11" fill="#aaa" text-anchor="end">Multi-Core</text>
+  
+  <rect x="160" y="160" width="235" height="35" fill="url(#amdGrad)" stroke="#ed1c24" stroke-width="2"/>
+  <text x="280" y="182" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">29,500</text>
+  
+  <rect x="160" y="200" width="303" height="35" fill="url(#intelGrad)" stroke="#0071c5" stroke-width="2"/>
+  <text x="315" y="222" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">38,000 (+28.8%)</text>
+  
+  <!-- Blender Render -->
+  <text x="100" y="275" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" text-anchor="end">Blender</text>
+  <text x="100" y="290" font-family="Arial, sans-serif" font-size="11" fill="#aaa" text-anchor="end">(lower is better)</text>
+  
+  <rect x="160" y="255" width="168" height="35" fill="url(#amdGrad)" stroke="#ed1c24" stroke-width="2"/>
+  <text x="245" y="277" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">2.1 min</text>
+  
+  <rect x="160" y="295" width="128" height="35" fill="url(#intelGrad)" stroke="#0071c5" stroke-width="2"/>
+  <text x="225" y="317" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">1.6 min (-24%)</text>
+  
+  <!-- HandBrake Encoding -->
+  <text x="100" y="370" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" text-anchor="end">HandBrake</text>
+  <text x="100" y="385" font-family="Arial, sans-serif" font-size="11" fill="#aaa" text-anchor="end">4K H.265</text>
+  
+  <rect x="160" y="350" width="248" height="35" fill="url(#amdGrad)" stroke="#ed1c24" stroke-width="2"/>
+  <text x="285" y="372" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">62 FPS</text>
+  
+  <rect x="160" y="390" width="312" height="35" fill="url(#intelGrad)" stroke="#0071c5" stroke-width="2"/>
+  <text x="320" y="412" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">78 FPS (+26%)</text>
+  
+  <!-- 7-Zip Compression -->
+  <text x="100" y="465" font-family="Arial, sans-serif" font-size="13" fill="#ffffff" text-anchor="end">7-Zip</text>
+  <text x="100" y="480" font-family="Arial, sans-serif" font-size="11" fill="#aaa" text-anchor="end">Compression</text>
+  
+  <rect x="160" y="445" width="256" height="35" fill="url(#amdGrad)" stroke="#ed1c24" stroke-width="2"/>
+  <text x="290" y="467" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">128K MIPS</text>
+  
+  <rect x="160" y="485" width="330" height="35" fill="url(#intelGrad)" stroke="#0071c5" stroke-width="2"/>
+  <text x="330" y="507" font-family="Arial, sans-serif" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="middle">165K MIPS (+29%)</text>
+  
+  <!-- Legend -->
+  <rect x="600" y="140" width="20" height="20" fill="url(#amdGrad)" stroke="#ed1c24" stroke-width="2"/>
+  <text x="630" y="155" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">AMD Ryzen 9 9900X</text>
+  
+  <rect x="600" y="170" width="20" height="20" fill="url(#intelGrad)" stroke="#0071c5" stroke-width="2"/>
+  <text x="630" y="185" font-family="Arial, sans-serif" font-size="14" fill="#ffffff">Intel Core Ultra 9 285K</text>
+  
+  <!-- Winner annotation -->
+  <text x="450" y="560" font-family="Arial, sans-serif" font-size="15" fill="#0071c5" text-anchor="middle" font-style="italic">
+    ✓ Intel Core Ultra 9 285K wins in productivity (20-30% faster average)
+  </text>
+</svg>

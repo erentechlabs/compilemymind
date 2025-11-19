@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .game-label { font: 13px sans-serif; fill: #444; }
+      .fps-label { font: bold 13px sans-serif; fill: #333; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .bar-intel { fill: #0071C5; opacity: 0.85; }
+      .grid-line { stroke: #ddd; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">Gaming Performance - 1080p Ultra (RTX 4090)</text>
+  
+  <rect x="300" y="55" width="25" height="15" class="bar-amd"/>
+  <text x="330" y="67" class="subtitle">Ryzen 9 9900X</text>
+  <rect x="520" y="55" width="25" height="15" class="bar-intel"/>
+  <text x="550" y="67" class="subtitle">Core Ultra 9 285K</text>
+  
+  <!-- Grid -->
+  <line x1="150" y1="90" x2="150" y2="600" class="grid-line"/>
+  <line x1="250" y1="90" x2="250" y2="600" class="grid-line"/>
+  <line x1="350" y1="90" x2="350" y2="600" class="grid-line"/>
+  <line x1="450" y1="90" x2="450" y2="600" class="grid-line"/>
+  <line x1="550" y1="90" x2="550" y2="600" class="grid-line"/>
+  <line x1="650" y1="90" x2="650" y2="600" class="grid-line"/>
+  <line x1="750" y1="90" x2="750" y2="600" class="grid-line"/>
+  
+  <!-- X-axis labels -->
+  <text x="150" y="620" text-anchor="middle" class="subtitle">0</text>
+  <text x="250" y="620" text-anchor="middle" class="subtitle">100</text>
+  <text x="350" y="620" text-anchor="middle" class="subtitle">200</text>
+  <text x="450" y="620" text-anchor="middle" class="subtitle">300</text>
+  <text x="550" y="620" text-anchor="middle" class="subtitle">400</text>
+  <text x="650" y="620" text-anchor="middle" class="subtitle">500</text>
+  <text x="750" y="620" text-anchor="middle" class="subtitle">600</text>
+  <text x="450" y="645" text-anchor="middle" class="subtitle">Frames Per Second (FPS)</text>
+  
+  <!-- CS2 -->
+  <text x="10" y="115" class="game-label">CS2</text>
+  <rect x="150" y="100" width="537" height="12" class="bar-amd"/>
+  <text x="692" y="110" class="fps-label">687</text>
+  <rect x="150" y="115" width="562" height="12" class="bar-intel"/>
+  <text x="717" y="125" class="fps-label">712</text>
+  
+  <!-- Valorant -->
+  <text x="10" y="160" class="game-label">Valorant</text>
+  <rect x="150" y="145" width="462" height="12" class="bar-amd"/>
+  <text x="617" y="155" class="fps-label">612</text>
+  <rect x="150" y="160" width="488" height="12" class="bar-intel"/>
+  <text x="643" y="170" class="fps-label">638</text>
+  
+  <!-- Fortnite -->
+  <text x="10" y="205" class="game-label">Fortnite</text>
+  <rect x="150" y="190" width="278" height="12" class="bar-amd"/>
+  <text x="433" y="200" class="fps-label">428</text>
+  <rect x="150" y="205" width="295" height="12" class="bar-intel"/>
+  <text x="450" y="215" class="fps-label">445</text>
+  
+  <!-- COD MW3 -->
+  <text x="10" y="250" class="game-label">COD: MW3</text>
+  <rect x="150" y="235" width="192" height="12" class="bar-amd"/>
+  <text x="347" y="245" class="fps-label">342</text>
+  <rect x="150" y="250" width="201" height="12" class="bar-intel"/>
+  <text x="356" y="260" class="fps-label">351</text>
+  
+  <!-- Spider-Man -->
+  <text x="10" y="295" class="game-label">Spider-Man</text>
+  <rect x="150" y="280" width="74" height="12" class="bar-amd"/>
+  <text x="229" y="290" class="fps-label">224</text>
+  <rect x="150" y="295" width="79" height="12" class="bar-intel"/>
+  <text x="234" y="305" class="fps-label">229</text>
+  
+  <!-- Cyberpunk -->
+  <text x="10" y="340" class="game-label">Cyberpunk</text>
+  <rect x="150" y="325" width="48" height="12" class="bar-amd"/>
+  <text x="203" y="335" class="fps-label">198</text>
+  <rect x="150" y="340" width="51" height="12" class="bar-intel"/>
+  <text x="206" y="350" class="fps-label">201</text>
+  
+  <!-- TLOU Part I -->
+  <text x="10" y="385" class="game-label">TLOU Part I</text>
+  <rect x="150" y="370" width="22" height="12" class="bar-amd"/>
+  <text x="177" y="380" class="fps-label">172</text>
+  <rect x="150" y="385" width="25" height="12" class="bar-intel"/>
+  <text x="180" y="395" class="fps-label">175</text>
+  
+  <!-- Starfield -->
+  <text x="10" y="430" class="game-label">Starfield</text>
+  <rect x="150" y="415" width="18" height="12" class="bar-amd"/>
+  <text x="173" y="425" class="fps-label">168</text>
+  <rect x="150" y="430" width="12" height="12" class="bar-intel"/>
+  <text x="167" y="440" class="fps-label">162</text>
+  
+  <!-- BG3 -->
+  <text x="10" y="475" class="game-label">BG3</text>
+  <rect x="150" y="460" width="6" height="12" class="bar-amd"/>
+  <text x="161" y="470" class="fps-label">156</text>
+  <rect x="150" y="475" width="2" height="12" class="bar-intel"/>
+  <text x="157" y="485" class="fps-label">152</text>
+  
+  <!-- Hogwarts -->
+  <text x="10" y="520" class="game-label">Hogwarts</text>
+  <rect x="150" y="505" width="-8" height="12" class="bar-amd"/>
+  <text x="147" y="515" class="fps-label">142</text>
+  <rect x="150" y="520" width="-5" height="12" class="bar-intel"/>
+  <text x="150" y="530" class="fps-label">145</text>
+  
+  <!-- Average -->
+  <line x1="10" y1="550" x2="850" y2="550" stroke="#333" stroke-width="2"/>
+  <text x="10" y="575" class="game-label" style="font-weight: bold;">Average</text>
+  <rect x="150" y="560" width="163" height="15" class="bar-amd"/>
+  <text x="318" y="572" class="fps-label" style="font-size: 15px;">313</text>
+  <rect x="150" y="580" width="171" height="15" class="bar-intel"/>
+  <text x="326" y="592" class="fps-label" style="font-size: 15px;">321</text>
+</svg>

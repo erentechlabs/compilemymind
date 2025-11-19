@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 14px sans-serif; fill: #444; }
+      .value-amd { font: bold 16px sans-serif; fill: #ED1C24; }
+      .value-intel { font: bold 16px sans-serif; fill: #0071C5; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .bar-intel { fill: #0071C5; opacity: 0.85; }
+      .grid-line { stroke: #e0e0e0; stroke-width: 1; }
+      .efficiency-badge { fill: #4CAF50; }
+      .efficiency-text { font: bold 12px sans-serif; fill: white; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" class="title">Power Consumption Comparison</text>
+  <text x="400" y="55" text-anchor="middle" class="subtitle">Lower is Better</text>
+  
+  <!-- Legend -->
+  <rect x="250" y="70" width="25" height="15" class="bar-amd"/>
+  <text x="280" y="82" class="subtitle">AMD Ryzen 7 9700X</text>
+  <rect x="450" y="70" width="25" height="15" class="bar-intel"/>
+  <text x="480" y="82" class="subtitle">Intel Core Ultra 7 265KF</text>
+  
+  <!-- Grid -->
+  <line x1="200" y1="120" x2="200" y2="420" class="grid-line"/>
+  <line x1="300" y1="120" x2="300" y2="420" class="grid-line"/>
+  <line x1="400" y1="120" x2="400" y2="420" class="grid-line"/>
+  <line x1="500" y1="120" x2="500" y2="420" class="grid-line"/>
+  <line x1="600" y1="120" x2="600" y2="420" class="grid-line"/>
+  <line x1="700" y1="120" x2="700" y2="420" class="grid-line"/>
+  
+  <!-- X-axis labels -->
+  <text x="200" y="445" text-anchor="middle" class="subtitle">0W</text>
+  <text x="300" y="445" text-anchor="middle" class="subtitle">50W</text>
+  <text x="400" y="445" text-anchor="middle" class="subtitle">100W</text>
+  <text x="500" y="445" text-anchor="middle" class="subtitle">150W</text>
+  <text x="600" y="445" text-anchor="middle" class="subtitle">200W</text>
+  <text x="700" y="445" text-anchor="middle" class="subtitle">250W</text>
+  
+  <!-- Idle Power -->
+  <text x="50" y="155" class="label">Idle</text>
+  <rect x="200" y="140" width="30" height="20" class="bar-amd"/>
+  <text x="235" y="155" class="value-amd">15W</text>
+  <rect x="200" y="165" width="50" height="20" class="bar-intel"/>
+  <text x="255" y="180" class="value-intel">25W</text>
+  
+  <!-- Gaming Power -->
+  <text x="50" y="235" class="label">Gaming</text>
+  <rect x="200" y="220" width="110" height="20" class="bar-amd"/>
+  <text x="315" y="235" class="value-amd">55W</text>
+  <rect x="200" y="245" width="220" height="20" class="bar-intel"/>
+  <text x="425" y="260" class="value-intel">110W</text>
+  
+  <!-- All-Core Load -->
+  <text x="50" y="315" class="label">All-Core</text>
+  <text x="50" y="330" class="label">Load</text>
+  <rect x="200" y="300" width="176" height="20" class="bar-amd"/>
+  <text x="381" y="315" class="value-amd">88W</text>
+  <rect x="200" y="325" width="480" height="20" class="bar-intel"/>
+  <text x="685" y="340" class="value-intel">240W</text>
+  
+  <!-- Cinebench R23 -->
+  <text x="50" y="395" class="label">Cinebench</text>
+  <text x="50" y="410" class="label">R23</text>
+  <rect x="200" y="380" width="170" height="20" class="bar-amd"/>
+  <text x="375" y="395" class="value-amd">85W</text>
+  <rect x="200" y="405" width="470" height="20" class="bar-intel"/>
+  <text x="675" y="420" class="value-intel">235W</text>
+  
+  <!-- Efficiency Badge -->
+  <rect x="620" y="140" width="150" height="60" rx="5" class="efficiency-badge"/>
+  <text x="695" y="162" text-anchor="middle" class="efficiency-text">AMD WINS</text>
+  <text x="695" y="180" text-anchor="middle" class="efficiency-text">60% Less</text>
+  <text x="695" y="195" text-anchor="middle" class="efficiency-text">Power</text>
+  
+  <!-- Footer note -->
+  <text x="400" y="475" text-anchor="middle" class="subtitle" style="font-size: 12px;">
+    AMD's efficiency advantage translates to lower electricity bills and cooling requirements
+  </text>
+</svg>

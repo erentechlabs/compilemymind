@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 14px sans-serif; fill: #444; }
+      .value-force { font: bold 15px sans-serif; fill: #FF6B00; }
+      .value-d3hp { font: bold 15px sans-serif; fill: #4CAF50; }
+      .bar-force { fill: #FF6B00; opacity: 0.85; }
+      .bar-d3hp { fill: #4CAF50; opacity: 0.85; }
+      .grid-line { stroke: #e0e0e0; stroke-width: 1; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" class="title">Key Specifications Comparison</text>
+  
+  <!-- Legend -->
+  <rect x="280" y="50" width="25" height="15" class="bar-force"/>
+  <text x="310" y="62" class="subtitle">B850M FORCE</text>
+  <rect x="500" y="50" width="25" height="15" class="bar-d3hp"/>
+  <text x="530" y="62" class="subtitle">B850M D3HP</text>
+  
+  <!-- Grid -->
+  <line x1="200" y1="90" x2="200" y2="660" class="grid-line"/>
+  <line x1="350" y1="90" x2="350" y2="660" class="grid-line"/>
+  <line x1="500" y1="90" x2="500" y2="660" class="grid-line"/>
+  <line x1="650" y1="90" x2="650" y2="660" class="grid-line"/>
+  <line x1="800" y1="90" x2="800" y2="660" class="grid-line"/>
+  
+  <!-- VRM Phases -->
+  <text x="20" y="120" class="label">VRM Phases</text>
+  <rect x="200" y="105" width="240" height="22" class="bar-force"/>
+  <text x="445" y="121" class="value-force">16+1+2</text>
+  <rect x="200" y="132" width="180" height="22" class="bar-d3hp"/>
+  <text x="385" y="148" class="value-d3hp">12+1+1</text>
+  
+  <!-- Power Stages -->
+  <text x="20" y="185" class="label">Power Stages</text>
+  <rect x="200" y="170" width="160" height="22" class="bar-force"/>
+  <text x="365" y="186" class="value-force">80A</text>
+  <rect x="200" y="197" width="120" height="22" class="bar-d3hp"/>
+  <text x="325" y="213" class="value-d3hp">60A</text>
+  
+  <!-- M.2 Slots -->
+  <text x="20" y="250" class="label">M.2 Slots</text>
+  <rect x="200" y="235" width="80" height="22" class="bar-force"/>
+  <text x="285" y="251" class="value-force">4</text>
+  <rect x="200" y="262" width="60" height="22" class="bar-d3hp"/>
+  <text x="265" y="278" class="value-d3hp">3</text>
+  
+  <!-- PCIe 5.0 M.2 -->
+  <text x="20" y="315" class="label">PCIe 5.0 M.2</text>
+  <rect x="200" y="300" width="60" height="22" class="bar-force"/>
+  <text x="265" y="316" class="value-force">3</text>
+  <rect x="200" y="327" width="0" height="22" class="bar-d3hp"/>
+  <text x="205" y="343" class="value-d3hp">0</text>
+  
+  <!-- USB Ports -->
+  <text x="20" y="380" class="label">USB Ports</text>
+  <rect x="200" y="365" width="100" height="22" class="bar-force"/>
+  <text x="305" y="381" class="value-force">10</text>
+  <rect x="200" y="392" width="80" height="22" class="bar-d3hp"/>
+  <text x="285" y="408" class="value-d3hp">8</text>
+  
+  <!-- USB 20Gbps -->
+  <text x="20" y="445" class="label">USB 20Gbps</text>
+  <rect x="200" y="430" width="20" height="22" class="bar-force"/>
+  <text x="225" y="446" class="value-force">1</text>
+  <rect x="200" y="457" width="0" height="22" class="bar-d3hp"/>
+  <text x="205" y="473" class="value-d3hp">0</text>
+  
+  <!-- Fan Headers -->
+  <text x="20" y="510" class="label">Fan Headers</text>
+  <rect x="200" y="495" width="70" height="22" class="bar-force"/>
+  <text x="275" y="511" class="value-force">7</text>
+  <rect x="200" y="522" width="50" height="22" class="bar-d3hp"/>
+  <text x="255" y="538" class="value-d3hp">5</text>
+  
+  <!-- Max Memory -->
+  <text x="20" y="575" class="label">Max Memory</text>
+  <rect x="200" y="560" width="256" height="22" class="bar-force"/>
+  <text x="461" y="576" class="value-force">256GB</text>
+  <rect x="200" y="587" width="192" height="22" class="bar-d3hp"/>
+  <text x="397" y="603" class="value-d3hp">192GB</text>
+  
+  <!-- Price -->
+  <text x="20" y="640" class="label">Price (USD)</text>
+  <rect x="200" y="625" width="200" height="22" class="bar-force"/>
+  <text x="405" y="641" class="value-force">$180-220</text>
+  <rect x="200" y="652" width="130" height="22" class="bar-d3hp"/>
+  <text x="335" y="668" class="value-d3hp">$120-150</text>
+  
+  <!-- Footer -->
+  <text x="450" y="690" text-anchor="middle" class="subtitle" style="font-size: 11px;">
+    FORCE offers premium features; D3HP provides excellent value
+  </text>
+</svg>

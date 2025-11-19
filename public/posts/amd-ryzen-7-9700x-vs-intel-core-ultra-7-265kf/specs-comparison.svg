@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .label { font: 14px sans-serif; fill: #666; }
+      .value-amd { font: bold 16px sans-serif; fill: #ED1C24; }
+      .value-intel { font: bold 16px sans-serif; fill: #0071C5; }
+      .bar-amd { fill: #ED1C24; opacity: 0.8; }
+      .bar-intel { fill: #0071C5; opacity: 0.8; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="400" y="30" text-anchor="middle" class="title">Specifications Comparison</text>
+  
+  <!-- Legend -->
+  <rect x="250" y="45" width="20" height="20" class="bar-amd"/>
+  <text x="275" y="60" class="label">AMD Ryzen 7 9700X</text>
+  <rect x="450" y="45" width="20" height="20" class="bar-intel"/>
+  <text x="475" y="60" class="label">Intel Core Ultra 7 265KF</text>
+  
+  <!-- Cores -->
+  <text x="50" y="110" class="label">Cores</text>
+  <rect x="150" y="95" width="80" height="25" class="bar-amd"/>
+  <text x="190" y="112" text-anchor="middle" class="value-amd">8</text>
+  <rect x="150" y="125" width="200" height="25" class="bar-intel"/>
+  <text x="250" y="142" text-anchor="middle" class="value-intel">20</text>
+  
+  <!-- Boost Clock -->
+  <text x="50" y="180" class="label">Boost (GHz)</text>
+  <rect x="150" y="165" width="137.5" height="25" class="bar-amd"/>
+  <text x="218" y="182" text-anchor="middle" class="value-amd">5.5</text>
+  <rect x="150" y="195" width="137.5" height="25" class="bar-intel"/>
+  <text x="218" y="212" text-anchor="middle" class="value-intel">5.5</text>
+  
+  <!-- Cache -->
+  <text x="50" y="250" class="label">Total Cache (MB)</text>
+  <rect x="150" y="235" width="138" height="25" class="bar-amd"/>
+  <text x="219" y="252" text-anchor="middle" class="value-amd">40</text>
+  <rect x="150" y="265" width="200" height="25" class="bar-intel"/>
+  <text x="250" y="282" text-anchor="middle" class="value-intel">58</text>
+  
+  <!-- TDP -->
+  <text x="50" y="320" class="label">TDP (Watts)</text>
+  <rect x="150" y="305" width="52" height="25" class="bar-amd"/>
+  <text x="176" y="322" text-anchor="middle" class="value-amd">65</text>
+  <rect x="150" y="335" width="250" height="25" class="bar-intel"/>
+  <text x="275" y="352" text-anchor="middle" class="value-intel">125</text>
+  
+  <!-- Max Power -->
+  <text x="50" y="390" class="label">Max Power (W)</text>
+  <rect x="150" y="375" width="70" height="25" class="bar-amd"/>
+  <text x="185" y="392" text-anchor="middle" class="value-amd">88</text>
+  <rect x="150" y="405" width="200" height="25" class="bar-intel"/>
+  <text x="250" y="422" text-anchor="middle" class="value-intel">250</text>
+  
+  <!-- Price -->
+  <text x="50" y="460" class="label">Launch Price ($)</text>
+  <rect x="150" y="445" width="179.5" height="25" class="bar-amd"/>
+  <text x="239" y="462" text-anchor="middle" class="value-amd">$359</text>
+  <rect x="150" y="475" width="197" height="25" class="bar-intel"/>
+  <text x="248" y="492" text-anchor="middle" class="value-intel">$394</text>
+  
+  <!-- Footer -->
+  <text x="400" y="550" text-anchor="middle" class="label" style="font-size: 12px;">
+    Data as of November 2025
+  </text>
+</svg>

@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#1a1a3e;stop-opacity:1" />
+    </linearGradient>
+    <style>
+      .main-title { font: bold 56px sans-serif; fill: white; }
+      .subtitle { font: 28px sans-serif; fill: #e0e0e0; }
+      .vs-text { font: bold 80px sans-serif; fill: #FF6B00; }
+      .board-name { font: bold 38px sans-serif; fill: white; }
+      .spec-text { font: 18px sans-serif; fill: #b0b0b0; }
+      .price-text { font: bold 24px sans-serif; fill: #4CAF50; }
+      .chipset-badge { fill: #0071C5; }
+      .badge-text { font: bold 16px sans-serif; fill: white; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGrad)"/>
+  
+  <!-- Circuit pattern -->
+  <g opacity="0.08">
+    <rect x="50" y="50" width="100" height="100" fill="none" stroke="white" stroke-width="2"/>
+    <rect x="1050" y="480" width="100" height="100" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="100" cy="100" r="30" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="1100" cy="530" r="30" fill="none" stroke="white" stroke-width="2"/>
+  </g>
+  
+  <!-- Title -->
+  <text x="600" y="70" text-anchor="middle" class="main-title">MOTHERBOARD SHOWDOWN</text>
+  <text x="600" y="110" text-anchor="middle" class="subtitle">Intel B850 Chipset Comparison</text>
+  
+  <!-- Chipset Badge -->
+  <rect x="500" y="130" width="200" height="40" rx="20" class="chipset-badge"/>
+  <text x="600" y="157" text-anchor="middle" class="badge-text">INTEL B850 CHIPSET</text>
+  
+  <!-- VS -->
+  <text x="600" y="350" text-anchor="middle" class="vs-text">VS</text>
+  
+  <!-- B850M FORCE Side -->
+  <rect x="50" y="200" width="480" height="320" rx="15" fill="#1a1a2e" stroke="#FF6B00" stroke-width="4"/>
+  
+  <!-- Motherboard icon representation -->
+  <rect x="80" y="230" width="120" height="100" rx="5" fill="#2a2a3e" stroke="#FF6B00" stroke-width="2"/>
+  <rect x="90" y="240" width="30" height="30" rx="3" fill="#FF6B00"/>
+  <rect x="130" y="240" width="30" height="30" rx="3" fill="#FF6B00"/>
+  <rect x="170" y="240" width="20" height="80" rx="3" fill="#666"/>
+  <rect x="90" y="280" width="30" height="40" rx="3" fill="#444"/>
+  <rect x="130" y="280" width="30" height="40" rx="3" fill="#444"/>
+  
+  <text x="220" y="260" class="board-name">B850M</text>
+  <text x="220" y="300" class="board-name">FORCE</text>
+  
+  <text x="80" y="360" class="spec-text">• 16+1+2 Phase VRM (80A)</text>
+  <text x="80" y="390" class="spec-text">• 4x M.2 PCIe 5.0</text>
+  <text x="80" y="420" class="spec-text">• Premium Audio (ALC1220)</text>
+  <text x="80" y="450" class="spec-text">• 10 USB Ports + Wi-Fi 6E</text>
+  
+  <text x="265" y="495" text-anchor="middle" class="price-text">$180-220</text>
+  
+  <!-- B850M D3HP Side -->
+  <rect x="670" y="200" width="480" height="320" rx="15" fill="#1a1a2e" stroke="#4CAF50" stroke-width="4"/>
+  
+  <!-- Motherboard icon representation -->
+  <rect x="1000" y="230" width="120" height="100" rx="5" fill="#2a2a3e" stroke="#4CAF50" stroke-width="2"/>
+  <rect x="1010" y="240" width="30" height="30" rx="3" fill="#4CAF50"/>
+  <rect x="1050" y="240" width="30" height="30" rx="3" fill="#4CAF50"/>
+  <rect x="1090" y="240" width="20" height="80" rx="3" fill="#666"/>
+  <rect x="1010" y="280" width="30" height="40" rx="3" fill="#444"/>
+  <rect x="1050" y="280" width="30" height="40" rx="3" fill="#444"/>
+  
+  <text x="700" y="260" class="board-name">B850M</text>
+  <text x="700" y="300" class="board-name">D3HP</text>
+  
+  <text x="700" y="360" class="spec-text">• 12+1+1 Phase VRM (60A)</text>
+  <text x="700" y="390" class="spec-text">• 3x M.2 PCIe 4.0</text>
+  <text x="700" y="420" class="spec-text">• Standard Audio (ALC897)</text>
+  <text x="700" y="450" class="spec-text">• 8 USB Ports</text>
+  
+  <text x="910" y="495" text-anchor="middle" class="price-text">$120-150</text>
+  
+  <!-- Bottom tagline -->
+  <rect x="250" y="550" width="700" height="60" rx="10" fill="#FF6B00" opacity="0.9"/>
+  <text x="600" y="580" text-anchor="middle" style="font: bold 26px sans-serif; fill: white;">
+    Premium Features vs Budget Value
+  </text>
+  <text x="600" y="605" text-anchor="middle" style="font: 18px sans-serif; fill: white;">
+    Which Intel B850 motherboard is right for your build?
+  </text>
+</svg>

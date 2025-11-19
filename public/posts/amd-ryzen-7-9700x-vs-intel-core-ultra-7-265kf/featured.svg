@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#16213e;stop-opacity:1" />
+    </linearGradient>
+    <style>
+      .main-title { font: bold 64px sans-serif; fill: white; }
+      .subtitle { font: 32px sans-serif; fill: #e0e0e0; }
+      .vs-text { font: bold 96px sans-serif; fill: #FFD700; }
+      .cpu-name { font: bold 36px sans-serif; }
+      .spec-text { font: 20px sans-serif; fill: #b0b0b0; }
+      .amd-color { fill: #ED1C24; }
+      .intel-color { fill: #0071C5; }
+    </style>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Circuit pattern decoration -->
+  <g opacity="0.1">
+    <circle cx="100" cy="100" r="80" fill="none" stroke="white" stroke-width="2"/>
+    <circle cx="1100" cy="530" r="80" fill="none" stroke="white" stroke-width="2"/>
+    <line x1="50" y1="50" x2="150" y2="150" stroke="white" stroke-width="2"/>
+    <line x1="1050" y1="480" x2="1150" y2="580" stroke="white" stroke-width="2"/>
+  </g>
+  
+  <!-- Main Title -->
+  <text x="600" y="80" text-anchor="middle" class="main-title">CPU SHOWDOWN</text>
+  <text x="600" y="130" text-anchor="middle" class="subtitle">The Ultimate Comparison</text>
+  
+  <!-- VS -->
+  <text x="600" y="340" text-anchor="middle" class="vs-text">VS</text>
+  
+  <!-- AMD Side -->
+  <rect x="50" y="180" width="480" height="280" rx="15" fill="#2a2a3e" stroke="#ED1C24" stroke-width="4"/>
+  
+  <!-- AMD Logo representation -->
+  <rect x="80" y="210" width="80" height="80" rx="10" class="amd-color"/>
+  <text x="120" y="260" text-anchor="middle" style="font: bold 32px sans-serif; fill: white;">AMD</text>
+  
+  <text x="180" y="240" class="cpu-name amd-color">Ryzen 7</text>
+  <text x="180" y="280" class="cpu-name amd-color">9700X</text>
+  
+  <text x="80" y="330" class="spec-text">• 8 Cores / 16 Threads</text>
+  <text x="80" y="360" class="spec-text">• Up to 5.5 GHz</text>
+  <text x="80" y="390" class="spec-text">• 65W TDP</text>
+  <text x="80" y="420" class="spec-text">• Zen 5 Architecture</text>
+  
+  <!-- Intel Side -->
+  <rect x="670" y="180" width="480" height="280" rx="15" fill="#2a2a3e" stroke="#0071C5" stroke-width="4"/>
+  
+  <!-- Intel Logo representation -->
+  <rect x="1040" y="210" width="80" height="80" rx="10" class="intel-color"/>
+  <text x="1080" y="260" text-anchor="middle" style="font: bold 28px sans-serif; fill: white;">INTEL</text>
+  
+  <text x="700" y="240" class="cpu-name intel-color">Core Ultra 7</text>
+  <text x="700" y="280" class="cpu-name intel-color">265KF</text>
+  
+  <text x="700" y="330" class="spec-text">• 20 Cores (8P + 12E)</text>
+  <text x="700" y="360" class="spec-text">• Up to 5.5 GHz</text>
+  <text x="700" y="390" class="spec-text">• 125W TDP</text>
+  <text x="700" y="420" class="spec-text">• Arrow Lake</text>
+  
+  <!-- Bottom tagline -->
+  <rect x="200" y="500" width="800" height="80" rx="10" fill="#FFD700" opacity="0.9"/>
+  <text x="600" y="535" text-anchor="middle" style="font: bold 28px sans-serif; fill: #1a1a2e;">
+    Performance • Efficiency • Value
+  </text>
+  <text x="600" y="565" text-anchor="middle" style="font: 20px sans-serif; fill: #1a1a2e;">
+    Complete benchmark analysis and buying guide
+  </text>
+</svg>

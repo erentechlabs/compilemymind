@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 14px sans-serif; fill: #444; }
+      .value-nvidia { font: bold 15px sans-serif; fill: #76B900; }
+      .value-amd { font: bold 15px sans-serif; fill: #ED1C24; }
+      .bar-nvidia { fill: #76B900; opacity: 0.85; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+    </style>
+  </defs>
+  
+  <text x="400" y="35" text-anchor="middle" class="title">GPU Specifications Comparison</text>
+  
+  <rect x="250" y="50" width="25" height="15" class="bar-nvidia"/>
+  <text x="280" y="62" class="subtitle">RTX 4070 Ti Super</text>
+  <rect x="500" y="50" width="25" height="15" class="bar-amd"/>
+  <text x="530" y="62" class="subtitle">RX 7900 XT</text>
+  
+  <!-- Cores -->
+  <text x="20" y="110" class="label">CUDA / Stream</text>
+  <text x="20" y="125" class="label">Processors</text>
+  <rect x="150" y="95" width="211" height="22" class="bar-nvidia"/>
+  <text x="366" y="111" class="value-nvidia">8,448</text>
+  <rect x="150" y="122" width="134" height="22" class="bar-amd"/>
+  <text x="289" y="138" class="value-amd">5,376</text>
+  
+  <!-- Boost Clock -->
+  <text x="20" y="180" class="label">Boost Clock</text>
+  <rect x="150" y="165" width="261" height="22" class="bar-nvidia"/>
+  <text x="416" y="181" class="value-nvidia">2,610 MHz</text>
+  <rect x="150" y="192" width="240" height="22" class="bar-amd"/>
+  <text x="395" y="208" class="value-amd">2,400 MHz</text>
+  
+  <!-- VRAM -->
+  <text x="20" y="250" class="label">VRAM</text>
+  <rect x="150" y="235" width="160" height="22" class="bar-nvidia"/>
+  <text x="315" y="251" class="value-nvidia">16GB GDDR6X</text>
+  <rect x="150" y="262" width="200" height="22" class="bar-amd"/>
+  <text x="355" y="278" class="value-amd">20GB GDDR6</text>
+  
+  <!-- Memory Bus -->
+  <text x="20" y="320" class="label">Memory Bus</text>
+  <rect x="150" y="305" width="128" height="22" class="bar-nvidia"/>
+  <text x="283" y="321" class="value-nvidia">256-bit</text>
+  <rect x="150" y="332" width="160" height="22" class="bar-amd"/>
+  <text x="315" y="348" class="value-amd">320-bit</text>
+  
+  <!-- Bandwidth -->
+  <text x="20" y="390" class="label">Bandwidth</text>
+  <rect x="150" y="375" width="268" height="22" class="bar-nvidia"/>
+  <text x="423" y="391" class="value-nvidia">672 GB/s</text>
+  <rect x="150" y="402" width="320" height="22" class="bar-amd"/>
+  <text x="475" y="418" class="value-amd">800 GB/s</text>
+  
+  <!-- TDP -->
+  <text x="20" y="460" class="label">TDP</text>
+  <rect x="150" y="445" width="142.5" height="22" class="bar-nvidia"/>
+  <text x="297" y="461" class="value-nvidia">285W</text>
+  <rect x="150" y="472" width="157.5" height="22" class="bar-amd"/>
+  <text x="312" y="488" class="value-amd">315W</text>
+  
+  <!-- Price -->
+  <text x="20" y="530" class="label">Current Price</text>
+  <rect x="150" y="515" width="200" height="22" class="bar-nvidia"/>
+  <text x="355" y="531" class="value-nvidia">$799-849</text>
+  <rect x="150" y="542" width="175" height="22" class="bar-amd"/>
+  <text x="330" y="558" class="value-amd">$699-749</text>
+  
+  <text x="400" y="590" text-anchor="middle" class="subtitle" style="font-size: 11px;">
+    AMD offers more VRAM and bandwidth; NVIDIA has better efficiency and RT performance
+  </text>
+</svg>

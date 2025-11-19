@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .game-label { font: 13px sans-serif; fill: #444; }
+      .fps-label { font: bold 13px sans-serif; fill: #333; }
+      .bar-4080 { fill: #888; opacity: 0.7; }
+      .bar-super { fill: #76B900; opacity: 0.85; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">4K Gaming Performance - Ultra Settings</text>
+  
+  <rect x="300" y="55" width="25" height="15" class="bar-4080"/>
+  <text x="330" y="67" class="subtitle">RTX 4080</text>
+  <rect x="500" y="55" width="25" height="15" class="bar-super"/>
+  <text x="530" y="67" class="subtitle">RTX 4080 Super</text>
+  
+  <!-- COD MW3 -->
+  <text x="10" y="115" class="game-label">COD: MW3</text>
+  <rect x="150" y="100" width="148" height="12" class="bar-4080"/>
+  <text x="303" y="110" class="fps-label">142</text>
+  <rect x="150" y="115" width="155" height="12" class="bar-super"/>
+  <text x="310" y="125" class="fps-label">149</text>
+  
+  <!-- Forza H5 -->
+  <text x="10" y="160" class="game-label">Forza H5</text>
+  <rect x="150" y="145" width="124" height="12" class="bar-4080"/>
+  <text x="279" y="155" class="fps-label">124</text>
+  <rect x="150" y="160" width="130" height="12" class="bar-super"/>
+  <text x="285" y="170" class="fps-label">130</text>
+  
+  <!-- Spider-Man -->
+  <text x="10" y="205" class="game-label">Spider-Man</text>
+  <rect x="150" y="190" width="89" height="12" class="bar-4080"/>
+  <text x="244" y="200" class="fps-label">98</text>
+  <rect x="150" y="205" width="93" height="12" class="bar-super"/>
+  <text x="248" y="215" class="fps-label">103</text>
+  
+  <!-- BG3 -->
+  <text x="10" y="250" class="game-label">BG3</text>
+  <rect x="150" y="235" width="88" height="12" class="bar-4080"/>
+  <text x="243" y="245" class="fps-label">88</text>
+  <rect x="150" y="250" width="93" height="12" class="bar-super"/>
+  <text x="248" y="260" class="fps-label">93</text>
+  
+  <!-- RDR2 -->
+  <text x="10" y="295" class="game-label">RDR2</text>
+  <rect x="150" y="280" width="82" height="12" class="bar-4080"/>
+  <text x="237" y="290" class="fps-label">82</text>
+  <rect x="150" y="295" width="86" height="12" class="bar-super"/>
+  <text x="241" y="305" class="fps-label">86</text>
+  
+  <!-- TLOU Part I -->
+  <text x="10" y="340" class="game-label">TLOU Part I</text>
+  <rect x="150" y="325" width="79" height="12" class="bar-4080"/>
+  <text x="234" y="335" class="fps-label">79</text>
+  <rect x="150" y="340" width="83" height="12" class="bar-super"/>
+  <text x="238" y="350" class="fps-label">83</text>
+  
+  <!-- Hogwarts -->
+  <text x="10" y="385" class="game-label">Hogwarts</text>
+  <rect x="150" y="370" width="76" height="12" class="bar-4080"/>
+  <text x="231" y="380" class="fps-label">76</text>
+  <rect x="150" y="385" width="80" height="12" class="bar-super"/>
+  <text x="235" y="395" class="fps-label">80</text>
+  
+  <!-- Starfield -->
+  <text x="10" y="430" class="game-label">Starfield</text>
+  <rect x="150" y="415" width="71" height="12" class="bar-4080"/>
+  <text x="226" y="425" class="fps-label">71</text>
+  <rect x="150" y="430" width="75" height="12" class="bar-super"/>
+  <text x="230" y="440" class="fps-label">75</text>
+  
+  <!-- Cyberpunk -->
+  <text x="10" y="475" class="game-label">Cyberpunk</text>
+  <rect x="150" y="460" width="68" height="12" class="bar-4080"/>
+  <text x="223" y="470" class="fps-label">68</text>
+  <rect x="150" y="475" width="72" height="12" class="bar-super"/>
+  <text x="227" y="485" class="fps-label">72</text>
+  
+  <!-- Alan Wake 2 -->
+  <text x="10" y="520" class="game-label">Alan Wake 2</text>
+  <rect x="150" y="505" width="61" height="12" class="bar-4080"/>
+  <text x="216" y="515" class="fps-label">61</text>
+  <rect x="150" y="520" width="64" height="12" class="bar-super"/>
+  <text x="219" y="530" class="fps-label">64</text>
+  
+  <!-- Average -->
+  <line x1="10" y1="550" x2="850" y2="550" stroke="#333" stroke-width="2"/>
+  <text x="10" y="575" class="game-label" style="font-weight: bold;">Average</text>
+  <rect x="150" y="560" width="89" height="15" class="bar-4080"/>
+  <text x="244" y="572" class="fps-label" style="font-size: 15px;">89</text>
+  <rect x="150" y="580" width="94" height="15" class="bar-super"/>
+  <text x="249" y="592" class="fps-label" style="font-size: 15px;">94</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: bold 14px sans-serif; fill: #444; }
+      .spec-text { font: 13px sans-serif; fill: #555; }
+      .force-color { fill: #FF6B00; }
+      .d3hp-color { fill: #00A8E1; }
+    </style>
+  </defs>
+  
+  <text x="400" y="35" text-anchor="middle" class="title">Value Analysis: Total Platform Cost</text>
+  
+  <text x="200" y="90" text-anchor="middle" class="label" style="fill: #FF6B00; font-size: 18px;">B850M FORCE</text>
+  
+  <rect x="80" y="110" width="240" height="50" fill="#f5f5f5" stroke="#FF6B00" stroke-width="2" rx="5"/>
+  <text x="100" y="140" class="spec-text">CPU (Core Ultra 7)</text>
+  <text x="300" y="140" text-anchor="end" class="label">$400</text>
+  
+  <rect x="80" y="170" width="240" height="50" fill="#f5f5f5" stroke="#FF6B00" stroke-width="2" rx="5"/>
+  <text x="100" y="200" class="spec-text">Motherboard</text>
+  <text x="300" y="200" text-anchor="end" class="label">$200</text>
+  
+  <rect x="80" y="230" width="240" height="50" fill="#f5f5f5" stroke="#FF6B00" stroke-width="2" rx="5"/>
+  <text x="100" y="260" class="spec-text">Cooler (Tower)</text>
+  <text x="300" y="260" text-anchor="end" class="label">$70</text>
+  
+  <line x1="80" y1="295" x2="320" y2="295" stroke="#FF6B00" stroke-width="2"/>
+  <text x="100" y="320" class="label" style="font-size: 18px; fill: #FF6B00;">TOTAL</text>
+  <text x="300" y="320" text-anchor="end" class="label" style="font-size: 18px; fill: #FF6B00;">$670</text>
+  
+  <text x="200" y="360" text-anchor="middle" class="spec-text">Premium Features:</text>
+  <text x="200" y="380" text-anchor="middle" class="spec-text" style="font-size: 11px;">16+1+2 VRM - 4 M.2 Slots</text>
+  <text x="200" y="395" text-anchor="middle" class="spec-text" style="font-size: 11px;">ALC1220 Audio - Q-Code LED</text>
+  <text x="200" y="410" text-anchor="middle" class="spec-text" style="font-size: 11px;">10 USB Ports - Wi-Fi Ready</text>
+  
+  <text x="600" y="90" text-anchor="middle" class="label" style="fill: #00A8E1; font-size: 18px;">B850M D3HP</text>
+  
+  <rect x="480" y="110" width="240" height="50" fill="#f5f5f5" stroke="#00A8E1" stroke-width="2" rx="5"/>
+  <text x="500" y="140" class="spec-text">CPU (Core Ultra 7)</text>
+  <text x="700" y="140" text-anchor="end" class="label">$400</text>
+  
+  <rect x="480" y="170" width="240" height="50" fill="#f5f5f5" stroke="#00A8E1" stroke-width="2" rx="5"/>
+  <text x="500" y="200" class="spec-text">Motherboard</text>
+  <text x="700" y="200" text-anchor="end" class="label">$135</text>
+  
+  <rect x="480" y="230" width="240" height="50" fill="#f5f5f5" stroke="#00A8E1" stroke-width="2" rx="5"/>
+  <text x="500" y="260" class="spec-text">Cooler (Tower)</text>
+  <text x="700" y="260" text-anchor="end" class="label">$70</text>
+  
+  <line x1="480" y1="295" x2="720" y2="295" stroke="#00A8E1" stroke-width="2"/>
+  <text x="500" y="320" class="label" style="font-size: 18px; fill: #00A8E1;">TOTAL</text>
+  <text x="700" y="320" text-anchor="end" class="label" style="font-size: 18px; fill: #00A8E1;">$605</text>
+  
+  <text x="600" y="360" text-anchor="middle" class="spec-text">Essential Features:</text>
+  <text x="600" y="380" text-anchor="middle" class="spec-text" style="font-size: 11px;">12+1+1 VRM - 3 M.2 Slots</text>
+  <text x="600" y="395" text-anchor="middle" class="spec-text" style="font-size: 11px;">ALC897 Audio - 2.5GbE LAN</text>
+  <text x="600" y="410" text-anchor="middle" class="spec-text" style="font-size: 11px;">8 USB Ports - Q-Flash Plus</text>
+  
+  <rect x="150" y="450" width="500" height="80" fill="#f5f5f5" stroke="#ccc" stroke-width="2" rx="10"/>
+  <text x="400" y="475" text-anchor="middle" class="label" style="font-size: 16px;">Price Difference: $65 ($605 vs $670)</text>
+  <text x="400" y="500" text-anchor="middle" class="spec-text">D3HP saves 10% - FORCE adds premium features worth the extra cost</text>
+  <text x="400" y="520" text-anchor="middle" class="spec-text" style="fill: #00A8E1; font-style: italic;">Best value for mid-range builds: D3HP</text>
+  
+  <text x="400" y="570" text-anchor="middle" class="spec-text" style="font-size: 12px;">Recommendation: FORCE for Core Ultra 7/9 - D3HP for Core Ultra 5 or budget builds</text>
+</svg>

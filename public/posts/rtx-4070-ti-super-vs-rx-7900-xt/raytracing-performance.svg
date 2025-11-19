@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .game-label { font: 13px sans-serif; fill: #444; }
+      .fps-label { font: bold 14px sans-serif; fill: #333; }
+      .bar-nvidia { fill: #76B900; opacity: 0.85; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .winner-badge { fill: #FFD700; }
+      .winner-text { font: bold 11px sans-serif; fill: #333; }
+    </style>
+  </defs>
+  
+  <text x="450" y="35" text-anchor="middle" class="title">Ray Tracing Performance - 1440p RT Ultra</text>
+  
+  <rect x="280" y="55" width="25" height="15" class="bar-nvidia"/>
+  <text x="310" y="67" class="subtitle">RTX 4070 Ti Super</text>
+  <rect x="520" y="55" width="25" height="15" class="bar-amd"/>
+  <text x="550" y="67" class="subtitle">RX 7900 XT</text>
+  
+  <!-- Cyberpunk RT Overdrive -->
+  <text x="10" y="120" class="game-label">Cyberpunk</text>
+  <text x="10" y="135" class="game-label">RT Overdrive</text>
+  <rect x="150" y="105" width="84" height="18" class="bar-nvidia"/>
+  <text x="239" y="119" class="fps-label">42</text>
+  <rect x="150" y="127" width="56" height="18" class="bar-amd"/>
+  <text x="211" y="141" class="fps-label">28</text>
+  <rect x="216" y="127" width="50" height="18" class="winner-badge"/>
+  <text x="241" y="140" text-anchor="middle" class="winner-text">+50%</text>
+  
+  <!-- Portal RTX -->
+  <text x="10" y="190" class="game-label">Portal RTX</text>
+  <rect x="150" y="175" width="96" height="18" class="bar-nvidia"/>
+  <text x="251" y="189" class="fps-label">48</text>
+  <rect x="150" y="197" width="62" height="18" class="bar-amd"/>
+  <text x="217" y="211" class="fps-label">31</text>
+  <rect x="222" y="197" width="50" height="18" class="winner-badge"/>
+  <text x="247" y="210" text-anchor="middle" class="winner-text">+55%</text>
+  
+  <!-- Spider-Man RT -->
+  <text x="10" y="260" class="game-label">Spider-Man</text>
+  <text x="10" y="275" class="game-label">RT Very High</text>
+  <rect x="150" y="245" width="164" height="18" class="bar-nvidia"/>
+  <text x="319" y="259" class="fps-label">82</text>
+  <rect x="150" y="267" width="128" height="18" class="bar-amd"/>
+  <text x="283" y="281" class="fps-label">64</text>
+  <rect x="288" y="267" width="50" height="18" class="winner-badge"/>
+  <text x="313" y="280" text-anchor="middle" class="winner-text">+28%</text>
+  
+  <!-- Control RT -->
+  <text x="10" y="330" class="game-label">Control</text>
+  <text x="10" y="345" class="game-label">RT High</text>
+  <rect x="150" y="315" width="188" height="18" class="bar-nvidia"/>
+  <text x="343" y="329" class="fps-label">94</text>
+  <rect x="150" y="337" width="144" height="18" class="bar-amd"/>
+  <text x="299" y="351" class="fps-label">72</text>
+  <rect x="304" y="337" width="50" height="18" class="winner-badge"/>
+  <text x="329" y="350" text-anchor="middle" class="winner-text">+31%</text>
+  
+  <!-- Metro Exodus -->
+  <text x="10" y="400" class="game-label">Metro Exodus</text>
+  <text x="10" y="415" class="game-label">Enhanced</text>
+  <rect x="150" y="385" width="152" height="18" class="bar-nvidia"/>
+  <text x="307" y="399" class="fps-label">76</text>
+  <rect x="150" y="407" width="116" height="18" class="bar-amd"/>
+  <text x="271" y="421" class="fps-label">58</text>
+  <rect x="276" y="407" width="50" height="18" class="winner-badge"/>
+  <text x="301" y="420" text-anchor="middle" class="winner-text">+31%</text>
+  
+  <!-- Average -->
+  <line x1="10" y1="450" x2="850" y2="450" stroke="#333" stroke-width="2"/>
+  <text x="10" y="475" class="game-label" style="font-weight: bold;">Average</text>
+  <rect x="150" y="460" width="136" height="20" class="bar-nvidia"/>
+  <text x="291" y="475" class="fps-label" style="font-size: 16px;">68</text>
+  <rect x="150" y="485" width="102" height="20" class="bar-amd"/>
+  <text x="257" y="500" class="fps-label" style="font-size: 16px;">51</text>
+  
+  <rect x="300" y="455" width="500" height="55" rx="5" fill="#76B900" opacity="0.1"/>
+  <text x="550" y="480" text-anchor="middle" class="subtitle" style="font-weight: bold;">
+    NVIDIA RTX 4070 Ti Super dominates ray tracing with 33% average advantage
+  </text>
+  <text x="550" y="500" text-anchor="middle" class="subtitle">
+    3rd-gen RT cores significantly outperform AMD's 2nd-gen ray accelerators
+  </text>
+</svg>

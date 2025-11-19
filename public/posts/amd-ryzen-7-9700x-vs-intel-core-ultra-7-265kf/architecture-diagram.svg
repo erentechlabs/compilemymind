@@ -1,0 +1,217 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: bold 14px sans-serif; fill: #444; }
+      .core-label { font: 12px sans-serif; fill: white; text-anchor: middle; }
+      .spec-text { font: 12px sans-serif; fill: #555; }
+      .p-core { fill: #0071C5; }
+      .e-core { fill: #5DADE2; }
+      .zen-core { fill: #ED1C24; }
+      .cache { fill: #FFD700; opacity: 0.7; }
+      .memory { fill: #9B59B6; opacity: 0.7; }
+    </style>
+  </defs>
+  
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" class="title">Architecture Comparison</text>
+  
+  <!-- AMD Side -->
+  <text x="250" y="75" text-anchor="middle" class="label" style="fill: #ED1C24; font-size: 20px;">AMD Ryzen 7 9700X (Zen 5)</text>
+  
+  <!-- AMD Cores (8 cores in 2 rows) -->
+  <g id="amd-cores">
+    <!-- Row 1 -->
+    <rect x="80" y="100" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="115" y="130" class="core-label">Core 0</text>
+    <text x="115" y="145" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="115" y="160" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="160" y="100" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="195" y="130" class="core-label">Core 1</text>
+    <text x="195" y="145" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="195" y="160" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="240" y="100" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="275" y="130" class="core-label">Core 2</text>
+    <text x="275" y="145" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="275" y="160" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="320" y="100" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="355" y="130" class="core-label">Core 3</text>
+    <text x="355" y="145" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="355" y="160" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <!-- Row 2 -->
+    <rect x="80" y="180" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="115" y="210" class="core-label">Core 4</text>
+    <text x="115" y="225" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="115" y="240" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="160" y="180" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="195" y="210" class="core-label">Core 5</text>
+    <text x="195" y="225" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="195" y="240" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="240" y="180" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="275" y="210" class="core-label">Core 6</text>
+    <text x="275" y="225" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="275" y="240" class="core-label" style="font-size: 10px;">5.5GHz</text>
+    
+    <rect x="320" y="180" width="70" height="70" rx="5" class="zen-core"/>
+    <text x="355" y="210" class="core-label">Core 7</text>
+    <text x="355" y="225" class="core-label" style="font-size: 10px;">Zen 5</text>
+    <text x="355" y="240" class="core-label" style="font-size: 10px;">5.5GHz</text>
+  </g>
+  
+  <!-- AMD L3 Cache -->
+  <rect x="80" y="270" width="310" height="40" rx="5" class="cache"/>
+  <text x="235" y="295" text-anchor="middle" style="font: bold 14px sans-serif; fill: #333;">
+    L3 Cache: 32 MB (Shared)
+  </text>
+  
+  <!-- AMD Memory Controller -->
+  <rect x="80" y="330" width="310" height="35" rx="5" class="memory"/>
+  <text x="235" y="352" text-anchor="middle" style="font: bold 12px sans-serif; fill: white;">
+    DDR5-5600 Memory Controller
+  </text>
+  
+  <!-- AMD Features -->
+  <text x="80" y="390" class="spec-text">✓ All cores identical (symmetric)</text>
+  <text x="80" y="410" class="spec-text">✓ SMT on all cores (16 threads)</text>
+  <text x="80" y="430" class="spec-text">✓ 1MB L2 per core</text>
+  <text x="80" y="450" class="spec-text">✓ Consistent performance</text>
+  <text x="80" y="470" class="spec-text">✓ Lower power (65W TDP)</text>
+  
+  <!-- Divider -->
+  <line x1="500" y1="60" x2="500" y2="550" stroke="#ccc" stroke-width="2" stroke-dasharray="5,5"/>
+  
+  <!-- Intel Side -->
+  <text x="750" y="75" text-anchor="middle" class="label" style="fill: #0071C5; font-size: 20px;">Intel Core Ultra 7 265KF</text>
+  
+  <!-- Intel P-Cores (8 cores in 2 rows) -->
+  <text x="750" y="95" text-anchor="middle" class="spec-text" style="font-weight: bold;">Performance Cores (P-cores)</text>
+  
+  <g id="intel-p-cores">
+    <!-- Row 1 -->
+    <rect x="610" y="100" width="60" height="60" rx="5" class="p-core"/>
+    <text x="640" y="127" class="core-label" style="font-size: 11px;">P0</text>
+    <text x="640" y="142" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="640" y="155" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="680" y="100" width="60" height="60" rx="5" class="p-core"/>
+    <text x="710" y="127" class="core-label" style="font-size: 11px;">P1</text>
+    <text x="710" y="142" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="710" y="155" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="750" y="100" width="60" height="60" rx="5" class="p-core"/>
+    <text x="780" y="127" class="core-label" style="font-size: 11px;">P2</text>
+    <text x="780" y="142" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="780" y="155" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="820" y="100" width="60" height="60" rx="5" class="p-core"/>
+    <text x="850" y="127" class="core-label" style="font-size: 11px;">P3</text>
+    <text x="850" y="142" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="850" y="155" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <!-- Row 2 -->
+    <rect x="610" y="170" width="60" height="60" rx="5" class="p-core"/>
+    <text x="640" y="197" class="core-label" style="font-size: 11px;">P4</text>
+    <text x="640" y="212" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="640" y="225" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="680" y="170" width="60" height="60" rx="5" class="p-core"/>
+    <text x="710" y="197" class="core-label" style="font-size: 11px;">P5</text>
+    <text x="710" y="212" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="710" y="225" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="750" y="170" width="60" height="60" rx="5" class="p-core"/>
+    <text x="780" y="197" class="core-label" style="font-size: 11px;">P6</text>
+    <text x="780" y="212" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="780" y="225" class="core-label" style="font-size: 9px;">SMT</text>
+    
+    <rect x="820" y="170" width="60" height="60" rx="5" class="p-core"/>
+    <text x="850" y="197" class="core-label" style="font-size: 11px;">P7</text>
+    <text x="850" y="212" class="core-label" style="font-size: 9px;">5.5GHz</text>
+    <text x="850" y="225" class="core-label" style="font-size: 9px;">SMT</text>
+  </g>
+  
+  <!-- Intel E-Cores (12 cores in 3 rows) -->
+  <text x="750" y="255" text-anchor="middle" class="spec-text" style="font-weight: bold;">Efficient Cores (E-cores)</text>
+  
+  <g id="intel-e-cores">
+    <!-- Row 1 -->
+    <rect x="610" y="260" width="45" height="45" rx="3" class="e-core"/>
+    <text x="632" y="280" class="core-label" style="font-size: 10px;">E0</text>
+    <text x="632" y="295" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="665" y="260" width="45" height="45" rx="3" class="e-core"/>
+    <text x="687" y="280" class="core-label" style="font-size: 10px;">E1</text>
+    <text x="687" y="295" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="720" y="260" width="45" height="45" rx="3" class="e-core"/>
+    <text x="742" y="280" class="core-label" style="font-size: 10px;">E2</text>
+    <text x="742" y="295" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="775" y="260" width="45" height="45" rx="3" class="e-core"/>
+    <text x="797" y="280" class="core-label" style="font-size: 10px;">E3</text>
+    <text x="797" y="295" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="830" y="260" width="45" height="45" rx="3" class="e-core"/>
+    <text x="852" y="280" class="core-label" style="font-size: 10px;">E4</text>
+    <text x="852" y="295" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <!-- Row 2 -->
+    <rect x="610" y="315" width="45" height="45" rx="3" class="e-core"/>
+    <text x="632" y="335" class="core-label" style="font-size: 10px;">E5</text>
+    <text x="632" y="350" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="665" y="315" width="45" height="45" rx="3" class="e-core"/>
+    <text x="687" y="335" class="core-label" style="font-size: 10px;">E6</text>
+    <text x="687" y="350" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="720" y="315" width="45" height="45" rx="3" class="e-core"/>
+    <text x="742" y="335" class="core-label" style="font-size: 10px;">E7</text>
+    <text x="742" y="350" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="775" y="315" width="45" height="45" rx="3" class="e-core"/>
+    <text x="797" y="335" class="core-label" style="font-size: 10px;">E8</text>
+    <text x="797" y="350" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="830" y="315" width="45" height="45" rx="3" class="e-core"/>
+    <text x="852" y="335" class="core-label" style="font-size: 10px;">E9</text>
+    <text x="852" y="350" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <!-- Row 3 -->
+    <rect x="665" y="370" width="45" height="45" rx="3" class="e-core"/>
+    <text x="687" y="390" class="core-label" style="font-size: 10px;">E10</text>
+    <text x="687" y="405" class="core-label" style="font-size: 8px;">4.6GHz</text>
+    
+    <rect x="775" y="370" width="45" height="45" rx="3" class="e-core"/>
+    <text x="797" y="390" class="core-label" style="font-size: 10px;">E11</text>
+    <text x="797" y="405" class="core-label" style="font-size: 8px;">4.6GHz</text>
+  </g>
+  
+  <!-- Intel L3 Cache -->
+  <rect x="610" y="430" width="265" height="35" rx="5" class="cache"/>
+  <text x="742" y="452" text-anchor="middle" style="font: bold 13px sans-serif; fill: #333;">
+    L3 Cache: 30 MB (Shared)
+  </text>
+  
+  <!-- Intel Memory Controller -->
+  <rect x="610" y="480" width="265" height="30" rx="5" class="memory"/>
+  <text x="742" y="500" text-anchor="middle" style="font: bold 11px sans-serif; fill: white;">
+    DDR5-6400 Memory Controller
+  </text>
+  
+  <!-- Intel Features -->
+  <text x="610" y="535" class="spec-text">✓ Hybrid architecture (P + E cores)</text>
+  <text x="610" y="555" class="spec-text">✓ Thread Director for scheduling</text>
+  <text x="610" y="575" class="spec-text">✓ Higher multi-threaded performance</text>
+  
+  <!-- Bottom note -->
+  <text x="500" y="590" text-anchor="middle" class="spec-text" style="font-style: italic;">
+    AMD: Symmetric design for consistency | Intel: Hybrid design for efficiency and performance
+  </text>
+</svg>

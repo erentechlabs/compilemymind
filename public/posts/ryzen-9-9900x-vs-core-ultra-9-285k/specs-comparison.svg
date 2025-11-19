@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .title { font: bold 24px sans-serif; fill: #333; }
+      .subtitle { font: 14px sans-serif; fill: #666; }
+      .label { font: 14px sans-serif; fill: #444; }
+      .value-amd { font: bold 15px sans-serif; fill: #ED1C24; }
+      .value-intel { font: bold 15px sans-serif; fill: #0071C5; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .bar-intel { fill: #0071C5; opacity: 0.85; }
+    </style>
+  </defs>
+  
+  <text x="400" y="35" text-anchor="middle" class="title">Flagship CPU Specifications</text>
+  
+  <rect x="250" y="50" width="25" height="15" class="bar-amd"/>
+  <text x="280" y="62" class="subtitle">Ryzen 9 9900X</text>
+  <rect x="480" y="50" width="25" height="15" class="bar-intel"/>
+  <text x="510" y="62" class="subtitle">Core Ultra 9 285K</text>
+  
+  <!-- Cores -->
+  <text x="20" y="110" class="label">Total Cores</text>
+  <rect x="150" y="95" width="120" height="22" class="bar-amd"/>
+  <text x="275" y="111" class="value-amd">12</text>
+  <rect x="150" y="122" width="240" height="22" class="bar-intel"/>
+  <text x="395" y="138" class="value-intel">24 (8P+16E)</text>
+  
+  <!-- Threads -->
+  <text x="20" y="175" class="label">Threads</text>
+  <rect x="150" y="160" width="120" height="22" class="bar-amd"/>
+  <text x="275" y="176" class="value-amd">24</text>
+  <rect x="150" y="187" width="120" height="22" class="bar-intel"/>
+  <text x="275" y="203" class="value-intel">24</text>
+  
+  <!-- Boost Clock -->
+  <text x="20" y="240" class="label">Max Boost (GHz)</text>
+  <rect x="150" y="225" width="140" height="22" class="bar-amd"/>
+  <text x="295" y="241" class="value-amd">5.6</text>
+  <rect x="150" y="252" width="142.5" height="22" class="bar-intel"/>
+  <text x="297" y="268" class="value-intel">5.7</text>
+  
+  <!-- L3 Cache -->
+  <text x="20" y="305" class="label">L3 Cache (MB)</text>
+  <rect x="150" y="290" width="256" height="22" class="bar-amd"/>
+  <text x="411" y="306" class="value-amd">64</text>
+  <rect x="150" y="317" width="144" height="22" class="bar-intel"/>
+  <text x="299" y="333" class="value-intel">36</text>
+  
+  <!-- Total Cache -->
+  <text x="20" y="370" class="label">Total Cache (MB)</text>
+  <rect x="150" y="355" width="304" height="22" class="bar-amd"/>
+  <text x="459" y="371" class="value-amd">76</text>
+  <rect x="150" y="382" width="288" height="22" class="bar-intel"/>
+  <text x="443" y="398" class="value-intel">72</text>
+  
+  <!-- TDP -->
+  <text x="20" y="435" class="label">Base TDP (W)</text>
+  <rect x="150" y="420" width="120" height="22" class="bar-amd"/>
+  <text x="275" y="436" class="value-amd">120W</text>
+  <rect x="150" y="447" width="125" height="22" class="bar-intel"/>
+  <text x="280" y="463" class="value-intel">125W</text>
+  
+  <!-- Max Power -->
+  <text x="20" y="500" class="label">Max Power (W)</text>
+  <rect x="150" y="485" width="162" height="22" class="bar-amd"/>
+  <text x="317" y="501" class="value-amd">162W</text>
+  <rect x="150" y="512" width="250" height="22" class="bar-intel"/>
+  <text x="405" y="528" class="value-intel">250W</text>
+  
+  <!-- Price -->
+  <text x="20" y="565" class="label">Launch Price</text>
+  <rect x="150" y="550" width="199.5" height="22" class="bar-amd"/>
+  <text x="354" y="566" class="value-amd">$499</text>
+  <rect x="150" y="577" width="235.6" height="22" class="bar-intel"/>
+  <text x="390" y="593" class="value-intel">$589</text>
+</svg>
