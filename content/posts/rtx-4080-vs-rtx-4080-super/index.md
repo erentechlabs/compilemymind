@@ -388,4 +388,3 @@ A: If you need a GPU now, buy now. The RTX 5080 likely won't arrive until late 2
 
 ---
 
-*Last updated: November 18, 2025*

@@ -461,4 +461,3 @@ A: If you need a GPU now, buy now. RTX 50-series and RDNA 4 won't arrive until l
 
 ---
 
-*Last updated: November 18, 2025*
