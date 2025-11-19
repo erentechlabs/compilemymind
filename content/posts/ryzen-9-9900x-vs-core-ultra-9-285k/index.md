@@ -165,7 +165,7 @@ Intel holds a slight edge in gaming, particularly in competitive esports titles 
 - Intel Core Ultra 9 285K: 35 minutes
 - **Winner: Intel (17% faster)**
 
-![Productivity Performance](productivity-performance.svg)
+![Productivity Performance](/productivity-performance.svg)
 
 ### Productivity Analysis
 
@@ -310,7 +310,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 - Intel: $26.81 per 1000 points
 - **Intel offers 3.4% better value**
 
-![Value Analysis](value-analysis.svg)
+![Value Analysis](/value-analysis.svg)
 
 ---
 

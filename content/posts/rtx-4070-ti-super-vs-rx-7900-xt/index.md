@@ -220,7 +220,7 @@ AMD's FSR 3 also includes frame generation, but with fewer supported games:
 - RX 7900 XT: 0.264 FPS/Watt
 - **NVIDIA is 7.6% more efficient**
 
-![Power Efficiency](power-efficiency.svg)
+![Power Efficiency](/power-efficiency.svg)
 
 ### Cooling & Noise
 
@@ -322,7 +322,7 @@ NVIDIA's Tensor Cores provide a massive advantage in AI workloads like Stable Di
 - RX 7900 XT ($724): $9.28 per FPS
 - **AMD offers 14% better value**
 
-![Value Analysis](value-analysis.svg)
+![Value Analysis](/value-analysis.svg)
 
 ---
 
