@@ -45,7 +45,7 @@ NVIDIA focuses on ray tracing, DLSS 3, and power efficiency, while AMD offers ra
 | **Launch Price** | $799 | $899 → $749 |
 | **Current Price** | ~$799-849 | ~$699-749 |
 
-![Specifications Comparison](/specs-comparison.svg)
+![Specifications Comparison](specs-comparison.svg)
 
 ### Key Differences
 
@@ -87,7 +87,7 @@ NVIDIA focuses on ray tracing, DLSS 3, and power efficiency, while AMD offers ra
 - RX 7900 XT: ~127 FPS
 - **Winner: AMD RX 7900 XT (+4.1% average)**
 
-![Gaming Performance 1440p](/gaming-1440p.svg)
+![Gaming Performance 1440p](gaming-1440p.svg)
 
 ### 4K Gaming (Ultra Settings, No Upscaling)
 
@@ -133,7 +133,7 @@ In pure rasterization (traditional rendering without ray tracing), the RX 7900 X
 - RX 7900 XT: ~51 FPS
 - **Winner: NVIDIA RTX 4070 Ti Super (+33% average)**
 
-![Ray Tracing Performance](/raytracing-performance.svg)
+![Ray Tracing Performance](raytracing-performance.svg)
 
 ### Ray Tracing Analysis
 
@@ -220,7 +220,7 @@ AMD's FSR 3 also includes frame generation, but with fewer supported games:
 - RX 7900 XT: 0.264 FPS/Watt
 - **NVIDIA is 7.6% more efficient**
 
-![Power Efficiency](/power-efficiency.svg)
+![Power Efficiency](power-efficiency.svg)
 
 ### Cooling & Noise
 
@@ -322,7 +322,7 @@ NVIDIA's Tensor Cores provide a massive advantage in AI workloads like Stable Di
 - RX 7900 XT ($724): $9.28 per FPS
 - **AMD offers 14% better value**
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 

@@ -47,7 +47,7 @@ Before diving into the details, here's a snapshot of what each motherboard bring
 | **BIOS Flash Button** | Yes (Q-Flash Plus) | Yes (Q-Flash Plus) |
 | **Price Range** | ~$180-220 | ~$120-150 |
 
-![Specifications Comparison](/specs-comparison.svg)
+![Specifications Comparison](specs-comparison.svg)
 
 ---
 
@@ -88,7 +88,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 
 **Winner: B850M FORCE** - Superior VRM for better stability and headroom, especially important for high-end CPUs or future upgrades.
 
-![VRM Comparison](/vrm-comparison.svg)
+![VRM Comparison](vrm-comparison.svg)
 
 ---
 
@@ -152,7 +152,7 @@ Both boards support DDR5 memory, but there are differences in capacity and overc
 
 **Winner: B850M FORCE** - More M.2 slots, better heatsinks, and superior expansion options.
 
-![Storage Comparison](/storage-comparison.svg)
+![Storage Comparison](storage-comparison.svg)
 
 ---
 
@@ -203,7 +203,7 @@ Both boards support DDR5 memory, but there are differences in capacity and overc
 
 **Winner: B850M FORCE** - Superior rear I/O, better audio, more fan headers, and Wi-Fi support.
 
-![I/O Connectivity Comparison](/io-comparison.svg)
+![I/O Connectivity Comparison](io-comparison.svg)
 
 ---
 
@@ -329,7 +329,7 @@ In real-world testing with a Core Ultra 7 265K, both motherboards deliver nearly
 
 **Is it worth it?** If you're building with a Core Ultra 7 or Ultra 9, the extra $60-70 is justified. For Core Ultra 5 builds, the D3HP offers better value.
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 

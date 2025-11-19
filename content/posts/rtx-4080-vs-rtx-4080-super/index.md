@@ -43,7 +43,7 @@ This detailed comparison breaks down the specifications, real-world gaming perfo
 | **Launch Price** | $1,199 | $999 |
 | **Current Price** | ~$950-1,050 | ~$999-1,099 |
 
-![Specifications Comparison](/specs-comparison.svg)
+![Specifications Comparison](specs-comparison.svg)
 
 ### Key Differences
 
@@ -79,7 +79,7 @@ The RTX 4080 Super brings several improvements over the original:
 - RTX 4080 Super: ~94 FPS
 - **Difference: +5.6% faster**
 
-![Gaming Performance Comparison](/gaming-performance.svg)
+![Gaming Performance Comparison](gaming-performance.svg)
 
 ### 1440p Gaming Benchmarks (Ultra Settings)
 
@@ -120,7 +120,7 @@ The RTX 4080 Super consistently delivers **5-6% better performance** across the 
 - DLSS 3 Frame Generation is crucial for playable RT performance
 - Both cards deliver 90+ FPS in RT titles with DLSS 3 enabled
 
-![Ray Tracing Performance](/raytracing-performance.svg)
+![Ray Tracing Performance](raytracing-performance.svg)
 
 ### DLSS 3 Frame Generation
 
@@ -159,7 +159,7 @@ Despite having more cores, the RTX 4080 Super maintains similar power consumptio
 - **RTX 4080 Super**: 0.324 FPS/Watt (4K average)
 - **Efficiency gain**: +3.8%
 
-![Power Efficiency](/power-efficiency.svg)
+![Power Efficiency](power-efficiency.svg)
 
 ---
 
@@ -234,7 +234,7 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 - RTX 4080 Super (~$1,050): $11.17 per FPS
 - **Value difference: Negligible**
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 

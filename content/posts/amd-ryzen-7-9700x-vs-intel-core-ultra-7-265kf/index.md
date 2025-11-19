@@ -40,9 +40,9 @@ Understanding the core specifications is crucial before we dive into performance
 
 **Intel Core Ultra 7 265KF** adopts Intel's hybrid architecture with 8 Performance cores (P-cores) and 12 Efficient cores (E-cores). The P-cores handle demanding single-threaded tasks, while E-cores manage background processes and lighter workloads. However, the KF variant lacks integrated graphics, requiring a discrete GPU.
 
-![Specifications Comparison](/specs-comparison.svg)
+![Specifications Comparison](specs-comparison.svg)
 
-![Architecture Diagram](/architecture-diagram.svg)
+![Architecture Diagram](architecture-diagram.svg)
 
 ---
 
@@ -82,7 +82,7 @@ Single-threaded performance is nearly identical, with Intel holding a slight edg
 
 **Winner: Intel Core Ultra 7 265KF** (both categories)
 
-![Benchmark Comparison](/benchmark-comparison.svg)
+![Benchmark Comparison](benchmark-comparison.svg)
 
 ### Productivity & Multi-Core Workloads
 
@@ -155,7 +155,7 @@ However, the difference is marginal—typically within 2-5%—which is barely no
 
 **Key Takeaway:** Both processors are excellent for gaming. Your choice should be based on other factors like productivity needs, power consumption, and platform features rather than pure gaming FPS.
 
-![Gaming FPS Comparison](/gaming-fps-comparison.svg)
+![Gaming FPS Comparison](gaming-fps-comparison.svg)
 
 ---
 
@@ -174,7 +174,7 @@ This is where AMD's Ryzen 7 9700X truly shines:
 
 **Winner: AMD Ryzen 7 9700X** (significantly more efficient)
 
-![Power Consumption Comparison](/power-consumption.svg)
+![Power Consumption Comparison](power-consumption.svg)
 
 The Ryzen 7 9700X consumes roughly 40-60% less power than the Intel chip under load. This translates to:
 
@@ -313,7 +313,7 @@ Let's look at the total cost of ownership:
 
 **Total savings with AMD: $280** (31% lower TCO)
 
-![Value Comparison](/value-comparison.svg)
+![Value Comparison](value-comparison.svg)
 
 ---
 

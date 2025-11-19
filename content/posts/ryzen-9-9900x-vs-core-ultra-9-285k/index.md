@@ -43,7 +43,7 @@ If you're building an ultimate gaming rig or a professional workstation and budg
 | **Launch Price** | ~$499 | ~$589 |
 | **Current Price** | ~$499 | ~$589 |
 
-![Specifications Comparison](/specs-comparison.svg)
+![Specifications Comparison](specs-comparison.svg)
 
 ### Key Architectural Differences
 
@@ -89,7 +89,7 @@ At 1080p, CPU performance is the primary bottleneck, revealing true processor ca
 - Intel Core Ultra 9 285K: ~321 FPS
 - **Winner: Intel (+2.6% average)**
 
-![Gaming Performance 1080p](/gaming-1080p.svg)
+![Gaming Performance 1080p](gaming-1080p.svg)
 
 ### 1440p Gaming (RTX 4090, Ultra Settings)
 
@@ -165,7 +165,7 @@ Intel holds a slight edge in gaming, particularly in competitive esports titles 
 - Intel Core Ultra 9 285K: 35 minutes
 - **Winner: Intel (17% faster)**
 
-![Productivity Performance](/productivity-performance.svg)
+![Productivity Performance](productivity-performance.svg)
 
 ### Productivity Analysis
 
@@ -193,7 +193,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 - AMD: 162W max vs Intel: 250W max (54% more power)
 - AMD runs significantly cooler and quieter
 
-![Power Consumption](/power-consumption.svg)
+![Power Consumption](power-consumption.svg)
 
 ### Performance Per Watt
 
@@ -310,7 +310,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 - Intel: $26.81 per 1000 points
 - **Intel offers 3.4% better value**
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 
