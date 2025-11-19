@@ -1,58 +1,87 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
   <defs>
     <style>
       .title { font: bold 24px sans-serif; fill: #333; }
       .subtitle { font: 14px sans-serif; fill: #666; }
-      .label { font: bold 15px sans-serif; fill: #444; }
-      .price-big { font: bold 36px sans-serif; }
-      .feature-text { font: 13px sans-serif; fill: #555; }
-      .nvidia-box { fill: #f0fff0; stroke: #76B900; stroke-width: 3; }
-      .amd-box { fill: #fff5f5; stroke: #ED1C24; stroke-width: 3; }
-      .value-badge { fill: #4CAF50; }
+      .label { font: 13px sans-serif; fill: #444; }
+      .value-label { font: bold 14px sans-serif; fill: #333; }
+      .bar-nvidia { fill: #76B900; opacity: 0.85; }
+      .bar-amd { fill: #ED1C24; opacity: 0.85; }
+      .grid-line { stroke: #ddd; stroke-width: 1; }
+      .price-box { fill: #f5f5f5; stroke: #ccc; stroke-width: 2; }
     </style>
   </defs>
   
-  <text x="400" y="35" text-anchor="middle" class="title">Price & Value Comparison</text>
+  <text x="450" y="35" text-anchor="middle" class="title">Value Analysis: Performance Per Dollar</text>
+  <text x="450" y="60" text-anchor="middle" class="subtitle">Lower cost per FPS is better</text>
   
-  <!-- NVIDIA -->
-  <rect x="50" y="70" width="300" height="380" rx="15" class="nvidia-box"/>
-  <text x="200" y="105" text-anchor="middle" class="label" style="fill: #76B900; font-size: 20px;">RTX 4070 Ti Super</text>
-  <text x="200" y="150" text-anchor="middle" class="price-big" style="fill: #76B900;">$799-849</text>
+  <rect x="150" y="80" width="250" height="60" class="price-box" rx="5"/>
+  <text x="275" y="105" text-anchor="middle" class="label">RTX 4070 Ti Super</text>
+  <text x="275" y="130" text-anchor="middle" class="value-label" style="font-size: 20px;">$799</text>
   
-  <text x="70" y="190" class="feature-text" style="font-weight: bold;">Strengths:</text>
-  <text x="70" y="215" class="feature-text">✓ Superior ray tracing (+33%)</text>
-  <text x="70" y="235" class="feature-text">✓ DLSS 3 Frame Generation</text>
-  <text x="70" y="255" class="feature-text">✓ Better power efficiency</text>
-  <text x="70" y="275" class="feature-text">✓ Cooler & quieter</text>
-  <text x="70" y="295" class="feature-text">✓ Tensor Cores for AI</text>
-  <text x="70" y="315" class="feature-text">✓ AV1 encoding</text>
-  <text x="70" y="335" class="feature-text">✓ Better for creators</text>
+  <rect x="500" y="80" width="250" height="60" class="price-box" rx="5"/>
+  <text x="625" y="105" text-anchor="middle" class="label">RX 7900 XT</text>
+  <text x="625" y="130" text-anchor="middle" class="value-label" style="font-size: 20px;">$724 avg</text>
   
-  <text x="70" y="370" class="feature-text" style="font-weight: bold;">Best For:</text>
-  <text x="70" y="390" class="feature-text">Ray tracing enthusiasts</text>
-  <text x="70" y="410" class="feature-text">Content creators</text>
-  <text x="70" y="430" class="feature-text">Efficiency-focused builds</text>
+  <text x="450" y="185" text-anchor="middle" class="title" style="font-size: 20px;">1440p Gaming</text>
   
-  <!-- AMD -->
-  <rect x="450" y="70" width="300" height="380" rx="15" class="amd-box"/>
-  <text x="600" y="105" text-anchor="middle" class="label" style="fill: #ED1C24; font-size: 20px;">RX 7900 XT</text>
-  <text x="600" y="150" text-anchor="middle" class="price-big" style="fill: #ED1C24;">$699-749</text>
+  <line x1="150" y1="210" x2="150" y2="310" class="grid-line"/>
+  <line x1="250" y1="210" x2="250" y2="310" class="grid-line"/>
+  <line x1="350" y1="210" x2="350" y2="310" class="grid-line"/>
+  <line x1="450" y1="210" x2="450" y2="310" class="grid-line"/>
+  <line x1="550" y1="210" x2="550" y2="310" class="grid-line"/>
+  <line x1="650" y1="210" x2="650" y2="310" class="grid-line"/>
+  <line x1="750" y1="210" x2="750" y2="310" class="grid-line"/>
   
-  <text x="470" y="190" class="feature-text" style="font-weight: bold;">Strengths:</text>
-  <text x="470" y="215" class="feature-text">✓ Faster rasterization (+4-6%)</text>
-  <text x="470" y="235" class="feature-text">✓ 20GB VRAM (vs 16GB)</text>
-  <text x="470" y="255" class="feature-text">✓ $50-100 cheaper</text>
-  <text x="470" y="275" class="feature-text">✓ Better value per dollar</text>
-  <text x="470" y="295" class="feature-text">✓ DisplayPort 2.1</text>
-  <text x="470" y="315" class="feature-text">✓ More bandwidth</text>
-  <text x="470" y="335" class="feature-text">✓ Future-proofing VRAM</text>
+  <text x="150" y="330" text-anchor="middle" class="subtitle">$0</text>
+  <text x="250" y="330" text-anchor="middle" class="subtitle">$2</text>
+  <text x="350" y="330" text-anchor="middle" class="subtitle">$4</text>
+  <text x="450" y="330" text-anchor="middle" class="subtitle">$6</text>
+  <text x="550" y="330" text-anchor="middle" class="subtitle">$8</text>
+  <text x="650" y="330" text-anchor="middle" class="subtitle">$10</text>
+  <text x="750" y="330" text-anchor="middle" class="subtitle">$12</text>
+  <text x="450" y="350" text-anchor="middle" class="subtitle">Cost per FPS</text>
   
-  <text x="470" y="370" class="feature-text" style="font-weight: bold;">Best For:</text>
-  <text x="470" y="390" class="feature-text">Value-conscious gamers</text>
-  <text x="470" y="410" class="feature-text">4K gaming</text>
-  <text x="470" y="430" class="feature-text">Traditional gaming</text>
+  <text x="10" y="245" class="label">RTX 4070 Ti</text>
+  <text x="10" y="260" class="label">Super</text>
+  <rect x="150" y="230" width="305" height="25" class="bar-nvidia"/>
+  <text x="460" y="247" class="value-label">$6.55 per FPS</text>
   
-  <text x="400" y="480" text-anchor="middle" class="subtitle">
-    AMD: Better value & VRAM | NVIDIA: Better features & efficiency
-  </text>
+  <text x="10" y="290" class="label">RX 7900 XT</text>
+  <rect x="150" y="275" width="270" height="25" class="bar-amd"/>
+  <text x="425" y="292" class="value-label">$5.70 per FPS</text>
+  
+  <text x="750" y="285" text-anchor="end" class="subtitle" style="fill: #ED1C24; font-weight: bold;">AMD 13% better value</text>
+  
+  <text x="450" y="400" text-anchor="middle" class="title" style="font-size: 20px;">4K Gaming</text>
+  
+  <line x1="150" y1="425" x2="150" y2="525" class="grid-line"/>
+  <line x1="250" y1="425" x2="250" y2="525" class="grid-line"/>
+  <line x1="350" y1="425" x2="350" y2="525" class="grid-line"/>
+  <line x1="450" y1="425" x2="450" y2="525" class="grid-line"/>
+  <line x1="550" y1="425" x2="550" y2="525" class="grid-line"/>
+  <line x1="650" y1="425" x2="650" y2="525" class="grid-line"/>
+  <line x1="750" y1="425" x2="750" y2="525" class="grid-line"/>
+  
+  <text x="150" y="545" text-anchor="middle" class="subtitle">$0</text>
+  <text x="250" y="545" text-anchor="middle" class="subtitle">$2</text>
+  <text x="350" y="545" text-anchor="middle" class="subtitle">$4</text>
+  <text x="450" y="545" text-anchor="middle" class="subtitle">$6</text>
+  <text x="550" y="545" text-anchor="middle" class="subtitle">$8</text>
+  <text x="650" y="545" text-anchor="middle" class="subtitle">$10</text>
+  <text x="750" y="545" text-anchor="middle" class="subtitle">$12</text>
+  <text x="450" y="565" text-anchor="middle" class="subtitle">Cost per FPS</text>
+  
+  <text x="10" y="460" class="label">RTX 4070 Ti</text>
+  <text x="10" y="475" class="label">Super</text>
+  <rect x="150" y="445" width="490" height="25" class="bar-nvidia"/>
+  <text x="645" y="462" class="value-label">$10.80 per FPS</text>
+  
+  <text x="10" y="505" class="label">RX 7900 XT</text>
+  <rect x="150" y="490" width="421" height="25" class="bar-amd"/>
+  <text x="576" y="507" class="value-label">$9.28 per FPS</text>
+  
+  <text x="750" y="500" text-anchor="end" class="subtitle" style="fill: #ED1C24; font-weight: bold;">AMD 14% better value</text>
+  
+  <text x="450" y="590" text-anchor="middle" class="subtitle" style="font-style: italic;">RX 7900 XT offers better value, but RTX 4070 Ti Super has superior ray tracing and DLSS 3</text>
 </svg>

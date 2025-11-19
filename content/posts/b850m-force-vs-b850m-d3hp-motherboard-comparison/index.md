@@ -152,7 +152,7 @@ Both boards support DDR5 memory, but there are differences in capacity and overc
 
 **Winner: B850M FORCE** - More M.2 slots, better heatsinks, and superior expansion options.
 
-![Storage Comparison](/storage-comparison.svg)
+![Storage Comparison](storage-comparison.svg)
 
 ---
 
@@ -329,7 +329,7 @@ In real-world testing with a Core Ultra 7 265K, both motherboards deliver nearly
 
 **Is it worth it?** If you're building with a Core Ultra 7 or Ultra 9, the extra $60-70 is justified. For Core Ultra 5 builds, the D3HP offers better value.
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 
@@ -480,4 +480,3 @@ A: No, both boards only support DDR5 memory. DDR4 is not compatible with LGA 185
 
 ---
 
-*Last updated: November 18, 2025*

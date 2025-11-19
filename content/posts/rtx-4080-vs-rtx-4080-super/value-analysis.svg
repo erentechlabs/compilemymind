@@ -1,55 +1,98 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
   <defs>
     <style>
       .title { font: bold 24px sans-serif; fill: #333; }
       .subtitle { font: 14px sans-serif; fill: #666; }
-      .label { font: bold 15px sans-serif; fill: #444; }
-      .price-big { font: bold 36px sans-serif; }
-      .feature-text { font: 13px sans-serif; fill: #555; }
-      .box-4080 { fill: #f5f5f5; stroke: #888; stroke-width: 3; }
-      .box-super { fill: #f0fff0; stroke: #76B900; stroke-width: 3; }
-      .value-badge { fill: #4CAF50; }
+      .label { font: 13px sans-serif; fill: #444; }
+      .value-label { font: bold 14px sans-serif; fill: #333; }
+      .bar-4080 { fill: #76B900; opacity: 0.85; }
+      .bar-4080super { fill: #00D4FF; opacity: 0.85; }
+      .grid-line { stroke: #ddd; stroke-width: 1; }
+      .price-box { fill: #f5f5f5; stroke: #ccc; stroke-width: 2; }
     </style>
   </defs>
   
-  <text x="400" y="35" text-anchor="middle" class="title">Price & Value Analysis</text>
+  <text x="450" y="35" text-anchor="middle" class="title">Value Analysis: Price and Performance Per Dollar</text>
   
-  <!-- RTX 4080 -->
-  <rect x="50" y="70" width="300" height="330" rx="15" class="box-4080"/>
-  <text x="200" y="105" text-anchor="middle" class="label" style="fill: #666; font-size: 20px;">RTX 4080</text>
-  <text x="200" y="150" text-anchor="middle" class="price-big" style="fill: #666;">$950-1,050</text>
-  <text x="200" y="175" text-anchor="middle" class="subtitle">Current Street Price</text>
+  <text x="450" y="70" text-anchor="middle" class="subtitle" style="font-size: 16px; font-weight: bold;">Launch MSRP Pricing</text>
   
-  <text x="70" y="210" class="feature-text" style="font-weight: bold;">Status:</text>
-  <text x="70" y="235" class="feature-text">• Being phased out</text>
-  <text x="70" y="255" class="feature-text">• Discounted pricing</text>
-  <text x="70" y="275" class="feature-text">• 5-6% slower</text>
-  <text x="70" y="295" class="feature-text">• Mature drivers</text>
+  <rect x="150" y="85" width="250" height="55" class="price-box" rx="5"/>
+  <text x="275" y="108" text-anchor="middle" class="label">RTX 4080</text>
+  <text x="275" y="130" text-anchor="middle" class="value-label" style="font-size: 20px;">MSRP: $1,199</text>
   
-  <text x="70" y="330" class="feature-text" style="font-weight: bold;">Best For:</text>
-  <text x="70" y="350" class="feature-text">Finding deals under $900</text>
-  <text x="70" y="370" class="feature-text">Already own one</text>
+  <rect x="500" y="85" width="250" height="55" class="price-box" rx="5"/>
+  <text x="625" y="108" text-anchor="middle" class="label">RTX 4080 Super</text>
+  <text x="625" y="130" text-anchor="middle" class="value-label" style="font-size: 20px;">MSRP: $999</text>
   
-  <!-- RTX 4080 Super -->
-  <rect x="450" y="70" width="300" height="330" rx="15" class="box-super"/>
-  <text x="600" y="105" text-anchor="middle" class="label" style="fill: #76B900; font-size: 20px;">RTX 4080 Super</text>
-  <text x="600" y="150" text-anchor="middle" class="price-big" style="fill: #76B900;">$999-1,099</text>
-  <text x="600" y="175" text-anchor="middle" class="subtitle">Current MSRP</text>
+  <text x="450" y="175" text-anchor="middle" class="label" style="font-size: 16px;">Performance Per Dollar at Launch MSRP (4K Gaming)</text>
   
-  <text x="470" y="210" class="feature-text" style="font-weight: bold;">Status:</text>
-  <text x="470" y="235" class="feature-text">• Current generation</text>
-  <text x="470" y="255" class="feature-text">• Better value at MSRP</text>
-  <text x="470" y="275" class="feature-text">• 5-6% faster</text>
-  <text x="470" y="295" class="feature-text">• More CUDA cores</text>
+  <line x1="150" y1="195" x2="150" y2="285" class="grid-line"/>
+  <line x1="250" y1="195" x2="250" y2="285" class="grid-line"/>
+  <line x1="350" y1="195" x2="350" y2="285" class="grid-line"/>
+  <line x1="450" y1="195" x2="450" y2="285" class="grid-line"/>
+  <line x1="550" y1="195" x2="550" y2="285" class="grid-line"/>
+  <line x1="650" y1="195" x2="650" y2="285" class="grid-line"/>
+  <line x1="750" y1="195" x2="750" y2="285" class="grid-line"/>
   
-  <text x="470" y="330" class="feature-text" style="font-weight: bold;">Best For:</text>
-  <text x="470" y="350" class="feature-text">New builds</text>
-  <text x="470" y="370" class="feature-text">Best performance</text>
+  <text x="150" y="300" text-anchor="middle" class="subtitle">$0</text>
+  <text x="250" y="300" text-anchor="middle" class="subtitle">$3</text>
+  <text x="350" y="300" text-anchor="middle" class="subtitle">$6</text>
+  <text x="450" y="300" text-anchor="middle" class="subtitle">$9</text>
+  <text x="550" y="300" text-anchor="middle" class="subtitle">$12</text>
+  <text x="650" y="300" text-anchor="middle" class="subtitle">$15</text>
+  <text x="750" y="300" text-anchor="middle" class="subtitle">$18</text>
+  <text x="450" y="320" text-anchor="middle" class="subtitle">Cost per FPS (lower is better)</text>
   
-  <rect x="460" y="380" width="280" height="15" rx="5" class="value-badge"/>
-  <text x="600" y="392" text-anchor="middle" style="font: bold 14px sans-serif; fill: white;">Recommended Choice</text>
+  <text x="10" y="225" class="label">RTX 4080</text>
+  <rect x="150" y="210" width="449" height="25" class="bar-4080"/>
+  <text x="604" y="227" class="value-label">$13.47 per FPS</text>
   
-  <text x="400" y="430" text-anchor="middle" class="subtitle">
-    Super offers better value at MSRP, but 4080 is good if under $900
-  </text>
+  <text x="10" y="265" class="label">RTX 4080</text>
+  <text x="10" y="280" class="label">Super</text>
+  <rect x="150" y="255" width="354" height="25" class="bar-4080super"/>
+  <text x="509" y="272" class="value-label">$10.63 per FPS</text>
+  
+  <text x="750" y="265" text-anchor="end" class="subtitle" style="fill: #00D4FF; font-weight: bold;">Super: 21% better value</text>
+  
+  <text x="450" y="365" text-anchor="middle" class="subtitle" style="font-size: 16px; font-weight: bold;">Current Street Prices (November 2025)</text>
+  
+  <rect x="150" y="380" width="250" height="55" class="price-box" rx="5"/>
+  <text x="275" y="403" text-anchor="middle" class="label">RTX 4080</text>
+  <text x="275" y="425" text-anchor="middle" class="value-label" style="font-size: 20px;">~$950-1,050</text>
+  
+  <rect x="500" y="380" width="250" height="55" class="price-box" rx="5"/>
+  <text x="625" y="403" text-anchor="middle" class="label">RTX 4080 Super</text>
+  <text x="625" y="425" text-anchor="middle" class="value-label" style="font-size: 20px;">~$999-1,199</text>
+  
+  <text x="450" y="470" text-anchor="middle" class="label" style="font-size: 16px;">Performance Per Dollar at Current Prices (4K Gaming)</text>
+  
+  <line x1="150" y1="490" x2="150" y2="580" class="grid-line"/>
+  <line x1="250" y1="490" x2="250" y2="580" class="grid-line"/>
+  <line x1="350" y1="490" x2="350" y2="580" class="grid-line"/>
+  <line x1="450" y1="490" x2="450" y2="580" class="grid-line"/>
+  <line x1="550" y1="490" x2="550" y2="580" class="grid-line"/>
+  <line x1="650" y1="490" x2="650" y2="580" class="grid-line"/>
+  <line x1="750" y1="490" x2="750" y2="580" class="grid-line"/>
+  
+  <text x="150" y="595" text-anchor="middle" class="subtitle">$0</text>
+  <text x="250" y="595" text-anchor="middle" class="subtitle">$3</text>
+  <text x="350" y="595" text-anchor="middle" class="subtitle">$6</text>
+  <text x="450" y="595" text-anchor="middle" class="subtitle">$9</text>
+  <text x="550" y="595" text-anchor="middle" class="subtitle">$12</text>
+  <text x="650" y="595" text-anchor="middle" class="subtitle">$15</text>
+  <text x="750" y="595" text-anchor="middle" class="subtitle">$18</text>
+  <text x="450" y="615" text-anchor="middle" class="subtitle">Cost per FPS (lower is better)</text>
+  
+  <text x="10" y="520" class="label">RTX 4080</text>
+  <rect x="150" y="505" width="374" height="25" class="bar-4080"/>
+  <text x="529" y="522" class="value-label">$11.24 per FPS (~$1,000)</text>
+  
+  <text x="10" y="560" class="label">RTX 4080</text>
+  <text x="10" y="575" class="label">Super</text>
+  <rect x="150" y="550" width="372" height="25" class="bar-4080super"/>
+  <text x="527" y="567" class="value-label">$11.17 per FPS (~$1,050)</text>
+  
+  <text x="750" y="560" text-anchor="end" class="subtitle" style="font-style: italic;">Nearly identical value</text>
+  
+  <text x="450" y="640" text-anchor="middle" class="subtitle" style="font-style: italic;">At current prices, both cards offer similar value. Choose Super for new builds.</text>
 </svg>

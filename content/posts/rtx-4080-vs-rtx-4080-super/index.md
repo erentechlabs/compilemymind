@@ -159,7 +159,7 @@ Despite having more cores, the RTX 4080 Super maintains similar power consumptio
 - **RTX 4080 Super**: 0.324 FPS/Watt (4K average)
 - **Efficiency gain**: +3.8%
 
-![Power Efficiency](/power-efficiency.svg)
+![Power Efficiency](power-efficiency.svg)
 
 ---
 
@@ -234,7 +234,7 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 - RTX 4080 Super (~$1,050): $11.17 per FPS
 - **Value difference: Negligible**
 
-![Value Analysis](/value-analysis.svg)
+![Value Analysis](value-analysis.svg)
 
 ---
 
