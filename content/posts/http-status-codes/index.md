@@ -1,7 +1,7 @@
 ---
 title: "Understanding HTTP Status Codes"
 description: "A concise guide to HTTP status codes, their meanings, and practical examples."
-date: 2025-11-24
+date: 2025-11-23
 tags: ["Web", "API"]
 categories: ["technology"]
 ---
