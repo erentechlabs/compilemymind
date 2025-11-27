@@ -1,6 +1,6 @@
 ---
-title: "Network Communication Basics: Understanding How Modern Networks Work"
-description: "A clear and practical introduction to network communication, Ethernet, MAC/IP addressing, and hierarchical network design."
+title: "Understanding Internet Connectivity and Network Cabling: A Complete Guide"
+description: "A comprehensive overview of how ISPs deliver internet, connection types, data transmission, and essential cabling technologies including twisted-pair, coaxial, and fiber optics."
 date: 2025-11-27
 tags: ["Networking", "Web", "API", "Hardware", "ProblemSolving"]
 categories: ["technology"]
