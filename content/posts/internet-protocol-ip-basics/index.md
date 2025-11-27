@@ -6,8 +6,6 @@ tags: ["Web", "Networking", "ProblemSolving", "Programming", "Hardware"]
 categories: ["technology"]
 ---
 
-# Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT
-
 Every device that communicates over the Internet relies on one foundational technology: the **Internet Protocol (IP)**. Whether you are browsing the web, watching a video, or connecting to a remote server, IP ensures packets find the correct destination.
 
 This guide summarizes the core concepts of IP addressing, subnetting, addressing types, DHCP allocation, NAT translation, and how hosts communicate across networks.
