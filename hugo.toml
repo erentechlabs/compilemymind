@@ -1,3 +1,116 @@
-baseURL = 'https://www.compilemymind.com/'
-languageCode = 'en-us'
-title = 'My New Personal Site'
+# =============================================================================
+# Compile My Mind — Hugo Configuration
+# Theme: hugo-mana-theme (https://github.com/Livour/hugo-mana-theme)
+# Focus: Cybersecurity · Networking · IT · Systems · Computing
+# =============================================================================
+
+baseURL = "https://www.compilemymind.com/"
+theme = "mana"
+defaultContentLanguage = "en"
+
+enableRobotsTXT = true
+
+# =============================================================================
+# Pagination
+# =============================================================================
+[pagination]
+  pageSize = 12
+
+# =============================================================================
+# Markup & Syntax Highlighting
+# =============================================================================
+[markup]
+  [markup.tableOfContents]
+    startLevel = 1
+    endLevel = 6
+    ordered = false
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+    [markup.goldmark.parser]
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    noClasses = false
+    style = "catppuccin-macchiato"
+
+# =============================================================================
+# Outputs — JSON required for search functionality
+# =============================================================================
+[outputs]
+  home = ["HTML", "JSON"]
+
+# =============================================================================
+# Sitemap
+# =============================================================================
+[sitemap]
+  changefreq = "weekly"
+  priority = 0.5
+  filename = "sitemap.xml"
+
+# =============================================================================
+# Site Parameters
+# =============================================================================
+[params]
+  enableIntegrity = false
+  relatedPostsCount = 4
+
+  description = "Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a developer who thinks like an engineer."
+  author = "Eren"
+  heroTitleLine1 = "COMPILE MY MIND"
+  heroTitleLine2 = "Security · Networks · Systems"
+  custom404Message = "Page not found — even the best recon turns up nothing sometimes."
+
+  # Favicon
+  favicon = "/favicon.ico"
+
+  # Social Links (add yours below)
+  [params.social]
+    # github   = "https://github.com/yourusername"
+    # linkedin = "https://www.linkedin.com/in/yourprofile"
+    # twitter  = "yourusername"
+
+  # Avatar — using existing icon from assets/
+  [params.avatar]
+    [params.avatar.home]
+      assetPath = "icon.png"
+
+  # Buy Me a Coffee (disabled)
+  [params.buyMeACoffee]
+    enabled = false
+
+  # Syntax highlighting themes (dark: Catppuccin Macchiato, light: Catppuccin Frappe)
+  [params.codeHighlight]
+    darkTheme  = "catppuccin-macchiato"
+    lightTheme = "catppuccin-frappe"
+
+  # Admonitions / alerts style
+  [params.admonitions]
+    alertStyle = "favicon"
+
+
+  # Verification meta tags
+  [params.verification]
+    bing   = "AA4E4F8297B73C961E16F3A4FE57D87D"
+    yandex = "8865729cd882d7e9"
+
+# =============================================================================
+# Navigation Menu
+# =============================================================================
+[[menus.main]]
+  name    = "Home"
+  pageRef = "/"
+  weight  = 10
+
+[[menus.main]]
+  name    = "Posts"
+  pageRef = "/posts"
+  weight  = 20
+
+[[menus.main]]
+  name    = "Tags"
+  pageRef = "/tags"
+  weight  = 30

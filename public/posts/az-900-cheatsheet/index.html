@@ -1,0 +1,1768 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="en">
+<meta name="theme-color" content="#BD5FFF">
+<script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+  
+  (function(){var t=sessionStorage.getItem('mana_pt');if(t){document.documentElement.setAttribute('data-page-enter',t);sessionStorage.removeItem('mana_pt');}})();
+  
+  window.MANA_SEARCH_INDEX_URL = '\/index.json';
+  
+  window.MANA_LANG_PREFIXES = ['en'];
+</script>
+<title>AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide | </title>
+<meta
+  name="description"
+  content="
+    A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam.
+  
+  ">
+
+
+  <meta name="keywords" content="azure, cloud, certification, az-900, microsoft, cheatsheet">
+
+
+
+  <meta name="author" content="Eren">
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/az-900-cheatsheet/">
+
+
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/az-900-cheatsheet/"><link rel="alternate" hreflang="x-default" href="http://localhost:1313/posts/az-900-cheatsheet/">
+
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide | ">
+<meta property="og:description" content="A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam.">
+<meta property="og:url" content="http://localhost:1313/posts/az-900-cheatsheet/">
+<meta property="og:site_name" content=""><meta property="article:published_time" content="2026-04-22T23:00:00&#43;03:00">
+  <meta
+    property="article:modified_time"
+    content="2026-04-22T23:00:00&#43;03:00"><meta property="article:section" content="azure"><meta property="article:tag" content="azure"><meta property="article:tag" content="cloud"><meta property="article:tag" content="certification"><meta property="article:tag" content="az-900"><meta property="article:tag" content="microsoft"><meta property="article:tag" content="cheatsheet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide | ">
+<meta name="twitter:description" content="A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam.">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Eren"},"dateModified":"2026-04-22T23:00:00+03:00","datePublished":"2026-04-22T23:00:00+03:00","description":"A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam.","headline":"AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide","image":"http://localhost:1313/icon.png","inLanguage":"en","keywords":["azure","cloud","certification","az-900","microsoft","cheatsheet"],"mainEntityOfPage":{"@id":"http://localhost:1313/posts/az-900-cheatsheet/","@type":"WebPage"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:1313/icon.png"},"name":"","url":"http://localhost:1313/"},"timeRequired":"PT19M","url":"http://localhost:1313/posts/az-900-cheatsheet/","wordCount":3895}</script>
+
+
+
+  
+  
+  
+    
+  
+  
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"http://localhost:1313/","name":"Home","position":1},{"@type":"ListItem","item":"http://localhost:1313/posts/","name":"Posts","position":2},{"@type":"ListItem","item":"http://localhost:1313/posts/az-900-cheatsheet/","name":"AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide","position":3}]}</script>
+
+
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+  media="print"
+  onload="this.media='all'">
+<noscript>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</noscript>
+
+<link rel="stylesheet" href="/css/theme.min.8072bb5d762c2b5f525748fdbcc951c0546e2e712e06c598f5e8ee6364a69869.css">
+
+
+  <link
+    rel="stylesheet"
+    href="/css/syntax-dark.min.b01037e5609e6260b74d6fcdd6d5131e8dcbc4d46d6ef4bfbe5a60bdfc1a9f30.css"
+    id="syntax-dark-theme"
+    class="syntax-theme">
+  <link
+    rel="stylesheet"
+    href="/css/syntax-light.min.9602bc2fcef52b4c62e05eae14b48ba428e114f116e993e504d83ed5a3aeda98.css"
+    id="syntax-light-theme"
+    class="syntax-theme"
+    disabled><script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+
+    const syntaxDark = document.getElementById("syntax-dark-theme");
+    const syntaxLight = document.getElementById("syntax-light-theme");
+
+    if (theme === "light") {
+      if (syntaxDark) syntaxDark.disabled = true;
+      if (syntaxLight) syntaxLight.disabled = false;
+    } else {
+      if (syntaxDark) syntaxDark.disabled = false;
+      if (syntaxLight) syntaxLight.disabled = true;
+    }
+
+    
+    const observer = new MutationObserver(() => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      if (currentTheme === "light") {
+        if (syntaxDark) syntaxDark.disabled = true;
+        if (syntaxLight) syntaxLight.disabled = false;
+      } else {
+        if (syntaxDark) syntaxDark.disabled = false;
+        if (syntaxLight) syntaxLight.disabled = true;
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+  })();
+</script>
+
+
+
+
+<link rel="stylesheet" href="/css/bundle.min.a344802d65c119f645e39f907ac9d6beb082ae6bd8f4bb92d516d449dcad3020.css">
+
+
+
+<link rel="stylesheet" href="/css/custom.min.9d19656412ed5eda727b3aa9066a6d2efc11f06f855fc90c62e4bf327e21ec51.css">
+
+
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="manifest" href="/site.webmanifest">
+
+
+
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5ZP6VTDC0D');
+</script>
+
+
+<meta name="google-adsense-account" content="ca-pub-6150876719010892">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892" crossorigin="anonymous"></script>
+
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <a href="#main-content" class="skip-to-main" aria-label="Skip to main content"
+      >Skip to main content</a
+    >
+    <header class="sticky-header">
+      <div class="header-container">
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+  <div class="header-content">
+    <div class="header-logo">
+      <a href="/" class="logo-link" aria-label="Home - ">
+        
+      </a>
+    </div>
+
+    
+    <button 
+      id="mobile-menu-toggle" 
+      class="mobile-menu-toggle" 
+      aria-label="Toggle menu" 
+      aria-expanded="false"
+      type="button">
+      <span class="hamburger-icon">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </span>
+    </button>
+
+    <div class="header-menu">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+
+      <button id="search-toggle" class="search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+
+      
+
+
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" type="button">
+  <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+  </svg>
+  <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+  </svg>
+</button>
+
+    </div>
+  </div>
+</nav>
+
+      </div>
+      <div class="reading-progress-bar" aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content" class="flex-1" role="main">
+      
+  <div class="single-post-wrapper">
+    <article class="single-post">
+      
+
+
+
+
+
+
+
+      <header class="post-header">
+        
+
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+      <meta itemprop="position" content="1" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/posts/" itemprop="item"><span itemprop="name">Posts</span></a>
+      <meta itemprop="position" content="2" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span itemprop="name" class="breadcrumb-current">AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide</span>
+      <meta itemprop="position" content="3" />
+    </li>
+  </ol>
+</nav>
+
+
+        <h1 class="post-title-main">AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide</h1>
+
+        
+          <p class="post-description-main">A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam.</p>
+        
+
+        <div class="post-meta">
+  <div class="post-meta-info">
+    <time datetime="2026-04-22T23:00:00&#43;03:00" class="post-date">
+      <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      April 22, 2026
+    </time>
+
+    <span class="meta-separator">•</span>
+
+    
+      <span class="post-word-count">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        3895 words
+      </span>
+    
+
+    
+      <span class="meta-separator">•</span>
+      <span class="post-reading-time">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        19 min
+      </span>
+    
+  </div>
+
+  
+    <div class="post-tags">
+      
+        <a href="/tags/azure" class="post-tag">azure</a>
+      
+        <a href="/tags/cloud" class="post-tag">cloud</a>
+      
+        <a href="/tags/certification" class="post-tag">certification</a>
+      
+        <a href="/tags/az-900" class="post-tag">az-900</a>
+      
+        <a href="/tags/microsoft" class="post-tag">microsoft</a>
+      
+        <a href="/tags/cheatsheet" class="post-tag">cheatsheet</a>
+      
+    </div>
+  
+</div>
+
+      </header>
+
+      <div class="post-content-main">
+        <p>Passing the <strong>Microsoft AZ-900: Azure Fundamentals</strong> exam is your first step into the Azure cloud ecosystem. Whether you&rsquo;re a developer, sysadmin, security professional, or IT manager, this certification validates your cloud literacy. This cheatsheet condenses every exam domain into a structured, scannable reference — study it, revisit it, and walk into the exam with confidence.</p>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p><strong>Exam breakdown:</strong> ~40–60 questions · ~60 minutes · Score 700/1000 to pass · Available in person or online proctored</p>
+
+</blockquote>
+<hr>
+<h2 id="domain-10--describe-cloud-concepts-2530">Domain 1.0 — Describe Cloud Concepts (25–30%)</h2>
+<h3 id="11-what-is-cloud-computing--shared-responsibility">1.1 What Is Cloud Computing &amp; Shared Responsibility?</h3>
+<p><strong>Cloud computing</strong> is the delivery of computing services — servers, storage, databases, networking, software, analytics, and intelligence — over the internet (&ldquo;the cloud&rdquo;) to offer faster innovation, flexible resources, and economies of scale.</p>
+<p><strong>The Shared Responsibility Model</strong> defines who is accountable for what across the cloud stack:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Responsibility</th>
+          <th>On-Premises</th>
+          <th>IaaS</th>
+          <th>PaaS</th>
+          <th>SaaS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Physical datacenter</td>
+          <td>Customer</td>
+          <td>Microsoft</td>
+          <td>Microsoft</td>
+          <td>Microsoft</td>
+      </tr>
+      <tr>
+          <td>Network controls</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Microsoft</td>
+          <td>Microsoft</td>
+      </tr>
+      <tr>
+          <td>Operating system</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Microsoft</td>
+          <td>Microsoft</td>
+      </tr>
+      <tr>
+          <td>Applications</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Microsoft</td>
+      </tr>
+      <tr>
+          <td>Identity &amp; access</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Shared</td>
+      </tr>
+      <tr>
+          <td>Data &amp; information</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Customer</td>
+          <td>Customer</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p><strong>Key insight:</strong> As you move from IaaS → PaaS → SaaS, Microsoft takes on <em>more</em> responsibility and you take on <em>less</em>. However, <strong>identity and data are always a shared or customer responsibility</strong>, regardless of the service model.</p>
+
+</blockquote>
+<hr>
+<h3 id="12-cloud-service-types-iaas-paas-saas">1.2 Cloud Service Types: IaaS, PaaS, SaaS</h3>
+<p><strong>Infrastructure as a Service (IaaS)</strong></p>
+<ul>
+<li>You rent the raw infrastructure: VMs, storage, networking.</li>
+<li>You manage: OS, middleware, runtime, applications, data.</li>
+<li><strong>Use case:</strong> Lift-and-shift migrations, test/dev environments.</li>
+<li><strong>Azure examples:</strong> Azure Virtual Machines, Azure Blob Storage, Azure Virtual Networks.</li>
+</ul>
+<p><strong>Platform as a Service (PaaS)</strong></p>
+<ul>
+<li>You get a managed platform; focus on building and deploying apps.</li>
+<li>Microsoft manages: OS, runtime, infrastructure patches.</li>
+<li><strong>Use case:</strong> Web apps, APIs, microservices development.</li>
+<li><strong>Azure examples:</strong> Azure App Service, Azure SQL Database, Azure Functions.</li>
+</ul>
+<p><strong>Software as a Service (SaaS)</strong></p>
+<ul>
+<li>Fully managed software delivered over the internet; nothing to install or manage.</li>
+<li><strong>Use case:</strong> End-user productivity, collaboration, CRM.</li>
+<li><strong>Azure examples:</strong> Microsoft 365, Dynamics 365, Microsoft Teams.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Think of it like a pizza analogy:
+</span></span><span class="line"><span class="cl">IaaS = Pizza ingredients delivered (you cook)
+</span></span><span class="line"><span class="cl">PaaS = Pizza oven + ingredients (you bake)
+</span></span><span class="line"><span class="cl">SaaS = Pizza delivered, ready to eat
+</span></span></code></pre></div><hr>
+<h3 id="13-cloud-deployment-models">1.3 Cloud Deployment Models</h3>
+<p><strong>Public Cloud</strong></p>
+<ul>
+<li>Resources are owned and operated by a third-party provider (Microsoft Azure) and delivered over the internet.</li>
+<li><strong>Pros:</strong> No upfront capital cost, massive scalability, global reach, pay-as-you-go.</li>
+<li><strong>Cons:</strong> Less control over infrastructure, potential compliance concerns.</li>
+<li><strong>Example:</strong> An e-commerce startup running entirely on Azure.</li>
+</ul>
+<p><strong>Private Cloud</strong></p>
+<ul>
+<li>Computing resources are used exclusively by one organisation. Can be hosted on-premises or by a third party.</li>
+<li><strong>Pros:</strong> Maximum control, compliance-friendly, high security.</li>
+<li><strong>Cons:</strong> Expensive CapEx, requires IT staff to maintain.</li>
+<li><strong>Example:</strong> A government agency running Azure Stack HCI on-premises.</li>
+</ul>
+<p><strong>Hybrid Cloud</strong></p>
+<ul>
+<li>Combines public and private clouds, allowing data and applications to move between them.</li>
+<li><strong>Pros:</strong> Flexibility, data sovereignty compliance, burst to public cloud when needed.</li>
+<li><strong>Cons:</strong> Complex to manage and integrate.</li>
+<li><strong>Example:</strong> A bank keeps sensitive customer data on-premises but runs its public website on Azure.</li>
+</ul>
+<p><strong>Multi-Cloud</strong></p>
+<ul>
+<li>Using multiple public cloud providers simultaneously (Azure + AWS + GCP).</li>
+<li>Managed via tools like <strong>Azure Arc</strong>.</li>
+</ul>
+<hr>
+<h3 id="14-benefits-of-the-cloud">1.4 Benefits of the Cloud</h3>
+<table>
+  <thead>
+      <tr>
+          <th>Benefit</th>
+          <th>What It Means</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>High Availability</strong></td>
+          <td>Resources stay up even when components fail. Measured as uptime SLAs (e.g., 99.99%).</td>
+      </tr>
+      <tr>
+          <td><strong>Scalability</strong></td>
+          <td>Ability to increase or decrease resources to handle demand.</td>
+      </tr>
+      <tr>
+          <td><strong>Elasticity</strong></td>
+          <td><em>Automatic</em> scaling — resources expand/contract in real time without manual intervention.</td>
+      </tr>
+      <tr>
+          <td><strong>Agility</strong></td>
+          <td>Rapid provisioning of resources in minutes, accelerating innovation.</td>
+      </tr>
+      <tr>
+          <td><strong>Geo-Distribution</strong></td>
+          <td>Deploy to regions worldwide to serve users with low latency.</td>
+      </tr>
+      <tr>
+          <td><strong>Disaster Recovery</strong></td>
+          <td>Replicate data and apps across regions; recover quickly from outages.</td>
+      </tr>
+      <tr>
+          <td><strong>Reliability</strong></td>
+          <td>Redundant infrastructure ensures consistent performance.</td>
+      </tr>
+      <tr>
+          <td><strong>Predictability</strong></td>
+          <td>Consistent performance and cost (can budget accurately).</td>
+      </tr>
+      <tr>
+          <td><strong>Security</strong></td>
+          <td>Broad set of built-in security controls; Microsoft invests $1B+ annually in security.</td>
+      </tr>
+      <tr>
+          <td><strong>Governance</strong></td>
+          <td>Policy enforcement, auditing, and compliance monitoring at scale.</td>
+      </tr>
+      <tr>
+          <td><strong>Manageability</strong></td>
+          <td>Manage through portal, CLI, APIs, or ARM templates.</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p><strong>Scalability vs. Elasticity:</strong> Scalability is your <em>capacity to scale</em>. Elasticity is <em>automatic, dynamic</em> scaling happening without manual action. Azure Virtual Machine Scale Sets are a great example of elasticity.</p>
+
+</blockquote>
+<hr>
+<h3 id="15-consumption-based-model-capex-vs-opex">1.5 Consumption-Based Model: CapEx vs. OpEx</h3>
+<p><strong>Capital Expenditure (CapEx)</strong></p>
+<ul>
+<li>Large upfront investment in physical infrastructure (servers, data centers, networking gear).</li>
+<li>Costs are amortised over time.</li>
+<li><strong>Example:</strong> Buying your own server rack.</li>
+</ul>
+<p><strong>Operational Expenditure (OpEx)</strong></p>
+<ul>
+<li>Pay-as-you-go spending on services consumed.</li>
+<li>No upfront cost; expensed immediately.</li>
+<li><strong>Example:</strong> Paying your Azure monthly bill.</li>
+</ul>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p>Cloud computing is fundamentally an <strong>OpEx model</strong> — you pay for what you use, when you use it. This shifts IT costs from a capital budget to an operational budget, improving cash flow and reducing financial risk.</p>
+
+</blockquote>
+<p><strong>Why OpEx wins in the cloud:</strong></p>
+<ul>
+<li>No over-provisioning or wasted idle hardware</li>
+<li>Scale down during off-peak hours → immediate cost savings</li>
+<li>Only pay for storage/compute actually consumed</li>
+</ul>
+<hr>
+<h3 id="16-sustainability-and-green-it-in-azure">1.6 Sustainability and Green IT in Azure</h3>
+<p>Microsoft has made significant commitments to sustainability:</p>
+<ul>
+<li><strong>Carbon negative by 2030</strong> — removing more carbon from the atmosphere than it emits.</li>
+<li><strong>Water positive by 2030</strong> — replenishing more water than it consumes.</li>
+<li><strong>Zero waste by 2030</strong> — sending zero waste to landfills.</li>
+<li><strong>100% renewable energy</strong> by 2025 for all datacenters.</li>
+</ul>
+<p><strong>Azure&rsquo;s sustainability tools:</strong></p>
+<ul>
+<li><strong>Microsoft Sustainability Manager</strong> — tracks, reports, and reduces environmental impact.</li>
+<li><strong>Azure&rsquo;s datacenters</strong> use advanced cooling, renewable energy, and water recycling.</li>
+<li><strong>Carbon-aware workloads</strong> — Azure shifts workloads to regions with lower carbon intensity.</li>
+</ul>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p>Cloud can actually be <em>greener</em> than on-premises: Azure datacenters run at 1.12–1.18 PUE (Power Usage Effectiveness), far better than the industry average of 1.58. Shared infrastructure means less waste.</p>
+
+</blockquote>
+<hr>
+<h2 id="domain-20--describe-azure-architecture-and-services-3540">Domain 2.0 — Describe Azure Architecture and Services (35–40%)</h2>
+<h3 id="21-azure-physical-infrastructure">2.1 Azure Physical Infrastructure</h3>
+<p><strong>Datacenters</strong>
+The physical buildings housing servers, networking, power, and cooling. You don&rsquo;t interact with them directly, but they form the backbone of Azure.</p>
+<p><strong>Regions</strong>
+A region is a set of datacenters deployed within a defined perimeter, connected via a dedicated low-latency network. Azure has 60+ regions globally.</p>
+<ul>
+<li><strong>Example regions:</strong> East US, West Europe, Southeast Asia, Australia East.</li>
+<li>Each region is paired with another nearby region (<strong>Region Pair</strong>) for disaster recovery and data replication.</li>
+</ul>
+<p><strong>Availability Zones</strong>
+Physically separate datacenters <em>within</em> a single region, each with independent power, cooling, and networking.</p>
+<ul>
+<li><strong>Purpose:</strong> Protect against single datacenter failure within a region.</li>
+<li><strong>Minimum:</strong> 3 zones per region (where supported).</li>
+<li><strong>Use case:</strong> Deploy VMs across zones for 99.99% uptime SLA.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Region: East US
+</span></span><span class="line"><span class="cl">  ├── Availability Zone 1 (Datacenter A)
+</span></span><span class="line"><span class="cl">  ├── Availability Zone 2 (Datacenter B)
+</span></span><span class="line"><span class="cl">  └── Availability Zone 3 (Datacenter C)
+</span></span></code></pre></div><p><strong>Region Pairs</strong></p>
+<ul>
+<li>Each Azure region is paired with another region at least 300 miles away.</li>
+<li>During planned maintenance, only one region in a pair is updated at a time.</li>
+<li>In a region-wide disaster, one region in a pair is prioritised for recovery.</li>
+<li><strong>Example pairs:</strong> East US ↔ West US, North Europe ↔ West Europe.</li>
+</ul>
+<p><strong>Sovereign Regions</strong>
+Isolated from the main Azure infrastructure for specific government/compliance requirements:</p>
+<ul>
+<li><strong>Azure Government</strong> — US government agencies.</li>
+<li><strong>Azure China</strong> — operated by 21Vianet, separate from global Azure.</li>
+</ul>
+<hr>
+<h3 id="22-azure-management-infrastructure">2.2 Azure Management Infrastructure</h3>
+<p><strong>Resources</strong>
+The fundamental unit of Azure — anything you create and use: a VM, a database, a storage account, a virtual network.</p>
+<p><strong>Resource Groups</strong></p>
+<ul>
+<li>Logical containers that hold related Azure resources.</li>
+<li>A resource can only belong to <strong>one</strong> resource group.</li>
+<li>Deleting a resource group deletes all resources inside it.</li>
+<li><strong>Best practice:</strong> Group by lifecycle (delete together) or environment (dev/prod/test).</li>
+</ul>
+<p><strong>Subscriptions</strong></p>
+<ul>
+<li>An authenticated and authorised access boundary to Azure services.</li>
+<li>Linked to an Azure account (Azure AD identity).</li>
+<li><strong>Billing boundary</strong> — each subscription generates its own invoice.</li>
+<li><strong>Access control boundary</strong> — apply policies and RBAC at the subscription level.</li>
+<li>An organisation can have multiple subscriptions (e.g., one per department).</li>
+</ul>
+<p><strong>Management Groups</strong></p>
+<ul>
+<li>Containers that organise subscriptions for governance at scale.</li>
+<li>Apply Azure Policies and RBAC at the management group level — these cascade down to all subscriptions and resources beneath.</li>
+<li>Up to <strong>6 levels deep</strong> (excluding root).</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">Management Group (Root)
+</span></span><span class="line"><span class="cl">  ├── Management Group: Production
+</span></span><span class="line"><span class="cl">  │     ├── Subscription: Finance-Prod
+</span></span><span class="line"><span class="cl">  │     └── Subscription: HR-Prod
+</span></span><span class="line"><span class="cl">  └── Management Group: Development
+</span></span><span class="line"><span class="cl">        └── Subscription: DevTest
+</span></span></code></pre></div><hr>
+<h3 id="23-azure-compute-services">2.3 Azure Compute Services</h3>
+<p><strong>Azure Virtual Machines (VMs)</strong></p>
+<ul>
+<li>Full control over the OS, software, and configuration.</li>
+<li>IaaS — you manage the OS and above.</li>
+<li><strong>Use cases:</strong> Custom applications, legacy apps, precise OS configuration.</li>
+<li><strong>VM Scale Sets:</strong> Deploy and auto-scale sets of identical VMs — true elasticity.</li>
+<li><strong>Azure Spot VMs:</strong> Unused Azure capacity at deep discounts (up to 90%) — interruptible.</li>
+<li><strong>Reserved VMs:</strong> Commit 1–3 years, save up to 72%.</li>
+</ul>
+<p><strong>Azure App Service</strong></p>
+<ul>
+<li>Fully managed PaaS platform for web apps, REST APIs, and mobile backends.</li>
+<li>Supports: .NET, Java, Node.js, Python, PHP, Ruby.</li>
+<li>Built-in auto-scaling, CI/CD integration, SSL, and custom domains.</li>
+<li><strong>No OS management required.</strong></li>
+</ul>
+<p><strong>Azure Functions (Serverless)</strong></p>
+<ul>
+<li>Event-driven, serverless compute — code runs <em>only</em> when triggered.</li>
+<li>Triggers: HTTP requests, timers, queue messages, blob storage events.</li>
+<li>Pay only for execution time and number of invocations.</li>
+<li><strong>Max execution timeout:</strong> 10 minutes (default), up to unlimited on Premium plan.</li>
+<li><strong>Use cases:</strong> Webhooks, lightweight APIs, IoT data processing, scheduled tasks.</li>
+</ul>
+<p><strong>Azure Container Instances (ACI)</strong></p>
+<ul>
+<li>Run Docker containers without managing VMs or orchestrators.</li>
+<li>Fastest way to run a container on Azure.</li>
+<li><strong>Use case:</strong> Simple isolated containers, batch jobs, CI/CD pipelines.</li>
+</ul>
+<p><strong>Azure Kubernetes Service (AKS)</strong></p>
+<ul>
+<li>Managed Kubernetes — Microsoft handles control plane, upgrades, scaling.</li>
+<li>You focus on deploying and managing containerised workloads.</li>
+<li>Integrates with Azure Monitor, Azure AD, Azure Container Registry.</li>
+<li><strong>Use case:</strong> Complex microservices architectures, production-grade container orchestration.</li>
+</ul>
+<p><strong>Azure Virtual Desktop</strong></p>
+<ul>
+<li>Fully managed Windows desktop and app virtualisation running in Azure.</li>
+<li>Multi-session Windows 10/11 — multiple users on one VM.</li>
+<li><strong>Use case:</strong> Remote workforces, BYOD policies, compliance-sensitive environments.</li>
+</ul>
+<hr>
+<h3 id="24-azure-networking-services">2.4 Azure Networking Services</h3>
+<p><strong>Azure Virtual Networks (VNets)</strong></p>
+<ul>
+<li>Isolated, private networks in Azure — the foundation of all Azure networking.</li>
+<li>Resources in the same VNet can communicate by default.</li>
+<li><strong>Subnets</strong> segment a VNet for organisation and security.</li>
+<li><strong>Peering:</strong> Connect two VNets (even across regions) privately — no public internet traversal.</li>
+</ul>
+<p><strong>Network Security Groups (NSGs)</strong></p>
+<ul>
+<li>Firewall rules applied to subnets or individual NICs.</li>
+<li>Contains inbound and outbound security rules with priority ordering.</li>
+</ul>
+<p><strong>VPN Gateway</strong></p>
+<ul>
+<li>Connects an Azure VNet to an on-premises network over an encrypted tunnel.</li>
+<li><strong>Site-to-Site VPN:</strong> On-premises network ↔ Azure (persistent connection).</li>
+<li><strong>Point-to-Site VPN:</strong> Individual device ↔ Azure (remote worker use case).</li>
+<li><strong>VNet-to-VNet VPN:</strong> Connect Azure VNets across regions via encrypted tunnel.</li>
+</ul>
+<p><strong>Azure ExpressRoute</strong></p>
+<ul>
+<li>Private, dedicated connection from on-premises to Azure via a connectivity partner.</li>
+<li><strong>NOT over the public internet</strong> — lower latency, higher reliability, more consistent bandwidth.</li>
+<li>Speeds: 50 Mbps to 100 Gbps.</li>
+<li><strong>Use case:</strong> Large enterprises with high-bandwidth, compliance-sensitive, or latency-sensitive workloads.</li>
+</ul>
+<table>
+  <thead>
+      <tr>
+          <th>Feature</th>
+          <th>VPN Gateway</th>
+          <th>ExpressRoute</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Traffic path</td>
+          <td>Public internet (encrypted)</td>
+          <td>Private connection</td>
+      </tr>
+      <tr>
+          <td>Latency</td>
+          <td>Higher</td>
+          <td>Lower, predictable</td>
+      </tr>
+      <tr>
+          <td>Bandwidth</td>
+          <td>Up to 10 Gbps</td>
+          <td>Up to 100 Gbps</td>
+      </tr>
+      <tr>
+          <td>Cost</td>
+          <td>Lower</td>
+          <td>Higher</td>
+      </tr>
+      <tr>
+          <td>Reliability</td>
+          <td>Internet-dependent</td>
+          <td>Higher (SLA-backed)</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Azure DNS</strong></p>
+<ul>
+<li>Host your DNS domains in Azure for high availability and fast query performance.</li>
+<li>Integrates with Azure resources via alias records.</li>
+<li><strong>Azure Private DNS:</strong> Resolve names within a VNet without exposing to the internet.</li>
+</ul>
+<p><strong>Azure Content Delivery Network (CDN)</strong></p>
+<ul>
+<li>Caches content at edge nodes worldwide to reduce latency for end users.</li>
+</ul>
+<p><strong>Azure Load Balancer</strong></p>
+<ul>
+<li>Distributes inbound traffic across multiple backend VMs.</li>
+<li><strong>Layer 4</strong> (TCP/UDP) load balancing.</li>
+<li>Internal (private) or public-facing.</li>
+</ul>
+<p><strong>Azure Application Gateway</strong></p>
+<ul>
+<li><strong>Layer 7</strong> (HTTP/HTTPS) load balancer with URL-based routing, SSL termination, and a Web Application Firewall (WAF).</li>
+</ul>
+<hr>
+<h3 id="25-azure-storage-services">2.5 Azure Storage Services</h3>
+<p><strong>Storage Account Types</strong></p>
+<ul>
+<li><strong>Standard General-Purpose v2</strong> — recommended for most scenarios.</li>
+<li><strong>Premium</strong> — for low-latency, high-throughput workloads.</li>
+</ul>
+<p><strong>Azure Blob Storage</strong></p>
+<ul>
+<li>Unstructured object storage for text, binary, images, videos, backups.</li>
+<li>Accessed via HTTP/HTTPS, REST API, or SDKs.</li>
+<li><strong>Use cases:</strong> Media streaming, log files, backup archives, data lake storage.</li>
+</ul>
+<p><strong>Access Tiers (Blob):</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Tier</th>
+          <th>Access Frequency</th>
+          <th>Storage Cost</th>
+          <th>Access Cost</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Hot</strong></td>
+          <td>Frequently accessed</td>
+          <td>Highest</td>
+          <td>Lowest</td>
+      </tr>
+      <tr>
+          <td><strong>Cool</strong></td>
+          <td>Infrequently accessed (30+ days)</td>
+          <td>Lower</td>
+          <td>Higher</td>
+      </tr>
+      <tr>
+          <td><strong>Cold</strong></td>
+          <td>Rarely accessed (90+ days)</td>
+          <td>Lower</td>
+          <td>Higher</td>
+      </tr>
+      <tr>
+          <td><strong>Archive</strong></td>
+          <td>Long-term retention (180+ days)</td>
+          <td>Lowest</td>
+          <td>Highest + rehydration time</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p>Archive tier data is <em>offline</em> — you must rehydrate it (move to Hot/Cool) before accessing. This can take hours.</p>
+
+</blockquote>
+<p><strong>Azure File Storage</strong></p>
+<ul>
+<li>Fully managed file shares accessed via the <strong>SMB (Server Message Block)</strong> or <strong>NFS</strong> protocol.</li>
+<li>Mount from Windows, Linux, or macOS — no code changes required.</li>
+<li><strong>Use case:</strong> Replace or supplement on-premises file servers, lift-and-shift apps requiring file shares.</li>
+</ul>
+<p><strong>Azure Queue Storage</strong></p>
+<ul>
+<li>Message storage for asynchronous communication between application components.</li>
+<li>Each message can be up to <strong>64 KB</strong>.</li>
+<li><strong>Use case:</strong> Decoupling microservices, task queues, reliable messaging.</li>
+</ul>
+<p><strong>Azure Table Storage</strong></p>
+<ul>
+<li>NoSQL key-value store for structured data.</li>
+<li>Now superseded by <strong>Azure Cosmos DB Table API</strong> for more advanced scenarios.</li>
+</ul>
+<p><strong>Azure Disk Storage</strong></p>
+<ul>
+<li>Block-level storage volumes attached to Azure VMs (like a hard drive).</li>
+<li><strong>Managed Disks:</strong> Microsoft manages the storage account — recommended.</li>
+<li><strong>Types:</strong> Ultra Disk, Premium SSD v2, Premium SSD, Standard SSD, Standard HDD.</li>
+</ul>
+<p><strong>Storage Redundancy Options:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Option</th>
+          <th>Replicas</th>
+          <th>Geographic Spread</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>LRS</strong> (Locally Redundant)</td>
+          <td>3 copies</td>
+          <td>Single datacenter</td>
+      </tr>
+      <tr>
+          <td><strong>ZRS</strong> (Zone Redundant)</td>
+          <td>3 copies</td>
+          <td>3 AZs in one region</td>
+      </tr>
+      <tr>
+          <td><strong>GRS</strong> (Geo-Redundant)</td>
+          <td>6 copies</td>
+          <td>2 regions (3 each)</td>
+      </tr>
+      <tr>
+          <td><strong>GZRS</strong> (Geo-Zone Redundant)</td>
+          <td>6 copies</td>
+          <td>ZRS primary + LRS secondary</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="26-azure-database-services">2.6 Azure Database Services</h3>
+<p><strong>Azure Cosmos DB</strong></p>
+<ul>
+<li>Microsoft&rsquo;s globally distributed, multi-model NoSQL database.</li>
+<li>Single-digit millisecond latency at any scale.</li>
+<li>Supports multiple APIs: SQL (Core), MongoDB, Cassandra, Gremlin, Table.</li>
+<li><strong>5 consistency levels:</strong> Strong, Bounded Staleness, Session, Consistent Prefix, Eventual.</li>
+<li><strong>Use case:</strong> Gaming leaderboards, IoT data, globally distributed apps, real-time personalisation.</li>
+</ul>
+<p><strong>Azure SQL Database</strong></p>
+<ul>
+<li>Fully managed PaaS relational database based on Microsoft SQL Server.</li>
+<li>Built-in HA, backups, patching — no DBA required for infrastructure.</li>
+<li><strong>Purchasing models:</strong> DTU (simple, bundled) or vCore (more control, hybrid licensing).</li>
+<li><strong>Use case:</strong> New cloud-native apps, web app backends, SaaS applications.</li>
+</ul>
+<p><strong>Azure SQL Managed Instance</strong></p>
+<ul>
+<li>Fully managed SQL Server instance with near 100% compatibility with on-premises SQL Server.</li>
+<li>Ideal for <strong>lift-and-shift</strong> migrations from on-premises SQL Server.</li>
+<li>Runs inside a VNet for network isolation.</li>
+<li>Supports features not available in Azure SQL Database: SQL Agent, cross-database queries, linked servers.</li>
+</ul>
+<p><strong>Azure Database for PostgreSQL / MySQL / MariaDB</strong></p>
+<ul>
+<li>Fully managed open-source database engines.</li>
+<li>Automatic backups, high availability, scaling.</li>
+<li><strong>Use case:</strong> Open-source stacks, LAMP/MEAN applications.</li>
+</ul>
+<p><strong>Comparison: When to use what</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Scenario</th>
+          <th>Recommended Service</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>New cloud app, relational data</td>
+          <td>Azure SQL Database</td>
+      </tr>
+      <tr>
+          <td>Migrate existing SQL Server (complex features needed)</td>
+          <td>SQL Managed Instance</td>
+      </tr>
+      <tr>
+          <td>Global scale, NoSQL, multi-model</td>
+          <td>Azure Cosmos DB</td>
+      </tr>
+      <tr>
+          <td>Open-source PostgreSQL workload</td>
+          <td>Azure DB for PostgreSQL</td>
+      </tr>
+      <tr>
+          <td>IoT sensor data, time-series</td>
+          <td>Azure Cosmos DB</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="domain-30--describe-azure-management-and-governance-3035">Domain 3.0 — Describe Azure Management and Governance (30–35%)</h2>
+<h3 id="31-cost-management-and-pricing-tools">3.1 Cost Management and Pricing Tools</h3>
+<p><strong>Factors Affecting Azure Costs:</strong></p>
+<ol>
+<li><strong>Resource type</strong> — Different services have different cost structures.</li>
+<li><strong>Consumption</strong> — How much you use (hours of VM uptime, GB of storage, etc.).</li>
+<li><strong>Region</strong> — Prices vary by datacenter location.</li>
+<li><strong>Subscription type</strong> — Pay-as-you-go vs. Enterprise Agreement vs. Dev/Test.</li>
+<li><strong>Azure Marketplace</strong> — Third-party software licences may add cost.</li>
+</ol>
+<p><strong>Cost Optimisation Strategies:</strong></p>
+<ul>
+<li><strong>Reserved Instances:</strong> Commit 1 or 3 years → save up to 72%.</li>
+<li><strong>Azure Hybrid Benefit:</strong> Use existing Windows Server/SQL Server licences on Azure.</li>
+<li><strong>Spot VMs:</strong> Use spare capacity at up to 90% discount (interruptible).</li>
+<li><strong>Right-sizing:</strong> Monitor usage and downsize over-provisioned resources.</li>
+<li><strong>Auto-shutdown:</strong> Schedule VMs to shut down outside business hours.</li>
+<li><strong>Tags:</strong> Tag resources to allocate costs to teams/projects.</li>
+</ul>
+<p><strong>Azure Pricing Calculator</strong></p>
+<ul>
+<li>Estimate the cost of Azure services <em>before</em> you deploy.</li>
+<li>Configure services, regions, and pricing tiers to get a monthly estimate.</li>
+<li>Export and share estimates.</li>
+<li>URL: <code>https://azure.microsoft.com/pricing/calculator/</code></li>
+</ul>
+<p><strong>Total Cost of Ownership (TCO) Calculator</strong></p>
+<ul>
+<li>Compare the cost of <em>your current on-premises infrastructure</em> vs. running it in Azure.</li>
+<li>Factor in: hardware, software licences, electricity, cooling, IT staff, facilities.</li>
+<li>Great for making the business case for cloud migration.</li>
+<li>URL: <code>https://azure.microsoft.com/pricing/tco/calculator/</code></li>
+</ul>
+<p><strong>Azure Cost Management + Billing</strong></p>
+<ul>
+<li>Monitor, analyse, and optimise your Azure spending.</li>
+<li>Set <strong>budgets</strong> and <strong>alerts</strong> to be notified when spending thresholds are reached.</li>
+<li>View spending breakdowns by resource, resource group, subscription, or tag.</li>
+<li>Generate cost reports and export data.</li>
+</ul>
+<hr>
+<h3 id="32-azure-governance-tools">3.2 Azure Governance Tools</h3>
+<p><strong>Azure Policy</strong></p>
+<ul>
+<li>A service that creates, assigns, and manages <em>policies</em> to enforce rules and compliance on Azure resources.</li>
+<li><strong>Effects:</strong> Deny (block non-compliant resources), Audit (log without blocking), Append (add required properties), DeployIfNotExists.</li>
+<li><strong>Initiatives:</strong> Groups of policies deployed together (e.g., &ldquo;ISO 27001 compliance&rdquo;).</li>
+<li><strong>Example policy:</strong> &ldquo;All storage accounts must use HTTPS-only access.&rdquo;</li>
+</ul>
+<p><strong>Role-Based Access Control (RBAC)</strong></p>
+<ul>
+<li>Manage <em>who</em> can do <em>what</em> on <em>which</em> Azure resources.</li>
+<li>Principle of least privilege — grant only the permissions needed.</li>
+<li><strong>Built-in roles:</strong> Owner, Contributor, Reader, User Access Administrator.</li>
+<li><strong>Custom roles:</strong> Define your own permission sets.</li>
+<li>Roles are assigned to: Users, Groups, Service Principals, Managed Identities.</li>
+<li>Scope: Management Group → Subscription → Resource Group → Resource (permissions inherit downward).</li>
+</ul>
+<p><strong>Resource Locks</strong></p>
+<ul>
+<li>Prevent accidental modification or deletion of Azure resources.</li>
+<li><strong>CanNotDelete:</strong> Users can read and modify, but cannot delete.</li>
+<li><strong>ReadOnly:</strong> Users can only read the resource — no modifications or deletions.</li>
+<li>Applied at: Management Group, Subscription, Resource Group, or individual Resource level.</li>
+<li><strong>Important:</strong> Locks override RBAC permissions — even an Owner cannot delete a locked resource without first removing the lock.</li>
+</ul>
+<p><strong>Azure Blueprints</strong> <em>(Legacy — being replaced by Azure Deployment Environments and Policy)</em></p>
+<ul>
+<li>Define a repeatable set of Azure resources (ARM templates, policies, RBAC) to provision governed environments.</li>
+<li>Useful for establishing &ldquo;landing zones&rdquo; with pre-configured governance.</li>
+</ul>
+<p><strong>Tags</strong></p>
+<ul>
+<li>Key-value metadata applied to Azure resources for organisation and cost tracking.</li>
+<li><strong>Examples:</strong> <code>Environment: Production</code>, <code>CostCenter: IT-Dept</code>, <code>Owner: JohnSmith</code>.</li>
+<li>Tags do <strong>not</strong> inherit from parent resources or resource groups by default.</li>
+<li>Use Azure Policy to enforce tagging requirements.</li>
+</ul>
+<hr>
+<h3 id="33-microsoft-purview-for-data-governance">3.3 Microsoft Purview for Data Governance</h3>
+<p><strong>Microsoft Purview</strong> is a unified data governance and compliance platform that helps organisations understand, manage, and protect their data across on-premises, multi-cloud, and SaaS environments.</p>
+<p><strong>Key Capabilities:</strong></p>
+<p><strong>Data Map</strong></p>
+<ul>
+<li>Automatically scans and catalogues data sources (Azure, AWS S3, on-premises SQL, Salesforce, etc.).</li>
+<li>Creates a unified data map showing where data lives and how it flows.</li>
+</ul>
+<p><strong>Data Catalog</strong></p>
+<ul>
+<li>Business-friendly searchable inventory of all data assets.</li>
+<li>Data stewards can add business glossary terms, classifications, and descriptions.</li>
+<li><strong>Data lineage:</strong> Visualise how data moves and transforms across systems.</li>
+</ul>
+<p><strong>Data Insights</strong></p>
+<ul>
+<li>Analytics dashboards showing data landscape trends: sensitivity labels, classifications, data storage volumes.</li>
+</ul>
+<p><strong>Information Protection (formerly AIP)</strong></p>
+<ul>
+<li>Discover, classify, and protect sensitive data using sensitivity labels.</li>
+<li>Labels can apply encryption, access restrictions, and visual markings.</li>
+<li><strong>Sensitive information types:</strong> Credit card numbers, social security numbers, health data, custom regex patterns.</li>
+</ul>
+<p><strong>Data Loss Prevention (DLP)</strong></p>
+<ul>
+<li>Policies that prevent sensitive data from being shared inappropriately (email, Teams, SharePoint, endpoints).</li>
+</ul>
+<p><strong>Compliance Manager</strong></p>
+<ul>
+<li>Assess your compliance posture against 300+ regulatory frameworks (GDPR, ISO 27001, HIPAA, NIST).</li>
+<li>Provides improvement actions and a compliance score.</li>
+</ul>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p>For the AZ-900 exam, understand that Purview provides: unified governance, data cataloguing, lineage, sensitivity classification, and compliance management — all without code.</p>
+
+</blockquote>
+<hr>
+<h3 id="34-monitoring-and-management-tools">3.4 Monitoring and Management Tools</h3>
+<p><strong>Azure Monitor</strong></p>
+<ul>
+<li>The central monitoring platform for all Azure resources.</li>
+<li>Collects <strong>metrics</strong> (numerical time-series data like CPU %) and <strong>logs</strong> (structured records of events).</li>
+<li><strong>Key features:</strong>
+<ul>
+<li><strong>Alerts:</strong> Notify you when thresholds are crossed (e.g., CPU &gt; 80% for 5 minutes).</li>
+<li><strong>Dashboards:</strong> Custom visualisations of your monitoring data.</li>
+<li><strong>Workbooks:</strong> Interactive data analysis.</li>
+<li><strong>Application Insights:</strong> APM (Application Performance Monitoring) for web apps — traces, exceptions, dependencies.</li>
+<li><strong>Log Analytics:</strong> Query logs using Kusto Query Language (KQL).</li>
+</ul>
+</li>
+</ul>
+<p><strong>Azure Service Health</strong></p>
+<ul>
+<li>Personalised view of the health of Azure services and regions <em>that you are using</em>.</li>
+<li><strong>Three components:</strong>
+<ul>
+<li><strong>Azure Status:</strong> Global Azure service status page (all customers).</li>
+<li><strong>Service Health:</strong> Status of services in regions <em>you use</em>.</li>
+<li><strong>Resource Health:</strong> Status of <em>your specific resources</em> (e.g., is my VM healthy?).</li>
+</ul>
+</li>
+<li>Receive alerts when Azure incidents affect your resources.</li>
+</ul>
+<p><strong>Azure Advisor</strong></p>
+<ul>
+<li>AI-powered consultant that analyses your Azure usage and recommends improvements across five categories:
+<ul>
+<li><strong>Cost</strong> — Identify idle resources, rightsizing opportunities.</li>
+<li><strong>Security</strong> — Recommendations from Microsoft Defender for Cloud.</li>
+<li><strong>Reliability</strong> — Improve HA and resilience.</li>
+<li><strong>Operational Excellence</strong> — Best practices for deployment and management.</li>
+<li><strong>Performance</strong> — Speed up applications.</li>
+</ul>
+</li>
+</ul>
+<p><strong>Azure Arc</strong></p>
+<ul>
+<li>Extend Azure management and governance to <em>non-Azure</em> environments:
+<ul>
+<li>On-premises servers (Windows/Linux)</li>
+<li>Other cloud providers (AWS, GCP)</li>
+<li>Kubernetes clusters anywhere</li>
+</ul>
+</li>
+<li>Apply Azure Policy, RBAC, tags, and Monitor to Arc-enabled resources.</li>
+</ul>
+<p><strong>Azure Resource Manager (ARM)</strong></p>
+<ul>
+<li>The deployment and management layer for Azure — every Azure API call goes through ARM.</li>
+<li>Deploy resources via: Azure Portal, Azure CLI, Azure PowerShell, ARM Templates, Bicep, Terraform.</li>
+<li><strong>ARM Templates:</strong> JSON-based infrastructure-as-code (IaC) declarative templates.</li>
+<li><strong>Bicep:</strong> Microsoft&rsquo;s own IaC language — cleaner syntax, compiles to ARM JSON.</li>
+</ul>
+<hr>
+<h3 id="35-azure-openai-service-and-responsible-ai">3.5 Azure OpenAI Service and Responsible AI</h3>
+<p><strong>Azure OpenAI Service</strong></p>
+<ul>
+<li>Access to OpenAI&rsquo;s powerful models (GPT-4, DALL-E, Whisper, Embeddings) through Azure&rsquo;s secure, enterprise-grade infrastructure.</li>
+<li>Data stays within your Azure tenant — not used to train OpenAI models.</li>
+<li>Integrates with Azure security (Private Endpoints, RBAC, VNet).</li>
+<li><strong>Use cases:</strong> Copilot applications, document summarisation, code generation, semantic search, customer service bots.</li>
+</ul>
+<p><strong>Key Models Available:</strong></p>
+<ul>
+<li><strong>GPT-4 / GPT-3.5-Turbo:</strong> Large language models for text generation, chat, summarisation.</li>
+<li><strong>DALL-E:</strong> Image generation from text prompts.</li>
+<li><strong>Whisper:</strong> Speech-to-text transcription.</li>
+<li><strong>Ada / text-embedding models:</strong> Generate vector embeddings for semantic search (RAG patterns).</li>
+</ul>
+<p><strong>Microsoft&rsquo;s 6 Responsible AI Principles:</strong></p>
+<table>
+  <thead>
+      <tr>
+          <th>Principle</th>
+          <th>What It Means</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Fairness</strong></td>
+          <td>AI systems should treat all people equitably, avoiding discriminatory outcomes.</td>
+      </tr>
+      <tr>
+          <td><strong>Reliability &amp; Safety</strong></td>
+          <td>AI must perform consistently and safely across different conditions and edge cases.</td>
+      </tr>
+      <tr>
+          <td><strong>Privacy &amp; Security</strong></td>
+          <td>Protect personal data; AI systems must respect individual privacy.</td>
+      </tr>
+      <tr>
+          <td><strong>Inclusiveness</strong></td>
+          <td>AI should empower and benefit everyone, regardless of ability, geography, or background.</td>
+      </tr>
+      <tr>
+          <td><strong>Transparency</strong></td>
+          <td>People should understand how AI systems make decisions.</td>
+      </tr>
+      <tr>
+          <td><strong>Accountability</strong></td>
+          <td>Humans must be accountable for AI systems and their outcomes.</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Azure AI Content Safety</strong></p>
+<ul>
+<li>Service to detect and filter harmful content (hate speech, violence, sexual content, self-harm) in AI-generated outputs.</li>
+<li>Essential for responsible deployment of generative AI applications.</li>
+</ul>
+
+
+
+
+
+
+
+
+<blockquote class="blockquote-regular">
+  <p>The AZ-900 exam tests awareness of these principles, not implementation details. Know all 6 by name and their core meaning.</p>
+
+</blockquote>
+<hr>
+<h2 id="quick-reference-azure-services-cheatsheet">Quick Reference: Azure Services Cheatsheet</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Category</th>
+          <th>Service</th>
+          <th>One-liner</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Compute</td>
+          <td>Virtual Machines</td>
+          <td>IaaS — full OS control</td>
+      </tr>
+      <tr>
+          <td>Compute</td>
+          <td>App Service</td>
+          <td>PaaS — managed web apps</td>
+      </tr>
+      <tr>
+          <td>Compute</td>
+          <td>Azure Functions</td>
+          <td>Serverless, event-driven code</td>
+      </tr>
+      <tr>
+          <td>Compute</td>
+          <td>AKS</td>
+          <td>Managed Kubernetes</td>
+      </tr>
+      <tr>
+          <td>Compute</td>
+          <td>ACI</td>
+          <td>Containers without orchestration</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>VNet</td>
+          <td>Private Azure network</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>VPN Gateway</td>
+          <td>Encrypted internet tunnel to on-premises</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>ExpressRoute</td>
+          <td>Private dedicated circuit to Azure</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>Azure DNS</td>
+          <td>Host and resolve DNS in Azure</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>Load Balancer</td>
+          <td>Layer 4 traffic distribution</td>
+      </tr>
+      <tr>
+          <td>Networking</td>
+          <td>Application Gateway</td>
+          <td>Layer 7 with WAF</td>
+      </tr>
+      <tr>
+          <td>Storage</td>
+          <td>Blob</td>
+          <td>Object/unstructured storage</td>
+      </tr>
+      <tr>
+          <td>Storage</td>
+          <td>Files</td>
+          <td>SMB/NFS managed file shares</td>
+      </tr>
+      <tr>
+          <td>Storage</td>
+          <td>Queue</td>
+          <td>Async message queue</td>
+      </tr>
+      <tr>
+          <td>Storage</td>
+          <td>Disk</td>
+          <td>Block storage for VMs</td>
+      </tr>
+      <tr>
+          <td>Database</td>
+          <td>SQL Database</td>
+          <td>Managed PaaS SQL Server</td>
+      </tr>
+      <tr>
+          <td>Database</td>
+          <td>SQL Managed Instance</td>
+          <td>Near-100% SQL Server compatible, lift-and-shift</td>
+      </tr>
+      <tr>
+          <td>Database</td>
+          <td>Cosmos DB</td>
+          <td>Global NoSQL, multi-model</td>
+      </tr>
+      <tr>
+          <td>Governance</td>
+          <td>Azure Policy</td>
+          <td>Enforce compliance rules</td>
+      </tr>
+      <tr>
+          <td>Governance</td>
+          <td>RBAC</td>
+          <td>Control who can do what</td>
+      </tr>
+      <tr>
+          <td>Governance</td>
+          <td>Resource Locks</td>
+          <td>Prevent accidental changes</td>
+      </tr>
+      <tr>
+          <td>Governance</td>
+          <td>Purview</td>
+          <td>Data governance &amp; compliance</td>
+      </tr>
+      <tr>
+          <td>Monitoring</td>
+          <td>Azure Monitor</td>
+          <td>Central metrics, logs, alerts</td>
+      </tr>
+      <tr>
+          <td>Monitoring</td>
+          <td>Service Health</td>
+          <td>Azure status for your services</td>
+      </tr>
+      <tr>
+          <td>Monitoring</td>
+          <td>Azure Advisor</td>
+          <td>AI-powered recommendations</td>
+      </tr>
+      <tr>
+          <td>Cost</td>
+          <td>Pricing Calculator</td>
+          <td>Estimate before you deploy</td>
+      </tr>
+      <tr>
+          <td>Cost</td>
+          <td>TCO Calculator</td>
+          <td>On-premises vs. Azure cost comparison</td>
+      </tr>
+      <tr>
+          <td>Cost</td>
+          <td>Cost Management</td>
+          <td>Monitor and optimise actual spend</td>
+      </tr>
+      <tr>
+          <td>AI</td>
+          <td>Azure OpenAI Service</td>
+          <td>GPT, DALL-E, Whisper in Azure</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="exam-tips">Exam Tips</h2>
+<ol>
+<li><strong>Know the shared responsibility model cold</strong> — which layer belongs to customer vs. Microsoft for IaaS/PaaS/SaaS.</li>
+<li><strong>Availability Zones ≠ Region Pairs</strong> — AZs protect within a region (datacenter failure), region pairs protect from region-level outages.</li>
+<li><strong>CapEx vs. OpEx</strong> — Cloud is OpEx. Understand why this matters financially.</li>
+<li><strong>Resource hierarchy:</strong> Resource → Resource Group → Subscription → Management Group. Policies and RBAC cascade downward.</li>
+<li><strong>Blob access tiers</strong> — Archive is offline and requires rehydration. Know which tier to use for what frequency of access.</li>
+<li><strong>SQL Database vs. SQL Managed Instance</strong> — MI has near-100% SQL Server feature parity (SQL Agent, linked servers); use it for migrations.</li>
+<li><strong>VPN Gateway uses the public internet (encrypted); ExpressRoute does NOT go over the internet.</strong></li>
+<li><strong>Resource Locks override RBAC</strong> — even an Owner can&rsquo;t delete a locked resource without first removing the lock.</li>
+<li><strong>Azure Monitor = metrics + logs; Service Health = Azure platform health affecting your resources.</strong></li>
+<li><strong>Responsible AI:</strong> Memorise all 6 principles — Fairness, Reliability &amp; Safety, Privacy &amp; Security, Inclusiveness, Transparency, Accountability.</li>
+</ol>
+<hr>
+<p>Good luck on the exam. The AZ-900 is designed to be approachable, but a structured review like this one makes the difference between scraping through and walking out with confidence. ☁️</p>
+
+      </div>
+
+      
+        <footer class="post-footer">
+          <div class="post-tags-footer">
+            <span class="tags-label">Tags:</span>
+            
+              <a href="/tags/azure" class="post-tag">azure</a>
+            
+              <a href="/tags/cloud" class="post-tag">cloud</a>
+            
+              <a href="/tags/certification" class="post-tag">certification</a>
+            
+              <a href="/tags/az-900" class="post-tag">az-900</a>
+            
+              <a href="/tags/microsoft" class="post-tag">microsoft</a>
+            
+              <a href="/tags/cheatsheet" class="post-tag">cheatsheet</a>
+            
+          </div>
+        </footer>
+      
+
+      
+
+
+
+
+      <nav class="post-navigation" aria-label="Post navigation">
+        
+          <a
+            href="/posts/internet-protocol-ip-basics/"
+            class="nav-link nav-prev"
+            aria-label="Previous post: Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title">Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT</span>
+          </a>
+        
+
+        
+      </nav>
+    </article>
+
+    
+  <aside class="post-toc" id="post-toc" aria-label="Table of Contents">
+    <button
+      class="toc-toggle"
+      id="toc-toggle"
+      aria-expanded="true"
+      aria-controls="toc-content"
+      aria-label="Toggle table of contents">
+      <svg
+        class="toc-burger-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span class="toc-toggle-text">Table of Contents</span>
+      <svg
+        class="toc-chevron-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="toc-content" id="toc-content">
+      <nav class="toc-nav" aria-label="Table of Contents">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#domain-10--describe-cloud-concepts-2530">Domain 1.0 — Describe Cloud Concepts (25–30%)</a>
+          <ul>
+            <li><a href="#11-what-is-cloud-computing--shared-responsibility">1.1 What Is Cloud Computing &amp; Shared Responsibility?</a></li>
+            <li><a href="#12-cloud-service-types-iaas-paas-saas">1.2 Cloud Service Types: IaaS, PaaS, SaaS</a></li>
+            <li><a href="#13-cloud-deployment-models">1.3 Cloud Deployment Models</a></li>
+            <li><a href="#14-benefits-of-the-cloud">1.4 Benefits of the Cloud</a></li>
+            <li><a href="#15-consumption-based-model-capex-vs-opex">1.5 Consumption-Based Model: CapEx vs. OpEx</a></li>
+            <li><a href="#16-sustainability-and-green-it-in-azure">1.6 Sustainability and Green IT in Azure</a></li>
+          </ul>
+        </li>
+        <li><a href="#domain-20--describe-azure-architecture-and-services-3540">Domain 2.0 — Describe Azure Architecture and Services (35–40%)</a>
+          <ul>
+            <li><a href="#21-azure-physical-infrastructure">2.1 Azure Physical Infrastructure</a></li>
+            <li><a href="#22-azure-management-infrastructure">2.2 Azure Management Infrastructure</a></li>
+            <li><a href="#23-azure-compute-services">2.3 Azure Compute Services</a></li>
+            <li><a href="#24-azure-networking-services">2.4 Azure Networking Services</a></li>
+            <li><a href="#25-azure-storage-services">2.5 Azure Storage Services</a></li>
+            <li><a href="#26-azure-database-services">2.6 Azure Database Services</a></li>
+          </ul>
+        </li>
+        <li><a href="#domain-30--describe-azure-management-and-governance-3035">Domain 3.0 — Describe Azure Management and Governance (30–35%)</a>
+          <ul>
+            <li><a href="#31-cost-management-and-pricing-tools">3.1 Cost Management and Pricing Tools</a></li>
+            <li><a href="#32-azure-governance-tools">3.2 Azure Governance Tools</a></li>
+            <li><a href="#33-microsoft-purview-for-data-governance">3.3 Microsoft Purview for Data Governance</a></li>
+            <li><a href="#34-monitoring-and-management-tools">3.4 Monitoring and Management Tools</a></li>
+            <li><a href="#35-azure-openai-service-and-responsible-ai">3.5 Azure OpenAI Service and Responsible AI</a></li>
+          </ul>
+        </li>
+        <li><a href="#quick-reference-azure-services-cheatsheet">Quick Reference: Azure Services Cheatsheet</a></li>
+        <li><a href="#exam-tips">Exam Tips</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </aside>
+
+
+  </div>
+
+    </main>
+
+    <footer>
+      <footer class="site-footer">
+  <div class="footer-content">
+    
+  </div>
+</footer>
+
+    </footer>
+
+    <div id="search-modal" class="search-modal" aria-hidden="true" role="dialog" aria-label="Search" data-no-results="No results found">
+  <div class="search-modal-backdrop" id="search-modal-backdrop"></div>
+  <div class="search-modal-container">
+    <div class="search-input-wrapper">
+      <svg class="search-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search..."
+        autocomplete="off"
+        aria-label="Search">
+      <button class="search-input-clear" id="search-input-clear" aria-label="Clear search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      </button>
+      <button class="search-modal-close" id="search-modal-close" aria-label="Close search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+    
+<div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-overlay"></div>
+  <div class="mobile-menu-content">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Menu</span>
+      <button
+        id="mobile-menu-close"
+        class="mobile-menu-close"
+        aria-label="Close menu"
+        type="button">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-menu-nav" role="navigation" aria-label="Mobile navigation">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+    </nav>
+    <div class="mobile-menu-footer">
+      <button id="mobile-search-toggle" class="mobile-search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <span>Search</span>
+      </button>
+      
+
+      <button class="theme-toggle" aria-label="Toggle theme" type="button">
+        <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+    
+
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top" type="button">
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.8cc4b96ac7af9517fd6ad80eeddd46ac956bb6c47f4c0481138642a15b70782f.js" defer></script>
+
+  </body>
+</html>

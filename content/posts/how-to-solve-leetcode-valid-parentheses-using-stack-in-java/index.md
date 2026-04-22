@@ -1,69 +1,91 @@
 ---
-title: "How to Solve LeetCode's Valid Parentheses Problem Using Stack in Java"
-description: "In this post, we walk through a beginner-friendly solution to LeetCode's Valid Parentheses problem using the Stack data structure in Java. We explain the logic step by step, making it easy to follow and apply in interviews or practice."
+title: "Solving LeetCode's Valid Parentheses Problem with a Stack in Java"
+description: "A beginner-friendly walkthrough of the Valid Parentheses problem — using the stack data structure to implement a clean, O(n) solution in Java."
 date: 2025-08-06
-tags: ["Programming", "ProblemSolving"]
+tags: ["Programming", "Java", "Algorithms", "ProblemSolving"]
 categories: ["technology"]
 ---
 
-LeetCode problems can sometimes be frustrating, but other times they can be genuinely fun. What I want to talk about today definitely falls into the fun category. 😊
+Some LeetCode problems feel like busy work. The Valid Parentheses problem is not one of them. It's a clean, well-defined problem that teaches a genuinely useful pattern — the **stack** — and produces code that's actually elegant when you get it right.
 
-Imagine we only have the characters (), {}, and [] to work with. We want to check whether every opening parenthesis, square bracket, and curly brace is correctly closed in the given string.
+The problem: given a string containing only `(`, `)`, `{`, `}`, `[`, and `]`, determine if the input is valid. A string is valid if every opening bracket is closed by the correct bracket type, in the correct order.
 
-For example, inputs like () or ({[]}) are valid, while something like ()[]{}{ would be invalid because of the unclosed brace at the end.
+```
+"()" → valid
+"()[]{}" → valid
+"({[]})" → valid
+"([)]" → invalid (wrong order)
+"{[]" → invalid (unclosed bracket)
+```
 
-There are several ways to solve this, but today I’ll walk you through a method that uses a data structure called a Stack.
+---
 
-### Quick Refresher: What is a Stack?
-A Stack is a data structure that stores items in a ***last-in***, ***first-out (LIFO)*** manner. Think of it like a stack of plates—what goes in last comes out first. Here's a simple visual to imagine it:
-![Stack](/images/technology/stack.jpg)
+## The Right Data Structure
 
-Now let’s apply this to our parentheses validation problem.
+The key insight: **you only ever need to remember the most recently opened bracket**. When you encounter a closing bracket, you need to check if it matches the *last* thing you opened.
 
-### Step-by-Step Solution
-We will write a method that takes a string input, such as "()[]{}", and returns true if the parentheses are valid, or false if they’re not.
+That's a last-in, first-out (LIFO) pattern — exactly what a **stack** provides.
 
-### 1. Define the Method
-   
-```Java
+```
+Processing: ( { [ ] } )
+
+Push (   → stack: [(]
+Push {   → stack: [(, {]
+Push [   → stack: [(, {, []
+See ]    → peek: [ → match! pop → stack: [(, {]
+See }    → peek: { → match! pop → stack: [(]
+See )    → peek: ( → match! pop → stack: []
+Done     → stack empty → valid ✓
+```
+
+If at any point the closing bracket doesn't match the top of the stack, the string is invalid. If the string ends with items still in the stack, some brackets were never closed — also invalid.
+
+---
+
+## Step-by-Step Implementation
+
+### Define the Method Signature
+
+```java
 public static boolean isValid(String s)
 ```
 
-The input s will be a string like "()[]{}". We return a boolean indicating whether the parentheses are valid.
+Input is a string. Output is a boolean. Simple.
 
-### 2. Declare a Stack
-   
-We’ll use a Stack to keep track of opening brackets:
+### Create the Stack
 
-```Java
+```java
 Stack<Character> stack = new Stack<>();
 ```
 
-### 3. Iterate Through the Characters
-   
-We loop through each character in the string:
+We'll push opening brackets onto this stack as we encounter them.
 
-```Java
-for (char c : s.toCharArray())
+### Iterate Through the String
+
+```java
+for (char c : s.toCharArray()) {
 ```
 
-### 4. Push Opening Brackets onto the Stack
-   
-If we encounter an opening bracket, we push it onto the stack:
+Process one character at a time.
 
-```Java
+### Handle Opening Brackets
+
+When we see an opener, push it:
+
+```java
 if (c == '(' || c == '[' || c == '{') {
     stack.push(c);
 }
 ```
 
-### 5. Handle Closing Brackets
-   
-If we encounter a closing bracket, we first check if the stack is empty. If it is, that means there was no corresponding opening bracket, so we return false.
+### Handle Closing Brackets
 
-Then, we look at the top of the stack using peek() (without removing it) to check if it matches the closing bracket. If it doesn’t match, we return false. If it does, we remove the top of the stack using pop():
+When we see a closer, two things can go wrong:
 
-```Java
+1. The stack is empty — there's nothing to match against
+2. The top of the stack doesn't match the current closer
+
+```java
 else {
     if (stack.isEmpty()) return false;
 
@@ -79,18 +101,21 @@ else {
 }
 ```
 
-### 6. Final Validation
+Note: we use `peek()` to check without removing, then `pop()` only after confirming the match.
 
-If the stack is empty at the end, that means all opening brackets had matching closing brackets. Otherwise, some were left unmatched.
+### Final Check
 
-```Java
+After processing every character, the stack should be empty. Any leftover items mean unclosed brackets:
+
+```java
 return stack.isEmpty();
 ```
 
-### Summary
-Here’s the complete method:
+---
 
-```Java
+## The Complete Solution
+
+```java
 public static boolean isValid(String s) {
     Stack<Character> stack = new Stack<>();
 
@@ -115,3 +140,28 @@ public static boolean isValid(String s) {
     return stack.isEmpty();
 }
 ```
+
+---
+
+## Complexity Analysis
+
+| Metric | Value |
+|--------|-------|
+| **Time** | O(n) — each character is processed once |
+| **Space** | O(n) — worst case, all openers pushed to stack |
+
+The space complexity is O(n) in the worst case (a string of `n` opening brackets with no closers). In practice, for valid strings, the stack depth stays bounded.
+
+---
+
+## Why This Pattern Matters
+
+The stack-based bracket matching pattern appears in real software:
+
+- **Compilers** — validating syntax trees and expression nesting
+- **Text editors** — bracket highlighting and auto-close features  
+- **XML/HTML parsers** — validating tag nesting
+- **JSON parsers** — validating object and array nesting
+- **Security tools** — parsing firewall rules, network protocols, file formats
+
+Understanding the stack pattern is understanding how a significant portion of parsing works. The Valid Parentheses problem is a good entry point precisely because the problem is small enough to fully grasp in one sitting, but the underlying pattern scales to complex real-world applications.

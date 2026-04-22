@@ -1,40 +1,58 @@
 ---
-title: "Understanding Controller, Service, and Repository in Spring Boot"
-description: "An in-depth look at the core layers of Spring Boot applications: Controller, Service, and Repository annotations. Learn their roles, how they interact, and best practices for building clean, maintainable code."
-date: 2025-08-07
-tags: ["Programming", "SpringBoot", "SoftwareDevelopment"]
+title: "Spring Boot Layered Architecture: Controller, Service, and Repository"
+description: "How Spring Boot's three-layer architecture organizes code into controllers, services, and repositories — and why separation of concerns makes applications easier to build, test, and maintain."
+date: 2025-06-15
+tags: ["Programming", "Java", "SpringBoot", "SoftwareDevelopment", "Architecture"]
 categories: ["technology"]
 ---
 
-Java is truly an amazing programming language. And among its rich toolkit, Spring Boot definitely stands out as a powerful building block. With Spring Boot, we build fast, effective, and sustainable applications. In this article, we’ll take a closer look at the core layers of Spring Boot: **Controller**, **Service**, and **Repository** annotations.
+One of the first questions you face when building a Spring Boot application is how to organize your code. You could put everything in one class. You could organize by feature. You could follow some informal convention that made sense to you at the time. But Spring Boot has a well-established pattern that most serious projects follow: **three-layer architecture**, separating the code into Controller, Service, and Repository layers.
 
-
-![Spring Layers](/images/technology/spring-layers.jpg)
-
-## Why Layered Architecture?
-
-Before jumping in, let’s quickly understand why layered architecture matters:
-
-- **Separation of concerns:** Makes code easier to read and maintain.
-- **Testability:** Each layer can be tested independently.
-- **Reusability:** Business logic can be reused in different parts.
-- **Scalability:** Easier to extend and modify.
+This isn't arbitrary organization. Each layer has a specific responsibility and talks only to its adjacent layers. The result is code that's easier to test, easier to change, and much easier for a new developer to navigate.
 
 ---
 
-## Controller
+## The Three Layers
 
-`Controller` is the layer that handles incoming HTTP requests. It listens to what the client asks for and directs the request to the appropriate handler. When building REST APIs, we usually use `@RestController` which automatically returns JSON or XML responses.
+```
+HTTP Request
+     │
+     ▼
+┌─────────────┐
+│  Controller │   ← Handles HTTP: routing, request parsing, response formatting
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│   Service   │   ← Business logic: the rules your application enforces
+└──────┬──────┘
+       │
+       ▼
+┌─────────────┐
+│ Repository  │   ← Data access: reads and writes to the database
+└─────────────┘
+```
 
-We handle HTTP requests using `@RequestMapping` or its shortcuts like `@GetMapping`, `@PostMapping`, `@PutMapping`, and `@DeleteMapping`.
+Data flows down on requests and back up on responses. Each layer has one job and one job only.
 
-```Java
+---
+
+## The Controller Layer
+
+The controller is the entry point for HTTP traffic. Its job is narrow: receive requests, validate inputs at the HTTP level, call the appropriate service method, and format the response.
+
+The controller should contain *no business logic*. If you find yourself writing `if (user.getRole() == ADMIN)` in a controller, that logic belongs in the service layer.
+
+```java
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
@@ -43,91 +61,148 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        UserDto createdUser = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid CreateUserRequest request) {
+        UserDto created = userService.createUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }
 ```
 
+Notice: the controller uses `UserDto` (a Data Transfer Object) rather than exposing the database entity directly. This is intentional — DTOs control exactly what gets serialized in the response and prevent accidentally leaking sensitive fields.
+
 ---
 
-## Service
+## The Service Layer
 
-The `Service` layer is where the business logic lives. Data coming from the controller is processed here — validations, calculations, and any rules specific to the domain are handled in this layer. It’s the brain of the application.
+The service layer is where your application's business logic lives. This is the heart of your application — the code that enforces rules, coordinates operations, and makes decisions.
 
-Marking a class with `@Service` lets Spring recognize it as a service component and automatically inject it where needed.
+If your application has any meaningful behavior beyond "store this and return it," that behavior belongs here.
 
-```Java
+```java
 @Service
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final EmailService emailService;
+
+    public UserService(UserRepository userRepository, EmailService emailService) {
+        this.userRepository = userRepository;
+        this.emailService = emailService;
+    }
 
     public UserDto getUserById(Long id) {
         User user = userRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            .orElseThrow(() -> new EntityNotFoundException("User not found: " + id));
         return convertToDto(user);
     }
 
-    public UserDto createUser(UserDto userDto) {
-        User user = convertToEntity(userDto);
-        User savedUser = userRepository.save(user);
-        return convertToDto(savedUser);
+    public UserDto createUser(CreateUserRequest request) {
+        // Business rule: email must be unique
+        if (userRepository.existsByEmail(request.email())) {
+            throw new ConflictException("Email already registered");
+        }
+
+        User user = new User();
+        user.setName(request.name());
+        user.setEmail(request.email());
+        user.setCreatedAt(Instant.now());
+
+        User saved = userRepository.save(user);
+
+        // Post-creation side effects belong here, not in the controller
+        emailService.sendWelcomeEmail(saved.getEmail());
+
+        return convertToDto(saved);
+    }
+
+    private UserDto convertToDto(User user) {
+        return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 }
 ```
 
+The service layer is also the natural location for **transaction management** (`@Transactional`), orchestrating multiple repository calls that should succeed or fail atomically.
+
 ---
 
-## Repository
+## The Repository Layer
 
-`Repository` is the data access layer, responsible for communicating with the database. Usually defined as an interface extending Spring Data interfaces like `JpaRepository` or `CrudRepository`.
+The repository layer handles all database interaction. In Spring Data JPA, this typically means extending `JpaRepository` or `CrudRepository` and letting Spring generate the standard query implementations for you.
 
-- `CrudRepository` provides basic CRUD operations.
-- `JpaRepository` extends CrudRepository and also offers pagination and sorting support.
-
-You can also write custom queries using the `@Query` annotation when standard methods aren’t enough.
-
-```Java
+```java
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    List<User> findByLastName(String lastName);
+    boolean existsByEmail(String email);
 
-    @Query("SELECT u FROM User u WHERE u.email = :email")
-    Optional<User> findByEmail(@Param("email") String email);
+    Optional<User> findByEmail(String email);
+
+    List<User> findByCreatedAtAfter(Instant since);
+
+    @Query("SELECT u FROM User u WHERE u.name LIKE :prefix%")
+    List<User> findByNameStartingWith(@Param("prefix") String prefix);
 }
 ```
 
+Spring Data generates the SQL for method names following its naming conventions (`findByEmail`, `existsByEmail`, etc.). For more complex queries, `@Query` lets you write JPQL or native SQL directly.
+
+The repository should never contain business logic — that belongs in the service. The repository's only job is data access.
+
 ---
 
-## How These Layers Work Together
+## Why This Separation Matters
 
-A typical request flow goes like this:
+### Testability
 
-1. Client sends an HTTP request.
-2. **Controller** receives the request and extracts data.
-3. Controller calls the **Service** layer.
-4. **Service** processes the business logic and calls the **Repository** layer.
-5. **Repository** interacts with the database.
-6. **Service** returns processed data back to the Controller.
-7. Controller sends the response to the client.
+Each layer can be tested in isolation:
+
+- **Controller tests** — test HTTP routing, request parsing, and response formatting with `@WebMvcTest` (no database needed)
+- **Service tests** — test business logic with mock repositories using Mockito
+- **Repository tests** — test queries with `@DataJpaTest` against an in-memory database
+
+Without this separation, every test requires spinning up the entire application stack.
+
+### Security
+
+The layered architecture has security implications. **DTOs at the controller boundary** prevent mass assignment attacks — where an attacker sends unexpected fields in a request body and manipulates fields they shouldn't have access to (like setting `user.role = ADMIN`).
+
+Controllers should map request bodies to command/request objects with only the fields that are allowed to be set. Services then apply business rules before passing data to repositories.
+
+### Maintainability
+
+When a business rule changes, you know exactly where to look: the service layer. When a database query needs optimizing, you go to the repository. When an HTTP response format changes, you touch the controller. Clear ownership of concerns dramatically reduces the cognitive load of maintaining a codebase.
+
+---
+
+## The Full Request Flow
+
+```
+1. Client → POST /api/users { name: "Alice", email: "alice@example.com" }
+2. Controller receives request, validates structure (@Valid)
+3. Controller calls userService.createUser(request)
+4. Service checks: does this email exist? → calls userRepository.existsByEmail()
+5. Service creates User entity, calls userRepository.save()
+6. Service triggers side effects (welcome email)
+7. Service converts User → UserDto, returns to Controller
+8. Controller returns 201 Created with UserDto as JSON body
+```
+
+Each step has exactly one layer responsible for it. That clarity is the point.
 
 ---
 
 ## Summary
 
-| Layer       | Responsibility                  | Annotations                 | Example Interfaces         |
-|-------------|--------------------------------|-----------------------------|---------------------------|
-| Controller  | Handles HTTP requests & routing | `@RestController` | -                         |
-| Service     | Implements business logic       | `@Service`                  | -                         |
-| Repository  | Manages data access             | `@Repository`               | `JpaRepository`, `CrudRepository` |
+| Layer | Annotation | Responsibility |
+|-------|-----------|----------------|
+| Controller | `@RestController` | HTTP routing, request/response handling |
+| Service | `@Service` | Business logic, transaction coordination |
+| Repository | `@Repository` | Data access, query execution |
 
----
-
-## Conclusion
-
-Using layered architecture with `Controller`, `Service`, and `Repository` in Spring Boot helps you write code that is clean, testable, and maintainable. These annotations clearly separate responsibilities, making your application easier to build and evolve.
-
+The three-layer architecture isn't the only way to organize a Spring application, but it's the most widely understood pattern and a solid default for most projects. When your application grows complex enough to need something different, you'll know it — and you'll appreciate having started from a clean foundation.

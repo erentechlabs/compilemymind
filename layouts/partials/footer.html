@@ -1,0 +1,9 @@
+<footer class="site-footer">
+  <div class="footer-content">
+    {{ if site.Params.social }}
+      <div class="footer-social">
+        {{ partial "social-links.html" . }}
+      </div>
+    {{ end }}
+  </div>
+</footer>

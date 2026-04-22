@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Java on </title>
+    <link>http://localhost:1313/tags/java/</link>
+    <description>Recent content in Java on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Fri, 24 Oct 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What&#39;s New in Java 25 (JDK 25)</title>
+      <link>http://localhost:1313/posts/new-features-in-java-25/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/new-features-in-java-25/</guid>
+      <description>&lt;p&gt;Java 25 (JDK 25) is here — and it&amp;rsquo;s an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I&amp;rsquo;ll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.&lt;/p&gt;&#xA;&lt;p&gt;This post is based on the official OpenJDK pages and JEPs for JDK 25.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Remove Duplicates from a Sorted Array — The Two-Pointer Technique</title>
+      <link>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</link>
+      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/remove-duplicates-from-sorted-array/</guid>
+      <description>&lt;p&gt;Removing duplicates from a sorted array is one of those problems that sounds trivial until you add the constraint: do it &lt;strong&gt;in-place&lt;/strong&gt;, without allocating another array. That constraint is what makes it interesting and what makes the &lt;strong&gt;two-pointer pattern&lt;/strong&gt; the right tool.&lt;/p&gt;&#xA;&lt;p&gt;The problem: given a sorted integer array &lt;code&gt;nums&lt;/code&gt;, remove duplicates in-place so each unique element appears exactly once. Return &lt;code&gt;k&lt;/code&gt; — the count of unique elements. The values at &lt;code&gt;nums[0]&lt;/code&gt; through &lt;code&gt;nums[k-1]&lt;/code&gt; must be the unique elements in order; anything beyond index &lt;code&gt;k-1&lt;/code&gt; doesn&amp;rsquo;t matter.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Solving LeetCode&#39;s Valid Parentheses Problem with a Stack in Java</title>
+      <link>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</link>
+      <pubDate>Wed, 06 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/</guid>
+      <description>&lt;p&gt;Some LeetCode problems feel like busy work. The Valid Parentheses problem is not one of them. It&amp;rsquo;s a clean, well-defined problem that teaches a genuinely useful pattern — the &lt;strong&gt;stack&lt;/strong&gt; — and produces code that&amp;rsquo;s actually elegant when you get it right.&lt;/p&gt;&#xA;&lt;p&gt;The problem: given a string containing only &lt;code&gt;(&lt;/code&gt;, &lt;code&gt;)&lt;/code&gt;, &lt;code&gt;{&lt;/code&gt;, &lt;code&gt;}&lt;/code&gt;, &lt;code&gt;[&lt;/code&gt;, and &lt;code&gt;]&lt;/code&gt;, determine if the input is valid. A string is valid if every opening bracket is closed by the correct bracket type, in the correct order.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>@Component vs @Bean in Spring: When to Use Each</title>
+      <link>http://localhost:1313/posts/component-vs-bean/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/component-vs-bean/</guid>
+      <description>&lt;p&gt;Spring&amp;rsquo;s dependency injection is powerful, but it gives you more than one way to register a bean with the container. Two of the most common approaches are &lt;code&gt;@Component&lt;/code&gt; and &lt;code&gt;@Bean&lt;/code&gt;. They accomplish similar goals but work differently and belong in different situations.&lt;/p&gt;&#xA;&lt;p&gt;Understanding which to use — and why — leads to cleaner, more intentional Spring code.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;what-is-a-spring-bean&#34;&gt;What Is a Spring Bean?&lt;/h2&gt;&#xA;&lt;p&gt;Before comparing the two annotations, it&amp;rsquo;s worth being precise: a &lt;strong&gt;bean&lt;/strong&gt; is simply an object managed by Spring&amp;rsquo;s IoC (Inversion of Control) container. Spring handles instantiation, configuration, and lifecycle management. You declare what you want; Spring figures out how to wire it together.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean</title>
+      <link>http://localhost:1313/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</link>
+      <pubDate>Tue, 15 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/spring-annotations-scheduling-async-component-service-configuration-bean/</guid>
+      <description>&lt;p&gt;Spring&amp;rsquo;s annotation model can feel overwhelming at first. There are annotations for everything: creating beans, scheduling tasks, running things asynchronously, declaring configuration. Understanding what each one does — and more importantly, &lt;em&gt;when&lt;/em&gt; each one is appropriate — is the difference between fighting the framework and working with it.&lt;/p&gt;&#xA;&lt;p&gt;This guide covers six of the most important annotations in day-to-day Spring development.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;component&#34;&gt;@Component&lt;/h2&gt;&#xA;&lt;p&gt;The base annotation for any class you want Spring to manage. When Spring&amp;rsquo;s component scanner finds a class marked with &lt;code&gt;@Component&lt;/code&gt;, it instantiates it and adds it to the application context.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Spring Boot Layered Architecture: Controller, Service, and Repository</title>
+      <link>http://localhost:1313/posts/spring-boot-layered-architecture/</link>
+      <pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/spring-boot-layered-architecture/</guid>
+      <description>&lt;p&gt;One of the first questions you face when building a Spring Boot application is how to organize your code. You could put everything in one class. You could organize by feature. You could follow some informal convention that made sense to you at the time. But Spring Boot has a well-established pattern that most serious projects follow: &lt;strong&gt;three-layer architecture&lt;/strong&gt;, separating the code into Controller, Service, and Repository layers.&lt;/p&gt;&#xA;&lt;p&gt;This isn&amp;rsquo;t arbitrary organization. Each layer has a specific responsibility and talks only to its adjacent layers. The result is code that&amp;rsquo;s easier to test, easier to change, and much easier for a new developer to navigate.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>C# vs Java: A Practical Comparison for 2025</title>
+      <link>http://localhost:1313/posts/csharp-vs-java/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/csharp-vs-java/</guid>
+      <description>&lt;p&gt;Java and C# are often described as rivals — born from similar philosophical roots, shaped by massive corporate investments, and used in largely overlapping problem spaces. Both are statically typed, object-oriented, garbage-collected, and designed for building serious software at scale. Both run on virtual machines. Both have enormous ecosystems.&lt;/p&gt;&#xA;&lt;p&gt;And yet, they&amp;rsquo;ve evolved in meaningfully different directions. Knowing which to reach for — and why — is the mark of a developer who has thought carefully about the tools, not just learned whichever one came first.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Why I Still Prefer Java Over Python</title>
+      <link>http://localhost:1313/posts/why-i-like-java-more-than-python/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/why-i-like-java-more-than-python/</guid>
+      <description>&lt;p&gt;Java doesn&amp;rsquo;t have a great reputation for being lovable. It&amp;rsquo;s verbose. It requires a lot of ceremony. Oracle&amp;rsquo;s licensing history has left scars. And if you&amp;rsquo;ve ever tried to explain generics or checked exceptions to someone who learned Python first, you know the look you get.&lt;/p&gt;&#xA;&lt;p&gt;And yet, I keep coming back to Java. Not out of stubbornness or habit — but because, when I&amp;rsquo;m building something that has to actually &lt;em&gt;last&lt;/em&gt;, Java&amp;rsquo;s constraints start looking more like features.&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

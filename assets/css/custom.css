@@ -1,0 +1,308 @@
+/* ============================================================
+   Compile My Mind – Custom Design Overrides
+   ============================================================ */
+
+/* ── Hero Logo: larger, more prominent with enhanced glow ── */
+.hero-logo {
+  width: 340px;
+  max-width: 100%;
+  height: auto;
+  filter:
+    drop-shadow(0 0 18px rgba(176, 99, 224, 0.6))
+    drop-shadow(0 0 40px rgba(0, 255, 255, 0.25));
+  animation: float 3.5s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
+  border-radius: 20px;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter:
+      drop-shadow(0 0 18px rgba(176, 99, 224, 0.55))
+      drop-shadow(0 0 40px rgba(0, 255, 255, 0.2));
+  }
+  50% {
+    filter:
+      drop-shadow(0 0 28px rgba(176, 99, 224, 0.85))
+      drop-shadow(0 0 60px rgba(0, 255, 255, 0.45));
+  }
+}
+
+/* ── Hero Section: tighter, more dramatic layout ── */
+.hero-section {
+  padding: var(--spacing-2xl) var(--spacing-lg) var(--spacing-xl);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle animated gradient accent behind hero */
+.hero-section::before {
+  content: "";
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(176, 99, 224, 0.12) 0%,
+    rgba(0, 255, 255, 0.05) 50%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  animation: drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(-30px, 20px) scale(1.05); }
+}
+
+/* ── Hero Title: stronger visual hierarchy ── */
+.hero-title-line1 {
+  font-size: clamp(2.6rem, 5.5vw, 5rem);
+  background: linear-gradient(135deg, #f1f5f9 30%, #dbabff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-title-line2 {
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  -webkit-text-stroke: 1.5px var(--accent-secondary);
+  opacity: 0.9;
+}
+
+/* ── Light mode: hero titles need dark, high-contrast colours ── */
+[data-theme="light"] .hero-title-line1 {
+  background: linear-gradient(135deg, #3b0a6e 0%, #6d28d9 55%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+[data-theme="light"] .hero-title-line2 {
+  -webkit-text-stroke: 1.5px #7c3aed;
+  /* Ensure fill is also visible (stroke alone can be thin) */
+  -webkit-text-fill-color: #7c3aed;
+  opacity: 1;
+}
+
+/* ── Hero Subtitle: monospace terminal feel ── */
+.hero-subtitle {
+  font-size: clamp(0.82rem, 1.4vw, 1rem);
+  line-height: 1.8;
+  color: var(--text-secondary);
+  opacity: 0.85;
+  border-left: 2px solid var(--accent-primary);
+  padding-left: var(--spacing-md);
+  margin-top: var(--spacing-lg) !important;
+}
+
+/* ── Post Cards: glassmorphism upgrade ── */
+.post-card {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(176, 99, 224, 0.15);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 12px 40px rgba(176, 99, 224, 0.2),
+    0 4px 12px rgba(0, 0, 0, 0.4);
+  border-color: rgba(176, 99, 224, 0.4);
+}
+
+/* ── Footer: minimal, clean ── */
+.site-footer {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg) var(--spacing-lg);
+  border-top: 1px solid rgba(176, 99, 224, 0.15);
+  background: transparent;
+}
+
+/* ── Section headings: accent underline ── */
+.posts-title {
+  position: relative;
+  padding-bottom: var(--spacing-sm);
+}
+
+.posts-title::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 3rem;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  border-radius: 2px;
+}
+
+/* ── Code Blocks: always horizontally scrollable ── */
+.highlight,
+.code-block-wrapper,
+pre,
+.post-content-main pre {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+/* Scrollbar styling for code blocks */
+.highlight::-webkit-scrollbar,
+pre::-webkit-scrollbar {
+  height: 6px;
+}
+.highlight::-webkit-scrollbar-track,
+pre::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+}
+.highlight::-webkit-scrollbar-thumb,
+pre::-webkit-scrollbar-thumb {
+  background: rgba(176, 99, 224, 0.4);
+  border-radius: 3px;
+}
+.highlight::-webkit-scrollbar-thumb:hover,
+pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(176, 99, 224, 0.7);
+}
+
+/* ── Tables: responsive wrapper ── */
+.post-content-main table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: var(--spacing-lg, 1.5rem) 0;
+  font-size: 0.9rem;
+  display: block;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.post-content-main table::-webkit-scrollbar {
+  height: 6px;
+}
+.post-content-main table::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0.05);
+  border-radius: 3px;
+}
+.post-content-main table::-webkit-scrollbar-thumb {
+  background: rgba(176, 99, 224, 0.4);
+  border-radius: 3px;
+}
+
+.post-content-main th {
+  background: rgba(176, 99, 224, 0.15);
+  color: var(--text-primary, #f1f5f9);
+  font-weight: 600;
+  padding: 0.6rem 0.9rem;
+  text-align: left;
+  border-bottom: 2px solid rgba(176, 99, 224, 0.4);
+  white-space: nowrap;
+}
+
+.post-content-main td {
+  padding: 0.55rem 0.9rem;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  vertical-align: top;
+}
+
+.post-content-main tr:last-child td {
+  border-bottom: none;
+}
+
+.post-content-main tr:nth-child(even) {
+  background: rgba(255,255,255,0.03);
+}
+
+.post-content-main tr:hover {
+  background: rgba(176, 99, 224, 0.07);
+  transition: background 0.15s ease;
+}
+
+/* ── Responsive: stack hero cleanly on mobile ── */
+@media (max-width: 768px) {
+  .hero-logo {
+    width: 200px;
+  }
+
+  .hero-content {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .hero-image {
+    order: -1;
+  }
+
+  .hero-subtitle {
+    border-left: none;
+    padding-left: 0;
+    text-align: left;
+  }
+
+  .posts-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  /* ── Table of Contents: compact & collapsed on mobile ── */
+
+  /* TOC sits in normal flow (not sticky) so it doesn't eat top space */
+  .post-toc {
+    position: relative;
+    top: unset;
+    width: 100%;
+    margin-bottom: var(--spacing-md, 1rem);
+    order: -1;
+  }
+
+  /* Collapse the TOC content to zero height by default on mobile */
+  .toc-content {
+    max-height: 0 !important;
+    overflow: hidden !important;
+    transition: max-height 0.28s ease !important;
+    padding: 0 !important;
+  }
+
+  /* When JS adds .expanded, allow scrollable content up to 50vh */
+  .toc-content.expanded {
+    max-height: 50vh !important;
+    overflow-y: auto !important;
+    padding: 0.5rem 0 !important;
+  }
+
+  /* Compact the toggle button */
+  .toc-toggle {
+    padding: 0.45rem 0.85rem;
+    font-size: 0.8rem;
+    width: 100%;
+  }
+
+  /* Tighten nav list spacing */
+  .toc-nav ul {
+    padding-left: 0;
+    margin: 0;
+  }
+
+  .toc-nav li {
+    margin: 0;
+  }
+
+  .toc-nav a {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    padding: 0.2rem 0.85rem;
+  }
+
+  .toc-nav ul ul {
+    padding-left: 0.85rem;
+  }
+}

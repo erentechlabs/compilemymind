@@ -1,1 +1,19 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DeepMind on Compile My Mind</title><link>https://www.compilemymind.com/tags/deepmind/</link><description>Recent content in DeepMind on Compile My Mind</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 19 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/deepmind/index.xml" rel="self" type="application/rss+xml"/><item><title>Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling</title><link>https://www.compilemymind.com/posts/google-gemini-3-launch/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/posts/google-gemini-3-launch/</guid><description>&lt;p>The AI arms race is accelerating, and Google is stepping up with Gemini 3 — a new multimodal model designed to reason, code, and generate interactive outputs at a new level. In this post I summarize what Google announced, how the new capabilities differ from previous releases, and what developers and everyday users should expect from Gemini 3, Gemini 3 Pro, Gemini Agent, Gemini 3 Deep Think, and Antigravity.&lt;/p></description><media:content xmlns:media="http://search.yahoo.com/mrss/" url="https://www.compilemymind.com/posts/google-gemini-3-launch/featured.png"/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DeepMind on </title>
+    <link>http://localhost:1313/tags/deepmind/</link>
+    <description>Recent content in DeepMind on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 19 Nov 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/deepmind/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling</title>
+      <link>http://localhost:1313/posts/google-gemini-3-launch/</link>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/google-gemini-3-launch/</guid>
+      <description>&lt;p&gt;The AI arms race is accelerating, and Google is stepping up with Gemini 3 — a new multimodal model designed to reason, code, and generate interactive outputs at a new level. In this post I summarize what Google announced, how the new capabilities differ from previous releases, and what developers and everyday users should expect from Gemini 3, Gemini 3 Pro, Gemini Agent, Gemini 3 Deep Think, and Antigravity.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;tldr&#34;&gt;TL;DR&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Gemini 3 is the latest multimodal model from Google/DeepMind with improved reasoning, stronger code execution and integrated developer tooling. ✅&lt;/li&gt;&#xA;&lt;li&gt;Gemini 3 Pro and the “Deep Think” variant target more complex reasoning tasks (Deep Think is aimed at researchers and advanced subscribers). 💡&lt;/li&gt;&#xA;&lt;li&gt;Google introduced Antigravity — a multi-pane agent developer environment for autonomous coding agents. 🧩&lt;/li&gt;&#xA;&lt;li&gt;Gemini 3 is already integrated across Google products (Search/AI Mode, Gemini app) and rolling out to subscribers; it aims to power richer, interactive responses including graphs and clickable UI-like output. 🌐&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h2 id=&#34;whats-new--highlights&#34;&gt;What’s new — highlights&lt;/h2&gt;&#xA;&lt;p&gt;Gemini 3 and its related services bring a few meaningful changes beyond raw model size or latency:&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

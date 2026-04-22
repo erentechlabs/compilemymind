@@ -1,1 +1,215 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Tags on Compile My Mind</title><link>https://www.compilemymind.com/tags/</link><description>Recent content in Tags on Compile My Mind</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 19 Nov 2025 00:00:00 +0000</lastBuildDate><atom:link href="https://www.compilemymind.com/tags/index.xml" rel="self" type="application/rss+xml"/><item><title>AI</title><link>https://www.compilemymind.com/tags/ai/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/ai/</guid><description/></item><item><title>DeepMind</title><link>https://www.compilemymind.com/tags/deepmind/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/deepmind/</guid><description/></item><item><title>Developer Tools</title><link>https://www.compilemymind.com/tags/developer-tools/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/developer-tools/</guid><description/></item><item><title>Gemini</title><link>https://www.compilemymind.com/tags/gemini/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/gemini/</guid><description/></item><item><title>Google</title><link>https://www.compilemymind.com/tags/google/</link><pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/google/</guid><description/></item><item><title>CPU</title><link>https://www.compilemymind.com/tags/cpu/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/cpu/</guid><description/></item><item><title>Gaming</title><link>https://www.compilemymind.com/tags/gaming/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/gaming/</guid><description/></item><item><title>GPU</title><link>https://www.compilemymind.com/tags/gpu/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/gpu/</guid><description/></item><item><title>Hardware</title><link>https://www.compilemymind.com/tags/hardware/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/hardware/</guid><description/></item><item><title>Intel</title><link>https://www.compilemymind.com/tags/intel/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/intel/</guid><description/></item><item><title>Motherboard</title><link>https://www.compilemymind.com/tags/motherboard/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/motherboard/</guid><description/></item><item><title>TechComparison</title><link>https://www.compilemymind.com/tags/techcomparison/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/techcomparison/</guid><description/></item><item><title>TechReview</title><link>https://www.compilemymind.com/tags/techreview/</link><pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/techreview/</guid><description/></item><item><title>Programming</title><link>https://www.compilemymind.com/tags/programming/</link><pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/programming/</guid><description/></item><item><title>SoftwareDevelopment</title><link>https://www.compilemymind.com/tags/softwaredevelopment/</link><pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/softwaredevelopment/</guid><description/></item><item><title>SpringBoot</title><link>https://www.compilemymind.com/tags/springboot/</link><pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/springboot/</guid><description/></item><item><title>TechTrends</title><link>https://www.compilemymind.com/tags/techtrends/</link><pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/techtrends/</guid><description/></item><item><title>ProblemSolving</title><link>https://www.compilemymind.com/tags/problemsolving/</link><pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/problemsolving/</guid><description/></item><item><title>Python</title><link>https://www.compilemymind.com/tags/python/</link><pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate><guid>https://www.compilemymind.com/tags/python/</guid><description/></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on </title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on </description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <lastBuildDate>Wed, 22 Apr 2026 23:00:00 +0300</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Az-900</title>
+      <link>http://localhost:1313/tags/az-900/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/az-900/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Azure</title>
+      <link>http://localhost:1313/tags/azure/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/azure/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Certification</title>
+      <link>http://localhost:1313/tags/certification/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/certification/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cheatsheet</title>
+      <link>http://localhost:1313/tags/cheatsheet/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/cheatsheet/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cloud</title>
+      <link>http://localhost:1313/tags/cloud/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/cloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Microsoft</title>
+      <link>http://localhost:1313/tags/microsoft/</link>
+      <pubDate>Wed, 22 Apr 2026 23:00:00 +0300</pubDate>
+      <guid>http://localhost:1313/tags/microsoft/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cybersecurity</title>
+      <link>http://localhost:1313/tags/cybersecurity/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/cybersecurity/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Infrastructure</title>
+      <link>http://localhost:1313/tags/infrastructure/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/infrastructure/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>IT</title>
+      <link>http://localhost:1313/tags/it/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/it/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Networking</title>
+      <link>http://localhost:1313/tags/networking/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/networking/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Protocols</title>
+      <link>http://localhost:1313/tags/protocols/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/protocols/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sysadmin</title>
+      <link>http://localhost:1313/tags/sysadmin/</link>
+      <pubDate>Thu, 27 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/sysadmin/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>API</title>
+      <link>http://localhost:1313/tags/api/</link>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/api/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Web</title>
+      <link>http://localhost:1313/tags/web/</link>
+      <pubDate>Sun, 23 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/web/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI</title>
+      <link>http://localhost:1313/tags/ai/</link>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Developer Tools</title>
+      <link>http://localhost:1313/tags/developer-tools/</link>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/developer-tools/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TechTrends</title>
+      <link>http://localhost:1313/tags/techtrends/</link>
+      <pubDate>Wed, 19 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/techtrends/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CPU</title>
+      <link>http://localhost:1313/tags/cpu/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/cpu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hardware</title>
+      <link>http://localhost:1313/tags/hardware/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/hardware/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TechComparison</title>
+      <link>http://localhost:1313/tags/techcomparison/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/techcomparison/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TechReview</title>
+      <link>http://localhost:1313/tags/techreview/</link>
+      <pubDate>Tue, 18 Nov 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/techreview/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Java</title>
+      <link>http://localhost:1313/tags/java/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/java/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Programming</title>
+      <link>http://localhost:1313/tags/programming/</link>
+      <pubDate>Fri, 24 Oct 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/programming/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Algorithms</title>
+      <link>http://localhost:1313/tags/algorithms/</link>
+      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/algorithms/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ProblemSolving</title>
+      <link>http://localhost:1313/tags/problemsolving/</link>
+      <pubDate>Sat, 09 Aug 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/problemsolving/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SoftwareDevelopment</title>
+      <link>http://localhost:1313/tags/softwaredevelopment/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/softwaredevelopment/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SpringBoot</title>
+      <link>http://localhost:1313/tags/springboot/</link>
+      <pubDate>Thu, 31 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/springboot/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Architecture</title>
+      <link>http://localhost:1313/tags/architecture/</link>
+      <pubDate>Sun, 15 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Opinion</title>
+      <link>http://localhost:1313/tags/opinion/</link>
+      <pubDate>Fri, 28 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/opinion/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

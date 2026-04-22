@@ -1,101 +1,887 @@
-<!doctype html><html lang=en dir=ltr class=scroll-smooth data-default-appearance=dark data-auto-appearance=false><head><meta charset=utf-8><meta http-equiv=content-language content="en"><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="ie=edge"><meta name=theme-color><title>Component vs Bean in Spring &#183; Compile My Mind</title>
-<meta name=title content="Component vs Bean in Spring &#183; Compile My Mind"><meta name=description content="We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way."><meta name=keywords content="Programming,SpringBoot,SoftwareDevelopment,"><link rel=canonical href=https://www.compilemymind.com/posts/component-vs-bean/><meta property="og:url" content="https://www.compilemymind.com/posts/component-vs-bean/"><meta property="og:site_name" content="Compile My Mind"><meta property="og:title" content="Component vs Bean in Spring"><meta property="og:description" content="We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-07-31T00:00:00+00:00"><meta property="article:modified_time" content="2025-07-31T00:00:00+00:00"><meta property="article:tag" content="Programming"><meta property="article:tag" content="SpringBoot"><meta property="article:tag" content="SoftwareDevelopment"><meta property="og:image" content="https://www.compilemymind.com/posts/component-vs-bean/featured.jpg"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://www.compilemymind.com/posts/component-vs-bean/featured.jpg"><meta name=twitter:title content="Component vs Bean in Spring"><meta name=twitter:description content="We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way."><meta name=msvalidate.01 content="AA4E4F8297B73C961E16F3A4FE57D87D"><meta name=yandex-verification content="8865729cd882d7e9"><link type=text/css rel=stylesheet href=/css/main.bundle.min.138ec01801bb969838e57febd468cd6741081467aec4f3cf1886002d47e58c7ae9648d51e74640f6201351ade42b798f2354068a4bb19037a35d9c848d274540.css integrity="sha512-E47AGAG7lpg45X/r1GjNZ0EIFGeuxPPPGIYALUfljHrpZI1R50ZA9iATUa3kK3mPI1QGikuxkDejXZyEjSdFQA=="><script type=text/javascript src=/js/appearance.min.6f41174b3a05b680820fe08cadbfa5fb7a7ca347b76a0955cdc68b9d8aca1ce24f0547e138cea33bcc7904d551a90afcb1cc7f2d9fe8557075d501419046c08c.js integrity="sha512-b0EXSzoFtoCCD+CMrb+l+3p8o0e3aglVzcaLnYrKHOJPBUfhOM6jO8x5BNVRqQr8scx/LZ/oVXB11QFBkEbAjA=="></script><script src=/lib/zoom/zoom.min.umd.b4b722fcb5d42f34f52b30a92f3521b69f403ca9d96d0d6179eb537cb870f5d83fdf1fe836688d95d5c99fefbda4170487711006e56051fa67ea00da10521721.js integrity="sha512-tLci/LXULzT1KzCpLzUhtp9APKnZbQ1heetTfLhw9dg/3x/oNmiNldXJn++9pBcEh3EQBuVgUfpn6gDaEFIXIQ=="></script><script defer type=text/javascript id=script-bundle src=/js/main.bundle.min.131e39b9b337e0abc435719fa19836a2fb1a09f65d3a9ffd23e371f1a0495b84e6d7d8747eb1cce8c03239d5ef8a4bc2265ecdf3fd4db5270620a59ef6f54116.js integrity="sha512-Ex45ubM34KvENXGfoZg2ovsaCfZdOp/9I+Nx8aBJW4Tm19h0frHM6MAyOdXvikvCJl7N8/1NtScGIKWe9vVBFg==" data-copy=Copy data-copied=Copied></script><script src=/lib/jquery/jquery.slim.min.03cb160e3cfdb2667a2e2c80d283bebcf63ff8bbc4b629c9ab2babf6fae1d0c07ad470edae783efa4fabda2ac01c58d60e63b98b3c336be8208460f08f4354f5.js integrity="sha512-A8sWDjz9smZ6LiyA0oO+vPY/+LvEtinJqyur9vrh0MB61HDtrng++k+r2irAHFjWDmO5izwza+gghGDwj0NU9Q=="></script><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/site.webmanifest><script type=application/ld+json>[{"@context":"https://schema.org","@type":"Article","articleSection":"Posts","name":"Component vs Bean in Spring","headline":"Component vs Bean in Spring","description":"We discuss the differences between the concepts of Bean and Component, two of the basic building blocks of the Spring Framework, their usage areas, and how to choose them in the best way.","abstract":"\u003cp\u003eSpring Framework provides a powerful \u003cstrong\u003eDependency Injection (DI)\u003c\/strong\u003e mechanism to manage application components. In this system, objects are managed by an \u003cstrong\u003eIoC (Inversion of Control)\u003c\/strong\u003e container. But how do we tell Spring which classes or objects it should manage?\u003c\/p\u003e","inLanguage":"en","url":"https:\/\/www.compilemymind.com\/posts\/component-vs-bean\/","author":{"@type":"Person","name":""},"copyrightYear":"2025","dateCreated":"2025-07-31T00:00:00\u002b00:00","datePublished":"2025-07-31T00:00:00\u002b00:00","dateModified":"2025-07-31T00:00:00\u002b00:00","keywords":["Programming","SpringBoot","SoftwareDevelopment"],"mainEntityOfPage":"true","wordCount":"362"}]</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-5ZP6VTDC0D")</script><script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","G-5ZP6VTDC0D")</script><meta name=google-adsense-account content="ca-pub-6150876719010892"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892" crossorigin=anonymous></script><script src=https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js></script><script src=https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js></script><script src=https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js></script><script>const firebaseConfig={apiKey:"AIzaSyA9m356meXRJ4Daob-37O50wJVnio2F1vA",authDomain:"compilemymind.firebaseapp.com",projectId:"compilemymind",storageBucket:"compilemymind.firebasestorage.app",messagingSenderId:"310601406648",appId:"1:310601406648:web:ab7d9c3355f419015fbc4d",measurementId:"G-5ZP6VTDC0D"};var app=firebase.initializeApp(firebaseConfig),db=firebase.firestore(),auth=firebase.auth()</script></head><body class="flex flex-col h-screen m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32 text-lg bg-neutral text-neutral-900 dark:bg-neutral-800 dark:text-neutral scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600"><div id=the-top class="absolute flex self-center"><a class="px-3 py-1 text-sm -translate-y-8 rounded-b-lg bg-primary-200 focus:translate-y-0 dark:bg-neutral-600" href=#main-content><span class="font-bold text-primary-600 pe-2 dark:text-primary-400">&darr;</span>
-Skip to main content</a></div><div class=min-h-[148px]></div><div class="fixed inset-x-0 z-100"><div id=menu-blur class="absolute opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl shadow-2xl"></div><div class="relative m-auto leading-7 max-w-7xl px-6 sm:px-14 md:px-24 lg:px-32"><div class="main-menu flex items-center justify-between py-6 md:justify-start gap-x-3 pt-[2px] pr-2 md:pr-4 pb-[3px] pl-0"><div><a href=/ class=flex><span class=sr-only>Compile My Mind</span>
-<img src=/icon.png width=32 height=32 class="logo max-h-[5rem] max-w-[5rem] object-scale-down object-left nozoom" alt></a></div><div class="flex flex-1 items-center justify-between"><nav class="flex space-x-3"><a href=/ class="text-base font-medium">Compile My Mind</a></nav><nav class="hidden md:flex items-center gap-x-5 md:ml-12 h-12"><a href=/posts/ class="flex items-center hover:text-primary-600 dark:hover:text-primary-400" aria-label=Posts title=Posts><p class="text-base font-medium">Posts</p></a><button id=search-button aria-label=Search class="text-base hover:text-primary-600 dark:hover:text-primary-400" title="Search (/)">
-<span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentcolor" d="M505 442.7 405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9.0 208 0S0 93.1.0 208s93.1 208 208 208c48.3.0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9.0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7.0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7.0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></span></button><div class="flex items-center"><button id=appearance-switcher aria-label="Dark mode switcher" type=button class="text-base hover:text-primary-600 dark:hover:text-primary-400"><div class="flex items-center justify-center dark:hidden"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M32 256C32 132.2 132.3 32 255.8 32c11.36.0 29.7 1.668 40.9 3.746 9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3 9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480 132.1 480 32 379.6 32 256z"/></svg></span></div><div class="items-center justify-center hidden dark:flex"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M256 159.1c-53.02.0-95.1 42.98-95.1 95.1s41.2 96.9 95.1 96.9 95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347l-63.2-91.9 63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89 164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6 12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256 2.74 347.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7 19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109 109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69.0-127.1-57.31-127.1-127.1.0-70.69 57.31-127.1 127.1-127.1S383.1 186.2 383.1 256c0 70.7-56.4 127.1-127.1 127.1z"/></svg></span></div></button></div></nav><div class="flex md:hidden items-center gap-x-5 md:ml-12 h-12"><span></span>
-<button id=search-button-mobile aria-label=Search class="text-base hover:text-primary-600 dark:hover:text-primary-400" title="Search (/)">
-<span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentcolor" d="M505 442.7 405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9.0 208 0S0 93.1.0 208s93.1 208 208 208c48.3.0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9.0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7.0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7.0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg>
-</span></button>
-<button id=appearance-switcher-mobile aria-label="Dark mode switcher" type=button class="text-base hover:text-primary-600 dark:hover:text-primary-400 me-1"><div class="flex items-center justify-center dark:hidden"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M32 256C32 132.2 132.3 32 255.8 32c11.36.0 29.7 1.668 40.9 3.746 9.616 1.777 11.75 14.63 3.279 19.44C245 86.5 211.2 144.6 211.2 207.8c0 109.7 99.71 193 208.3 172.3 9.561-1.805 16.28 9.324 10.11 16.95C387.9 448.6 324.8 480 255.8 480 132.1 480 32 379.6 32 256z"/></svg></span></div><div class="items-center justify-center hidden dark:flex"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M256 159.1c-53.02.0-95.1 42.98-95.1 95.1s41.2 96.9 95.1 96.9 95.1-42.98 95.1-95.1S309 159.1 256 159.1zM509.3 347l-63.2-91.9 63.15-91.01c6.332-9.125 1.104-21.74-9.826-23.72l-109-19.7-19.7-109c-1.975-10.93-14.59-16.16-23.72-9.824L256 65.89 164.1 2.736c-9.125-6.332-21.74-1.107-23.72 9.824L121.6 121.6 12.56 141.3C1.633 143.2-3.596 155.9 2.736 164.1L65.89 256 2.74 347.01c-6.332 9.125-1.105 21.74 9.824 23.72l109 19.7 19.7 109c1.975 10.93 14.59 16.16 23.72 9.824L256 446.1l91.01 63.15c9.127 6.334 21.75 1.107 23.72-9.822l19.7-109 109-19.7C510.4 368.8 515.6 356.1 509.3 347zM256 383.1c-70.69.0-127.1-57.31-127.1-127.1.0-70.69 57.31-127.1 127.1-127.1S383.1 186.2 383.1 256c0 70.7-56.4 127.1-127.1 127.1z"/></svg></span></div></button></div></div><div class="-my-2 md:hidden"><div id=menu-button class=block><div class="cursor-pointer hover:text-primary-600 dark:hover:text-primary-400"><span class="relative block icon"><svg viewBox="0 0 448 512"><path fill="currentcolor" d="M0 96C0 78.33 14.33 64 32 64H416c17.7.0 32 14.33 32 32 0 17.7-14.3 32-32 32H32C14.33 128 0 113.7.0 96zM0 256c0-17.7 14.33-32 32-32H416c17.7.0 32 14.3 32 32s-14.3 32-32 32H32c-17.67.0-32-14.3-32-32zM416 448H32c-17.67.0-32-14.3-32-32s14.33-32 32-32H416c17.7.0 32 14.3 32 32s-14.3 32-32 32z"/></svg></span></div><div id=menu-wrapper class="fixed inset-0 z-30 invisible w-screen h-screen m-0 overflow-auto transition-opacity opacity-0 cursor-default bg-neutral-100/50 backdrop-blur-sm dark:bg-neutral-900/50 pt-[5px]"><ul class="flex space-y-2 mt-3 flex-col items-end w-full px-6 py-6 mx-auto overflow-visible list-none text-end max-w-7xl"><li id=menu-close-button><span class="cursor-pointer inline-block align-text-bottom hover:text-primary-600 dark:hover:text-primary-400"><span class="relative block icon"><svg viewBox="0 0 320 512"><path fill="currentcolor" d="M310.6 361.4c12.5 12.5 12.5 32.75.0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3 54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75.0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75.0-45.25s32.75-12.5 45.25.0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25.0s12.5 32.75.0 45.25l-105.4 105.4L310.6 361.4z"/></svg></span></span></li><li class=mt-1><a href=/posts/ class="flex items-center hover:text-primary-600 dark:hover:text-primary-400" aria-label=Posts title=Posts><p class="text-bg font-bg">Posts</p></a></li></ul></div></div></div></div><script>(function(){var e=$(".main-menu"),t=window.location.pathname;e.find('a[href="'+t+'"]').each(function(e,t){$(t).children("p").addClass("active")})})()</script></div></div><script type=text/javascript src=/js/background-blur.min.00a57c73ea12f2cab2980c3c3d649e89f6d82f190f74bbe2b67f2f5e39ab7d032ece47086400ca05396758aace13299da49aca43ea643d2625e62c506267a169.js integrity="sha512-AKV8c+oS8sqymAw8PWSeifbYLxkPdLvitn8vXjmrfQMuzkcIZADKBTlnWKrOEymdpJrKQ+pkPSYl5ixQYmehaQ==" data-blur-id=menu-blur></script><div class="relative flex flex-col grow"><main id=main-content class=grow><article><div id=hero class="h-[150px] md:h-[200px]"></div><div class="fixed inset-x-0 top-0 h-[800px] single_hero_background nozoom"><img id=background-image src=/posts/component-vs-bean/featured_hu_d97b6099d3dc0b42.jpg alt="Component vs Bean in Spring" loading=eager decoding=async fetchpriority=high class="absolute inset-0 w-full h-full object-cover"><div class="absolute inset-0 bg-gradient-to-t from-neutral dark:from-neutral-800 to-transparent mix-blend-normal"></div><div class="absolute inset-0 opacity-60 bg-gradient-to-t from-neutral dark:from-neutral-800 to-neutral-100 dark:to-neutral-800 mix-blend-normal"></div></div><div id=background-blur class="fixed opacity-0 inset-x-0 top-0 h-full single_hero_background nozoom backdrop-blur-2xl"></div><script type=text/javascript src=/js/background-blur.min.00a57c73ea12f2cab2980c3c3d649e89f6d82f190f74bbe2b67f2f5e39ab7d032ece47086400ca05396758aace13299da49aca43ea643d2625e62c506267a169.js integrity="sha512-AKV8c+oS8sqymAw8PWSeifbYLxkPdLvitn8vXjmrfQMuzkcIZADKBTlnWKrOEymdpJrKQ+pkPSYl5ixQYmehaQ==" data-blur-id=background-blur data-image-id=background-image data-image-url=/posts/component-vs-bean/featured_hu_d97b6099d3dc0b42.jpg></script><header id=single_header class="mt-5 max-w-prose"><ol class="text-sm text-neutral-500 dark:text-neutral-400 print:hidden"><li class=hidden><a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href=/></a><span class="px-1 text-primary-500">/</span></li><li class=inline><a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href=/posts/>Posts</a><span class="px-1 text-primary-500">/</span></li><li class=hidden><a class="hover:underline decoration-neutral-300 dark:underline-neutral-600" href=/posts/component-vs-bean/>Component vs Bean in Spring</a><span class="px-1 text-primary-500">/</span></li></ol><h1 class="mt-0 text-4xl font-extrabold text-neutral-900 dark:text-neutral">Component vs Bean in Spring</h1><div class="mt-1 mb-6 text-base text-neutral-500 dark:text-neutral-400 print:hidden"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-07-31T00:00:00+00:00>31 July 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">2 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\component-vs-bean\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\component-vs-bean\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<button id=button_likes class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">
-<span id=button_likes_heart class="inline-block align-text-bottom hidden"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span>
-</span><span id=button_likes_emtpty_heart class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M244 84l11.1 12 12-11.98C300.6 51.37 347 36.51 392.6 44.1 461.5 55.58 512 115.2 512 185.1V190.9c0 41.5-17.2 81.2-47.6 109.5L283.7 469.1c-7.5 7-17.4 10.9-27.7 10.9S235.8 476.1 228.3 469.1L47.59 300.4C17.23 272.1.0 232.4.0 190.9V185.1c0-69.9 50.52-129.52 119.4-141 44.7-7.59 92 7.27 124.6 39.9C243.1 84 244 84.01 244 84zm11.1 79.9-45-46.8c-21.7-20.82-52.5-30.7-82.8-25.66C81.55 99.07 48 138.7 48 185.1V190.9c0 28.2 11.71 55.2 32.34 74.4L256 429.3l175.7-164c20.6-19.2 32.3-46.2 32.3-74.4V185.1c0-46.4-33.6-86.03-79.3-93.66C354.4 86.4 323.6 96.28 301.9 117.1l-46.8 46.8z"/></svg></span></span>
-<span id=button_likes_text>&nbsp;Like</span></button></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/springboot/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SpringBoot
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/softwaredevelopment/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SoftwareDevelopment</span></span></a></div></div></header><section class="flex flex-col max-w-full mt-0 prose dark:prose-invert lg:flex-row"><div class="order-first lg:ml-auto px-0 lg:order-last lg:ps-8 lg:max-w-2xs"><div class="toc ps-5 print:hidden lg:sticky lg:top-[140px]"><details open id=TOCView class="toc-right mt-0 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-track-neutral-200 scrollbar-thumb-neutral-400 dark:scrollbar-track-neutral-800 dark:scrollbar-thumb-neutral-600 rounded-lg -ms-5 ps-5 pe-2 hidden lg:block"><summary class="block py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">Table of Contents</summary><div class="min-w-[220px] py-2 border-dotted border-s-1 -ms-5 ps-5 dark:border-neutral-600"><nav id=TableOfContents><ul><li><a href=#what-is-component>What is @Component?</a></li><li><a href=#what-is-bean>What is @Bean?</a></li><li><a href=#when-should-you-use-each>When Should You Use Each?</a><ul><li><ul><li><a href=#use-component-when>Use Component when:</a></li><li><a href=#use-bean-when>Use Bean when:</a></li></ul></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></div></details><details class="toc-inside mt-0 overflow-hidden rounded-lg -ms-5 ps-5 lg:hidden"><summary class="py-1 text-lg font-semibold cursor-pointer bg-neutral-100 text-neutral-800 -ms-5 ps-5 dark:bg-neutral-700 dark:text-neutral-100 lg:hidden">Table of Contents</summary><div class="py-2 border-dotted border-neutral-300 border-s-1 -ms-5 ps-5 dark:border-neutral-600"><nav id=TableOfContents><ul><li><a href=#what-is-component>What is @Component?</a></li><li><a href=#what-is-bean>What is @Bean?</a></li><li><a href=#when-should-you-use-each>When Should You Use Each?</a><ul><li><ul><li><a href=#use-component-when>Use Component when:</a></li><li><a href=#use-bean-when>Use Bean when:</a></li></ul></li></ul></li><li><a href=#conclusion>Conclusion</a></li></ul></nav></div></details><script>(function(){"use strict";const s=.33,o="#TableOfContents",i=".anchor",a='a[href^="#"]',r="li ul",c="active";let t=!1;function l(e,n){const o=window.scrollY+window.innerHeight*n,i=[...document.querySelectorAll('#TableOfContents a[href^="#"]')],s=new Set(i.map(e=>e.getAttribute("href").substring(1)));if(t)for(let t=0;t<e.length;t++){const n=e[t];if(!s.has(n.id))continue;const o=n.getBoundingClientRect().top+window.scrollY;if(Math.abs(window.scrollY-o)<100)return n.id}for(let t=e.length-1;t>=0;t--){const n=e[t].getBoundingClientRect().top+window.scrollY;if(n<=o&&s.has(e[t].id))return e[t].id}return e.find(e=>s.has(e.id))?.id||""}function e({toc:e,anchors:t,links:n,scrollOffset:s,collapseInactive:o}){const i=l(t,s);if(!i)return;if(n.forEach(e=>{const t=e.getAttribute("href")===`#${i}`;if(e.classList.toggle(c,t),o){const n=e.closest("li")?.querySelector("ul");n&&(n.style.display=t?"":"none")}}),o){const n=e.querySelector(`a[href="#${CSS.escape(i)}"]`);let t=n;for(;t&&t!==e;)t.tagName==="UL"&&(t.style.display=""),t.tagName==="LI"&&t.querySelector("ul")?.style.setProperty("display",""),t=t.parentElement}}function n(){const n=document.querySelector(o);if(!n)return;const l=!0,u=[...document.querySelectorAll(i)],d=[...n.querySelectorAll(a)];l&&n.querySelectorAll(r).forEach(e=>e.style.display="none"),d.forEach(e=>{e.addEventListener("click",()=>{t=!0})});const c={toc:n,anchors:u,links:d,scrollOffset:s,collapseInactive:l};window.addEventListener("scroll",()=>e(c),{passive:!0}),window.addEventListener("hashchange",()=>e(c),{passive:!0}),e(c)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",n):n()})()</script></div></div><div class="min-w-0 min-h-0 max-w-fit"><div class="article-content max-w-prose mb-20"><p>Spring Framework provides a powerful <strong>Dependency Injection (DI)</strong> mechanism to manage application components. In this system, objects are managed by an <strong>IoC (Inversion of Control)</strong> container. But how do we tell Spring which classes or objects it should manage?</p><p>There are two common approaches:</p><ul><li><code>@Component</code></li><li><code>@Bean</code></li></ul><p>Although both serve the same end goal—registering a bean with the Spring container—they work in different ways and are used in different contexts. Let’s explore their differences with examples and best practices.</p><hr><h2 class="relative group">What is @Component?<div id=what-is-component class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#what-is-component aria-label=Anchor>#</a></span></h2><p>@Component is a class-level annotation that tells Spring to automatically detect and register the class as a bean during component scanning.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Java data-lang=Java><span class=line><span class=cl><span class=kn>import</span><span class=w> </span><span class=nn>org.springframework.stereotype.Component</span><span class=p>;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Component</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>MyService</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=kt>void</span><span class=w> </span><span class=nf>doSomething</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>println</span><span class=p>(</span><span class=s>&#34;Component-based service is working!&#34;</span><span class=p>);</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><p>🔍 Note: Annotations like @Service, @Repository, and @Controller are specializations of @Component. They provide semantic meaning in layered architectures.</p><p>To enable component scanning, you need to annotate your configuration class like this:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Java data-lang=Java><span class=line><span class=cl><span class=nd>@Configuration</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@ComponentScan</span><span class=p>(</span><span class=n>basePackages</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=s>&#34;com.example&#34;</span><span class=p>)</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>AppConfig</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><hr><h2 class="relative group">What is @Bean?<div id=what-is-bean class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#what-is-bean aria-label=Anchor>#</a></span></h2><p>@Bean is used to explicitly declare a bean in a method inside a @Configuration class. It&rsquo;s perfect for registering beans manually or configuring third-party objects.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-Java data-lang=Java><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kn>import</span><span class=w> </span><span class=nn>org.springframework.context.annotation.Bean</span><span class=p>;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kn>import</span><span class=w> </span><span class=nn>org.springframework.context.annotation.Configuration</span><span class=p>;</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=nd>@Configuration</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=kd>public</span><span class=w> </span><span class=kd>class</span> <span class=nc>AppConfig</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=nd>@Bean</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>public</span><span class=w> </span><span class=n>MyService</span><span class=w> </span><span class=nf>myService</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=k>return</span><span class=w> </span><span class=k>new</span><span class=w> </span><span class=n>MyService</span><span class=p>();</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
-</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
-</span></span></span></code></pre></div><table><thead><tr><th>Feature</th><th><strong>Component</strong></th><th><strong>Bean</strong></th></tr></thead><tbody><tr><td>Placement</td><td>On the class</td><td>On a method</td></tr><tr><td>Registration</td><td>Automatic via scanning</td><td>Explicit via method</td></tr><tr><td>Flexibility</td><td>Less flexible</td><td>More flexible</td></tr><tr><td>External Libraries</td><td>Not suitable</td><td>Suitable</td></tr><tr><td>Dependency Injection</td><td>Via constructor or field</td><td>Via method parameters</td></tr></tbody></table><hr><h2 class="relative group">When Should You Use Each?<div id=when-should-you-use-each class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#when-should-you-use-each aria-label=Anchor>#</a></span></h2><h4 class="relative group">Use Component when:<div id=use-component-when class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#use-component-when aria-label=Anchor>#</a></span></h4><ol><li><p>You control the class source code.</p></li><li><p>You want automatic discovery and registration.</p></li><li><p>You’re organizing your app into layers (@Service, @Repository, etc.).</p></li></ol><h4 class="relative group">Use Bean when:<div id=use-bean-when class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#use-bean-when aria-label=Anchor>#</a></span></h4><ol><li><p>You&rsquo;re working with external libraries or third-party classes.</p></li><li><p>You need to manually configure or customize the object.</p></li><li><p>You want fine-grained control over bean creation.</p></li></ol><hr><h2 class="relative group">Conclusion<div id=conclusion class=anchor></div><span class="absolute top-0 w-6 transition-opacity opacity-0 -start-6 not-prose group-hover:opacity-100 select-none"><a class="text-primary-300 dark:text-neutral-700 !no-underline" href=#conclusion aria-label=Anchor>#</a></span></h2><p>Both @Component and @Bean are essential tools for defining Spring beans, but they shine in different scenarios.</p><ol><li><p>Use <strong>@Component</strong> for classes you write and control.</p></li><li><p>Use <strong>@Bean</strong> for manual configuration, third-party classes, or when you need full control over instantiation.</p></li></ol><p>Understanding the strengths and use-cases of each will help you write cleaner, more maintainable Spring applications.</p></div><section class="flex flex-row flex-wrap justify-center pt-4 text-xl"><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https://www.compilemymind.com/posts/component-vs-bean/&amp;title=Component%20vs%20Bean%20in%20Spring" title="Share on LinkedIn" aria-label="Share on LinkedIn"><span class="relative block icon"><svg viewBox="0 0 448 512"><path fill="currentcolor" d="M416 32H31.9C14.3 32 0 46.5.0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6.0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3.0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2.0 38.5 17.3 38.5 38.5.0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6.0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2.0 79.7 44.3 79.7 101.9V416z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://twitter.com/intent/tweet/?url=https://www.compilemymind.com/posts/component-vs-bean/&amp;text=Component%20vs%20Bean%20in%20Spring" title="Tweet on Twitter" aria-label="Tweet on Twitter"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"/></svg></span>
-</a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://reddit.com/submit/?url=https://www.compilemymind.com/posts/component-vs-bean/&amp;resubmit=true&amp;title=Component%20vs%20Bean%20in%20Spring" title="Submit to Reddit" aria-label="Submit to Reddit"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M201.5 305.5c-13.8.0-24.9-11.1-24.9-24.6.0-13.8 11.1-24.9 24.9-24.9 13.6.0 24.6 11.1 24.6 24.9.0 13.6-11.1 24.6-24.6 24.6zM504 256c0 137-111 248-248 248S8 393 8 256 119 8 256 8s248 111 248 248zm-132.3-41.2c-9.4.0-17.7 3.9-23.8 10-22.4-15.5-52.6-25.5-86.1-26.6l17.4-78.3 55.4 12.5c0 13.6 11.1 24.6 24.6 24.6 13.8.0 24.9-11.3 24.9-24.9s-11.1-24.9-24.9-24.9c-9.7.0-18 5.8-22.1 13.8l-61.2-13.6c-3-.8-6.1 1.4-6.9 4.4l-19.1 86.4c-33.2 1.4-63.1 11.3-85.5 26.8-6.1-6.4-14.7-10.2-24.1-10.2-34.9.0-46.3 46.9-14.4 62.8-1.1 5-1.7 10.2-1.7 15.5.0 52.6 59.2 95.2 132 95.2 73.1.0 132.3-42.6 132.3-95.2.0-5.3-.6-10.8-1.9-15.8 31.3-16 19.8-62.5-14.9-62.5zM302.8 331c-18.2 18.2-76.1 17.9-93.6.0-2.2-2.2-6.1-2.2-8.3.0-2.5 2.5-2.5 6.4.0 8.6 22.8 22.8 87.3 22.8 110.2.0 2.5-2.2 2.5-6.1.0-8.6-2.2-2.2-6.1-2.2-8.3.0zm7.7-75c-13.6.0-24.6 11.1-24.6 24.9.0 13.6 11.1 24.6 24.6 24.6 13.8.0 24.9-11.1 24.9-24.6.0-13.8-11-24.9-24.9-24.9z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://pinterest.com/pin/create/bookmarklet/?url=https://www.compilemymind.com/posts/component-vs-bean/&amp;description=Component%20vs%20Bean%20in%20Spring" title="Pin on Pinterest" aria-label="Pin on Pinterest"><span class="relative block icon"><svg viewBox="0 0 496 512"><path fill="currentcolor" d="M496 256c0 137-111 248-248 248-25.6.0-50.2-3.9-73.4-11.1 10.1-16.5 25.2-43.5 30.8-65 3-11.6 15.4-59 15.4-59 8.1 15.4 31.7 28.5 56.8 28.5 74.8.0 128.7-68.8 128.7-154.3.0-81.9-66.9-143.2-152.9-143.2-107 0-163.9 71.8-163.9 150.1.0 36.4 19.4 81.7 50.3 96.1 4.7 2.2 7.2 1.2 8.3-3.3.8-3.4 5-20.3 6.9-28.1.6-2.5.3-4.7-1.7-7.1-10.1-12.5-18.3-35.3-18.3-56.6.0-54.7 41.4-107.6 112-107.6 60.9.0 103.6 41.5 103.6 100.9.0 67.1-33.9 113.6-78 113.6-24.3.0-42.6-20.1-36.7-44.8 7-29.5 20.5-61.3 20.5-82.6.0-19-10.2-34.9-31.4-34.9-24.9.0-44.9 25.7-44.9 60.2.0 22 7.4 36.8 7.4 36.8s-24.5 103.8-29 123.2c-5 21.4-3 51.6-.9 71.2C65.4 450.9.0 361.1.0 256 0 119 111 8 248 8s248 111 248 248z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://www.facebook.com/sharer/sharer.php?u=https://www.compilemymind.com/posts/component-vs-bean/&amp;quote=Component%20vs%20Bean%20in%20Spring" title="Share on Facebook" aria-label="Share on Facebook"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14.0 55.52 4.84 55.52 4.84v61h-31.28c-30.8.0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="mailto:?body=https://www.compilemymind.com/posts/component-vs-bean/&amp;subject=Component%20vs%20Bean%20in%20Spring" title="Send via email" aria-label="Send via email"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M207.8 20.73c-93.45 18.32-168.7 93.66-187 187.1-27.64 140.9 68.65 266.2 199.1 285.1 19.01 2.888 36.17-12.26 36.17-31.49l1e-4-.6631c0-15.74-11.44-28.88-26.84-31.24-84.35-12.98-149.2-86.13-149.2-174.2.0-102.9 88.61-185.5 193.4-175.4 91.54 8.869 158.6 91.25 158.6 183.2v16.16c0 22.09-17.94 40.05-40 40.05s-40.01-17.96-40.01-40.05v-120.1c0-8.847-7.161-16.02-16.01-16.02l-31.98.0036c-7.299.0-13.2 4.992-15.12 11.68-24.85-12.15-54.24-16.38-86.06-5.106-38.75 13.73-68.12 48.91-73.72 89.64-9.483 69.01 43.81 128 110.9 128 26.44.0 50.43-9.544 69.59-24.88 24 31.3 65.23 48.69 109.4 37.49C465.2 369.3 496 324.1 495.1 277.2V256.3c0-149.2-133.9-265.632-287.3-235.57zM239.1 304.3c-26.47.0-48-21.56-48-48.05s21.53-48.05 48-48.05 48 21.56 48 48.05-20.6 48.05-48 48.05z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://api.whatsapp.com/send?text=https://www.compilemymind.com/posts/component-vs-bean/&amp;resubmit=true&amp;title=Component%20vs%20Bean%20in%20Spring" title="Share via WhatsApp" aria-label="Share via WhatsApp"><span class="relative block icon"><svg viewBox="0 0 448 512"><path fill="currentcolor" d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4.0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3.0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2.0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2.0-101.7 82.8-184.5 184.6-184.5 49.3.0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5.0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3.0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/></svg>
-</span></a><a target=_blank class="m-1 rounded bg-neutral-300 p-1.5 text-neutral-700 hover:bg-primary-500 hover:text-neutral dark:bg-neutral-700 dark:text-neutral-300 dark:hover:bg-primary-400 dark:hover:text-neutral-800" href="https://t.me/share/url?url=https://www.compilemymind.com/posts/component-vs-bean/&amp;resubmit=true&amp;title=Component%20vs%20Bean%20in%20Spring" title="Share via Telegram" aria-label="Share via Telegram"><span class="relative block icon"><svg viewBox="0 0 496 512"><path fill="currentcolor" d="M248 8C111.033 8 0 119.033.0 256S111.033 504 248 504 496 392.967 496 256 384.967 8 248 8zM362.952 176.66c-3.732 39.215-19.881 134.378-28.1 178.3-3.476 18.584-10.322 24.816-16.948 25.425-14.4 1.326-25.338-9.517-39.287-18.661-21.827-14.308-34.158-23.215-55.346-37.177-24.485-16.135-8.612-25 5.342-39.5 3.652-3.793 67.107-61.51 68.335-66.746.153-.655.3-3.1-1.154-4.384s-3.59-.849-5.135-.5q-3.283.746-104.608 69.142-14.845 10.194-26.894 9.934c-8.855-.191-25.888-5.006-38.551-9.123-15.531-5.048-27.875-7.717-26.8-16.291q.84-6.7 18.45-13.7 108.446-47.248 144.628-62.3c68.872-28.647 83.183-33.623 92.511-33.789 2.052-.034 6.639.474 9.61 2.885a10.452 10.452.0 013.53 6.716A43.765 43.765.0 01362.952 176.66z"/></svg></span></a></section><h2 class="mt-8 text-2xl font-extrabold mb-10">Related</h2><section class="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3"><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/spring-boot-layered-architecture/featured_hu_eb09900477dcaa5d.png alt="Understanding Controller, Service, and Repository in Spring Boot" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/spring-boot-layered-architecture/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>Understanding Controller, Service, and Repository in Spring Boot</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-08-07T00:00:00+00:00>7 August 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">3 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\spring-boot-layered-architecture\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\spring-boot-layered-architecture\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/springboot/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SpringBoot
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/softwaredevelopment/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SoftwareDevelopment</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/spring-annotations-scheduling-async-component-service-configuration-bean/featured_hu_ff6f73e216b86397.png alt="Spring Annotations Guide: @EnableScheduling, @Scheduled, @Async, @EnableAsync, @Service, and @Configuration Examples" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/spring-annotations-scheduling-async-component-service-configuration-bean/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>Spring Annotations Guide: @EnableScheduling, @Scheduled, @Async, @EnableAsync, @Service, and @Configuration Examples</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-10-24T00:00:00+00:00>24 October 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">3 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\spring-annotations-scheduling-async-component-service-configuration-bean\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\spring-annotations-scheduling-async-component-service-configuration-bean\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/springboot/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SpringBoot
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/softwaredevelopment/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">SoftwareDevelopment</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/new-features-in-java-25/featured_hu_76bad1568991a073.png alt="What’s New in Java 25 (JDK 25)" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/new-features-in-java-25/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>What’s New in Java 25 (JDK 25)</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-10-24T00:00:00+00:00>24 October 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">6 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\new-features-in-java-25\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\new-features-in-java-25\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/techtrends/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">TechTrends</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/csharp-vs-java/featured_hu_b358de7de1a60b96.jpg alt="C# vs Java" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/csharp-vs-java/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>C# vs Java</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-03-28T00:00:00+00:00>28 March 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">5 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\csharp-vs-java\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\csharp-vs-java\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/techcomparison/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">TechComparison</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/remove-duplicates-from-sorted-array/featured_hu_5e8152c13aeb239c.png alt="Remove Duplicates from Sorted Array — The Two-Pointer Solution" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/remove-duplicates-from-sorted-array/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>Remove Duplicates from Sorted Array — The Two-Pointer Solution</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-08-09T00:00:00+00:00>9 August 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">2 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\remove-duplicates-from-sorted-array\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\remove-duplicates-from-sorted-array\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/problemsolving/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">ProblemSolving</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article><article class="relative min-h-full min-w-full overflow-hidden rounded border border-2 border-neutral-200 shadow-2xl dark:border-neutral-700"><div class="flex-none relative overflow-hidden thumbnail_card_related"><img src=/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/featured_hu_281da2cd1d619461.jpg alt="How to Solve LeetCode's Valid Parentheses Problem Using Stack in Java" loading=lazy decoding=async fetchpriority=low class="not-prose absolute inset-0 w-full h-full object-cover"></div><div class="px-6 py-4"><header><a href=/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/ class="not-prose before:absolute before:inset-0 decoration-primary-500 dark:text-neutral text-xl font-bold text-neutral-800 hover:underline hover:underline-offset-2"><h2>How to Solve LeetCode's Valid Parentheses Problem Using Stack in Java</h2></a></header><div class="text-sm text-neutral-500 dark:text-neutral-400"><div class="flex flex-row flex-wrap items-center"><time datetime=2025-08-06T00:00:00+00:00>6 August 2025</time><span class="px-2 text-primary-500">&#183;</span><span title="Reading time">3 mins</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=views_posts\how-to-solve-leetcode-valid-parentheses-using-stack-in-java\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=views>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 576 512"><path fill="currentcolor" d="M288 32c-80.8.0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7.0 24.6C17.3 304 48.6 356 95.4 399.4 142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1 3.3-7.9 3.3-16.7.0-24.6-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144 64.5-144 144-144 144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64-11.5.0-22.3-3-31.6-8.4-.2 2.8-.4 5.5-.4 8.4.0 53 43 96 96 96s96-43 96-96-43-96-96-96c-2.8.0-5.6.1-8.4.4 5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></span>
-</span><span class="px-2 text-primary-500">&#183;</span><span>
-<span id=likes_posts\how-to-solve-leetcode-valid-parentheses-using-stack-in-java\index.md class="animate-pulse inline-block text-transparent max-h-3 rounded-full -mt-[2px] align-middle bg-neutral-300 dark:bg-neutral-400" title=likes>loading</span>
-<span class="inline-block align-text-bottom"><span class="relative block icon"><svg viewBox="0 0 512 512"><path fill="currentcolor" d="M47.6 300.4 228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6.0 115.2.0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/></svg></span></span></span></div><div class="flex flex-row flex-wrap items-center"><a class="relative mt-[0.5rem] me-2" href=/categories/technology/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Technology
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/programming/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">Programming
-</span></span></a><a class="relative mt-[0.5rem] me-2" href=/tags/problemsolving/><span class="flex cursor-pointer"><span class="rounded-md border border-primary-400 px-1 py-[1px] text-xs font-normal text-primary-700 dark:border-primary-600 dark:text-primary-400">ProblemSolving</span></span></a></div></div></div><div class="px-6 pt-4 pb-2"></div></article></section></div><script type=text/javascript src=/js/page.min.54b6f4371722649edbe871e431d8670d670878c22be8f36e229fe53cc9b786fe25a834def5e6de621f7a3e37b72bc8cd73839aa5ed907ed6cbd45cd3e1b0fa20.js integrity="sha512-VLb0NxciZJ7b6HHkMdhnDWcIeMIr6PNuIp/lPMm3hv4lqDTe9ebeYh96Pje3K8jNc4Oape2QftbL1FzT4bD6IA==" data-oid=views_posts\component-vs-bean\index.md data-oid-likes=likes_posts\component-vs-bean\index.md></script></section><footer class="pt-8 max-w-prose print:hidden"><div class=pt-8><hr class="border-dotted border-neutral-300 dark:border-neutral-600"><div class="flex justify-between pt-3"><span class="flex flex-col"><a class="flex text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400" href=/posts/csharp-vs-java/><span class=leading-6><span class="inline-block rtl:rotate-180">&larr;</span>&ensp;C# vs Java
-</span></a><span class="ms-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400"><time datetime=2025-03-28T00:00:00+00:00>28 March 2025</time>
-</span></span><span class="flex flex-col items-end"><a class="flex text-right text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400" href=/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/><span class=leading-6>How to Solve LeetCode's Valid Parentheses Problem Using Stack in Java&ensp;<span class="inline-block rtl:rotate-180">&rarr;</span>
-</span></a><span class="me-6 mt-1 text-xs text-neutral-500 dark:text-neutral-400"><time datetime=2025-08-06T00:00:00+00:00>6 August 2025</time></span></span></div></div></footer></article><div id=scroll-to-top class="fixed bottom-6 end-6 z-50 transform translate-y-4 opacity-0 duration-200"><a href=#the-top class="pointer-events-auto flex h-12 w-12 items-center justify-center rounded-full bg-neutral/50 text-xl text-neutral-700 hover:text-primary-600 dark:bg-neutral-800/50 dark:text-neutral dark:hover:text-primary-400" aria-label="Scroll to top" title="Scroll to top">&uarr;</a></div></main><footer id=site-footer class="py-10 print:hidden"><div class="flex items-center justify-between"></div><script>mediumZoom(document.querySelectorAll("img:not(.nozoom)"),{margin:24,background:"rgba(0,0,0,0.5)",scrollOffset:0})</script><script type=text/javascript src=/js/process.min.ee03488f19c93c2efb199e2e3014ea5f3cb2ce7d45154adb3399a158cac27ca52831db249ede5bb602700ef87eb02434139de0858af1818ab0fb4182472204a4.js integrity="sha512-7gNIjxnJPC77GZ4uMBTqXzyyzn1FFUrbM5mhWMrCfKUoMdsknt5btgJwDvh+sCQ0E53ghYrxgYqw+0GCRyIEpA=="></script></footer><div id=search-wrapper class="invisible fixed inset-0 flex h-screen w-screen cursor-default flex-col bg-neutral-500/50 p-4 backdrop-blur-sm dark:bg-neutral-900/50 sm:p-6 md:p-[10vh] lg:p-[12vh] z-500" data-url=https://www.compilemymind.com/><div id=search-modal class="flex flex-col w-full max-w-3xl min-h-0 mx-auto border rounded-md shadow-lg top-20 border-neutral-200 bg-neutral dark:border-neutral-700 dark:bg-neutral-800"><header class="relative z-10 flex items-center justify-between flex-none px-2"><form class="flex items-center flex-auto min-w-0"><div class="flex items-center justify-center w-8 h-8 text-neutral-400"><span class="relative block icon"><svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="search" class="svg-inline--fa fa-search fa-w-16" role="img" viewBox="0 0 512 512"><path fill="currentcolor" d="M505 442.7 405.3 343c-4.5-4.5-10.6-7-17-7H372c27.6-35.3 44-79.7 44-128C416 93.1 322.9.0 208 0S0 93.1.0 208s93.1 208 208 208c48.3.0 92.7-16.4 128-44v16.3c0 6.4 2.5 12.5 7 17l99.7 99.7c9.4 9.4 24.6 9.4 33.9.0l28.3-28.3c9.4-9.4 9.4-24.6.1-34zM208 336c-70.7.0-128-57.2-128-128 0-70.7 57.2-128 128-128 70.7.0 128 57.2 128 128 0 70.7-57.2 128-128 128z"/></svg></span></div><input type=search id=search-query class="flex flex-auto h-12 mx-1 bg-transparent appearance-none focus:outline-dotted focus:outline-2 focus:outline-transparent" placeholder=Search tabindex=0></form><button id=close-search-button class="flex items-center justify-center w-8 h-8 text-neutral-700 hover:text-primary-600 dark:text-neutral dark:hover:text-primary-400" title="Close (Esc)">
-<span class="relative block icon"><svg viewBox="0 0 320 512"><path fill="currentcolor" d="M310.6 361.4c12.5 12.5 12.5 32.75.0 45.25C304.4 412.9 296.2 416 288 416s-16.38-3.125-22.62-9.375L160 301.3 54.63 406.6C48.38 412.9 40.19 416 32 416S15.63 412.9 9.375 406.6c-12.5-12.5-12.5-32.75.0-45.25l105.4-105.4L9.375 150.6c-12.5-12.5-12.5-32.75.0-45.25s32.75-12.5 45.25.0L160 210.8l105.4-105.4c12.5-12.5 32.75-12.5 45.25.0s12.5 32.75.0 45.25l-105.4 105.4L310.6 361.4z"/></svg></span></button></header><section class="flex-auto px-2 overflow-auto"><ul id=search-results></ul></section></div></div></div></body></html>
+<!doctype html>
+<html lang="en" class="h-full">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="en">
+<meta name="theme-color" content="#BD5FFF">
+<script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+  
+  (function(){var t=sessionStorage.getItem('mana_pt');if(t){document.documentElement.setAttribute('data-page-enter',t);sessionStorage.removeItem('mana_pt');}})();
+  
+  window.MANA_SEARCH_INDEX_URL = '\/index.json';
+  
+  window.MANA_LANG_PREFIXES = ['en'];
+</script>
+<title>@Component vs @Bean in Spring: When to Use Each | </title>
+<meta
+  name="description"
+  content="
+    A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach.
+  
+  ">
+
+
+  <meta name="keywords" content="Programming, Java, SpringBoot, SoftwareDevelopment">
+
+
+
+  <meta name="author" content="Eren">
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/component-vs-bean/">
+
+
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/component-vs-bean/"><link rel="alternate" hreflang="x-default" href="http://localhost:1313/posts/component-vs-bean/">
+
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="@Component vs @Bean in Spring: When to Use Each | ">
+<meta property="og:description" content="A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach.">
+<meta property="og:url" content="http://localhost:1313/posts/component-vs-bean/">
+<meta property="og:site_name" content=""><meta property="article:published_time" content="2025-07-31T00:00:00Z">
+  <meta
+    property="article:modified_time"
+    content="2025-07-31T00:00:00Z"><meta property="article:section" content="Programming"><meta property="article:tag" content="Programming"><meta property="article:tag" content="Java"><meta property="article:tag" content="SpringBoot"><meta property="article:tag" content="SoftwareDevelopment">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="@Component vs @Bean in Spring: When to Use Each | ">
+<meta name="twitter:description" content="A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach.">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Eren"},"dateModified":"2025-07-31T00:00:00Z","datePublished":"2025-07-31T00:00:00Z","description":"A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach.","headline":"@Component vs @Bean in Spring: When to Use Each","image":"http://localhost:1313/icon.png","inLanguage":"en","keywords":["Programming","Java","SpringBoot","SoftwareDevelopment"],"mainEntityOfPage":{"@id":"http://localhost:1313/posts/component-vs-bean/","@type":"WebPage"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:1313/icon.png"},"name":"","url":"http://localhost:1313/"},"timeRequired":"PT4M","url":"http://localhost:1313/posts/component-vs-bean/","wordCount":722}</script>
+
+
+
+  
+  
+  
+    
+  
+  
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"http://localhost:1313/","name":"Home","position":1},{"@type":"ListItem","item":"http://localhost:1313/posts/","name":"Posts","position":2},{"@type":"ListItem","item":"http://localhost:1313/posts/component-vs-bean/","name":"@Component vs @Bean in Spring: When to Use Each","position":3}]}</script>
+
+
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+  media="print"
+  onload="this.media='all'">
+<noscript>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</noscript>
+
+<link rel="stylesheet" href="/css/theme.min.8072bb5d762c2b5f525748fdbcc951c0546e2e712e06c598f5e8ee6364a69869.css">
+
+
+  <link
+    rel="stylesheet"
+    href="/css/syntax-dark.min.b01037e5609e6260b74d6fcdd6d5131e8dcbc4d46d6ef4bfbe5a60bdfc1a9f30.css"
+    id="syntax-dark-theme"
+    class="syntax-theme">
+  <link
+    rel="stylesheet"
+    href="/css/syntax-light.min.9602bc2fcef52b4c62e05eae14b48ba428e114f116e993e504d83ed5a3aeda98.css"
+    id="syntax-light-theme"
+    class="syntax-theme"
+    disabled><script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+
+    const syntaxDark = document.getElementById("syntax-dark-theme");
+    const syntaxLight = document.getElementById("syntax-light-theme");
+
+    if (theme === "light") {
+      if (syntaxDark) syntaxDark.disabled = true;
+      if (syntaxLight) syntaxLight.disabled = false;
+    } else {
+      if (syntaxDark) syntaxDark.disabled = false;
+      if (syntaxLight) syntaxLight.disabled = true;
+    }
+
+    
+    const observer = new MutationObserver(() => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      if (currentTheme === "light") {
+        if (syntaxDark) syntaxDark.disabled = true;
+        if (syntaxLight) syntaxLight.disabled = false;
+      } else {
+        if (syntaxDark) syntaxDark.disabled = false;
+        if (syntaxLight) syntaxLight.disabled = true;
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+  })();
+</script>
+
+
+
+
+<link rel="stylesheet" href="/css/bundle.min.a344802d65c119f645e39f907ac9d6beb082ae6bd8f4bb92d516d449dcad3020.css">
+
+
+
+<link rel="stylesheet" href="/css/custom.min.9d19656412ed5eda727b3aa9066a6d2efc11f06f855fc90c62e4bf327e21ec51.css">
+
+
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="manifest" href="/site.webmanifest">
+
+
+
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5ZP6VTDC0D');
+</script>
+
+
+<meta name="google-adsense-account" content="ca-pub-6150876719010892">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892" crossorigin="anonymous"></script>
+
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <a href="#main-content" class="skip-to-main" aria-label="Skip to main content"
+      >Skip to main content</a
+    >
+    <header class="sticky-header">
+      <div class="header-container">
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+  <div class="header-content">
+    <div class="header-logo">
+      <a href="/" class="logo-link" aria-label="Home - ">
+        
+      </a>
+    </div>
+
+    
+    <button 
+      id="mobile-menu-toggle" 
+      class="mobile-menu-toggle" 
+      aria-label="Toggle menu" 
+      aria-expanded="false"
+      type="button">
+      <span class="hamburger-icon">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </span>
+    </button>
+
+    <div class="header-menu">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+
+      <button id="search-toggle" class="search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+
+      
+
+
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" type="button">
+  <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+  </svg>
+  <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+  </svg>
+</button>
+
+    </div>
+  </div>
+</nav>
+
+      </div>
+      <div class="reading-progress-bar" aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content" class="flex-1" role="main">
+      
+  <div class="single-post-wrapper">
+    <article class="single-post">
+      
+
+
+
+
+
+
+
+      <header class="post-header">
+        
+
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+      <meta itemprop="position" content="1" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/posts/" itemprop="item"><span itemprop="name">Posts</span></a>
+      <meta itemprop="position" content="2" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span itemprop="name" class="breadcrumb-current">@Component vs @Bean in Spring: When to Use Each</span>
+      <meta itemprop="position" content="3" />
+    </li>
+  </ol>
+</nav>
+
+
+        <h1 class="post-title-main">@Component vs @Bean in Spring: When to Use Each</h1>
+
+        
+          <p class="post-description-main">A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach.</p>
+        
+
+        <div class="post-meta">
+  <div class="post-meta-info">
+    <time datetime="2025-07-31T00:00:00Z" class="post-date">
+      <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      July 31, 2025
+    </time>
+
+    <span class="meta-separator">•</span>
+
+    
+      <span class="post-word-count">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        722 words
+      </span>
+    
+
+    
+      <span class="meta-separator">•</span>
+      <span class="post-reading-time">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        4 min
+      </span>
+    
+  </div>
+
+  
+    <div class="post-tags">
+      
+        <a href="/tags/programming" class="post-tag">Programming</a>
+      
+        <a href="/tags/java" class="post-tag">Java</a>
+      
+        <a href="/tags/springboot" class="post-tag">SpringBoot</a>
+      
+        <a href="/tags/softwaredevelopment" class="post-tag">SoftwareDevelopment</a>
+      
+    </div>
+  
+</div>
+
+      </header>
+
+      <div class="post-content-main">
+        <p>Spring&rsquo;s dependency injection is powerful, but it gives you more than one way to register a bean with the container. Two of the most common approaches are <code>@Component</code> and <code>@Bean</code>. They accomplish similar goals but work differently and belong in different situations.</p>
+<p>Understanding which to use — and why — leads to cleaner, more intentional Spring code.</p>
+<hr>
+<h2 id="what-is-a-spring-bean">What Is a Spring Bean?</h2>
+<p>Before comparing the two annotations, it&rsquo;s worth being precise: a <strong>bean</strong> is simply an object managed by Spring&rsquo;s IoC (Inversion of Control) container. Spring handles instantiation, configuration, and lifecycle management. You declare what you want; Spring figures out how to wire it together.</p>
+<p>Both <code>@Component</code> and <code>@Bean</code> are ways of registering objects with that container. The difference is in <em>how</em> you declare them.</p>
+<hr>
+<h2 id="component--automatic-registration">@Component — Automatic Registration</h2>
+<p><code>@Component</code> is a class-level annotation. When Spring&rsquo;s component scanning encounters a class marked with it, the class is automatically instantiated and registered as a bean.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Component</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TokenValidator</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">isValid</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c1">// validation logic</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">token</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">token</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">32</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Spring finds <code>TokenValidator</code> during the component scan and registers it. You can now inject it anywhere:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Service</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AuthService</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">TokenValidator</span><span class="w"> </span><span class="n">tokenValidator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">AuthService</span><span class="p">(</span><span class="n">TokenValidator</span><span class="w"> </span><span class="n">tokenValidator</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">tokenValidator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tokenValidator</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><h3 id="specialized-variants">Specialized Variants</h3>
+<p><code>@Component</code> has three specialized stereotypes that add semantic meaning:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Annotation</th>
+          <th>Layer</th>
+          <th>Purpose</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>@Service</code></td>
+          <td>Business logic</td>
+          <td>Service layer operations</td>
+      </tr>
+      <tr>
+          <td><code>@Repository</code></td>
+          <td>Data access</td>
+          <td>Database interaction, exception translation</td>
+      </tr>
+      <tr>
+          <td><code>@Controller</code> / <code>@RestController</code></td>
+          <td>Presentation</td>
+          <td>HTTP request handling</td>
+      </tr>
+  </tbody>
+</table>
+<p>These annotations are all <code>@Component</code> under the hood — they scan and register the same way — but they communicate intent and enable layer-specific behaviors (like <code>@Repository</code>&rsquo;s JPA exception translation).</p>
+<h3 id="enabling-component-scanning">Enabling Component Scanning</h3>
+<p>Component scanning is active by default in Spring Boot applications. For explicit control:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="nd">@ComponentScan</span><span class="p">(</span><span class="n">basePackages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;com.example.app&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">AppConfig</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><hr>
+<h2 id="bean--explicit-registration">@Bean — Explicit Registration</h2>
+<p><code>@Bean</code> is a method-level annotation used inside a <code>@Configuration</code> class. It tells Spring to call that method and register its return value as a bean.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SecurityConfig</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">PasswordEncoder</span><span class="w"> </span><span class="nf">passwordEncoder</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">BCryptPasswordEncoder</span><span class="p">(</span><span class="n">12</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>Spring calls <code>passwordEncoder()</code> once, stores the result, and injects it wherever a <code>PasswordEncoder</code> is needed. The <code>@Configuration</code> annotation ensures that repeated calls to <code>passwordEncoder()</code> within the configuration class return the <em>same</em> instance (not new ones), which is important for beans that must be singletons.</p>
+<hr>
+<h2 id="the-critical-difference-who-owns-the-class">The Critical Difference: Who Owns the Class?</h2>
+<p>The most important factor in choosing between them:</p>
+<p><strong>@Component</strong>: Use when you own and control the class source code. You can add the annotation directly.</p>
+<p><strong>@Bean</strong>: Use when the class comes from an external library or third-party dependency — you <em>can&rsquo;t</em> add <code>@Component</code> to it. The <code>@Bean</code> method lets you configure and register it explicitly.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Configuration</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">HttpClientConfig</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// OkHttp3 is a third-party library — we can&#39;t annotate its class</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">OkHttpClient</span><span class="w"> </span><span class="nf">okHttpClient</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OkHttpClient</span><span class="p">.</span><span class="na">Builder</span><span class="p">()</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="na">connectTimeout</span><span class="p">(</span><span class="n">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="na">readTimeout</span><span class="p">(</span><span class="n">30</span><span class="p">,</span><span class="w"> </span><span class="n">TimeUnit</span><span class="p">.</span><span class="na">SECONDS</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">LoggingInterceptor</span><span class="p">())</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="p">.</span><span class="na">build</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><hr>
+<h2 id="bean-gives-you-construction-control">@Bean Gives You Construction Control</h2>
+<p>Another advantage of <code>@Bean</code> is complete control over how the object is built. When <code>@Component</code> auto-creates an object, you can&rsquo;t easily inject custom construction logic. <code>@Bean</code> makes the creation process explicit:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Bean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kd">public</span><span class="w"> </span><span class="n">DataSource</span><span class="w"> </span><span class="nf">dataSource</span><span class="p">(</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&#34;${db.url}&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&#34;${db.username}&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">username</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&#34;${db.password}&#34;</span><span class="p">)</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">password</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">HikariConfig</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HikariConfig</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">setJdbcUrl</span><span class="p">(</span><span class="n">url</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">setUsername</span><span class="p">(</span><span class="n">username</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">setPassword</span><span class="p">(</span><span class="n">password</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">setMaximumPoolSize</span><span class="p">(</span><span class="n">20</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">config</span><span class="p">.</span><span class="na">setConnectionTimeout</span><span class="p">(</span><span class="n">30_000</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HikariDataSource</span><span class="p">(</span><span class="n">config</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>This level of construction-time configuration isn&rsquo;t possible with <code>@Component</code>.</p>
+<hr>
+<h2 id="side-by-side-comparison">Side-by-Side Comparison</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Attribute</th>
+          <th><code>@Component</code></th>
+          <th><code>@Bean</code></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Placement</strong></td>
+          <td>On the class</td>
+          <td>On a method inside <code>@Configuration</code></td>
+      </tr>
+      <tr>
+          <td><strong>Registration</strong></td>
+          <td>Automatic (component scan)</td>
+          <td>Explicit (method return value)</td>
+      </tr>
+      <tr>
+          <td><strong>Best for</strong></td>
+          <td>Classes you control</td>
+          <td>External/third-party classes</td>
+      </tr>
+      <tr>
+          <td><strong>Construction control</strong></td>
+          <td>Limited</td>
+          <td>Full</td>
+      </tr>
+      <tr>
+          <td><strong>Readability</strong></td>
+          <td>Less boilerplate</td>
+          <td>More explicit</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="practical-guidelines">Practical Guidelines</h2>
+<p>Use <code>@Component</code> (or its stereotypes) when:</p>
+<ul>
+<li>You own the class</li>
+<li>The class has a clear, single role in your application&rsquo;s layer structure</li>
+<li>Auto-discovery and minimal boilerplate are acceptable</li>
+</ul>
+<p>Use <code>@Bean</code> when:</p>
+<ul>
+<li>The class comes from a library you can&rsquo;t modify</li>
+<li>You need to customize how the object is constructed</li>
+<li>You want the configuration to be explicit and centralized in a <code>@Configuration</code> class</li>
+</ul>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>Both <code>@Component</code> and <code>@Bean</code> put objects into Spring&rsquo;s container. The distinction is about <em>who controls the class</em> and <em>how much control you need over construction</em>.</p>
+<p>For classes you write: <code>@Component</code>. For classes you don&rsquo;t: <code>@Bean</code>. When in doubt, prefer explicitness — a <code>@Configuration</code> class with <code>@Bean</code> methods is easier to audit, easier to test, and leaves nothing to implicit scanning behavior.</p>
+
+      </div>
+
+      
+        <footer class="post-footer">
+          <div class="post-tags-footer">
+            <span class="tags-label">Tags:</span>
+            
+              <a href="/tags/programming" class="post-tag">Programming</a>
+            
+              <a href="/tags/java" class="post-tag">Java</a>
+            
+              <a href="/tags/springboot" class="post-tag">SpringBoot</a>
+            
+              <a href="/tags/softwaredevelopment" class="post-tag">SoftwareDevelopment</a>
+            
+          </div>
+        </footer>
+      
+
+      
+
+
+<section class="related-posts" aria-label="Related Posts">
+  <h2 class="related-posts-title">Related Posts</h2>
+  <ul class="related-posts-list">
+    
+    <li class="related-post-item">
+      <a href="/posts/spring-annotations-scheduling-async-component-service-configuration-bean/" class="related-post-link">
+        <strong>Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean</strong>
+        <span>A practical guide to the most important Spring Framework annotations — what they do, when to use them, and how they fit together in a real application.</span>
+      </a>
+    </li>
+    
+    <li class="related-post-item">
+      <a href="/posts/spring-boot-layered-architecture/" class="related-post-link">
+        <strong>Spring Boot Layered Architecture: Controller, Service, and Repository</strong>
+        <span>How Spring Boot&#39;s three-layer architecture organizes code into controllers, services, and repositories — and why separation of concerns makes applications easier to build, test, and maintain.</span>
+      </a>
+    </li>
+    
+    <li class="related-post-item">
+      <a href="/posts/csharp-vs-java/" class="related-post-link">
+        <strong>C# vs Java: A Practical Comparison for 2025</strong>
+        <span>A detailed, honest comparison of Java and C# — two of the most widely used languages in enterprise software development — covering performance, ecosystem, tooling, and real-world use cases.</span>
+      </a>
+    </li>
+    
+    <li class="related-post-item">
+      <a href="/posts/why-i-like-java-more-than-python/" class="related-post-link">
+        <strong>Why I Still Prefer Java Over Python</strong>
+        <span>A developer&#39;s perspective on why Java&#39;s strictness, performance, and ecosystem make it the right choice for building serious, long-lived software.</span>
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+
+
+      <nav class="post-navigation" aria-label="Post navigation">
+        
+          <a
+            href="/posts/spring-annotations-scheduling-async-component-service-configuration-bean/"
+            class="nav-link nav-prev"
+            aria-label="Previous post: Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title">Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean</span>
+          </a>
+        
+
+        
+          <a
+            href="/posts/how-to-solve-leetcode-valid-parentheses-using-stack-in-java/"
+            class="nav-link nav-next"
+            aria-label="Next post: Solving LeetCode&#39;s Valid Parentheses Problem with a Stack in Java">
+            <span class="nav-label">Next</span>
+            <span class="nav-title">Solving LeetCode&#39;s Valid Parentheses Problem with a Stack in Java</span>
+          </a>
+        
+      </nav>
+    </article>
+
+    
+  <aside class="post-toc" id="post-toc" aria-label="Table of Contents">
+    <button
+      class="toc-toggle"
+      id="toc-toggle"
+      aria-expanded="true"
+      aria-controls="toc-content"
+      aria-label="Toggle table of contents">
+      <svg
+        class="toc-burger-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span class="toc-toggle-text">Table of Contents</span>
+      <svg
+        class="toc-chevron-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="toc-content" id="toc-content">
+      <nav class="toc-nav" aria-label="Table of Contents">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#what-is-a-spring-bean">What Is a Spring Bean?</a></li>
+        <li><a href="#component--automatic-registration">@Component — Automatic Registration</a>
+          <ul>
+            <li><a href="#specialized-variants">Specialized Variants</a></li>
+            <li><a href="#enabling-component-scanning">Enabling Component Scanning</a></li>
+          </ul>
+        </li>
+        <li><a href="#bean--explicit-registration">@Bean — Explicit Registration</a></li>
+        <li><a href="#the-critical-difference-who-owns-the-class">The Critical Difference: Who Owns the Class?</a></li>
+        <li><a href="#bean-gives-you-construction-control">@Bean Gives You Construction Control</a></li>
+        <li><a href="#side-by-side-comparison">Side-by-Side Comparison</a></li>
+        <li><a href="#practical-guidelines">Practical Guidelines</a></li>
+        <li><a href="#conclusion">Conclusion</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </aside>
+
+
+  </div>
+
+    </main>
+
+    <footer>
+      <footer class="site-footer">
+  <div class="footer-content">
+    
+  </div>
+</footer>
+
+    </footer>
+
+    <div id="search-modal" class="search-modal" aria-hidden="true" role="dialog" aria-label="Search" data-no-results="No results found">
+  <div class="search-modal-backdrop" id="search-modal-backdrop"></div>
+  <div class="search-modal-container">
+    <div class="search-input-wrapper">
+      <svg class="search-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search..."
+        autocomplete="off"
+        aria-label="Search">
+      <button class="search-input-clear" id="search-input-clear" aria-label="Clear search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      </button>
+      <button class="search-modal-close" id="search-modal-close" aria-label="Close search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+    
+<div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-overlay"></div>
+  <div class="mobile-menu-content">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Menu</span>
+      <button
+        id="mobile-menu-close"
+        class="mobile-menu-close"
+        aria-label="Close menu"
+        type="button">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-menu-nav" role="navigation" aria-label="Mobile navigation">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+    </nav>
+    <div class="mobile-menu-footer">
+      <button id="mobile-search-toggle" class="mobile-search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <span>Search</span>
+      </button>
+      
+
+      <button class="theme-toggle" aria-label="Toggle theme" type="button">
+        <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+    
+
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top" type="button">
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.8cc4b96ac7af9517fd6ad80eeddd46ac956bb6c47f4c0481138642a15b70782f.js" defer></script>
+
+  </body>
+</html>

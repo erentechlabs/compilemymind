@@ -1,11 +1,6 @@
 ---
-description: "Here, I share my journey in coding, system design, and exploring new technologies that shape the world of software."
+title: "Compile My Mind"
+description: "Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world."
 ---
 
-## 👋 Welcome!
-
-I’m Eren, the creator of **Compile My Mind** — a space where I share my journey, projects, and ideas in software development and technology.  
-
-I’m passionate about coding, system design, and exploring new technologies. For me, it’s not just about using tools — it’s about understanding how they work, building with them, and sharing what I learn along the way.  
-
-What drives me is the excitement of learning, improving, and connecting with people who share the same passion. Through Compile My Mind, I document my growth as a developer and collaborate with like-minded tech enthusiasts.
+> As someone deeply passionate about technology and the digital world — particularly cybersecurity, networking, and systems — this is where I document what I learn, build, and think about.

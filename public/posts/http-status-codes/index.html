@@ -1,0 +1,1112 @@
+<!doctype html>
+<html lang="en" class="h-full">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="language" content="en">
+<meta name="theme-color" content="#BD5FFF">
+<script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+  
+  (function(){var t=sessionStorage.getItem('mana_pt');if(t){document.documentElement.setAttribute('data-page-enter',t);sessionStorage.removeItem('mana_pt');}})();
+  
+  window.MANA_SEARCH_INDEX_URL = '\/index.json';
+  
+  window.MANA_LANG_PREFIXES = ['en'];
+</script>
+<title>Understanding HTTP Status Codes: What They Mean and How to Use Them | </title>
+<meta
+  name="description"
+  content="
+    A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security.
+  
+  ">
+
+
+  <meta name="keywords" content="Web, Networking, API, Cybersecurity, Protocols">
+
+
+
+  <meta name="author" content="Eren">
+
+
+
+<link rel="canonical" href="http://localhost:1313/posts/http-status-codes/">
+
+
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/http-status-codes/"><link rel="alternate" hreflang="x-default" href="http://localhost:1313/posts/http-status-codes/">
+
+
+<meta name="robots" content="index, follow">
+
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en">
+<meta property="og:title" content="Understanding HTTP Status Codes: What They Mean and How to Use Them | ">
+<meta property="og:description" content="A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security.">
+<meta property="og:url" content="http://localhost:1313/posts/http-status-codes/">
+<meta property="og:site_name" content=""><meta property="article:published_time" content="2025-11-23T00:00:00Z">
+  <meta
+    property="article:modified_time"
+    content="2025-11-23T00:00:00Z"><meta property="article:section" content="Web"><meta property="article:tag" content="Web"><meta property="article:tag" content="Networking"><meta property="article:tag" content="API"><meta property="article:tag" content="Cybersecurity"><meta property="article:tag" content="Protocols">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Understanding HTTP Status Codes: What They Mean and How to Use Them | ">
+<meta name="twitter:description" content="A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security.">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+  
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"Eren"},"dateModified":"2025-11-23T00:00:00Z","datePublished":"2025-11-23T00:00:00Z","description":"A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security.","headline":"Understanding HTTP Status Codes: What They Mean and How to Use Them","image":"http://localhost:1313/icon.png","inLanguage":"en","keywords":["Web","Networking","API","Cybersecurity","Protocols"],"mainEntityOfPage":{"@id":"http://localhost:1313/posts/http-status-codes/","@type":"WebPage"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"http://localhost:1313/icon.png"},"name":"","url":"http://localhost:1313/"},"timeRequired":"PT6M","url":"http://localhost:1313/posts/http-status-codes/","wordCount":1108}</script>
+
+
+
+  
+  
+  
+    
+  
+  
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"http://localhost:1313/","name":"Home","position":1},{"@type":"ListItem","item":"http://localhost:1313/posts/","name":"Posts","position":2},{"@type":"ListItem","item":"http://localhost:1313/posts/http-status-codes/","name":"Understanding HTTP Status Codes: What They Mean and How to Use Them","position":3}]}</script>
+
+
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+  media="print"
+  onload="this.media='all'">
+<noscript>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+</noscript>
+
+<link rel="stylesheet" href="/css/theme.min.8072bb5d762c2b5f525748fdbcc951c0546e2e712e06c598f5e8ee6364a69869.css">
+
+
+  <link
+    rel="stylesheet"
+    href="/css/syntax-dark.min.b01037e5609e6260b74d6fcdd6d5131e8dcbc4d46d6ef4bfbe5a60bdfc1a9f30.css"
+    id="syntax-dark-theme"
+    class="syntax-theme">
+  <link
+    rel="stylesheet"
+    href="/css/syntax-light.min.9602bc2fcef52b4c62e05eae14b48ba428e114f116e993e504d83ed5a3aeda98.css"
+    id="syntax-light-theme"
+    class="syntax-theme"
+    disabled><script>
+  
+  (function () {
+    const storedTheme = localStorage.getItem("theme");
+    const systemPrefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+    const theme = storedTheme || (systemPrefersLight ? "light" : "dark");
+
+    const syntaxDark = document.getElementById("syntax-dark-theme");
+    const syntaxLight = document.getElementById("syntax-light-theme");
+
+    if (theme === "light") {
+      if (syntaxDark) syntaxDark.disabled = true;
+      if (syntaxLight) syntaxLight.disabled = false;
+    } else {
+      if (syntaxDark) syntaxDark.disabled = false;
+      if (syntaxLight) syntaxLight.disabled = true;
+    }
+
+    
+    const observer = new MutationObserver(() => {
+      const currentTheme = document.documentElement.getAttribute("data-theme");
+      if (currentTheme === "light") {
+        if (syntaxDark) syntaxDark.disabled = true;
+        if (syntaxLight) syntaxLight.disabled = false;
+      } else {
+        if (syntaxDark) syntaxDark.disabled = false;
+        if (syntaxLight) syntaxLight.disabled = true;
+      }
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+  })();
+</script>
+
+
+
+
+<link rel="stylesheet" href="/css/bundle.min.a344802d65c119f645e39f907ac9d6beb082ae6bd8f4bb92d516d449dcad3020.css">
+
+
+
+<link rel="stylesheet" href="/css/custom.min.9d19656412ed5eda727b3aa9066a6d2efc11f06f855fc90c62e4bf327e21ec51.css">
+
+
+
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+
+
+<link rel="icon" type="image/png" href="/favicon.png">
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+
+
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png">
+<link rel="manifest" href="/site.webmanifest">
+
+
+
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-5ZP6VTDC0D');
+</script>
+
+
+<meta name="google-adsense-account" content="ca-pub-6150876719010892">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892" crossorigin="anonymous"></script>
+
+  </head>
+  <body class="flex flex-col min-h-screen">
+    <a href="#main-content" class="skip-to-main" aria-label="Skip to main content"
+      >Skip to main content</a
+    >
+    <header class="sticky-header">
+      <div class="header-container">
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+  <div class="header-content">
+    <div class="header-logo">
+      <a href="/" class="logo-link" aria-label="Home - ">
+        
+      </a>
+    </div>
+
+    
+    <button 
+      id="mobile-menu-toggle" 
+      class="mobile-menu-toggle" 
+      aria-label="Toggle menu" 
+      aria-expanded="false"
+      type="button">
+      <span class="hamburger-icon">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </span>
+    </button>
+
+    <div class="header-menu">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+
+      <button id="search-toggle" class="search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+
+      
+
+
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" type="button">
+  <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+  </svg>
+  <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+  </svg>
+</button>
+
+    </div>
+  </div>
+</nav>
+
+      </div>
+      <div class="reading-progress-bar" aria-hidden="true"></div>
+    </header>
+
+    <main id="main-content" class="flex-1" role="main">
+      
+  <div class="single-post-wrapper">
+    <article class="single-post">
+      
+
+
+
+
+
+
+
+      <header class="post-header">
+        
+
+<nav aria-label="breadcrumb" class="breadcrumb-nav">
+  <ol class="breadcrumb-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/" itemprop="item"><span itemprop="name">Home</span></a>
+      <meta itemprop="position" content="1" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <a href="/posts/" itemprop="item"><span itemprop="name">Posts</span></a>
+      <meta itemprop="position" content="2" />
+      <span aria-hidden="true" class="breadcrumb-sep">›</span>
+    </li>
+    
+    <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+      <span itemprop="name" class="breadcrumb-current">Understanding HTTP Status Codes: What They Mean and How to Use Them</span>
+      <meta itemprop="position" content="3" />
+    </li>
+  </ol>
+</nav>
+
+
+        <h1 class="post-title-main">Understanding HTTP Status Codes: What They Mean and How to Use Them</h1>
+
+        
+          <p class="post-description-main">A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security.</p>
+        
+
+        <div class="post-meta">
+  <div class="post-meta-info">
+    <time datetime="2025-11-23T00:00:00Z" class="post-date">
+      <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+      </svg>
+      November 23, 2025
+    </time>
+
+    <span class="meta-separator">•</span>
+
+    
+      <span class="post-word-count">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        1108 words
+      </span>
+    
+
+    
+      <span class="meta-separator">•</span>
+      <span class="post-reading-time">
+        <svg class="meta-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        6 min
+      </span>
+    
+  </div>
+
+  
+    <div class="post-tags">
+      
+        <a href="/tags/web" class="post-tag">Web</a>
+      
+        <a href="/tags/networking" class="post-tag">Networking</a>
+      
+        <a href="/tags/api" class="post-tag">API</a>
+      
+        <a href="/tags/cybersecurity" class="post-tag">Cybersecurity</a>
+      
+        <a href="/tags/protocols" class="post-tag">Protocols</a>
+      
+    </div>
+  
+</div>
+
+      </header>
+
+      <div class="post-content-main">
+        <p>HTTP status codes are the server&rsquo;s vocabulary for telling clients what happened. Three digits. Completely standardized. And yet, they&rsquo;re routinely misused in ways that break API clients, confuse security tools, and inadvertently leak information about your infrastructure.</p>
+<p>This guide covers what each status code category means, when to use specific codes, and a few security considerations that most tutorials skip.</p>
+<hr>
+<h2 id="the-five-categories">The Five Categories</h2>
+<p>Status codes are grouped by their first digit:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Range</th>
+          <th>Category</th>
+          <th>Meaning</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1xx</td>
+          <td>Informational</td>
+          <td>Request received, processing continues</td>
+      </tr>
+      <tr>
+          <td>2xx</td>
+          <td>Success</td>
+          <td>Request completed successfully</td>
+      </tr>
+      <tr>
+          <td>3xx</td>
+          <td>Redirection</td>
+          <td>Client must take additional action</td>
+      </tr>
+      <tr>
+          <td>4xx</td>
+          <td>Client Error</td>
+          <td>The request was malformed or unauthorized</td>
+      </tr>
+      <tr>
+          <td>5xx</td>
+          <td>Server Error</td>
+          <td>The server failed to fulfill a valid request</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h2 id="1xx--informational">1xx — Informational</h2>
+<p>Rarely seen in most applications, but important for specific protocols.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>100</strong></td>
+          <td>Continue</td>
+          <td>Server tells client to proceed with a large request body</td>
+      </tr>
+      <tr>
+          <td><strong>101</strong></td>
+          <td>Switching Protocols</td>
+          <td>Used for WebSocket upgrade from HTTP</td>
+      </tr>
+  </tbody>
+</table>
+<p><code>101</code> is the handshake that starts every WebSocket connection — critical for real-time applications like chat, live dashboards, and game servers.</p>
+<hr>
+<h2 id="2xx--success">2xx — Success</h2>
+<p>The codes you want to see.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>200</strong></td>
+          <td>OK</td>
+          <td>Generic success — GET, PUT, PATCH responses</td>
+      </tr>
+      <tr>
+          <td><strong>201</strong></td>
+          <td>Created</td>
+          <td>A new resource was created (POST)</td>
+      </tr>
+      <tr>
+          <td><strong>202</strong></td>
+          <td>Accepted</td>
+          <td>Request accepted but processing isn&rsquo;t done yet (async operations)</td>
+      </tr>
+      <tr>
+          <td><strong>204</strong></td>
+          <td>No Content</td>
+          <td>Success with no response body (DELETE operations)</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Get specific:</strong> Returning <code>200 OK</code> for a resource creation is technically wrong. Use <code>201 Created</code> with a <code>Location</code> header pointing to the new resource. API clients and automated tools depend on this precision.</p>
+<hr>
+<h2 id="3xx--redirection">3xx — Redirection</h2>
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>301</strong></td>
+          <td>Moved Permanently</td>
+          <td>Permanent URL change — search engines update their index</td>
+      </tr>
+      <tr>
+          <td><strong>302</strong></td>
+          <td>Found</td>
+          <td>Temporary redirect — login flows, maintenance pages</td>
+      </tr>
+      <tr>
+          <td><strong>304</strong></td>
+          <td>Not Modified</td>
+          <td>Cached response is still valid — saves bandwidth</td>
+      </tr>
+      <tr>
+          <td><strong>307</strong></td>
+          <td>Temporary Redirect</td>
+          <td>Like 302, but <strong>must</strong> preserve the HTTP method</td>
+      </tr>
+      <tr>
+          <td><strong>308</strong></td>
+          <td>Permanent Redirect</td>
+          <td>Like 301, but <strong>must</strong> preserve the HTTP method</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>301 vs. 307 matters:</strong> A <code>301</code> redirect on a POST request causes most browsers to re-issue it as a GET. If you need to redirect a POST and keep it a POST, use <code>307</code>. This distinction becomes critical in payment flows, form submissions, and API endpoints.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="alert alert-tip" >
+  <div class="alert-header" >
+    <span class="alert-icon">
+      
+      
+      <svg style="width: 1.25em; height: 1.25em; vertical-align: text-bottom; margin-right: 0.2rem;"
+  class="admonition-favicon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path
+    d="M15 14c.2-1 .7-1.7 1.5-2.5 1-1 1.5-2.4 1.5-3.8 0-3.3-2.7-6-6-6 0 0 0 0-0 0-3.3 0-6 2.7-6 6 0 1.4.5 2.8 1.5 3.8.8.8 1.3 1.5 1.5 2.5">
+  </path>
+  <path d="M9 18h6"></path>
+  <path d="M10 22h4"></path>
+</svg>
+      
+      
+    </span>
+    <span class="alert-title">
+      
+      Tip
+      
+    </span>
+    
+  </div>
+  <div class="alert-content" id="alert-0" >
+    <p>For SEO-critical URL migrations, always use <code>301</code>. It passes link equity (PageRank) to the new URL. A <code>302</code> tells search engines the old URL is still the canonical one.</p>
+  </div>
+</div>
+<hr>
+<h2 id="4xx--client-errors">4xx — Client Errors</h2>
+<p>The request was wrong — and it&rsquo;s the <em>client&rsquo;s</em> fault.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>400</strong></td>
+          <td>Bad Request</td>
+          <td>Malformed syntax, invalid JSON, missing required fields</td>
+      </tr>
+      <tr>
+          <td><strong>401</strong></td>
+          <td>Unauthorized</td>
+          <td>Authentication required or token invalid</td>
+      </tr>
+      <tr>
+          <td><strong>403</strong></td>
+          <td>Forbidden</td>
+          <td>Authenticated but not authorized for this resource</td>
+      </tr>
+      <tr>
+          <td><strong>404</strong></td>
+          <td>Not Found</td>
+          <td>Resource doesn&rsquo;t exist at this URL</td>
+      </tr>
+      <tr>
+          <td><strong>405</strong></td>
+          <td>Method Not Allowed</td>
+          <td>Wrong HTTP method for this endpoint</td>
+      </tr>
+      <tr>
+          <td><strong>409</strong></td>
+          <td>Conflict</td>
+          <td>Resource state conflict (duplicate entry, stale update)</td>
+      </tr>
+      <tr>
+          <td><strong>410</strong></td>
+          <td>Gone</td>
+          <td>Resource existed but has been permanently deleted</td>
+      </tr>
+      <tr>
+          <td><strong>422</strong></td>
+          <td>Unprocessable Entity</td>
+          <td>Valid syntax, but semantic errors (validation failures)</td>
+      </tr>
+      <tr>
+          <td><strong>429</strong></td>
+          <td>Too Many Requests</td>
+          <td>Rate limit exceeded</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>401 vs. 403:</strong> These are frequently confused. <code>401</code> means <em>&ldquo;tell me who you are&rdquo;</em> — the client needs to authenticate. <code>403</code> means <em>&ldquo;I know who you are, and you&rsquo;re not allowed here&rdquo;</em> — authentication won&rsquo;t help.</p>
+
+
+
+
+
+
+
+
+
+
+
+<div class="alert alert-warning" >
+  <div class="alert-header" >
+    <span class="alert-icon">
+      
+      
+      <svg style="width: 1.25em; height: 1.25em; vertical-align: text-bottom; margin-right: 0.2rem;"
+  class="admonition-favicon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+  <line x1="12" y1="9" x2="12" y2="13"></line>
+  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+</svg>
+      
+      
+    </span>
+    <span class="alert-title">
+      
+      Warning
+      
+    </span>
+    
+  </div>
+  <div class="alert-content" id="alert-1" >
+    <p><strong>Security consideration:</strong> Returning <code>404</code> instead of <code>403</code> for resources that exist but are unauthorized is a common technique to avoid leaking information about what exists on your system. If an unauthenticated user gets <code>403</code> on <code>/admin</code>, they now know there <em>is</em> an admin panel. Returning <code>404</code> instead reveals nothing. This pattern is used by many security-conscious APIs.</p>
+  </div>
+</div>
+<p><strong>429 and rate limiting:</strong> Always include a <code>Retry-After</code> header with <code>429</code> responses. Clients need to know when they can try again; without it, they&rsquo;ll either hammer your server in a retry loop or give up entirely.</p>
+<hr>
+<h2 id="5xx--server-errors">5xx — Server Errors</h2>
+<p>The request was valid, but the server failed. The client did nothing wrong.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Code</th>
+          <th>Name</th>
+          <th>Use Case</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>500</strong></td>
+          <td>Internal Server Error</td>
+          <td>Unhandled exception, uncaught error</td>
+      </tr>
+      <tr>
+          <td><strong>502</strong></td>
+          <td>Bad Gateway</td>
+          <td>Upstream service returned an invalid response</td>
+      </tr>
+      <tr>
+          <td><strong>503</strong></td>
+          <td>Service Unavailable</td>
+          <td>Server overloaded or in maintenance mode</td>
+      </tr>
+      <tr>
+          <td><strong>504</strong></td>
+          <td>Gateway Timeout</td>
+          <td>Upstream service didn&rsquo;t respond in time</td>
+      </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<div class="alert alert-warning" >
+  <div class="alert-header" >
+    <span class="alert-icon">
+      
+      
+      <svg style="width: 1.25em; height: 1.25em; vertical-align: text-bottom; margin-right: 0.2rem;"
+  class="admonition-favicon" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"
+  stroke-linecap="round" stroke-linejoin="round">
+  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+  <line x1="12" y1="9" x2="12" y2="13"></line>
+  <line x1="12" y1="17" x2="12.01" y2="17"></line>
+</svg>
+      
+      
+    </span>
+    <span class="alert-title">
+      
+      Warning
+      
+    </span>
+    
+  </div>
+  <div class="alert-content" id="alert-2" >
+    <p><strong>Never expose stack traces or internal error details in 5xx responses.</strong> Error messages like &ldquo;NullPointerException at com.example.service.UserService:42&rdquo; reveal your technology stack, class structure, and file paths. This information directly assists attackers. Log the full error server-side; return a sanitized message to the client.</p>
+  </div>
+</div>
+<p><strong>503 with <code>Retry-After</code>:</strong> When deploying maintenance windows or experiencing temporary overload, return <code>503</code> with a <code>Retry-After</code> header. Well-behaved clients will back off and retry. Without it, they&rsquo;ll retry immediately and make your situation worse.</p>
+<hr>
+<h2 id="practical-example-restful-api">Practical Example: RESTful API</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// Express.js — returning appropriate HTTP status codes
+</span></span></span><span class="line"><span class="cl"><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/api/users&#39;</span><span class="p">,</span> <span class="kr">async</span> <span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="kr">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">email</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">body</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="c1">// 400 — validation failure
+</span></span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">name</span> <span class="o">||</span> <span class="o">!</span><span class="nx">email</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">400</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;VALIDATION_ERROR&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;name and email are required&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="k">try</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">existing</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">findByEmail</span><span class="p">(</span><span class="nx">email</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 409 — duplicate resource
+</span></span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="p">(</span><span class="nx">existing</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">409</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;CONFLICT&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;A user with this email already exists&#39;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">});</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="kr">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="kr">await</span> <span class="nx">db</span><span class="p">.</span><span class="nx">users</span><span class="p">.</span><span class="nx">create</span><span class="p">({</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">email</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1">// 201 — resource created, with Location header
+</span></span></span><span class="line"><span class="cl">    <span class="nx">res</span><span class="p">.</span><span class="nx">setHeader</span><span class="p">(</span><span class="s1">&#39;Location&#39;</span><span class="p">,</span> <span class="sb">`/api/users/</span><span class="si">${</span><span class="nx">user</span><span class="p">.</span><span class="nx">id</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">201</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span> <span class="nx">id</span><span class="o">:</span> <span class="nx">user</span><span class="p">.</span><span class="nx">id</span> <span class="p">});</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// Log the full error internally, return nothing useful to the client
+</span></span></span><span class="line"><span class="cl">    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nx">status</span><span class="p">(</span><span class="mi">500</span><span class="p">).</span><span class="nx">json</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">error</span><span class="o">:</span> <span class="s1">&#39;INTERNAL_ERROR&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">message</span><span class="o">:</span> <span class="s1">&#39;An unexpected error occurred&#39;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">});</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">});</span>
+</span></span></code></pre></div><p>Notice: the <code>500</code> response returns a generic message. The actual exception is logged server-side. The client never sees your internal implementation details.</p>
+<hr>
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+<p><strong>Returning 200 for errors</strong> — Some APIs wrap everything in <code>200 OK</code> with an error field in the body. Don&rsquo;t do this. It breaks HTTP semantics, confuses monitoring tools, and makes error handling harder for API consumers.</p>
+<p><strong>Using 404 when you mean 400</strong> — A 404 means the <em>resource</em> doesn&rsquo;t exist. A 400 means the <em>request</em> is malformed. If someone hits <code>POST /users</code> with invalid JSON, that&rsquo;s a 400, not a 404.</p>
+<p><strong>Ignoring 422</strong> — <code>400</code> means syntactically broken. <code>422</code> means syntactically valid but semantically wrong (like a birthdate set to the future). The distinction helps clients give users better error messages.</p>
+<p><strong>Returning 403 on private resources</strong> — As noted above, consider returning <code>404</code> for resources that exist but are restricted to authenticated/authorized users, to avoid confirming their existence to unauthorized callers.</p>
+<hr>
+<h2 id="tldr">TL;DR</h2>
+<ul>
+<li><strong>2xx</strong> — success. Use the specific one: <code>201</code> for creation, <code>204</code> for deletion.</li>
+<li><strong>3xx</strong> — redirection. Use <code>301</code> for permanent, <code>302</code>/<code>307</code> for temporary.</li>
+<li><strong>4xx</strong> — client error. <code>400</code> bad input, <code>401</code> unauthenticated, <code>403</code> unauthorized, <code>404</code> not found, <code>429</code> rate limited.</li>
+<li><strong>5xx</strong> — server error. Never expose internals in the response body.</li>
+</ul>
+<p>Getting status codes right isn&rsquo;t pedantry — it&rsquo;s the contract your API makes with its consumers.</p>
+
+      </div>
+
+      
+        <footer class="post-footer">
+          <div class="post-tags-footer">
+            <span class="tags-label">Tags:</span>
+            
+              <a href="/tags/web" class="post-tag">Web</a>
+            
+              <a href="/tags/networking" class="post-tag">Networking</a>
+            
+              <a href="/tags/api" class="post-tag">API</a>
+            
+              <a href="/tags/cybersecurity" class="post-tag">Cybersecurity</a>
+            
+              <a href="/tags/protocols" class="post-tag">Protocols</a>
+            
+          </div>
+        </footer>
+      
+
+      
+
+
+<section class="related-posts" aria-label="Related Posts">
+  <h2 class="related-posts-title">Related Posts</h2>
+  <ul class="related-posts-list">
+    
+    <li class="related-post-item">
+      <a href="/posts/google-gemini-3-launch/" class="related-post-link">
+        <strong>Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling</strong>
+        <span>Google&#39;s Gemini 3 brings deep reasoning, stronger code capabilities, new agent features and Antigravity — a developer platform for autonomous tooling.</span>
+      </a>
+    </li>
+    
+    <li class="related-post-item">
+      <a href="/posts/new-features-in-java-25/" class="related-post-link">
+        <strong>What&#39;s New in Java 25 (JDK 25)</strong>
+        <span>A developer-friendly tour of the most important changes in Java 25 (LTS): language improvements, concurrency, performance work, JFR tooling, AOT ergonomics, GC updates, and more.</span>
+      </a>
+    </li>
+    
+  </ul>
+</section>
+
+
+
+      <nav class="post-navigation" aria-label="Post navigation">
+        
+          <a
+            href="/posts/google-gemini-3-launch/"
+            class="nav-link nav-prev"
+            aria-label="Previous post: Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling">
+            <span class="nav-label">Previous</span>
+            <span class="nav-title">Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling</span>
+          </a>
+        
+
+        
+          <a
+            href="/posts/internet-connectivity-and-cabling/"
+            class="nav-link nav-next"
+            aria-label="Next post: Understanding Internet Connectivity and Network Cabling: A Complete Guide">
+            <span class="nav-label">Next</span>
+            <span class="nav-title">Understanding Internet Connectivity and Network Cabling: A Complete Guide</span>
+          </a>
+        
+      </nav>
+    </article>
+
+    
+  <aside class="post-toc" id="post-toc" aria-label="Table of Contents">
+    <button
+      class="toc-toggle"
+      id="toc-toggle"
+      aria-expanded="true"
+      aria-controls="toc-content"
+      aria-label="Toggle table of contents">
+      <svg
+        class="toc-burger-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span class="toc-toggle-text">Table of Contents</span>
+      <svg
+        class="toc-chevron-icon"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true">
+        <polyline points="6 9 12 15 18 9"></polyline>
+      </svg>
+    </button>
+    <div class="toc-content" id="toc-content">
+      <nav class="toc-nav" aria-label="Table of Contents">
+        <nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#the-five-categories">The Five Categories</a></li>
+        <li><a href="#1xx--informational">1xx — Informational</a></li>
+        <li><a href="#2xx--success">2xx — Success</a></li>
+        <li><a href="#3xx--redirection">3xx — Redirection</a></li>
+        <li><a href="#4xx--client-errors">4xx — Client Errors</a></li>
+        <li><a href="#5xx--server-errors">5xx — Server Errors</a></li>
+        <li><a href="#practical-example-restful-api">Practical Example: RESTful API</a></li>
+        <li><a href="#common-mistakes-to-avoid">Common Mistakes to Avoid</a></li>
+        <li><a href="#tldr">TL;DR</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+      </nav>
+    </div>
+  </aside>
+
+
+  </div>
+
+    </main>
+
+    <footer>
+      <footer class="site-footer">
+  <div class="footer-content">
+    
+  </div>
+</footer>
+
+    </footer>
+
+    <div id="search-modal" class="search-modal" aria-hidden="true" role="dialog" aria-label="Search" data-no-results="No results found">
+  <div class="search-modal-backdrop" id="search-modal-backdrop"></div>
+  <div class="search-modal-container">
+    <div class="search-input-wrapper">
+      <svg class="search-input-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+      <input
+        type="search"
+        id="search-input"
+        class="search-input"
+        placeholder="Search..."
+        autocomplete="off"
+        aria-label="Search">
+      <button class="search-input-clear" id="search-input-clear" aria-label="Clear search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+        </svg>
+      </button>
+      <button class="search-modal-close" id="search-modal-close" aria-label="Close search">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div id="search-results" class="search-results"></div>
+  </div>
+</div>
+
+    
+<div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-overlay"></div>
+  <div class="mobile-menu-content">
+    <div class="mobile-menu-header">
+      <span class="mobile-menu-title">Menu</span>
+      <button
+        id="mobile-menu-close"
+        class="mobile-menu-close"
+        aria-label="Close menu"
+        type="button">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <nav class="mobile-menu-nav" role="navigation" aria-label="Mobile navigation">
+      <ul class="menu-list">
+  
+    <li class="menu-item">
+      <a
+        href="/"
+        class="menu-link ">
+        Home
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/posts/"
+        class="menu-link ">
+        Posts
+      </a>
+    </li>
+  
+    <li class="menu-item">
+      <a
+        href="/tags/"
+        class="menu-link ">
+        Tags
+      </a>
+    </li>
+  
+</ul>
+
+    </nav>
+    <div class="mobile-menu-footer">
+      <button id="mobile-search-toggle" class="mobile-search-toggle" aria-label="Search" type="button">
+        <svg class="search-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <span>Search</span>
+      </button>
+      
+
+      <button class="theme-toggle" aria-label="Toggle theme" type="button">
+        <svg class="icon-sun" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+        </svg>
+        <svg class="icon-moon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+    
+
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="Scroll to top" type="button">
+  <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <path
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+  </svg>
+</button>
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="/js/main.min.8cc4b96ac7af9517fd6ad80eeddd46ac956bb6c47f4c0481138642a15b70782f.js" defer></script>
+
+  </body>
+</html>
