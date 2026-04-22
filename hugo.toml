@@ -76,7 +76,8 @@ enableRobotsTXT = true
   # Avatar — using existing icon from assets/
   [params.avatar]
     [params.avatar.home]
-      assetPath = "icon.png"
+      assetPath    = "icon.png"
+      enableResize = true
 
   # Buy Me a Coffee (disabled)
   [params.buyMeACoffee]

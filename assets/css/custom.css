@@ -7,11 +7,13 @@
   width: 340px;
   max-width: 100%;
   height: auto;
+  border-radius: 20px;
+  /* will-change promotes to its own compositor layer — avoids repaints */
+  will-change: transform;
+  animation: float 3.5s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
   filter:
     drop-shadow(0 0 18px rgba(176, 99, 224, 0.6))
     drop-shadow(0 0 40px rgba(0, 255, 255, 0.25));
-  animation: float 3.5s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
-  border-radius: 20px;
 }
 
 @keyframes pulse-glow {
@@ -50,12 +52,29 @@
   );
   border-radius: 50%;
   pointer-events: none;
+  will-change: transform;
   animation: drift 8s ease-in-out infinite alternate;
 }
 
 @keyframes drift {
   from { transform: translate(0, 0) scale(1); }
   to   { transform: translate(-30px, 20px) scale(1.05); }
+}
+
+/* ── Respect reduced-motion preference ── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo,
+  .hero-section::before,
+  .post-card {
+    animation: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+  .hero-logo {
+    filter:
+      drop-shadow(0 0 18px rgba(176, 99, 224, 0.6))
+      drop-shadow(0 0 40px rgba(0, 255, 255, 0.25));
+  }
 }
 
 /* ── Hero Title: stronger visual hierarchy ── */
