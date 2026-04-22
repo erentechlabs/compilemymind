@@ -64,17 +64,17 @@
 {{ partial "head/json-ld.html" . }}
 
 
-<!-- Google Fonts: Space Grotesk (headings), Inter (body), Outfit (logo), and JetBrains Mono (code) -->
+<!-- Google Fonts: Space Grotesk (headings), Inter (body), Outfit (logo), JetBrains Mono (code) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
   rel="stylesheet"
   media="print"
   onload="this.media='all'">
 <noscript>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@600;700;800&family=Space+Grotesk:wght@500;700&display=swap"
     rel="stylesheet">
 </noscript>
 {{ partial "head/css.html" . }}
@@ -103,15 +103,23 @@
     data-website-id="{{ site.Params.umami.websiteId }}"></script>
 {{ end }}
 
-<!-- Google Analytics (GA4) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script>
+<!-- Google Analytics (GA4) — fully deferred to avoid forced reflow -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-5ZP6VTDC0D');
+  gtag('config', 'G-5ZP6VTDC0D', { 'transport_type': 'beacon' });
 </script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-5ZP6VTDC0D"></script>
 
-<!-- Google AdSense -->
+<!-- Google AdSense — deferred to keep it off the critical path -->
 <meta name="google-adsense-account" content="ca-pub-6150876719010892">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892" crossorigin="anonymous"></script>
+<script>
+  window.addEventListener('load', function() {
+    var s = document.createElement('script');
+    s.async = true;
+    s.crossOrigin = 'anonymous';
+    s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6150876719010892';
+    document.head.appendChild(s);
+  });
+</script>

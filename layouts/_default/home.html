@@ -43,7 +43,7 @@
           {{ else if $avatarAsset }}
             {{ with resources.Get $avatarAsset }}
               {{ if $enableResize }}
-                {{ with .Resize "512x webp q85" }}
+                {{ with .Resize "320x webp q85" }}
                   <img
                     src="{{ .RelPermalink }}"
                     alt="{{ site.Title }}"
