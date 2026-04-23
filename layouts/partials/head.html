@@ -16,7 +16,7 @@
   // Search index URL for current language (multilingual support)
   window.MANA_SEARCH_INDEX_URL = '{{ "index.json" | relLangURL }}';
   // Language prefixes for URL normalization in page transitions
-  window.MANA_LANG_PREFIXES = [{{ range $i, $lang := site.Languages }}{{ if $i }},{{ end }}'{{ $lang.Lang }}'{{ end }}];
+  window.MANA_LANG_PREFIXES = '{{ range $i, $lang := site.Languages }}{{ if $i }},{{ end }}{{ $lang.Lang }}{{ end }}'.split(',');
 </script>
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end }}</title>
 <meta

@@ -5,6 +5,7 @@
 # =============================================================================
 
 baseURL = "https://www.compilemymind.com/"
+title = "Compile My Mind"
 theme = "mana"
 defaultContentLanguage = "en"
 
