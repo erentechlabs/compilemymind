@@ -110,7 +110,7 @@
 }
 
 .posts-filter.expanded {
-  max-height: 800px;
+  max-height: 600px;
   padding-top: var(--spacing-lg);
   padding-bottom: var(--spacing-lg);
   opacity: 1;
@@ -265,7 +265,7 @@
   background-color: var(--accent-mid-purple-rgba-05);
 }
 
-.filter-tag-input:checked + .filter-tag-label {
+.filter-tag-input:checked+.filter-tag-label {
   background-color: var(--accent-primary);
   border-color: var(--accent-primary);
   color: white;
@@ -316,4 +316,11 @@
 .pagination-info {
   color: var(--text-muted);
   font-size: 0.875rem;
+}
+
+@media (max-width: 600px) {
+  .filter-clear-btn {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+  }
 }
