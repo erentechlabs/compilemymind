@@ -110,7 +110,7 @@
 }
 
 .posts-filter.expanded {
-  max-height: 300px;
+  max-height: 800px;
   padding-top: var(--spacing-lg);
   padding-bottom: var(--spacing-lg);
   opacity: 1;
