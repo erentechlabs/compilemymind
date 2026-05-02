@@ -288,10 +288,12 @@ function initFilters() {
       if (!isExpanded) {
         // Expanding - measure actual height
         filterContent.style.maxHeight = "none";
+        filterContent.classList.add("expanded"); // Add expanded class before measuring to include paddings
         const height = filterContent.scrollHeight;
+        filterContent.classList.remove("expanded");
         filterContent.style.maxHeight = "0px";
         filterContent.offsetHeight; // Force reflow
-        filterContent.style.maxHeight = Math.max(height, 300) + "px";
+        filterContent.style.maxHeight = Math.max(height, 800) + "px";
         filterContent.classList.add("expanded");
       } else {
         // Collapsing
