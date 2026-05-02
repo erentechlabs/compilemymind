@@ -110,7 +110,7 @@
 }
 
 .posts-filter.expanded {
-  max-height: 600px;
+  max-height: 800px;
   padding-top: var(--spacing-lg);
   padding-bottom: var(--spacing-lg);
   opacity: 1;
@@ -316,11 +316,4 @@
 .pagination-info {
   color: var(--text-muted);
   font-size: 0.875rem;
-}
-
-@media (max-width: 600px) {
-  .filter-clear-btn {
-    width: 100%;
-    margin-top: var(--spacing-sm);
-  }
 }
