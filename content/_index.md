@@ -1,6 +1,6 @@
 ---
 title: "Compile My Mind"
-description: "Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world."
+description: "Practical guides, deep dives, and cheatsheets on cybersecurity, networking, cloud, and systems — written by a developer who thinks like an engineer."
 ---
 
-> As someone deeply passionate about technology and the digital world — particularly cybersecurity, networking, and systems — this is where I document what I learn, build, and think about.
+Compile My Mind is a technical blog covering **cybersecurity**, **networking**, **cloud infrastructure**, and **systems programming**. Whether you're preparing for a certification, troubleshooting a network, or diving into low-level computing concepts — you'll find structured, practical content here.

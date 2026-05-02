@@ -59,7 +59,7 @@ enableRobotsTXT = true
   enableIntegrity = false
   relatedPostsCount = 4
 
-  description = "Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a developer who thinks like an engineer."
+  description = "Practical guides, deep dives, and cheatsheets on cybersecurity, networking, cloud, and systems — written by a developer who thinks like an engineer."
   author = "Eren"
   heroTitleLine1 = "COMPILE MY MIND"
   heroTitleLine2 = "Security · Networks · Systems"
