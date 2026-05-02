@@ -3,7 +3,7 @@
 [![Hugo Version](https://img.shields.io/badge/Hugo-%E2%89%A5%200.110.0-FF4088?logo=hugo)](https://gohugo.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-> **Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a developer who thinks like an engineer.**
+> **Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a cybersecurity engineer decoding the complexities of digital defense.**
 
 [**Visit the Website**](https://www.compilemymind.com/)
 
@@ -61,7 +61,7 @@ compilemymind/
 ## 📝 Author
 
 **Eren**
-A developer who thinks like an engineer.
+A cybersecurity engineer decoding the complexities of digital defense.
 
 *   **Website:** [compilemymind.com](https://www.compilemymind.com/)
 
