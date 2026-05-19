@@ -1,7 +1,7 @@
 ---
 title: "AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide"
 date: 2026-04-22T23:00:00+03:00
-description: "A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI — everything you need to pass the Azure Fundamentals exam."
+description: "A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI - everything you need to pass the Azure Fundamentals exam."
 tags:
   - azure
   - cloud
@@ -12,17 +12,17 @@ tags:
 draft: false
 ---
 
-Passing the **Microsoft AZ-900: Azure Fundamentals** exam is your first step into the Azure cloud ecosystem. Whether you're a developer, sysadmin, security professional, or IT manager, this certification validates your cloud literacy. This cheatsheet condenses every exam domain into a structured, scannable reference — study it, revisit it, and walk into the exam with confidence.
+Passing the **Microsoft AZ-900: Azure Fundamentals** exam is your first step into the Azure cloud ecosystem. Whether you're a developer, sysadmin, security professional, or IT manager, this certification validates your cloud literacy. This cheatsheet condenses every exam domain into a structured, scannable reference - study it, revisit it, and walk into the exam with confidence.
 
 > **Exam breakdown:** ~40–60 questions · ~60 minutes · Score 700/1000 to pass · Available in person or online proctored
 
 ---
 
-## Domain 1.0 — Describe Cloud Concepts (25–30%)
+## Domain 1.0 - Describe Cloud Concepts (25–30%)
 
 ### 1.1 What Is Cloud Computing & Shared Responsibility?
 
-**Cloud computing** is the delivery of computing services — servers, storage, databases, networking, software, analytics, and intelligence — over the internet ("the cloud") to offer faster innovation, flexible resources, and economies of scale.
+**Cloud computing** is the delivery of computing services - servers, storage, databases, networking, software, analytics, and intelligence - over the internet ("the cloud") to offer faster innovation, flexible resources, and economies of scale.
 
 **The Shared Responsibility Model** defines who is accountable for what across the cloud stack:
 
@@ -99,7 +99,7 @@ SaaS = Pizza delivered, ready to eat
 |---|---|
 | **High Availability** | Resources stay up even when components fail. Measured as uptime SLAs (e.g., 99.99%). |
 | **Scalability** | Ability to increase or decrease resources to handle demand. |
-| **Elasticity** | *Automatic* scaling — resources expand/contract in real time without manual intervention. |
+| **Elasticity** | *Automatic* scaling - resources expand/contract in real time without manual intervention. |
 | **Agility** | Rapid provisioning of resources in minutes, accelerating innovation. |
 | **Geo-Distribution** | Deploy to regions worldwide to serve users with low latency. |
 | **Disaster Recovery** | Replicate data and apps across regions; recover quickly from outages. |
@@ -125,7 +125,7 @@ SaaS = Pizza delivered, ready to eat
 - No upfront cost; expensed immediately.
 - **Example:** Paying your Azure monthly bill.
 
-> Cloud computing is fundamentally an **OpEx model** — you pay for what you use, when you use it. This shifts IT costs from a capital budget to an operational budget, improving cash flow and reducing financial risk.
+> Cloud computing is fundamentally an **OpEx model** - you pay for what you use, when you use it. This shifts IT costs from a capital budget to an operational budget, improving cash flow and reducing financial risk.
 
 **Why OpEx wins in the cloud:**
 - No over-provisioning or wasted idle hardware
@@ -138,21 +138,21 @@ SaaS = Pizza delivered, ready to eat
 
 Microsoft has made significant commitments to sustainability:
 
-- **Carbon negative by 2030** — removing more carbon from the atmosphere than it emits.
-- **Water positive by 2030** — replenishing more water than it consumes.
-- **Zero waste by 2030** — sending zero waste to landfills.
+- **Carbon negative by 2030** - removing more carbon from the atmosphere than it emits.
+- **Water positive by 2030** - replenishing more water than it consumes.
+- **Zero waste by 2030** - sending zero waste to landfills.
 - **100% renewable energy** by 2025 for all datacenters.
 
 **Azure's sustainability tools:**
-- **Microsoft Sustainability Manager** — tracks, reports, and reduces environmental impact.
+- **Microsoft Sustainability Manager** - tracks, reports, and reduces environmental impact.
 - **Azure's datacenters** use advanced cooling, renewable energy, and water recycling.
-- **Carbon-aware workloads** — Azure shifts workloads to regions with lower carbon intensity.
+- **Carbon-aware workloads** - Azure shifts workloads to regions with lower carbon intensity.
 
 > Cloud can actually be *greener* than on-premises: Azure datacenters run at 1.12–1.18 PUE (Power Usage Effectiveness), far better than the industry average of 1.58. Shared infrastructure means less waste.
 
 ---
 
-## Domain 2.0 — Describe Azure Architecture and Services (35–40%)
+## Domain 2.0 - Describe Azure Architecture and Services (35–40%)
 
 ### 2.1 Azure Physical Infrastructure
 
@@ -187,15 +187,15 @@ Region: East US
 
 **Sovereign Regions**
 Isolated from the main Azure infrastructure for specific government/compliance requirements:
-- **Azure Government** — US government agencies.
-- **Azure China** — operated by 21Vianet, separate from global Azure.
+- **Azure Government** - US government agencies.
+- **Azure China** - operated by 21Vianet, separate from global Azure.
 
 ---
 
 ### 2.2 Azure Management Infrastructure
 
 **Resources**
-The fundamental unit of Azure — anything you create and use: a VM, a database, a storage account, a virtual network.
+The fundamental unit of Azure - anything you create and use: a VM, a database, a storage account, a virtual network.
 
 **Resource Groups**
 - Logical containers that hold related Azure resources.
@@ -206,13 +206,13 @@ The fundamental unit of Azure — anything you create and use: a VM, a database,
 **Subscriptions**
 - An authenticated and authorised access boundary to Azure services.
 - Linked to an Azure account (Azure AD identity).
-- **Billing boundary** — each subscription generates its own invoice.
-- **Access control boundary** — apply policies and RBAC at the subscription level.
+- **Billing boundary** - each subscription generates its own invoice.
+- **Access control boundary** - apply policies and RBAC at the subscription level.
 - An organisation can have multiple subscriptions (e.g., one per department).
 
 **Management Groups**
 - Containers that organise subscriptions for governance at scale.
-- Apply Azure Policies and RBAC at the management group level — these cascade down to all subscriptions and resources beneath.
+- Apply Azure Policies and RBAC at the management group level - these cascade down to all subscriptions and resources beneath.
 - Up to **6 levels deep** (excluding root).
 
 ```
@@ -230,10 +230,10 @@ Management Group (Root)
 
 **Azure Virtual Machines (VMs)**
 - Full control over the OS, software, and configuration.
-- IaaS — you manage the OS and above.
+- IaaS - you manage the OS and above.
 - **Use cases:** Custom applications, legacy apps, precise OS configuration.
-- **VM Scale Sets:** Deploy and auto-scale sets of identical VMs — true elasticity.
-- **Azure Spot VMs:** Unused Azure capacity at deep discounts (up to 90%) — interruptible.
+- **VM Scale Sets:** Deploy and auto-scale sets of identical VMs - true elasticity.
+- **Azure Spot VMs:** Unused Azure capacity at deep discounts (up to 90%) - interruptible.
 - **Reserved VMs:** Commit 1–3 years, save up to 72%.
 
 **Azure App Service**
@@ -243,7 +243,7 @@ Management Group (Root)
 - **No OS management required.**
 
 **Azure Functions (Serverless)**
-- Event-driven, serverless compute — code runs *only* when triggered.
+- Event-driven, serverless compute - code runs *only* when triggered.
 - Triggers: HTTP requests, timers, queue messages, blob storage events.
 - Pay only for execution time and number of invocations.
 - **Max execution timeout:** 10 minutes (default), up to unlimited on Premium plan.
@@ -255,14 +255,14 @@ Management Group (Root)
 - **Use case:** Simple isolated containers, batch jobs, CI/CD pipelines.
 
 **Azure Kubernetes Service (AKS)**
-- Managed Kubernetes — Microsoft handles control plane, upgrades, scaling.
+- Managed Kubernetes - Microsoft handles control plane, upgrades, scaling.
 - You focus on deploying and managing containerised workloads.
 - Integrates with Azure Monitor, Azure AD, Azure Container Registry.
 - **Use case:** Complex microservices architectures, production-grade container orchestration.
 
 **Azure Virtual Desktop**
 - Fully managed Windows desktop and app virtualisation running in Azure.
-- Multi-session Windows 10/11 — multiple users on one VM.
+- Multi-session Windows 10/11 - multiple users on one VM.
 - **Use case:** Remote workforces, BYOD policies, compliance-sensitive environments.
 
 ---
@@ -270,10 +270,10 @@ Management Group (Root)
 ### 2.4 Azure Networking Services
 
 **Azure Virtual Networks (VNets)**
-- Isolated, private networks in Azure — the foundation of all Azure networking.
+- Isolated, private networks in Azure - the foundation of all Azure networking.
 - Resources in the same VNet can communicate by default.
 - **Subnets** segment a VNet for organisation and security.
-- **Peering:** Connect two VNets (even across regions) privately — no public internet traversal.
+- **Peering:** Connect two VNets (even across regions) privately - no public internet traversal.
 
 **Network Security Groups (NSGs)**
 - Firewall rules applied to subnets or individual NICs.
@@ -287,7 +287,7 @@ Management Group (Root)
 
 **Azure ExpressRoute**
 - Private, dedicated connection from on-premises to Azure via a connectivity partner.
-- **NOT over the public internet** — lower latency, higher reliability, more consistent bandwidth.
+- **NOT over the public internet** - lower latency, higher reliability, more consistent bandwidth.
 - Speeds: 50 Mbps to 100 Gbps.
 - **Use case:** Large enterprises with high-bandwidth, compliance-sensitive, or latency-sensitive workloads.
 
@@ -320,8 +320,8 @@ Management Group (Root)
 ### 2.5 Azure Storage Services
 
 **Storage Account Types**
-- **Standard General-Purpose v2** — recommended for most scenarios.
-- **Premium** — for low-latency, high-throughput workloads.
+- **Standard General-Purpose v2** - recommended for most scenarios.
+- **Premium** - for low-latency, high-throughput workloads.
 
 **Azure Blob Storage**
 - Unstructured object storage for text, binary, images, videos, backups.
@@ -337,11 +337,11 @@ Management Group (Root)
 | **Cold** | Rarely accessed (90+ days) | Lower | Higher |
 | **Archive** | Long-term retention (180+ days) | Lowest | Highest + rehydration time |
 
-> Archive tier data is *offline* — you must rehydrate it (move to Hot/Cool) before accessing. This can take hours.
+> Archive tier data is *offline* - you must rehydrate it (move to Hot/Cool) before accessing. This can take hours.
 
 **Azure File Storage**
 - Fully managed file shares accessed via the **SMB (Server Message Block)** or **NFS** protocol.
-- Mount from Windows, Linux, or macOS — no code changes required.
+- Mount from Windows, Linux, or macOS - no code changes required.
 - **Use case:** Replace or supplement on-premises file servers, lift-and-shift apps requiring file shares.
 
 **Azure Queue Storage**
@@ -355,7 +355,7 @@ Management Group (Root)
 
 **Azure Disk Storage**
 - Block-level storage volumes attached to Azure VMs (like a hard drive).
-- **Managed Disks:** Microsoft manages the storage account — recommended.
+- **Managed Disks:** Microsoft manages the storage account - recommended.
 - **Types:** Ultra Disk, Premium SSD v2, Premium SSD, Standard SSD, Standard HDD.
 
 **Storage Redundancy Options:**
@@ -380,7 +380,7 @@ Management Group (Root)
 
 **Azure SQL Database**
 - Fully managed PaaS relational database based on Microsoft SQL Server.
-- Built-in HA, backups, patching — no DBA required for infrastructure.
+- Built-in HA, backups, patching - no DBA required for infrastructure.
 - **Purchasing models:** DTU (simple, bundled) or vCore (more control, hybrid licensing).
 - **Use case:** New cloud-native apps, web app backends, SaaS applications.
 
@@ -407,16 +407,16 @@ Management Group (Root)
 
 ---
 
-## Domain 3.0 — Describe Azure Management and Governance (30–35%)
+## Domain 3.0 - Describe Azure Management and Governance (30–35%)
 
 ### 3.1 Cost Management and Pricing Tools
 
 **Factors Affecting Azure Costs:**
-1. **Resource type** — Different services have different cost structures.
-2. **Consumption** — How much you use (hours of VM uptime, GB of storage, etc.).
-3. **Region** — Prices vary by datacenter location.
-4. **Subscription type** — Pay-as-you-go vs. Enterprise Agreement vs. Dev/Test.
-5. **Azure Marketplace** — Third-party software licences may add cost.
+1. **Resource type** - Different services have different cost structures.
+2. **Consumption** - How much you use (hours of VM uptime, GB of storage, etc.).
+3. **Region** - Prices vary by datacenter location.
+4. **Subscription type** - Pay-as-you-go vs. Enterprise Agreement vs. Dev/Test.
+5. **Azure Marketplace** - Third-party software licences may add cost.
 
 **Cost Optimisation Strategies:**
 - **Reserved Instances:** Commit 1 or 3 years → save up to 72%.
@@ -456,7 +456,7 @@ Management Group (Root)
 
 **Role-Based Access Control (RBAC)**
 - Manage *who* can do *what* on *which* Azure resources.
-- Principle of least privilege — grant only the permissions needed.
+- Principle of least privilege - grant only the permissions needed.
 - **Built-in roles:** Owner, Contributor, Reader, User Access Administrator.
 - **Custom roles:** Define your own permission sets.
 - Roles are assigned to: Users, Groups, Service Principals, Managed Identities.
@@ -465,11 +465,11 @@ Management Group (Root)
 **Resource Locks**
 - Prevent accidental modification or deletion of Azure resources.
 - **CanNotDelete:** Users can read and modify, but cannot delete.
-- **ReadOnly:** Users can only read the resource — no modifications or deletions.
+- **ReadOnly:** Users can only read the resource - no modifications or deletions.
 - Applied at: Management Group, Subscription, Resource Group, or individual Resource level.
-- **Important:** Locks override RBAC permissions — even an Owner cannot delete a locked resource without first removing the lock.
+- **Important:** Locks override RBAC permissions - even an Owner cannot delete a locked resource without first removing the lock.
 
-**Azure Blueprints** *(Legacy — being replaced by Azure Deployment Environments and Policy)*
+**Azure Blueprints** *(Legacy - being replaced by Azure Deployment Environments and Policy)*
 - Define a repeatable set of Azure resources (ARM templates, policies, RBAC) to provision governed environments.
 - Useful for establishing "landing zones" with pre-configured governance.
 
@@ -511,7 +511,7 @@ Management Group (Root)
 - Assess your compliance posture against 300+ regulatory frameworks (GDPR, ISO 27001, HIPAA, NIST).
 - Provides improvement actions and a compliance score.
 
-> For the AZ-900 exam, understand that Purview provides: unified governance, data cataloguing, lineage, sensitivity classification, and compliance management — all without code.
+> For the AZ-900 exam, understand that Purview provides: unified governance, data cataloguing, lineage, sensitivity classification, and compliance management - all without code.
 
 ---
 
@@ -524,7 +524,7 @@ Management Group (Root)
   - **Alerts:** Notify you when thresholds are crossed (e.g., CPU > 80% for 5 minutes).
   - **Dashboards:** Custom visualisations of your monitoring data.
   - **Workbooks:** Interactive data analysis.
-  - **Application Insights:** APM (Application Performance Monitoring) for web apps — traces, exceptions, dependencies.
+  - **Application Insights:** APM (Application Performance Monitoring) for web apps - traces, exceptions, dependencies.
   - **Log Analytics:** Query logs using Kusto Query Language (KQL).
 
 **Azure Service Health**
@@ -537,11 +537,11 @@ Management Group (Root)
 
 **Azure Advisor**
 - AI-powered consultant that analyses your Azure usage and recommends improvements across five categories:
-  - **Cost** — Identify idle resources, rightsizing opportunities.
-  - **Security** — Recommendations from Microsoft Defender for Cloud.
-  - **Reliability** — Improve HA and resilience.
-  - **Operational Excellence** — Best practices for deployment and management.
-  - **Performance** — Speed up applications.
+  - **Cost** - Identify idle resources, rightsizing opportunities.
+  - **Security** - Recommendations from Microsoft Defender for Cloud.
+  - **Reliability** - Improve HA and resilience.
+  - **Operational Excellence** - Best practices for deployment and management.
+  - **Performance** - Speed up applications.
 
 **Azure Arc**
 - Extend Azure management and governance to *non-Azure* environments:
@@ -551,10 +551,10 @@ Management Group (Root)
 - Apply Azure Policy, RBAC, tags, and Monitor to Arc-enabled resources.
 
 **Azure Resource Manager (ARM)**
-- The deployment and management layer for Azure — every Azure API call goes through ARM.
+- The deployment and management layer for Azure - every Azure API call goes through ARM.
 - Deploy resources via: Azure Portal, Azure CLI, Azure PowerShell, ARM Templates, Bicep, Terraform.
 - **ARM Templates:** JSON-based infrastructure-as-code (IaC) declarative templates.
-- **Bicep:** Microsoft's own IaC language — cleaner syntax, compiles to ARM JSON.
+- **Bicep:** Microsoft's own IaC language - cleaner syntax, compiles to ARM JSON.
 
 ---
 
@@ -562,7 +562,7 @@ Management Group (Root)
 
 **Azure OpenAI Service**
 - Access to OpenAI's powerful models (GPT-4, DALL-E, Whisper, Embeddings) through Azure's secure, enterprise-grade infrastructure.
-- Data stays within your Azure tenant — not used to train OpenAI models.
+- Data stays within your Azure tenant - not used to train OpenAI models.
 - Integrates with Azure security (Private Endpoints, RBAC, VNet).
 - **Use cases:** Copilot applications, document summarisation, code generation, semantic search, customer service bots.
 
@@ -595,8 +595,8 @@ Management Group (Root)
 
 | Category | Service | One-liner |
 |---|---|---|
-| Compute | Virtual Machines | IaaS — full OS control |
-| Compute | App Service | PaaS — managed web apps |
+| Compute | Virtual Machines | IaaS - full OS control |
+| Compute | App Service | PaaS - managed web apps |
 | Compute | Azure Functions | Serverless, event-driven code |
 | Compute | AKS | Managed Kubernetes |
 | Compute | ACI | Containers without orchestration |
@@ -629,16 +629,16 @@ Management Group (Root)
 
 ## Exam Tips
 
-1. **Know the shared responsibility model cold** — which layer belongs to customer vs. Microsoft for IaaS/PaaS/SaaS.
-2. **Availability Zones ≠ Region Pairs** — AZs protect within a region (datacenter failure), region pairs protect from region-level outages.
-3. **CapEx vs. OpEx** — Cloud is OpEx. Understand why this matters financially.
+1. **Know the shared responsibility model cold** - which layer belongs to customer vs. Microsoft for IaaS/PaaS/SaaS.
+2. **Availability Zones ≠ Region Pairs** - AZs protect within a region (datacenter failure), region pairs protect from region-level outages.
+3. **CapEx vs. OpEx** - Cloud is OpEx. Understand why this matters financially.
 4. **Resource hierarchy:** Resource → Resource Group → Subscription → Management Group. Policies and RBAC cascade downward.
-5. **Blob access tiers** — Archive is offline and requires rehydration. Know which tier to use for what frequency of access.
-6. **SQL Database vs. SQL Managed Instance** — MI has near-100% SQL Server feature parity (SQL Agent, linked servers); use it for migrations.
+5. **Blob access tiers** - Archive is offline and requires rehydration. Know which tier to use for what frequency of access.
+6. **SQL Database vs. SQL Managed Instance** - MI has near-100% SQL Server feature parity (SQL Agent, linked servers); use it for migrations.
 7. **VPN Gateway uses the public internet (encrypted); ExpressRoute does NOT go over the internet.**
-8. **Resource Locks override RBAC** — even an Owner can't delete a locked resource without first removing the lock.
+8. **Resource Locks override RBAC** - even an Owner can't delete a locked resource without first removing the lock.
 9. **Azure Monitor = metrics + logs; Service Health = Azure platform health affecting your resources.**
-10. **Responsible AI:** Memorise all 6 principles — Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability.
+10. **Responsible AI:** Memorise all 6 principles - Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability.
 
 ---
 

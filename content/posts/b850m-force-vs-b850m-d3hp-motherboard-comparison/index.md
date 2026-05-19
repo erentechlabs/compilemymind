@@ -14,9 +14,9 @@ Both motherboards support Intel's latest Core Ultra processors (Arrow Lake) on t
 
 ## Quick Overview
 
-**B850M FORCE** — The premium option with robust VRM, better cooling, more connectivity, and enthusiast-friendly features. Ideal for users who want headroom for higher-end CPUs and future upgrades.
+**B850M FORCE** - The premium option with robust VRM, better cooling, more connectivity, and enthusiast-friendly features. Ideal for users who want headroom for higher-end CPUs and future upgrades.
 
-**B850M D3HP** — The budget-friendly choice that covers the essentials with solid performance for mid-range builds. Perfect for value-conscious builders who don't need extensive I/O or overclocking features.
+**B850M D3HP** - The budget-friendly choice that covers the essentials with solid performance for mid-range builds. Perfect for value-conscious builders who don't need extensive I/O or overclocking features.
 
 ---
 
@@ -60,7 +60,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 | **CPU Power Connectors** | 8+4 pin | 8 pin |
 | **Best for** | Core Ultra 9 285K at full load | Core Ultra 5 / 7 |
 
-**Winner: B850M FORCE** — superior VRM for better stability and headroom, especially important for high-end CPUs or future upgrades.
+**Winner: B850M FORCE** - superior VRM for better stability and headroom, especially important for high-end CPUs or future upgrades.
 
 ---
 
@@ -75,7 +75,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 
 **Real-World Impact:** If you're running DDR5-6000 to DDR5-6400 (the sweet spot for Intel), both boards will perform identically. The FORCE's advantage shows up when pushing DDR5-7200+ speeds or using 64GB DIMMs.
 
-**Winner: B850M FORCE** — better for extreme memory overclocking and higher capacity.
+**Winner: B850M FORCE** - better for extreme memory overclocking and higher capacity.
 
 ---
 
@@ -85,20 +85,20 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 
 | Slot | B850M FORCE | B850M D3HP |
 |------|-------------|------------|
-| M.2_1 | PCIe 5.0 x4 (CPU) — with heatsink | PCIe 4.0 x4 (CPU) — with heatsink |
-| M.2_2 | PCIe 5.0 x4 (CPU) — with heatsink | PCIe 4.0 x4 (chipset) — with heatsink |
-| M.2_3 | PCIe 5.0 x4 (chipset) — with heatsink | PCIe 3.0 x4 (chipset) — **no heatsink** |
-| M.2_4 | PCIe 4.0 x4 (chipset) — with heatsink | — |
+| M.2_1 | PCIe 5.0 x4 (CPU) - with heatsink | PCIe 4.0 x4 (CPU) - with heatsink |
+| M.2_2 | PCIe 5.0 x4 (CPU) - with heatsink | PCIe 4.0 x4 (chipset) - with heatsink |
+| M.2_3 | PCIe 5.0 x4 (chipset) - with heatsink | PCIe 3.0 x4 (chipset) - **no heatsink** |
+| M.2_4 | PCIe 4.0 x4 (chipset) - with heatsink | - |
 | **Max Storage** | 4x 8TB = 32TB | 3x 8TB = 24TB |
 
 ### PCIe Expansion Slots
 
 | | B850M FORCE | B850M D3HP |
 |-|-------------|------------|
-| **Slot 1** | PCIe 5.0 x16 (CPU) — reinforced | PCIe 5.0 x16 (CPU) — standard |
+| **Slot 1** | PCIe 5.0 x16 (CPU) - reinforced | PCIe 5.0 x16 (CPU) - standard |
 | **Slot 2** | PCIe 4.0 x4 (chipset) | PCIe 3.0 x4 (chipset) |
 
-**Winner: B850M FORCE** — more M.2 slots, better heatsinks, and superior expansion options.
+**Winner: B850M FORCE** - more M.2 slots, better heatsinks, and superior expansion options.
 
 ---
 
@@ -108,7 +108,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 
 | Port | B850M FORCE | B850M D3HP |
 |------|-------------|------------|
-| **USB 3.2 Gen2x2 Type-C** | 1x (20Gbps) | — |
+| **USB 3.2 Gen2x2 Type-C** | 1x (20Gbps) | - |
 | **USB 3.2 Gen2 Type-C** | 1x (10Gbps) | 1x (10Gbps) |
 | **USB 3.2 Gen2 Type-A** | 4x (10Gbps) | 1x (10Gbps) |
 | **USB 3.2 Gen1 Type-A** | 4x (5Gbps) | 6x (5Gbps) |
@@ -128,7 +128,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 | ARGB headers | 2x | 1x |
 | RGB headers | 1x | 1x |
 
-**Winner: B850M FORCE** — superior rear I/O, better audio, more fan headers, and Wi-Fi support.
+**Winner: B850M FORCE** - superior rear I/O, better audio, more fan headers, and Wi-Fi support.
 
 ---
 
@@ -158,7 +158,7 @@ The VRM (Voltage Regulator Module) is critical for stable power delivery, especi
 
 The ALC1220-VB provides noticeably clearer audio with better bass response and less background noise. If you use quality headphones or external speakers, you'll appreciate the upgrade.
 
-**Winner: B850M FORCE** — significantly better audio quality.
+**Winner: B850M FORCE** - significantly better audio quality.
 
 ---
 
@@ -168,17 +168,17 @@ Both motherboards use GIGABYTE's UEFI BIOS with similar features:
 
 | Feature | Both Boards | FORCE Only |
 |---------|-------------|------------|
-| Q-Flash Plus | Yes | — |
-| Easy Mode / Advanced Mode | Yes | — |
-| XMP / EXPO profile support | Yes | — |
-| Fan curve customization | Yes | — |
-| RGB Fusion 2.0 | Yes | — |
-| Granular voltage controls | — | Yes |
-| Better memory timing options | — | Yes |
-| Q-Code debug LED | — | Yes |
-| Dual BIOS | — | Yes |
+| Q-Flash Plus | Yes | - |
+| Easy Mode / Advanced Mode | Yes | - |
+| XMP / EXPO profile support | Yes | - |
+| Fan curve customization | Yes | - |
+| RGB Fusion 2.0 | Yes | - |
+| Granular voltage controls | - | Yes |
+| Better memory timing options | - | Yes |
+| Q-Code debug LED | - | Yes |
+| Dual BIOS | - | Yes |
 
-**Winner: B850M FORCE** — more advanced BIOS options and dual BIOS safety.
+**Winner: B850M FORCE** - more advanced BIOS options and dual BIOS safety.
 
 ---
 
@@ -202,7 +202,7 @@ In real-world testing with a Core Ultra 7 265K, both motherboards deliver nearly
 |-|-------------|------------|
 | **Price** | ~$180–220 | ~$120–150 |
 | **Best for** | High-end builds, enthusiasts | Budget/mid-range builders |
-| **Extra cost buys** | Better VRM, extra M.2, premium audio, more USB, Wi-Fi option, Q-Code, Dual BIOS | — |
+| **Extra cost buys** | Better VRM, extra M.2, premium audio, more USB, Wi-Fi option, Q-Code, Dual BIOS | - |
 
 **Is the $60–70 premium worth it?** If you're building with a Core Ultra 7 or Ultra 9, yes. For Core Ultra 5 builds, the D3HP offers better value.
 
@@ -217,14 +217,14 @@ In real-world testing with a Core Ultra 7 265K, both motherboards deliver nearly
 | Excellent 16+1+2 phase VRM with 80A stages | Higher price ($180–220) |
 | Superior cooling with heatpipe design | Overkill for budget CPUs |
 | 4 M.2 slots with PCIe 5.0 support | Wi-Fi module sold separately |
-| Better USB connectivity (10 ports, 20Gbps Type-C) | — |
-| Premium audio codec (ALC1220-VB, 120dB SNR) | — |
-| Q-Code debug LED for troubleshooting | — |
-| Dual BIOS for safety | — |
-| Wi-Fi 6E support (optional module) | — |
-| More fan headers (7 total, incl. CPU_OPT) | — |
-| Better memory overclocking potential | — |
-| Reinforced PCIe slot | — |
+| Better USB connectivity (10 ports, 20Gbps Type-C) | - |
+| Premium audio codec (ALC1220-VB, 120dB SNR) | - |
+| Q-Code debug LED for troubleshooting | - |
+| Dual BIOS for safety | - |
+| Wi-Fi 6E support (optional module) | - |
+| More fan headers (7 total, incl. CPU_OPT) | - |
+| Better memory overclocking potential | - |
+| Reinforced PCIe slot | - |
 
 ### B850M D3HP
 

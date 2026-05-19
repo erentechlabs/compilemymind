@@ -6,7 +6,7 @@ tags: ["Programming", "Java", "Cybersecurity", "TechTrends"]
 categories: ["technology"]
 ---
 
-Java 25 (JDK 25) is here — and it's an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I'll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.
+Java 25 (JDK 25) is here - and it's an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I'll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.
 
 This post is based on the official OpenJDK pages and JEPs for JDK 25.
 
@@ -16,7 +16,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
 
 | Area | Highlights |
 |------|------------|
-| **LTS Release** | 18 JEPs included — see the full list below |
+| **LTS Release** | 18 JEPs included - see the full list below |
 | **Language & Syntax** | Primitive types in patterns/switch (3rd preview), module import declarations, compact source files & instance main methods, flexible constructor bodies |
 | **Concurrency (Loom)** | Structured Concurrency (5th preview), Scoped Values (finalized) |
 | **Observability (JFR)** | CPU-time profiling (experimental), method timing & tracing, cooperative sampling |
@@ -28,7 +28,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
 
 ## Language and Syntax Improvements
 
-- **Primitive Types in Patterns, instanceof, and switch (Third Preview)** — JEP 507
+- **Primitive Types in Patterns, instanceof, and switch (Third Preview)** - JEP 507
   - Brings pattern matching to primitives, improving expressiveness in `switch` and `instanceof` scenarios.
   - Still a preview: enable with `--enable-preview` while evaluating in production-like tests.
 
@@ -49,7 +49,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
   }
   ```
 
-- **Module Import Declarations** — JEP 511
+- **Module Import Declarations** - JEP 511
   - Streamlines how code refers to modules and their content, complementing package-level imports.
 
   ```java
@@ -72,7 +72,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
   }
   ```
 
-- **Compact Source Files and Instance Main Methods** — JEP 512
+- **Compact Source Files and Instance Main Methods** - JEP 512
   - Makes small programs and examples easier to write and run with a leaner source file format and support for instance `main` methods.
 
   ```java
@@ -88,7 +88,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
   java HelloWorld.java
   ```
 
-- **Flexible Constructor Bodies** — JEP 513
+- **Flexible Constructor Bodies** - JEP 513
   - Eases constraints in constructors, improving readability and reducing boilerplate in common patterns.
 
   ```java
@@ -119,7 +119,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
 
 ## Concurrency & Loom
 
-- **Structured Concurrency (Fifth Preview)** — JEP 505
+- **Structured Concurrency (Fifth Preview)** - JEP 505
   - A higher-level API for managing related tasks as a single unit, leading to clearer code and predictable cancellation/error handling.
   - Preview status lets the API evolve with real-world feedback.
 
@@ -136,7 +136,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
   }
   ```
 
-- **Scoped Values** — JEP 506
+- **Scoped Values** - JEP 506
   - Finalized. Provides a safe, immutable, thread-local-like mechanism for sharing data within a call scope, especially effective with virtual threads.
 
   ```java
@@ -187,7 +187,7 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
 | JEP | Feature | Impact |
 |-----|---------|--------|
 | JEP 519 | Compact Object Headers | Reduces object header size to lower memory footprint and improve cache locality |
-| JEP 521 | Generational Shenandoah | Generational mode for Shenandoah GC — better throughput and latency for long-lived services |
+| JEP 521 | Generational Shenandoah | Generational mode for Shenandoah GC - better throughput and latency for long-lived services |
 | JEP 503 | Remove 32-bit x86 Port | Cleans up legacy maintenance burden; modern Java focuses on x64 and ARM64 |
 
   ```bash
@@ -216,7 +216,7 @@ java -XX:AOTCache=app.aot -cp app.jar com.example.App
 
 ## Vector API (Incubator)
 
-- **Vector API (Tenth Incubator)** — JEP 508
+- **Vector API (Tenth Incubator)** - JEP 508
   - Continued refinement of a portable, explicit SIMD API for data-parallel operations, mapping efficiently to modern CPU instructions.
   - As an incubator, it remains behind `--add-modules jdk.incubator.vector` for now.
 
@@ -251,11 +251,11 @@ java -XX:AOTCache=app.aot -cp app.jar com.example.App
 
 | JEP | Feature | Description |
 |-----|---------|-------------|
-| JEP 470 | PEM Encodings (Preview) | First-class support for reading/writing PEM-encoded material — simplifies interoperability with common tooling |
+| JEP 470 | PEM Encodings (Preview) | First-class support for reading/writing PEM-encoded material - simplifies interoperability with common tooling |
 | JEP 510 | Key Derivation Function API | Standardized APIs for modern KDFs, making secure key derivation more approachable and consistent |
 
 ```java
-// KDF (HKDF-SHA256) example — derive a 32-byte AES key
+// KDF (HKDF-SHA256) example - derive a 32-byte AES key
 import javax.crypto.KDF;
 import javax.crypto.SecretKey;
 import java.security.spec.AlgorithmParameterSpec;
@@ -300,4 +300,4 @@ ECPublicKey pub = pd.decode(pem, ECPublicKey.class);
 
 ## Conclusion
 
-JDK 25 is a solid LTS that continues the steady modernization of Java: safer and clearer concurrency, better profiling, smarter memory layout, and practical language polish. If you're on JDK 17 or 21, this is a compelling target for your next upgrade window — especially if you benefit from Loom, JFR improvements, or reduced memory overhead.
+JDK 25 is a solid LTS that continues the steady modernization of Java: safer and clearer concurrency, better profiling, smarter memory layout, and practical language polish. If you're on JDK 17 or 21, this is a compelling target for your next upgrade window - especially if you benefit from Loom, JFR improvements, or reduced memory overhead.

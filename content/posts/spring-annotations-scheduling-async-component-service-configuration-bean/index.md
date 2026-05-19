@@ -1,12 +1,12 @@
 ---
 title: "Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean"
-description: "A practical guide to the most important Spring Framework annotations — what they do, when to use them, and how they fit together in a real application."
+description: "A practical guide to the most important Spring Framework annotations - what they do, when to use them, and how they fit together in a real application."
 date: 2025-07-15
 tags: ["Programming", "Java", "SpringBoot", "SoftwareDevelopment"]
 categories: ["technology"]
 ---
 
-Spring's annotation model can feel overwhelming at first. There are annotations for everything: creating beans, scheduling tasks, running things asynchronously, declaring configuration. Understanding what each one does — and more importantly, *when* each one is appropriate — is the difference between fighting the framework and working with it.
+Spring's annotation model can feel overwhelming at first. There are annotations for everything: creating beans, scheduling tasks, running things asynchronously, declaring configuration. Understanding what each one does - and more importantly, *when* each one is appropriate - is the difference between fighting the framework and working with it.
 
 This guide covers six of the most important annotations in day-to-day Spring development.
 
@@ -26,7 +26,7 @@ public class FileWatcher {
 }
 ```
 
-Spring creates one instance of `FileWatcher` (singleton by default) and injects it wherever it's needed. You never call `new FileWatcher()` — Spring handles instantiation and lifecycle.
+Spring creates one instance of `FileWatcher` (singleton by default) and injects it wherever it's needed. You never call `new FileWatcher()` - Spring handles instantiation and lifecycle.
 
 **When to use it:** For utility classes, helper components, and anything that doesn't clearly belong to the service, repository, or controller layers.
 
@@ -62,7 +62,7 @@ public class PaymentService {
 }
 ```
 
-Beyond semantics, `@Service` also enables AOP (Aspect-Oriented Programming) — things like `@Transactional` and `@Async` work on `@Service` classes because Spring wraps them in proxies.
+Beyond semantics, `@Service` also enables AOP (Aspect-Oriented Programming) - things like `@Transactional` and `@Async` work on `@Service` classes because Spring wraps them in proxies.
 
 **When to use it:** Business logic, use-case implementations, orchestration of multiple repositories or external services.
 
@@ -93,7 +93,7 @@ public class AppConfig {
 }
 ```
 
-`@Bean` is essential for registering third-party objects — classes from external libraries that you can't annotate with `@Component`. The `@Configuration` annotation makes the class a full proxy, ensuring that `@Bean` methods always return the same singleton instance even if called multiple times.
+`@Bean` is essential for registering third-party objects - classes from external libraries that you can't annotate with `@Component`. The `@Configuration` annotation makes the class a full proxy, ensuring that `@Bean` methods always return the same singleton instance even if called multiple times.
 
 **When to use it:** Infrastructure setup (HTTP clients, serialization config, connection pools, security config). Any bean that requires construction-time customization.
 
@@ -137,7 +137,7 @@ public class NotificationService {
 The caller returns immediately. The email sends in a background thread. This is useful for non-critical operations (notifications, logging, webhooks) that shouldn't slow down the main request path.
 
 > [!WARNING]
-> `@Async` only works when called from *outside* the class — not when one method in the same class calls another `@Async` method. Spring's proxy mechanism requires the call to pass through the proxy to intercept it. Internal calls bypass the proxy entirely.
+> `@Async` only works when called from *outside* the class - not when one method in the same class calls another `@Async` method. Spring's proxy mechanism requires the call to pass through the proxy to intercept it. Internal calls bypass the proxy entirely.
 
 **When to use it:** Sending emails, notifications, webhooks, audit logging, any operation that's fire-and-forget from the user's perspective.
 
@@ -145,7 +145,7 @@ The caller returns immediately. The email sends in a background thread. This is 
 
 ## @Scheduled
 
-Runs a method on a schedule — either at a fixed interval, with a fixed delay between runs, or on a cron expression.
+Runs a method on a schedule - either at a fixed interval, with a fixed delay between runs, or on a cron expression.
 
 ```java
 @Configuration
@@ -199,7 +199,7 @@ Cron expressions follow the standard format: `seconds minutes hours day-of-month
 A realistic application uses all of these annotations together:
 
 ```java
-// Configuration — set up infrastructure beans
+// Configuration - set up infrastructure beans
 @Configuration
 @EnableAsync
 @EnableScheduling
@@ -209,7 +209,7 @@ public class InfrastructureConfig {
     public Executor asyncExecutor() { /* ... */ }
 }
 
-// Service — business logic
+// Service - business logic
 @Service
 public class ReportService {
 
@@ -220,7 +220,7 @@ public class ReportService {
     }
 }
 
-// Component — background maintenance
+// Component - background maintenance
 @Component
 public class ReportCleanup {
 
@@ -246,4 +246,4 @@ Each annotation communicates clear intent: what this class is, what this method 
 | `@Async` | Method | Execute in a thread pool, non-blocking |
 | `@Scheduled` | Method | Execute on a schedule (cron, fixed rate, fixed delay) |
 
-Understanding these six annotations covers the vast majority of what you'll use in a typical Spring application. The rest — `@Transactional`, `@Cacheable`, `@EventListener` — follow the same model and build on the same foundations.
+Understanding these six annotations covers the vast majority of what you'll use in a typical Spring application. The rest - `@Transactional`, `@Cacheable`, `@EventListener` - follow the same model and build on the same foundations.

@@ -8,7 +8,7 @@ categories: ["guide", "certification"]
 
 Whether you are transitioning into a tech career, aiming for a Help Desk role, or setting the groundwork for advanced cybersecurity certifications, the **CompTIA Tech+** (formerly IT Fundamentals+) certification is the perfect launching pad. It provides the universal vocabulary needed to navigate the ever-evolving landscape of Information Technology.
 
-In this extensive guide, we will break down all six domains of the CompTIA Tech+ exam. Written from the perspective of a seasoned IT professional, this cheatsheet is packed with deep-dive explanations, real-world examples, and industry insights to ensure you don't just pass the exam—you truly understand the technology.
+In this extensive guide, we will break down all six domains of the CompTIA Tech+ exam. Written from the perspective of a seasoned IT professional, this cheatsheet is packed with deep-dive explanations, real-world examples, and industry insights to ensure you don't just pass the exam-you truly understand the technology.
 
 ---
 
@@ -17,7 +17,7 @@ In this extensive guide, we will break down all six domains of the CompTIA Tech+
 Before you can build or defend a network, you must understand the foundational language of computing. 
 
 ### 1.1 The Basics of Computing
-At its core, every computing device—from a smart thermostat to a supercomputer—operates on a four-stage data lifecycle:
+At its core, every computing device-from a smart thermostat to a supercomputer-operates on a four-stage data lifecycle:
 1.  **Input:** The system receives data. This could be a keystroke on a keyboard, a voice command given to Alexa, or a sensor detecting room temperature.
 2.  **Processing:** The brain of the computer (the CPU) takes the input and performs calculations or logic operations. It converts your keystroke into binary code that the machine understands.
 3.  **Output:** The result of the processing is presented in a human-readable or usable format. The letter you typed appears on your monitor, or the smart speaker replies to your query.
@@ -203,7 +203,7 @@ Encryption uses complex mathematical algorithms to scramble data so it cannot be
 *   **Data in Transit:** Securing data as it travels across a network. We use protocols like TLS (Transport Layer Security) to encrypt web traffic, ensuring that the connection to your bank is safe (indicated by the `HTTPS` lock icon).
 
 ### 6.5 Business Continuity
-When disaster strikes—be it a ransomware attack, a hurricane, or a massive hardware failure—the business must survive.
+When disaster strikes-be it a ransomware attack, a hurricane, or a massive hardware failure-the business must survive.
 *   **Disaster Recovery (DR):** The technical process of restoring IT infrastructure.
 *   **RTO (Recovery Time Objective):** How quickly must the system be brought back online? (e.g., The system must be up within 4 hours).
 *   **RPO (Recovery Point Objective):** How much data loss can the business tolerate? (e.g., If backups happen nightly, the RPO is 24 hours of data loss).
@@ -213,6 +213,6 @@ When disaster strikes—be it a ransomware attack, a hurricane, or a massive har
 
 ## Conclusion
 
-The CompTIA Tech+ certification is an extraordinary milestone. It demystifies the black boxes of technology, revealing how hardware, software, networking, and security interplay to drive the modern world. By internalizing these foundational concepts, you are not merely memorizing terms to pass an exam—you are building a robust technical vocabulary that will serve as the bedrock for a successful, lifelong career in Information Technology. 
+The CompTIA Tech+ certification is an extraordinary milestone. It demystifies the black boxes of technology, revealing how hardware, software, networking, and security interplay to drive the modern world. By internalizing these foundational concepts, you are not merely memorizing terms to pass an exam-you are building a robust technical vocabulary that will serve as the bedrock for a successful, lifelong career in Information Technology. 
 
 Keep exploring, keep building, and stay curious. The world of IT is vast, and you have just taken the perfect first step.

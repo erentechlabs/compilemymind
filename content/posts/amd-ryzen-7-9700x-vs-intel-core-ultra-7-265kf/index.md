@@ -92,7 +92,7 @@ Gaming is where things get interesting. While both processors are more than capa
 - Intel Core Ultra 7 265KF: ~241 FPS
 - **Winner: Intel Core Ultra 7 265KF (+2.5% average)**
 
-The gaming performance is remarkably close between these two processors. Intel holds a slight edge in most titles, particularly in competitive esports games like CS2. However, the difference is typically within 2–5% — barely noticeable in real-world gaming. At 1440p or 4K resolutions, the GPU becomes the bottleneck and performance differences essentially disappear.
+The gaming performance is remarkably close between these two processors. Intel holds a slight edge in most titles, particularly in competitive esports games like CS2. However, the difference is typically within 2–5% - barely noticeable in real-world gaming. At 1440p or 4K resolutions, the GPU becomes the bottleneck and performance differences essentially disappear.
 
 ---
 
@@ -159,9 +159,9 @@ The Ryzen 7 9700X consumes roughly 40–60% less power than the Intel chip under
 | Lower heat output and cooling requirements | Fewer total cores (8 vs 20) |
 | Excellent single-threaded performance | Slower in heavily multi-threaded productivity tasks |
 | AM5 platform with long-term upgrade path | Slightly lower memory speed support (DDR5-5600 vs 6400) |
-| Integrated graphics (useful for troubleshooting) | — |
-| More affordable motherboard options | — |
-| Great for small form factor builds | — |
+| Integrated graphics (useful for troubleshooting) | - |
+| More affordable motherboard options | - |
+| Great for small form factor builds | - |
 
 ### Intel Core Ultra 7 265KF
 

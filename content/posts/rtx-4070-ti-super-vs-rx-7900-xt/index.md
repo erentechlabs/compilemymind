@@ -14,9 +14,9 @@ NVIDIA focuses on ray tracing, DLSS 3, and power efficiency, while AMD offers ra
 
 ## Quick Overview
 
-**RTX 4070 Ti Super** — NVIDIA's mid-high-end Ada Lovelace GPU with 16GB VRAM, excellent ray tracing, DLSS 3 Frame Generation, and impressive power efficiency.
+**RTX 4070 Ti Super** - NVIDIA's mid-high-end Ada Lovelace GPU with 16GB VRAM, excellent ray tracing, DLSS 3 Frame Generation, and impressive power efficiency.
 
-**RX 7900 XT** — AMD's RDNA 3 powerhouse with 20GB VRAM, strong rasterization performance, and competitive pricing, though it trails in ray tracing.
+**RX 7900 XT** - AMD's RDNA 3 powerhouse with 20GB VRAM, strong rasterization performance, and competitive pricing, though it trails in ray tracing.
 
 ---
 
@@ -50,13 +50,13 @@ NVIDIA focuses on ray tracing, DLSS 3, and power efficiency, while AMD offers ra
 | Feature | RTX 4070 Ti Super Advantage | RX 7900 XT Advantage |
 |---------|----------------------------|---------------------|
 | AI / Upscaling | DLSS 3 with Frame Generation | FSR 3 (works on any GPU) |
-| Ray Tracing | Superior 3rd-gen RT cores | — |
-| Power | Lower consumption (285W) | — |
-| VRAM | — | 4GB more (20GB vs 16GB) |
-| Memory Bus | — | Wider (320-bit vs 256-bit) |
-| Memory Bandwidth | — | Higher (800 vs 672 GB/s) |
-| Display | — | DisplayPort 2.1 |
-| Price | — | $50–100 cheaper |
+| Ray Tracing | Superior 3rd-gen RT cores | - |
+| Power | Lower consumption (285W) | - |
+| VRAM | - | 4GB more (20GB vs 16GB) |
+| Memory Bus | - | Wider (320-bit vs 256-bit) |
+| Memory Bandwidth | - | Higher (800 vs 672 GB/s) |
+| Display | - | DisplayPort 2.1 |
+| Price | - | $50–100 cheaper |
 
 ---
 
@@ -147,7 +147,7 @@ NVIDIA's 3rd-gen RT cores significantly outperform AMD's 2nd-gen ray accelerator
 | **Latency** | Lower (with Reflex) | Standard |
 | **Vendor Lock-in** | NVIDIA only | Open-source, any GPU |
 
-**Winner: NVIDIA DLSS 3** — better quality, more games, Frame Generation advantage
+**Winner: NVIDIA DLSS 3** - better quality, more games, Frame Generation advantage
 
 ---
 
@@ -177,7 +177,7 @@ NVIDIA's 3rd-gen RT cores significantly outperform AMD's 2nd-gen ray accelerator
 | **Typical Temps** | 65–72°C | 72–80°C |
 | **Noise Level** | 36–40 dBA | 40–45 dBA |
 
-**Winner: RTX 4070 Ti Super** — better efficiency, cooler, quieter
+**Winner: RTX 4070 Ti Super** - better efficiency, cooler, quieter
 
 ---
 
@@ -191,7 +191,7 @@ NVIDIA's 3rd-gen RT cores significantly outperform AMD's 2nd-gen ray accelerator
 
 NVIDIA's Tensor Cores provide a massive advantage in AI workloads like Stable Diffusion, image upscaling, and AI-assisted editing.
 
-**Winner: RTX 4070 Ti Super** — superior for content creation and AI workloads
+**Winner: RTX 4070 Ti Super** - superior for content creation and AI workloads
 
 ---
 
@@ -217,7 +217,7 @@ NVIDIA's Tensor Cores provide a massive advantage in AI workloads like Stable Di
 
 16GB is sufficient for current games, but 20GB provides better future-proofing, especially for modded games and content creation.
 
-**Winner: RX 7900 XT** — more VRAM for future-proofing
+**Winner: RX 7900 XT** - more VRAM for future-proofing
 
 ---
 
@@ -249,10 +249,10 @@ NVIDIA's Tensor Cores provide a massive advantage in AI workloads like Stable Di
 | Superior ray tracing (30–55% faster) | 4GB less VRAM (16GB vs 20GB) |
 | DLSS 3 Frame Generation | $50–100 more expensive |
 | Better power efficiency (285W) | No DisplayPort 2.1 |
-| Runs cooler and quieter | — |
-| Tensor Cores for AI workloads | — |
-| AV1 encoding support | — |
-| Mature drivers | — |
+| Runs cooler and quieter | - |
+| Tensor Cores for AI workloads | - |
+| AV1 encoding support | - |
+| Mature drivers | - |
 
 ### RX 7900 XT
 

@@ -6,7 +6,7 @@ tags: ["Networking", "IT", "Sysadmin", "Infrastructure", "Cybersecurity"]
 categories: ["technology"]
 ---
 
-Before a single packet reaches your application, it has to traverse an enormous amount of physical and logical infrastructure. Understanding that infrastructure — from the cable plugged into your wall to the backbone routers of your ISP — isn't just interesting trivia. It shapes how you design networks, troubleshoot outages, and think about availability and reliability in a security context.
+Before a single packet reaches your application, it has to traverse an enormous amount of physical and logical infrastructure. Understanding that infrastructure - from the cable plugged into your wall to the backbone routers of your ISP - isn't just interesting trivia. It shapes how you design networks, troubleshoot outages, and think about availability and reliability in a security context.
 
 This guide covers how internet connectivity is delivered and the physical cabling technologies that underpin modern networks.
 
@@ -14,7 +14,7 @@ This guide covers how internet connectivity is delivered and the physical cablin
 
 ## How ISPs Deliver Internet
 
-Your home router doesn't connect directly to the internet — it connects to your **ISP's nearest Point of Presence (POP)**.
+Your home router doesn't connect directly to the internet - it connects to your **ISP's nearest Point of Presence (POP)**.
 
 ### Point of Presence (POP)
 
@@ -37,10 +37,10 @@ Between POPs, ISPs run high-capacity fiber links carrying traffic for millions o
 Not all connections are created equal. The technology delivering your internet determines your speed ceiling, latency floor, and reliability characteristics.
 
 ### DSL (Digital Subscriber Line)
-Uses existing telephone copper. Speed degrades sharply with distance from the DSLAM — a user 500m from the cabinet gets very different throughput than one 3km away. ADSL is asymmetric (download >> upload); VDSL offers higher symmetric speeds.
+Uses existing telephone copper. Speed degrades sharply with distance from the DSLAM - a user 500m from the cabinet gets very different throughput than one 3km away. ADSL is asymmetric (download >> upload); VDSL offers higher symmetric speeds.
 
 ### Cable Internet
-Rides coaxial cable originally built for cable TV. Uses **CMTS (Cable Modem Termination System)** at the head end. Bandwidth is shared among neighbors on the same segment — which is why cable speeds can degrade during peak hours.
+Rides coaxial cable originally built for cable TV. Uses **CMTS (Cable Modem Termination System)** at the head end. Bandwidth is shared among neighbors on the same segment - which is why cable speeds can degrade during peak hours.
 
 ### Fiber Optic
 Light pulses through glass fiber. Immune to electromagnetic interference, offers the highest bandwidth and lowest latency of any wireline technology. **FTTH (Fiber to the Home)** eliminates copper entirely. **FTTC (Fiber to the Cabinet)** still has a copper "last mile."
@@ -66,25 +66,25 @@ For sysadmins and developers: if you're hosting services or running VPNs from yo
 
 ## How Packets Travel the Internet
 
-Data doesn't flow as a continuous stream — it's broken into **IP packets** and routed independently across the network. Each router along the path makes a forwarding decision based on the destination IP and its routing table.
+Data doesn't flow as a continuous stream - it's broken into **IP packets** and routed independently across the network. Each router along the path makes a forwarding decision based on the destination IP and its routing table.
 
 Two essential diagnostic tools for tracing this path:
 
-**`ping`** — Sends ICMP Echo Requests and measures round-trip time. Tells you whether a destination is reachable.
+**`ping`** - Sends ICMP Echo Requests and measures round-trip time. Tells you whether a destination is reachable.
 
 ```bash
 ping 8.8.8.8
 # ICMP echo request → response latency in ms
 ```
 
-**`traceroute` / `tracert`** — Maps every router hop between you and the destination, with latency at each step.
+**`traceroute` / `tracert`** - Maps every router hop between you and the destination, with latency at each step.
 
 ```bash
 traceroute 8.8.8.8
 # Shows each hop, its IP, and latency
 ```
 
-These tools are indispensable for diagnosing network issues — and for understanding the routing path in security assessments.
+These tools are indispensable for diagnosing network issues - and for understanding the routing path in security assessments.
 
 ---
 
@@ -99,8 +99,8 @@ The physical layer is often overlooked until something breaks. Understanding cab
 The most common cable in LAN environments. Pairs of copper conductors are twisted together to cancel out electromagnetic interference (crosstalk).
 
 **Types:**
-- **UTP (Unshielded Twisted Pair)** — Standard for office and home use
-- **STP/ScTP (Shielded Twisted Pair)** — Used in high-EMI environments (factories, elevator shafts, near power lines)
+- **UTP (Unshielded Twisted Pair)** - Standard for office and home use
+- **STP/ScTP (Shielded Twisted Pair)** - Used in high-EMI environments (factories, elevator shafts, near power lines)
 
 **Categories:**
 
@@ -114,8 +114,8 @@ The most common cable in LAN environments. Pairs of copper conductors are twiste
 **Connectors:** RJ-45 plugs, wired to either **T568A** or **T568B** standard.
 
 **Cable types:**
-- **Straight-through** — connects different device types (PC to switch, switch to router)
-- **Crossover** — connects like device types (switch to switch). Modern switches support **Auto-MDI/MDIX**, eliminating the need to think about this.
+- **Straight-through** - connects different device types (PC to switch, switch to router)
+- **Crossover** - connects like device types (switch to switch). Modern switches support **Auto-MDI/MDIX**, eliminating the need to think about this.
 
 ---
 
@@ -128,7 +128,7 @@ A central conductor surrounded by insulation, a braided shield, and an outer jac
 - RF and antenna connections
 - CCTV systems
 
-The shielding gives coax excellent noise immunity — why it's still used where interference is a concern.
+The shielding gives coax excellent noise immunity - why it's still used where interference is a concern.
 
 ---
 
@@ -148,7 +148,7 @@ Fiber transmits data as **pulses of light** through a glass or plastic core. No 
 - Distances: up to 550m (OM4) or 2km (OM5)
 - Used for: data center interconnects, server rooms, short campus links
 
-Fiber is immune to the electromagnetic attacks that affect copper — you can't tap a fiber cable with an inductive tap the way you can copper. That said, physical fiber taps *do* exist, used in intelligence operations.
+Fiber is immune to the electromagnetic attacks that affect copper - you can't tap a fiber cable with an inductive tap the way you can copper. That said, physical fiber taps *do* exist, used in intelligence operations.
 
 ---
 
@@ -159,14 +159,14 @@ Properly installed cabling is the foundation of a reliable network. Cutting corn
 - Follow **ANSI/TIA-568** standards for cable installation
 - Respect **100m maximum run length** for copper twisted-pair
 - Keep cables away from EMI sources (fluorescent lights, motors, power conduits)
-- Label every cable at both ends — unlabeled cables become archaeological mysteries
+- Label every cable at both ends - unlabeled cables become archaeological mysteries
 - Use **patch panels** for organized cable management
 - Avoid excessive untwisting at termination points (causes crosstalk)
-- **Test cables after termination** — always
+- **Test cables after termination** - always
 
 **Testing tools:**
-- **Basic cable tester** — checks for opens, shorts, miswiring, and reversed pairs
-- **Certification tester** (Fluke DSX, etc.) — measures crosstalk (NEXT/FEXT), attenuation, return loss, and certifies against CAT5e/CAT6/CAT6A standards
+- **Basic cable tester** - checks for opens, shorts, miswiring, and reversed pairs
+- **Certification tester** (Fluke DSX, etc.) - measures crosstalk (NEXT/FEXT), attenuation, return loss, and certifies against CAT5e/CAT6/CAT6A standards
 
 The most common installation errors: incorrect pair untwisting at termination, split pairs, and exceeding bend radius limits.
 
@@ -174,4 +174,4 @@ The most common installation errors: incorrect pair untwisting at termination, s
 
 ## Summary
 
-Understanding how connectivity is delivered — from ISP backbone to your patch panel — gives you the mental model to design better networks and diagnose problems faster. Fiber vs. copper, symmetric vs. asymmetric, SMF vs. MMF: these aren't just vocabulary words. They're decisions that determine the performance, reliability, and security posture of every network you build or manage.
+Understanding how connectivity is delivered - from ISP backbone to your patch panel - gives you the mental model to design better networks and diagnose problems faster. Fiber vs. copper, symmetric vs. asymmetric, SMF vs. MMF: these aren't just vocabulary words. They're decisions that determine the performance, reliability, and security posture of every network you build or manage.

@@ -1,12 +1,12 @@
 ---
 title: "Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT"
-description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT — foundational knowledge for anyone working in networking or cybersecurity."
+description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT - foundational knowledge for anyone working in networking or cybersecurity."
 date: 2025-11-27
 tags: ["Networking", "Cybersecurity", "Protocols", "Sysadmin", "IT"]
 categories: ["technology"]
 ---
 
-Every device on the internet speaks one language at the network layer: **IP**. Whether a packet travels from your browser to a web server around the world, or bounces between two VMs inside a private data center, the Internet Protocol is what makes routing possible. It's also, by no coincidence, one of the most exploited protocol layers in cybersecurity — from IP spoofing to DHCP starvation attacks.
+Every device on the internet speaks one language at the network layer: **IP**. Whether a packet travels from your browser to a web server around the world, or bounces between two VMs inside a private data center, the Internet Protocol is what makes routing possible. It's also, by no coincidence, one of the most exploited protocol layers in cybersecurity - from IP spoofing to DHCP starvation attacks.
 
 This guide takes you through the mechanics of IPv4 addressing, subnetting, DHCP, and NAT. No hand-waving. Just the internals.
 
@@ -14,7 +14,7 @@ This guide takes you through the mechanics of IPv4 addressing, subnetting, DHCP,
 
 ## What Is an IP Address?
 
-An **IP address** is a logical identifier assigned to a network interface. Unlike a MAC address (which is hardware-bound), IP addresses are *logical* — assigned by software, routable across networks, and hierarchical by design.
+An **IP address** is a logical identifier assigned to a network interface. Unlike a MAC address (which is hardware-bound), IP addresses are *logical* - assigned by software, routable across networks, and hierarchical by design.
 
 At the network layer, IP ensures:
 - Packets reach the correct destination
@@ -29,7 +29,7 @@ IPv4 addresses are **32-bit binary numbers**, written in dotted-decimal notation
 192.168.1.5  →  11000000.10101000.00000001.00000101
 ```
 
-Each octet (8-bit group) ranges from **0 to 255**, giving IPv4 a theoretical address space of **~4.3 billion** unique addresses. In practice, much of that space is reserved, multicast, or private — which is exactly why NAT and IPv6 exist.
+Each octet (8-bit group) ranges from **0 to 255**, giving IPv4 a theoretical address space of **~4.3 billion** unique addresses. In practice, much of that space is reserved, multicast, or private - which is exactly why NAT and IPv6 exist.
 
 ---
 
@@ -37,8 +37,8 @@ Each octet (8-bit group) ranges from **0 to 255**, giving IPv4 a theoretical add
 
 An IPv4 address is split into two parts:
 
-- **Network portion** — identifies *which network* the device belongs to
-- **Host portion** — identifies *which device* within that network
+- **Network portion** - identifies *which network* the device belongs to
+- **Host portion** - identifies *which device* within that network
 
 ```
 192.168.18.57
@@ -79,7 +79,7 @@ The formula for usable hosts: **2^(host bits) − 2**
 A `/24` subnet → 8 host bits → `2^8 - 2 = 254` usable addresses.
 
 > [!TIP]
-> In penetration testing and network audits, subnetting is critical. Knowing a target's subnet reveals the full scope of its local network — helping you map hosts, identify gateways, and understand segmentation.
+> In penetration testing and network audits, subnetting is critical. Knowing a target's subnet reveals the full scope of its local network - helping you map hosts, identify gateways, and understand segmentation.
 
 ---
 
@@ -92,8 +92,8 @@ Before CIDR (Classless Inter-Domain Routing), IPv4 used a rigid class system:
 | A     | 1–126             | /8           | Large enterprises |
 | B     | 128–191           | /16          | Medium networks   |
 | C     | 192–223           | /24          | Small networks    |
-| D     | 224–239           | —            | Multicast         |
-| E     | 240–255           | —            | Experimental      |
+| D     | 224–239           | -            | Multicast         |
+| E     | 240–255           | -            | Experimental      |
 
 Examples:
 - `15.4.234.12` → Class A
@@ -115,7 +115,7 @@ Not every IP address is routable on the public internet. **RFC 1918** defines pr
 | 192.168.0.0        | /16        | C     |
 
 Private addresses:
-- Are **not globally unique** — your `192.168.1.1` is also someone else's
+- Are **not globally unique** - your `192.168.1.1` is also someone else's
 - Are **not routed** on the public internet
 - Add a layer of **obscurity** (though not real security)
 - Enable thousands of devices to share a single public IP via NAT
@@ -131,14 +131,14 @@ Private addresses:
 
 IP supports three communication models:
 
-**Unicast** — one sender, one receiver. The standard mode for most traffic (HTTP, SSH, DNS).
+**Unicast** - one sender, one receiver. The standard mode for most traffic (HTTP, SSH, DNS).
 
-**Broadcast** — one sender, all devices on the local network receive it.
+**Broadcast** - one sender, all devices on the local network receive it.
 - Broadcast address for `/24`: `192.168.1.255`
 - Used by: ARP, DHCP Discover
-- Broadcasts don't cross router boundaries — this is a design feature, not a limitation
+- Broadcasts don't cross router boundaries - this is a design feature, not a limitation
 
-**Multicast** — one sender, a *group* of interested receivers.
+**Multicast** - one sender, a *group* of interested receivers.
 - Address range: `224.0.0.0 – 239.255.255.255`
 - Used by: live video streaming, OSPF routing (224.0.0.5), video conferencing
 - Corresponding multicast MACs start with: `01-00-5E`
@@ -193,7 +193,7 @@ Internal (private)              Router                External (public)
 - Hides internal topology from external observers
 - Creates an implicit firewall (unrequested inbound connections are dropped)
 
-**NAT is not a security control** — it's an address-conservation mechanism that *incidentally* provides some obscurity. Do not rely on it as your sole perimeter defense.
+**NAT is not a security control** - it's an address-conservation mechanism that *incidentally* provides some obscurity. Do not rely on it as your sole perimeter defense.
 
 ---
 
@@ -215,6 +215,6 @@ The gateway address is assigned either statically by an admin or automatically v
 
 ## Conclusion
 
-IPv4 addressing isn't just networking trivia — it's the foundation of every connected system you'll encounter in IT, system administration, and cybersecurity. Subnetting determines network scope. DHCP manages address assignment at scale. NAT keeps private networks connected to the public internet. And understanding all of it is the first step toward understanding how attackers think about networks.
+IPv4 addressing isn't just networking trivia - it's the foundation of every connected system you'll encounter in IT, system administration, and cybersecurity. Subnetting determines network scope. DHCP manages address assignment at scale. NAT keeps private networks connected to the public internet. And understanding all of it is the first step toward understanding how attackers think about networks.
 
-As IPv6 adoption continues to grow, these IPv4 fundamentals don't become obsolete — they become the baseline you compare everything else against.
+As IPv6 adoption continues to grow, these IPv4 fundamentals don't become obsolete - they become the baseline you compare everything else against.

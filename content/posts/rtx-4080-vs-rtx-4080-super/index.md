@@ -14,9 +14,9 @@ This detailed comparison breaks down the specifications, real-world gaming perfo
 
 ## Quick Overview
 
-**RTX 4080** — The original high-end Ada Lovelace GPU that launched at $1,199, offering excellent 4K gaming performance but criticized for its high price.
+**RTX 4080** - The original high-end Ada Lovelace GPU that launched at $1,199, offering excellent 4K gaming performance but criticized for its high price.
 
-**RTX 4080 Super** — The refreshed version with more CUDA cores, launched at $999, providing better performance-per-dollar and positioning itself as the true 4K gaming champion.
+**RTX 4080 Super** - The refreshed version with more CUDA cores, launched at $999, providing better performance-per-dollar and positioning itself as the true 4K gaming champion.
 
 ---
 
@@ -178,7 +178,7 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 |-|----------|----------------|
 | **Founders Edition** | Discontinued | $999 |
 | **AIB Models** | $950–1,050 | $999–1,199 |
-| **Used Market** | $800–900 | — |
+| **Used Market** | $800–900 | - |
 
 ### Performance Per Dollar
 
@@ -200,8 +200,8 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 | DLSS 3 Frame Generation | Fewer CUDA cores |
 | Exceptional ray tracing | Slower memory speed |
 | Low power consumption (320W) | Being phased out |
-| Quiet operation | — |
-| Available at discounted prices | — |
+| Quiet operation | - |
+| Available at discounted prices | - |
 
 ### RTX 4080 Super
 
@@ -211,10 +211,10 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 | More CUDA cores (10,240) | Still expensive |
 | Faster memory (23 Gbps) | Runs slightly warmer |
 | Lower MSRP ($999 vs $1,199) | Limited availability of FE cards |
-| Better value proposition | — |
-| 16GB VRAM | — |
-| DLSS 3 Frame Generation | — |
-| Current-gen product | — |
+| Better value proposition | - |
+| 16GB VRAM | - |
+| DLSS 3 Frame Generation | - |
+| Current-gen product | - |
 
 ---
 
@@ -222,10 +222,10 @@ The RTX 4080 Super's additional Tensor Cores provide a modest but consistent adv
 
 | Current Card | Recommendation |
 |-------------|----------------|
-| **RTX 4080 → Super** | **Not recommended** — only 5–6% gain (~$200–300 after selling) |
-| **RTX 3080 / 3080 Ti** | **Recommended** — 40–50% improvement, DLSS 3, more VRAM |
-| **RTX 3090 / 3090 Ti** | **Consider it** — 25–35% faster gaming; note VRAM downgrade (24→16GB) |
-| **RTX 2080 Ti or older** | **Highly recommended** — massive upgrade, 2–3x performance |
+| **RTX 4080 → Super** | **Not recommended** - only 5–6% gain (~$200–300 after selling) |
+| **RTX 3080 / 3080 Ti** | **Recommended** - 40–50% improvement, DLSS 3, more VRAM |
+| **RTX 3090 / 3090 Ti** | **Consider it** - 25–35% faster gaming; note VRAM downgrade (24→16GB) |
+| **RTX 2080 Ti or older** | **Highly recommended** - massive upgrade, 2–3x performance |
 
 ---
 
@@ -235,9 +235,9 @@ The RTX 4080 Super is the better card overall, offering 5–6% more performance 
 
 | Scenario | Recommendation |
 |----------|----------------|
-| **Building new** | RTX 4080 Super — faster, better value, current-gen |
-| **Found RTX 4080 for $900 or less** | RTX 4080 — 5–6% gap won't be noticeable, save money |
-| **Already own RTX 4080** | **Don't upgrade** — not worth the cost |
+| **Building new** | RTX 4080 Super - faster, better value, current-gen |
+| **Found RTX 4080 for $900 or less** | RTX 4080 - 5–6% gap won't be noticeable, save money |
+| **Already own RTX 4080** | **Don't upgrade** - not worth the cost |
 | **Best overall** | RTX 4080 Super |
 | **Best value buy** | RTX 4080 (if under $900) |
 

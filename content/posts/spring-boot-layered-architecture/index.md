@@ -1,6 +1,6 @@
 ---
 title: "Spring Boot Layered Architecture: Controller, Service, and Repository"
-description: "How Spring Boot's three-layer architecture organizes code into controllers, services, and repositories — and why separation of concerns makes applications easier to build, test, and maintain."
+description: "How Spring Boot's three-layer architecture organizes code into controllers, services, and repositories - and why separation of concerns makes applications easier to build, test, and maintain."
 date: 2025-06-15
 tags: ["Programming", "Java", "SpringBoot", "SoftwareDevelopment", "Architecture"]
 categories: ["technology"]
@@ -74,13 +74,13 @@ public class UserController {
 }
 ```
 
-Notice: the controller uses `UserDto` (a Data Transfer Object) rather than exposing the database entity directly. This is intentional — DTOs control exactly what gets serialized in the response and prevent accidentally leaking sensitive fields.
+Notice: the controller uses `UserDto` (a Data Transfer Object) rather than exposing the database entity directly. This is intentional - DTOs control exactly what gets serialized in the response and prevent accidentally leaking sensitive fields.
 
 ---
 
 ## The Service Layer
 
-The service layer is where your application's business logic lives. This is the heart of your application — the code that enforces rules, coordinates operations, and makes decisions.
+The service layer is where your application's business logic lives. This is the heart of your application - the code that enforces rules, coordinates operations, and makes decisions.
 
 If your application has any meaningful behavior beyond "store this and return it," that behavior belongs here.
 
@@ -152,7 +152,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 Spring Data generates the SQL for method names following its naming conventions (`findByEmail`, `existsByEmail`, etc.). For more complex queries, `@Query` lets you write JPQL or native SQL directly.
 
-The repository should never contain business logic — that belongs in the service. The repository's only job is data access.
+The repository should never contain business logic - that belongs in the service. The repository's only job is data access.
 
 ---
 
@@ -162,15 +162,15 @@ The repository should never contain business logic — that belongs in the servi
 
 Each layer can be tested in isolation:
 
-- **Controller tests** — test HTTP routing, request parsing, and response formatting with `@WebMvcTest` (no database needed)
-- **Service tests** — test business logic with mock repositories using Mockito
-- **Repository tests** — test queries with `@DataJpaTest` against an in-memory database
+- **Controller tests** - test HTTP routing, request parsing, and response formatting with `@WebMvcTest` (no database needed)
+- **Service tests** - test business logic with mock repositories using Mockito
+- **Repository tests** - test queries with `@DataJpaTest` against an in-memory database
 
 Without this separation, every test requires spinning up the entire application stack.
 
 ### Security
 
-The layered architecture has security implications. **DTOs at the controller boundary** prevent mass assignment attacks — where an attacker sends unexpected fields in a request body and manipulates fields they shouldn't have access to (like setting `user.role = ADMIN`).
+The layered architecture has security implications. **DTOs at the controller boundary** prevent mass assignment attacks - where an attacker sends unexpected fields in a request body and manipulates fields they shouldn't have access to (like setting `user.role = ADMIN`).
 
 Controllers should map request bodies to command/request objects with only the fields that are allowed to be set. Services then apply business rules before passing data to repositories.
 
@@ -205,4 +205,4 @@ Each step has exactly one layer responsible for it. That clarity is the point.
 | Service | `@Service` | Business logic, transaction coordination |
 | Repository | `@Repository` | Data access, query execution |
 
-The three-layer architecture isn't the only way to organize a Spring application, but it's the most widely understood pattern and a solid default for most projects. When your application grows complex enough to need something different, you'll know it — and you'll appreciate having started from a clean foundation.
+The three-layer architecture isn't the only way to organize a Spring application, but it's the most widely understood pattern and a solid default for most projects. When your application grows complex enough to need something different, you'll know it - and you'll appreciate having started from a clean foundation.

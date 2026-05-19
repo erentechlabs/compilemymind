@@ -14,9 +14,9 @@ If you're building an ultimate gaming rig or a professional workstation and budg
 
 ## Quick Overview
 
-**AMD Ryzen 9 9900X** — A 12-core symmetric design with exceptional single-threaded performance, impressive power efficiency, and the long-term support of the AM5 platform.
+**AMD Ryzen 9 9900X** - A 12-core symmetric design with exceptional single-threaded performance, impressive power efficiency, and the long-term support of the AM5 platform.
 
-**Intel Core Ultra 9 285K** — A 24-core hybrid architecture (8P + 16E cores) delivering massive multi-threaded performance, though at the cost of higher power consumption.
+**Intel Core Ultra 9 285K** - A 24-core hybrid architecture (8P + 16E cores) delivering massive multi-threaded performance, though at the cost of higher power consumption.
 
 ---
 
@@ -84,7 +84,7 @@ At 1080p, CPU performance is the primary bottleneck, revealing true processor ca
 
 ### 4K Gaming (RTX 4090, Ultra Settings)
 
-At 4K, the GPU becomes the bottleneck and CPU differences become negligible — both CPUs deliver essentially identical 4K gaming performance (< 1% difference). Either CPU is excellent for 4K gaming.
+At 4K, the GPU becomes the bottleneck and CPU differences become negligible - both CPUs deliver essentially identical 4K gaming performance (< 1% difference). Either CPU is excellent for 4K gaming.
 
 ### Gaming Analysis
 
@@ -108,7 +108,7 @@ Intel holds a slight edge in gaming, particularly in competitive esports titles 
 
 Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 cores (8P + 16E). If you're a content creator or developer, the Intel chip offers tangible time savings.
 
-**Winner: Intel Core Ultra 9 285K** — 20–30% faster in heavily multi-threaded workloads
+**Winner: Intel Core Ultra 9 285K** - 20–30% faster in heavily multi-threaded workloads
 
 ---
 
@@ -138,7 +138,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 | **Ryzen 9 9900X** | Quality tower cooler ($50–80) | 70–75°C |
 | **Core Ultra 9 285K** | 280mm+ AIO ($100–150) | 85–90°C |
 
-**Winner: AMD Ryzen 9 9900X** — significantly more efficient and easier to cool
+**Winner: AMD Ryzen 9 9900X** - significantly more efficient and easier to cool
 
 ---
 
@@ -153,7 +153,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 | **Motherboard Price Range** | $100–$700 | $180–$800 |
 | **Future Upgrade Path** | Zen 6 / Zen 7 drop-in | New socket likely next gen |
 
-**Winner: AMD AM5** — better long-term value and upgrade flexibility
+**Winner: AMD AM5** - better long-term value and upgrade flexibility
 
 ---
 
@@ -166,7 +166,7 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 | **Memory OC** | DDR5-7200+ | DDR5-8000+ |
 | **Expected Gain** | 5–10% | 8–12% |
 
-**Winner: Tie** — both offer excellent overclocking; Intel has a slight edge for extreme OC
+**Winner: Tie** - both offer excellent overclocking; Intel has a slight edge for extreme OC
 
 ---
 
@@ -201,10 +201,10 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 | Excellent gaming performance | 20–30% slower in multi-threaded workloads |
 | Superior power efficiency (162W max) | Fewer total cores (12 vs 24) |
 | Lower heat output and easier cooling | Lower memory speed support (DDR5-5600 vs 6400) |
-| Massive 64MB L3 cache | — |
-| AM5 platform with long-term support | — |
-| Lower total system cost ($200 less) | — |
-| Quieter operation | — |
+| Massive 64MB L3 cache | - |
+| AM5 platform with long-term support | - |
+| Lower total system cost ($200 less) | - |
+| Quieter operation | - |
 
 ### Intel Core Ultra 9 285K
 
@@ -256,19 +256,19 @@ Intel's Core Ultra 9 285K dominates multi-threaded workloads thanks to its 24 co
 
 | From | Recommendation |
 |------|---------------|
-| Ryzen 9 7900X / 7950X | **Not recommended** — minimal gaming improvement; Zen 5 gains only 5–10%. Wait for Zen 6 or invest in GPU. |
+| Ryzen 9 7900X / 7950X | **Not recommended** - minimal gaming improvement; Zen 5 gains only 5–10%. Wait for Zen 6 or invest in GPU. |
 | Ryzen 7 7700X / 7800X3D | **Consider it** if you need more cores. Gaming: minimal improvement. Productivity: significant boost. |
 
 ### From Intel 13th/14th Gen
 
 | From | Recommendation |
 |------|---------------|
-| i9-13900K / 14900K | **Not recommended** — similar performance. Wait for next gen. |
+| i9-13900K / 14900K | **Not recommended** - similar performance. Wait for next gen. |
 | i7-13700K / 14700K | **Consider it** for productivity. Gaming: minimal. Multi-threading: 30–40% faster. |
 
 ### From Older Platforms
 
-If upgrading from Ryzen 5000 or Intel 10th/11th Gen: **highly recommended** — expect 2–3x performance in many workloads, plus modern DDR5, PCIe 5.0, and better efficiency.
+If upgrading from Ryzen 5000 or Intel 10th/11th Gen: **highly recommended** - expect 2–3x performance in many workloads, plus modern DDR5, PCIe 5.0, and better efficiency.
 
 ---
 
@@ -276,10 +276,10 @@ If upgrading from Ryzen 5000 or Intel 10th/11th Gen: **highly recommended** — 
 
 | Scenario | Recommended CPU |
 |----------|----------------|
-| **Best for Gaming** | AMD Ryzen 9 9900X — better value, efficiency, and platform longevity |
-| **Best for Productivity** | Intel Core Ultra 9 285K — superior multi-threaded performance |
-| **Best Overall Value** | AMD Ryzen 9 9900X — excellent all-around performance at lower cost |
-| **Best for Professionals** | Intel Core Ultra 9 285K — time savings in content creation justify the premium |
+| **Best for Gaming** | AMD Ryzen 9 9900X - better value, efficiency, and platform longevity |
+| **Best for Productivity** | Intel Core Ultra 9 285K - superior multi-threaded performance |
+| **Best Overall Value** | AMD Ryzen 9 9900X - excellent all-around performance at lower cost |
+| **Best for Professionals** | Intel Core Ultra 9 285K - time savings in content creation justify the premium |
 
 The AMD Ryzen 9 9900X is the smarter choice for most enthusiasts. It delivers flagship-level gaming performance, excellent productivity capabilities, and superior efficiency at a lower total cost. The AM5 platform's longevity is the cherry on top.
 

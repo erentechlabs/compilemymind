@@ -1,6 +1,6 @@
 ---
 title: "@Component vs @Bean in Spring: When to Use Each"
-description: "A clear explanation of the difference between @Component and @Bean in Spring — with practical examples and guidelines for choosing the right approach."
+description: "A clear explanation of the difference between @Component and @Bean in Spring - with practical examples and guidelines for choosing the right approach."
 date: 2025-07-31
 tags: ["Programming", "Java", "SpringBoot", "SoftwareDevelopment"]
 categories: ["technology"]
@@ -8,7 +8,7 @@ categories: ["technology"]
 
 Spring's dependency injection is powerful, but it gives you more than one way to register a bean with the container. Two of the most common approaches are `@Component` and `@Bean`. They accomplish similar goals but work differently and belong in different situations.
 
-Understanding which to use — and why — leads to cleaner, more intentional Spring code.
+Understanding which to use - and why - leads to cleaner, more intentional Spring code.
 
 ---
 
@@ -20,7 +20,7 @@ Both `@Component` and `@Bean` are ways of registering objects with that containe
 
 ---
 
-## @Component — Automatic Registration
+## @Component - Automatic Registration
 
 `@Component` is a class-level annotation. When Spring's component scanning encounters a class marked with it, the class is automatically instantiated and registered as a bean.
 
@@ -59,7 +59,7 @@ public class AuthService {
 | `@Repository` | Data access | Database interaction, exception translation |
 | `@Controller` / `@RestController` | Presentation | HTTP request handling |
 
-These annotations are all `@Component` under the hood — they scan and register the same way — but they communicate intent and enable layer-specific behaviors (like `@Repository`'s JPA exception translation).
+These annotations are all `@Component` under the hood - they scan and register the same way - but they communicate intent and enable layer-specific behaviors (like `@Repository`'s JPA exception translation).
 
 ### Enabling Component Scanning
 
@@ -74,7 +74,7 @@ public class AppConfig {
 
 ---
 
-## @Bean — Explicit Registration
+## @Bean - Explicit Registration
 
 `@Bean` is a method-level annotation used inside a `@Configuration` class. It tells Spring to call that method and register its return value as a bean.
 
@@ -99,13 +99,13 @@ The most important factor in choosing between them:
 
 **@Component**: Use when you own and control the class source code. You can add the annotation directly.
 
-**@Bean**: Use when the class comes from an external library or third-party dependency — you *can't* add `@Component` to it. The `@Bean` method lets you configure and register it explicitly.
+**@Bean**: Use when the class comes from an external library or third-party dependency - you *can't* add `@Component` to it. The `@Bean` method lets you configure and register it explicitly.
 
 ```java
 @Configuration
 public class HttpClientConfig {
 
-    // OkHttp3 is a third-party library — we can't annotate its class
+    // OkHttp3 is a third-party library - we can't annotate its class
     @Bean
     public OkHttpClient okHttpClient() {
         return new OkHttpClient.Builder()
@@ -174,4 +174,4 @@ Use `@Bean` when:
 
 Both `@Component` and `@Bean` put objects into Spring's container. The distinction is about *who controls the class* and *how much control you need over construction*.
 
-For classes you write: `@Component`. For classes you don't: `@Bean`. When in doubt, prefer explicitness — a `@Configuration` class with `@Bean` methods is easier to audit, easier to test, and leaves nothing to implicit scanning behavior.
+For classes you write: `@Component`. For classes you don't: `@Bean`. When in doubt, prefer explicitness - a `@Configuration` class with `@Bean` methods is easier to audit, easier to test, and leaves nothing to implicit scanning behavior.

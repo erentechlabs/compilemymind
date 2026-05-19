@@ -1,6 +1,6 @@
 ---
 title: "Understanding HTTP Status Codes: What They Mean and How to Use Them"
-description: "A practical guide to HTTP status codes — what they mean, when to use them, and why getting them right matters for API design and security."
+description: "A practical guide to HTTP status codes - what they mean, when to use them, and why getting them right matters for API design and security."
 date: 2025-11-23
 tags: ["Web", "Networking", "API", "Cybersecurity", "Protocols"]
 categories: ["technology"]
@@ -26,7 +26,7 @@ Status codes are grouped by their first digit:
 
 ---
 
-## 1xx — Informational
+## 1xx - Informational
 
 Rarely seen in most applications, but important for specific protocols.
 
@@ -35,17 +35,17 @@ Rarely seen in most applications, but important for specific protocols.
 | **100** | Continue | Server tells client to proceed with a large request body |
 | **101** | Switching Protocols | Used for WebSocket upgrade from HTTP |
 
-`101` is the handshake that starts every WebSocket connection — critical for real-time applications like chat, live dashboards, and game servers.
+`101` is the handshake that starts every WebSocket connection - critical for real-time applications like chat, live dashboards, and game servers.
 
 ---
 
-## 2xx — Success
+## 2xx - Success
 
 The codes you want to see.
 
 | Code | Name | Use Case |
 |------|------|----------|
-| **200** | OK | Generic success — GET, PUT, PATCH responses |
+| **200** | OK | Generic success - GET, PUT, PATCH responses |
 | **201** | Created | A new resource was created (POST) |
 | **202** | Accepted | Request accepted but processing isn't done yet (async operations) |
 | **204** | No Content | Success with no response body (DELETE operations) |
@@ -54,13 +54,13 @@ The codes you want to see.
 
 ---
 
-## 3xx — Redirection
+## 3xx - Redirection
 
 | Code | Name | Use Case |
 |------|------|----------|
-| **301** | Moved Permanently | Permanent URL change — search engines update their index |
-| **302** | Found | Temporary redirect — login flows, maintenance pages |
-| **304** | Not Modified | Cached response is still valid — saves bandwidth |
+| **301** | Moved Permanently | Permanent URL change - search engines update their index |
+| **302** | Found | Temporary redirect - login flows, maintenance pages |
+| **304** | Not Modified | Cached response is still valid - saves bandwidth |
 | **307** | Temporary Redirect | Like 302, but **must** preserve the HTTP method |
 | **308** | Permanent Redirect | Like 301, but **must** preserve the HTTP method |
 
@@ -71,9 +71,9 @@ The codes you want to see.
 
 ---
 
-## 4xx — Client Errors
+## 4xx - Client Errors
 
-The request was wrong — and it's the *client's* fault.
+The request was wrong - and it's the *client's* fault.
 
 | Code | Name | Use Case |
 |------|------|----------|
@@ -87,7 +87,7 @@ The request was wrong — and it's the *client's* fault.
 | **422** | Unprocessable Entity | Valid syntax, but semantic errors (validation failures) |
 | **429** | Too Many Requests | Rate limit exceeded |
 
-**401 vs. 403:** These are frequently confused. `401` means *"tell me who you are"* — the client needs to authenticate. `403` means *"I know who you are, and you're not allowed here"* — authentication won't help.
+**401 vs. 403:** These are frequently confused. `401` means *"tell me who you are"* - the client needs to authenticate. `403` means *"I know who you are, and you're not allowed here"* - authentication won't help.
 
 > [!WARNING]
 > **Security consideration:** Returning `404` instead of `403` for resources that exist but are unauthorized is a common technique to avoid leaking information about what exists on your system. If an unauthenticated user gets `403` on `/admin`, they now know there *is* an admin panel. Returning `404` instead reveals nothing. This pattern is used by many security-conscious APIs.
@@ -96,7 +96,7 @@ The request was wrong — and it's the *client's* fault.
 
 ---
 
-## 5xx — Server Errors
+## 5xx - Server Errors
 
 The request was valid, but the server failed. The client did nothing wrong.
 
@@ -117,11 +117,11 @@ The request was valid, but the server failed. The client did nothing wrong.
 ## Practical Example: RESTful API
 
 ```javascript
-// Express.js — returning appropriate HTTP status codes
+// Express.js - returning appropriate HTTP status codes
 app.post('/api/users', async (req, res) => {
   const { name, email } = req.body;
 
-  // 400 — validation failure
+  // 400 - validation failure
   if (!name || !email) {
     return res.status(400).json({
       error: 'VALIDATION_ERROR',
@@ -132,7 +132,7 @@ app.post('/api/users', async (req, res) => {
   try {
     const existing = await db.users.findByEmail(email);
 
-    // 409 — duplicate resource
+    // 409 - duplicate resource
     if (existing) {
       return res.status(409).json({
         error: 'CONFLICT',
@@ -142,7 +142,7 @@ app.post('/api/users', async (req, res) => {
 
     const user = await db.users.create({ name, email });
 
-    // 201 — resource created, with Location header
+    // 201 - resource created, with Location header
     res.setHeader('Location', `/api/users/${user.id}`);
     return res.status(201).json({ id: user.id });
 
@@ -163,21 +163,21 @@ Notice: the `500` response returns a generic message. The actual exception is lo
 
 ## Common Mistakes to Avoid
 
-**Returning 200 for errors** — Some APIs wrap everything in `200 OK` with an error field in the body. Don't do this. It breaks HTTP semantics, confuses monitoring tools, and makes error handling harder for API consumers.
+**Returning 200 for errors** - Some APIs wrap everything in `200 OK` with an error field in the body. Don't do this. It breaks HTTP semantics, confuses monitoring tools, and makes error handling harder for API consumers.
 
-**Using 404 when you mean 400** — A 404 means the *resource* doesn't exist. A 400 means the *request* is malformed. If someone hits `POST /users` with invalid JSON, that's a 400, not a 404.
+**Using 404 when you mean 400** - A 404 means the *resource* doesn't exist. A 400 means the *request* is malformed. If someone hits `POST /users` with invalid JSON, that's a 400, not a 404.
 
-**Ignoring 422** — `400` means syntactically broken. `422` means syntactically valid but semantically wrong (like a birthdate set to the future). The distinction helps clients give users better error messages.
+**Ignoring 422** - `400` means syntactically broken. `422` means syntactically valid but semantically wrong (like a birthdate set to the future). The distinction helps clients give users better error messages.
 
-**Returning 403 on private resources** — As noted above, consider returning `404` for resources that exist but are restricted to authenticated/authorized users, to avoid confirming their existence to unauthorized callers.
+**Returning 403 on private resources** - As noted above, consider returning `404` for resources that exist but are restricted to authenticated/authorized users, to avoid confirming their existence to unauthorized callers.
 
 ---
 
 ## TL;DR
 
-- **2xx** — success. Use the specific one: `201` for creation, `204` for deletion.
-- **3xx** — redirection. Use `301` for permanent, `302`/`307` for temporary.
-- **4xx** — client error. `400` bad input, `401` unauthenticated, `403` unauthorized, `404` not found, `429` rate limited.
-- **5xx** — server error. Never expose internals in the response body.
+- **2xx** - success. Use the specific one: `201` for creation, `204` for deletion.
+- **3xx** - redirection. Use `301` for permanent, `302`/`307` for temporary.
+- **4xx** - client error. `400` bad input, `401` unauthenticated, `403` unauthorized, `404` not found, `429` rate limited.
+- **5xx** - server error. Never expose internals in the response body.
 
-Getting status codes right isn't pedantry — it's the contract your API makes with its consumers.
+Getting status codes right isn't pedantry - it's the contract your API makes with its consumers.

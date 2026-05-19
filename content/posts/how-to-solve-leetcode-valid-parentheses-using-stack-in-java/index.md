@@ -1,12 +1,12 @@
 ---
 title: "Solving LeetCode's Valid Parentheses Problem with a Stack in Java"
-description: "A beginner-friendly walkthrough of the Valid Parentheses problem — using the stack data structure to implement a clean, O(n) solution in Java."
+description: "A beginner-friendly walkthrough of the Valid Parentheses problem - using the stack data structure to implement a clean, O(n) solution in Java."
 date: 2025-08-06
 tags: ["Programming", "Java", "Algorithms", "ProblemSolving"]
 categories: ["technology"]
 ---
 
-Some LeetCode problems feel like busy work. The Valid Parentheses problem is not one of them. It's a clean, well-defined problem that teaches a genuinely useful pattern — the **stack** — and produces code that's actually elegant when you get it right.
+Some LeetCode problems feel like busy work. The Valid Parentheses problem is not one of them. It's a clean, well-defined problem that teaches a genuinely useful pattern - the **stack** - and produces code that's actually elegant when you get it right.
 
 The problem: given a string containing only `(`, `)`, `{`, `}`, `[`, and `]`, determine if the input is valid. A string is valid if every opening bracket is closed by the correct bracket type, in the correct order.
 
@@ -24,7 +24,7 @@ The problem: given a string containing only `(`, `)`, `{`, `}`, `[`, and `]`, de
 
 The key insight: **you only ever need to remember the most recently opened bracket**. When you encounter a closing bracket, you need to check if it matches the *last* thing you opened.
 
-That's a last-in, first-out (LIFO) pattern — exactly what a **stack** provides.
+That's a last-in, first-out (LIFO) pattern - exactly what a **stack** provides.
 
 ```
 Processing: ( { [ ] } )
@@ -38,7 +38,7 @@ See )    → peek: ( → match! pop → stack: []
 Done     → stack empty → valid ✓
 ```
 
-If at any point the closing bracket doesn't match the top of the stack, the string is invalid. If the string ends with items still in the stack, some brackets were never closed — also invalid.
+If at any point the closing bracket doesn't match the top of the stack, the string is invalid. If the string ends with items still in the stack, some brackets were never closed - also invalid.
 
 ---
 
@@ -82,7 +82,7 @@ if (c == '(' || c == '[' || c == '{') {
 
 When we see a closer, two things can go wrong:
 
-1. The stack is empty — there's nothing to match against
+1. The stack is empty - there's nothing to match against
 2. The top of the stack doesn't match the current closer
 
 ```java
@@ -147,8 +147,8 @@ public static boolean isValid(String s) {
 
 | Metric | Value |
 |--------|-------|
-| **Time** | O(n) — each character is processed once |
-| **Space** | O(n) — worst case, all openers pushed to stack |
+| **Time** | O(n) - each character is processed once |
+| **Space** | O(n) - worst case, all openers pushed to stack |
 
 The space complexity is O(n) in the worst case (a string of `n` opening brackets with no closers). In practice, for valid strings, the stack depth stays bounded.
 
@@ -158,10 +158,10 @@ The space complexity is O(n) in the worst case (a string of `n` opening brackets
 
 The stack-based bracket matching pattern appears in real software:
 
-- **Compilers** — validating syntax trees and expression nesting
-- **Text editors** — bracket highlighting and auto-close features  
-- **XML/HTML parsers** — validating tag nesting
-- **JSON parsers** — validating object and array nesting
-- **Security tools** — parsing firewall rules, network protocols, file formats
+- **Compilers** - validating syntax trees and expression nesting
+- **Text editors** - bracket highlighting and auto-close features  
+- **XML/HTML parsers** - validating tag nesting
+- **JSON parsers** - validating object and array nesting
+- **Security tools** - parsing firewall rules, network protocols, file formats
 
 Understanding the stack pattern is understanding how a significant portion of parsing works. The Valid Parentheses problem is a good entry point precisely because the problem is small enough to fully grasp in one sitting, but the underlying pattern scales to complex real-world applications.
