@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 540" role="img" aria-labelledby="title desc">
+  <title id="title">Microsoft 365 fundamentals foundation map</title>
+  <desc id="desc">A Microsoft 365 fundamentals visual showing the platform as four connected foundations: identity, devices, apps, and data.</desc>
+  <rect width="1100" height="540" rx="18" fill="#f8fafc"/>
+  <text x="60" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Microsoft 365 Fundamentals</text>
+  <text x="60" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">A practical map for thinking about the platform: identity, devices, apps, and data.</text>
+
+  <g transform="translate(60 155)" font-family="Segoe UI, Arial, sans-serif">
+    <rect width="220" height="230" rx="14" fill="#dbeafe" stroke="#93c5fd"/>
+    <circle cx="110" cy="82" r="40" fill="#2563eb"/>
+    <circle cx="110" cy="69" r="13" fill="#ffffff"/>
+    <path d="M82 111c7-24 49-24 56 0" fill="none" stroke="#ffffff" stroke-width="11" stroke-linecap="round"/>
+    <text x="110" y="155" text-anchor="middle" font-size="23" font-weight="700" fill="#0f172a">Identity</text>
+    <text x="110" y="186" text-anchor="middle" font-size="15" fill="#475569">Entra ID</text>
+    <text x="110" y="211" text-anchor="middle" font-size="15" fill="#475569">MFA and access</text>
+  </g>
+
+  <g transform="translate(315 155)" font-family="Segoe UI, Arial, sans-serif">
+    <rect width="220" height="230" rx="14" fill="#dcfce7" stroke="#86efac"/>
+    <rect x="64" y="45" width="92" height="68" rx="10" fill="#059669"/>
+    <rect x="82" y="122" width="56" height="10" rx="5" fill="#059669"/>
+    <rect x="72" y="136" width="76" height="10" rx="5" fill="#059669"/>
+    <rect x="86" y="60" width="48" height="38" rx="5" fill="#ffffff" opacity=".9"/>
+    <text x="110" y="155" text-anchor="middle" font-size="23" font-weight="700" fill="#0f172a">Devices</text>
+    <text x="110" y="186" text-anchor="middle" font-size="15" fill="#475569">Intune</text>
+    <text x="110" y="211" text-anchor="middle" font-size="15" fill="#475569">Autopilot</text>
+  </g>
+
+  <g transform="translate(570 155)" font-family="Segoe UI, Arial, sans-serif">
+    <rect width="220" height="230" rx="14" fill="#fef3c7" stroke="#fcd34d"/>
+    <rect x="55" y="48" width="110" height="82" rx="12" fill="#f59e0b"/>
+    <rect x="72" y="66" width="76" height="10" rx="5" fill="#ffffff"/>
+    <rect x="72" y="88" width="54" height="10" rx="5" fill="#ffffff"/>
+    <rect x="72" y="110" width="66" height="10" rx="5" fill="#ffffff"/>
+    <text x="110" y="155" text-anchor="middle" font-size="23" font-weight="700" fill="#0f172a">Apps</text>
+    <text x="110" y="186" text-anchor="middle" font-size="15" fill="#475569">Office apps</text>
+    <text x="110" y="211" text-anchor="middle" font-size="15" fill="#475569">Teams and Viva</text>
+  </g>
+
+  <g transform="translate(825 155)" font-family="Segoe UI, Arial, sans-serif">
+    <rect width="220" height="230" rx="14" fill="#ede9fe" stroke="#c4b5fd"/>
+    <path d="M62 64c0-18 96-18 96 0v68c0 18-96 18-96 0z" fill="#7c3aed"/>
+    <ellipse cx="110" cy="64" rx="48" ry="18" fill="#a78bfa"/>
+    <ellipse cx="110" cy="132" rx="48" ry="18" fill="#6d28d9"/>
+    <text x="110" y="155" text-anchor="middle" font-size="23" font-weight="700" fill="#0f172a">Data</text>
+    <text x="110" y="186" text-anchor="middle" font-size="15" fill="#475569">Purview</text>
+    <text x="110" y="211" text-anchor="middle" font-size="15" fill="#475569">DLP and labels</text>
+  </g>
+
+  <path d="M280 270h35M535 270h35M790 270h35" stroke="#94a3b8" stroke-width="4" stroke-linecap="round" stroke-dasharray="9 10"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="235" y="425" width="630" height="56" rx="12" fill="#ffffff" stroke="#cbd5e1"/>
+    <text x="550" y="459" text-anchor="middle" font-size="17" font-weight="700" fill="#334155">Licensing, billing, support, service health, and governance wrap around every foundation.</text>
+  </g>
+</svg>

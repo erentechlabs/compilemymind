@@ -23,7 +23,7 @@
   font-size: clamp(2.5rem, 5vw, 4.5rem);
   font-weight: 900;
   color: var(--text-primary);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .list-title-line2 {
@@ -33,7 +33,7 @@
   color: transparent;
   -webkit-text-stroke: 2px var(--accent-light-purple);
   text-stroke: 2px var(--accent-light-purple);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 .list-description {

@@ -8,20 +8,25 @@
 {{- $android192 := default "/android-chrome-192x192.png" (index $fav "android192") -}}
 {{- $android512 := default "/android-chrome-512x512.png" (index $fav "android512") -}}
 {{- $manifest := default "/site.webmanifest" (index $fav "manifest") -}}
+{{- $version := default "" (index $fav "version") -}}
+{{- $cacheBust := "" -}}
+{{- if $version -}}
+  {{- $cacheBust = printf "?v=%s" $version -}}
+{{- end -}}
 
 <!-- Root favicon for Google and other crawlers - Google prefers larger sizes (48x48+) -->
-<link rel="icon" type="image/x-icon" href="{{ $ico }}">
-<link rel="shortcut icon" type="image/x-icon" href="{{ $ico }}">
+<link rel="icon" type="image/x-icon" href="{{ $ico }}{{ $cacheBust }}">
+<link rel="shortcut icon" type="image/x-icon" href="{{ $ico }}{{ $cacheBust }}">
 
 <!-- Primary PNG favicon - Google also checks for /favicon.png -->
-<link rel="icon" type="image/png" href="{{ $png }}">
+<link rel="icon" type="image/png" href="{{ $png }}{{ $cacheBust }}">
 
 <!-- Primary favicon - Google prefers 32x32 or larger -->
-<link rel="icon" type="image/png" sizes="32x32" href="{{ $png32 }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ $png32 }}{{ $cacheBust }}">
 
 <!-- Additional favicon formats -->
-<link rel="icon" type="image/png" sizes="16x16" href="{{ $png16 }}">
-<link rel="apple-touch-icon" sizes="180x180" href="{{ $apple180 }}">
-<link rel="icon" type="image/png" sizes="192x192" href="{{ $android192 }}">
-<link rel="icon" type="image/png" sizes="512x512" href="{{ $android512 }}">
-<link rel="manifest" href="{{ $manifest }}">
+<link rel="icon" type="image/png" sizes="16x16" href="{{ $png16 }}{{ $cacheBust }}">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ $apple180 }}{{ $cacheBust }}">
+<link rel="icon" type="image/png" sizes="192x192" href="{{ $android192 }}{{ $cacheBust }}">
+<link rel="icon" type="image/png" sizes="512x512" href="{{ $android512 }}{{ $cacheBust }}">
+<link rel="manifest" href="{{ $manifest }}{{ $cacheBust }}">

@@ -1,8 +1,8 @@
 ---
 title: "Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT"
-description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT - foundational knowledge for anyone working in networking or cybersecurity."
+description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT - foundational knowledge for anyone working in networking or systems administration."
 date: 2025-11-27
-tags: ["Networking", "Cybersecurity", "Protocols", "Sysadmin", "IT"]
+tags: ["networking", "protocols", "sysadmin", "it-fundamentals"]
 categories: ["technology"]
 ---
 

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 760" role="img" aria-labelledby="title desc">
+  <title id="title">Microsoft 365 solution map</title>
+  <desc id="desc">A visual map grouping Microsoft 365 capabilities into productivity, collaboration, endpoint, analytics, security and compliance, and licensing and support.</desc>
+  <rect width="1100" height="760" rx="18" fill="#f8fafc"/>
+  <text x="60" y="74" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Microsoft 365 Solution Map</text>
+  <text x="60" y="112" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">Think in workload groups, then map each product to the user problem it solves.</text>
+
+  <defs>
+    <style>
+      .box-title{font-family:Segoe UI,Arial,sans-serif;font-size:22px;font-weight:700;fill:#0f172a}
+      .chip{font-family:Segoe UI,Arial,sans-serif;font-size:15px;font-weight:700;fill:#111827}
+      .hint{font-family:Segoe UI,Arial,sans-serif;font-size:14px;fill:#475569}
+    </style>
+  </defs>
+
+  <g transform="translate(60 155)">
+    <rect width="310" height="210" rx="14" fill="#dbeafe" stroke="#93c5fd"/>
+    <text class="box-title" x="24" y="42">Productivity</text>
+    <text class="hint" x="24" y="72">Create and edit work</text>
+    <rect x="24" y="96" width="78" height="34" rx="17" fill="#ffffff"/><text class="chip" x="43" y="119">Word</text>
+    <rect x="112" y="96" width="78" height="34" rx="17" fill="#ffffff"/><text class="chip" x="128" y="119">Excel</text>
+    <rect x="200" y="96" width="88" height="34" rx="17" fill="#ffffff"/><text class="chip" x="214" y="119">Outlook</text>
+    <rect x="24" y="144" width="118" height="34" rx="17" fill="#ffffff"/><text class="chip" x="43" y="167">PowerPoint</text>
+    <rect x="152" y="144" width="98" height="34" rx="17" fill="#ffffff"/><text class="chip" x="171" y="167">OneNote</text>
+  </g>
+
+  <g transform="translate(395 155)">
+    <rect width="310" height="210" rx="14" fill="#dcfce7" stroke="#86efac"/>
+    <text class="box-title" x="24" y="42">Collaboration</text>
+    <text class="hint" x="24" y="72">Meet, share, and coordinate</text>
+    <rect x="24" y="96" width="90" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="119">Teams</text>
+    <rect x="124" y="96" width="112" height="34" rx="17" fill="#ffffff"/><text class="chip" x="144" y="119">SharePoint</text>
+    <rect x="24" y="144" width="100" height="34" rx="17" fill="#ffffff"/><text class="chip" x="44" y="167">OneDrive</text>
+    <rect x="134" y="144" width="76" height="34" rx="17" fill="#ffffff"/><text class="chip" x="154" y="167">Viva</text>
+  </g>
+
+  <g transform="translate(730 155)">
+    <rect width="310" height="210" rx="14" fill="#fef3c7" stroke="#fcd34d"/>
+    <text class="box-title" x="24" y="42">Endpoints</text>
+    <text class="hint" x="24" y="72">Manage devices and desktops</text>
+    <rect x="24" y="96" width="88" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="119">Intune</text>
+    <rect x="122" y="96" width="118" height="34" rx="17" fill="#ffffff"/><text class="chip" x="139" y="119">Windows 365</text>
+    <rect x="24" y="144" width="106" height="34" rx="17" fill="#ffffff"/><text class="chip" x="43" y="167">Autopilot</text>
+  </g>
+
+  <g transform="translate(60 405)">
+    <rect width="310" height="210" rx="14" fill="#ede9fe" stroke="#c4b5fd"/>
+    <text class="box-title" x="24" y="42">Analytics</text>
+    <text class="hint" x="24" y="72">Measure and improve decisions</text>
+    <rect x="24" y="96" width="92" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="119">Power BI</text>
+    <rect x="126" y="96" width="126" height="34" rx="17" fill="#ffffff"/><text class="chip" x="145" y="119">Viva Insights</text>
+    <rect x="24" y="144" width="154" height="34" rx="17" fill="#ffffff"/><text class="chip" x="44" y="167">Admin reports</text>
+  </g>
+
+  <g transform="translate(395 405)">
+    <rect width="310" height="210" rx="14" fill="#fee2e2" stroke="#fca5a5"/>
+    <text class="box-title" x="24" y="42">Security and Compliance</text>
+    <text class="hint" x="24" y="72">Protect identities, devices, and data</text>
+    <rect x="24" y="96" width="94" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="119">Entra ID</text>
+    <rect x="128" y="96" width="100" height="34" rx="17" fill="#ffffff"/><text class="chip" x="150" y="119">Purview</text>
+    <rect x="24" y="144" width="98" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="167">Defender</text>
+    <rect x="132" y="144" width="104" height="34" rx="17" fill="#ffffff"/><text class="chip" x="153" y="167">Zero Trust</text>
+  </g>
+
+  <g transform="translate(730 405)">
+    <rect width="310" height="210" rx="14" fill="#e0f2fe" stroke="#7dd3fc"/>
+    <text class="box-title" x="24" y="42">Licensing and Support</text>
+    <text class="hint" x="24" y="72">Buy, govern, and operate service</text>
+    <rect x="24" y="96" width="104" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="119">Base SKU</text>
+    <rect x="138" y="96" width="90" height="34" rx="17" fill="#ffffff"/><text class="chip" x="158" y="119">Add-ons</text>
+    <rect x="24" y="144" width="96" height="34" rx="17" fill="#ffffff"/><text class="chip" x="45" y="167">Billing</text>
+    <rect x="130" y="144" width="72" height="34" rx="17" fill="#ffffff"/><text class="chip" x="153" y="167">SLA</text>
+  </g>
+
+  <path d="M550 365 L550 405" stroke="#94a3b8" stroke-width="3" stroke-dasharray="8 8"/>
+  <text x="356" y="690" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#475569">A good Microsoft 365 answer usually crosses categories: identity plus device plus app plus data.</text>
+</svg>

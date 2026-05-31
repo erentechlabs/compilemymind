@@ -2,7 +2,7 @@
 title: "RTX 4080 vs RTX 4080 Super: Is the Super Worth the Upgrade?"
 description: "A comprehensive comparison of NVIDIA RTX 4080 and RTX 4080 Super graphics cards covering specifications, gaming performance, ray tracing, power efficiency, and value to help you choose the right GPU."
 date: 2025-11-18
-tags: ["Hardware", "IT", "TechReview", "TechComparison"]
+tags: ["hardware", "gpu", "pc-building", "tech-review", "tech-comparison"]
 categories: ["technology"]
 ---
 

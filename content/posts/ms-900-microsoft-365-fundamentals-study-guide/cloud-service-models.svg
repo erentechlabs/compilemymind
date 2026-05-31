@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud service models and shared responsibility</title>
+  <desc id="desc">A table comparing on-premises, IaaS, PaaS, and SaaS responsibilities across data, identity, applications, runtime, operating system, networking, hosts, and datacenter.</desc>
+  <rect width="1100" height="720" rx="18" fill="#f8fafc"/>
+  <text x="60" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Cloud Service Models</text>
+  <text x="60" y="108" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">As responsibility shifts from customer-managed infrastructure to provider-managed software, operational work decreases.</text>
+
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="17">
+    <rect x="60" y="145" width="220" height="52" rx="8" fill="#e2e8f0"/>
+    <rect x="292" y="145" width="180" height="52" rx="8" fill="#dbeafe"/>
+    <rect x="484" y="145" width="180" height="52" rx="8" fill="#dcfce7"/>
+    <rect x="676" y="145" width="180" height="52" rx="8" fill="#fef3c7"/>
+    <rect x="868" y="145" width="180" height="52" rx="8" fill="#ede9fe"/>
+    <text x="84" y="178" font-weight="700" fill="#0f172a">Layer</text>
+    <text x="344" y="178" font-weight="700" fill="#1d4ed8">On-prem</text>
+    <text x="548" y="178" font-weight="700" fill="#15803d">IaaS</text>
+    <text x="716" y="178" font-weight="700" fill="#b45309">PaaS</text>
+    <text x="910" y="178" font-weight="700" fill="#6d28d9">SaaS</text>
+  </g>
+
+  <defs>
+    <style>
+      .label{font-family:Segoe UI,Arial,sans-serif;font-size:16px;font-weight:700;fill:#0f172a}
+      .cell{font-family:Segoe UI,Arial,sans-serif;font-size:14px;font-weight:700}
+      .cust{fill:#2563eb}
+      .shared{fill:#f97316}
+      .ms{fill:#059669}
+    </style>
+  </defs>
+
+  <g>
+    <g transform="translate(60 215)">
+      <text class="label" x="24" y="32">Data and content</text>
+      <text class="cell cust" x="260" y="32">Customer</text>
+      <text class="cell cust" x="452" y="32">Customer</text>
+      <text class="cell cust" x="644" y="32">Customer</text>
+      <text class="cell cust" x="836" y="32">Customer</text>
+    </g>
+    <g transform="translate(60 273)">
+      <rect x="0" y="-4" width="988" height="48" rx="8" fill="#ffffff"/>
+      <text class="label" x="24" y="28">Identity and access</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell cust" x="452" y="28">Customer</text>
+      <text class="cell shared" x="644" y="28">Shared</text>
+      <text class="cell shared" x="836" y="28">Shared</text>
+    </g>
+    <g transform="translate(60 331)">
+      <text class="label" x="24" y="28">Applications</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell cust" x="452" y="28">Customer</text>
+      <text class="cell cust" x="644" y="28">Customer</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+    <g transform="translate(60 389)">
+      <rect x="0" y="-4" width="988" height="48" rx="8" fill="#ffffff"/>
+      <text class="label" x="24" y="28">Runtime and middleware</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell cust" x="452" y="28">Customer</text>
+      <text class="cell ms" x="644" y="28">Microsoft</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+    <g transform="translate(60 447)">
+      <text class="label" x="24" y="28">Operating system</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell cust" x="452" y="28">Customer</text>
+      <text class="cell ms" x="644" y="28">Microsoft</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+    <g transform="translate(60 505)">
+      <rect x="0" y="-4" width="988" height="48" rx="8" fill="#ffffff"/>
+      <text class="label" x="24" y="28">Network controls</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell cust" x="452" y="28">Customer</text>
+      <text class="cell ms" x="644" y="28">Microsoft</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+    <g transform="translate(60 563)">
+      <text class="label" x="24" y="28">Physical hosts</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell ms" x="452" y="28">Microsoft</text>
+      <text class="cell ms" x="644" y="28">Microsoft</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+    <g transform="translate(60 621)">
+      <rect x="0" y="-4" width="988" height="48" rx="8" fill="#ffffff"/>
+      <text class="label" x="24" y="28">Datacenter</text>
+      <text class="cell cust" x="260" y="28">Customer</text>
+      <text class="cell ms" x="452" y="28">Microsoft</text>
+      <text class="cell ms" x="644" y="28">Microsoft</text>
+      <text class="cell ms" x="836" y="28">Microsoft</text>
+    </g>
+  </g>
+
+  <g font-family="Segoe UI, Arial, sans-serif" font-size="14">
+    <circle cx="720" cy="690" r="7" fill="#2563eb"/>
+    <text x="734" y="695" fill="#475569">Customer</text>
+    <circle cx="820" cy="690" r="7" fill="#f97316"/>
+    <text x="834" y="695" fill="#475569">Shared</text>
+    <circle cx="916" cy="690" r="7" fill="#059669"/>
+    <text x="930" y="695" fill="#475569">Microsoft</text>
+  </g>
+</svg>

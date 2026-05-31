@@ -2,7 +2,7 @@
 title: "C# vs Java: A Practical Comparison for 2025"
 description: "A detailed, honest comparison of Java and C# - two of the most widely used languages in enterprise software development - covering performance, ecosystem, tooling, and real-world use cases."
 date: 2025-03-28
-tags: ["Programming", "Java", "SoftwareDevelopment", "TechComparison"]
+tags: ["programming", "java", "c-sharp", "software-development", "tech-comparison"]
 categories: ["technology"]
 ---
 

@@ -36,29 +36,26 @@
   overflow: hidden;
 }
 
-/* Subtle animated gradient accent behind hero */
+/* Subtle cyber grid accent behind hero */
 .hero-section::before {
   content: "";
   position: absolute;
-  top: -80px;
-  right: -80px;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(
-    circle,
-    rgba(176, 99, 224, 0.12) 0%,
-    rgba(0, 255, 255, 0.05) 50%,
-    transparent 70%
-  );
-  border-radius: 50%;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(168, 85, 247, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(34, 211, 238, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  opacity: 0.3;
+  mask-image: linear-gradient(90deg, transparent 0%, #000 58%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 58%, transparent 100%);
   pointer-events: none;
   will-change: transform;
-  animation: drift 8s ease-in-out infinite alternate;
+  animation: grid-drift 12s linear infinite;
 }
 
-@keyframes drift {
-  from { transform: translate(0, 0) scale(1); }
-  to   { transform: translate(-30px, 20px) scale(1.05); }
+@keyframes grid-drift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-64px, 0, 0); }
 }
 
 /* ── Respect reduced-motion preference ── */
@@ -89,23 +86,23 @@
 .hero-title-line2 {
   font-size: clamp(1.4rem, 3vw, 2.4rem);
   font-weight: 700;
-  letter-spacing: 0.15em;
+  letter-spacing: 0;
   -webkit-text-stroke: 1.5px var(--accent-secondary);
   opacity: 0.9;
 }
 
 /* ── Light mode: hero titles need dark, high-contrast colours ── */
 [data-theme="light"] .hero-title-line1 {
-  background: linear-gradient(135deg, #3b0a6e 0%, #6d28d9 55%, #a855f7 100%);
+  background: linear-gradient(135deg, #2e1065 0%, #6d28d9 55%, #0891b2 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 [data-theme="light"] .hero-title-line2 {
-  -webkit-text-stroke: 1.5px #7c3aed;
+  -webkit-text-stroke: 1.5px #6d28d9;
   /* Ensure fill is also visible (stroke alone can be thin) */
-  -webkit-text-fill-color: #7c3aed;
+  -webkit-text-fill-color: #6d28d9;
   opacity: 1;
 }
 

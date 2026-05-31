@@ -2,13 +2,28 @@
 title: "The Ultimate CompTIA Tech+ Cheatsheet: Mastering the Fundamentals of IT"
 description: "A comprehensive, deep-dive guide into the CompTIA Tech+ (FC0-U71) certification. Explore detailed explanations, real-world examples, and foundational IT concepts spanning infrastructure, software, databases, and cybersecurity."
 date: 2026-05-19
-tags: ["CompTIA", "Tech+", "Certification", "IT Fundamentals", "Cybersecurity", "Career", "Cheatsheet"]
+tags: ["comptia", "tech-plus", "certification", "it-fundamentals", "career", "cheatsheet"]
 categories: ["guide", "certification"]
 ---
 
 Whether you are transitioning into a tech career, aiming for a Help Desk role, or setting the groundwork for advanced cybersecurity certifications, the **CompTIA Tech+** (formerly IT Fundamentals+) certification is the perfect launching pad. It provides the universal vocabulary needed to navigate the ever-evolving landscape of Information Technology.
 
-In this extensive guide, we will break down all six domains of the CompTIA Tech+ exam. Written from the perspective of a seasoned IT professional, this cheatsheet is packed with deep-dive explanations, real-world examples, and industry insights to ensure you don't just pass the exam-you truly understand the technology.
+In this extensive guide, we will break down all six domains of the CompTIA Tech+ exam. Written from the perspective of a seasoned IT professional, this cheatsheet is packed with deep-dive explanations, real-world examples, and industry insights to ensure you don't just pass the exam - you truly understand the technology.
+
+> **Exam details:** FC0-U71 / V6 - maximum of 70 multiple-choice questions - 60 minutes - passing score 650 on a 900-point scale - no prior experience required.
+
+![CompTIA Tech+ domain weighting](tech-plus-domain-weighting.svg)
+
+| Domain | Weight | What To Prioritize |
+|---|---:|---|
+| IT concepts and terminology | 13% | Computing basics, notation systems, units of measure, troubleshooting |
+| Infrastructure | 24% | Devices, internal components, storage, peripherals, cloud, networking, wireless |
+| Applications and software | 18% | Operating systems, software types, browser features, AI tools |
+| Software development concepts | 13% | Language categories, data types, variables, logic, pseudocode, OOP |
+| Data and database fundamentals | 13% | Data value, relational databases, non-relational databases, backup concepts |
+| Security | 19% | CIA triad, device security, passwords, MFA, encryption, business continuity |
+
+![CompTIA Tech+ foundation map](tech-plus-foundation-map.svg)
 
 ---
 
@@ -43,6 +58,8 @@ A professional IT technician doesn't guess; they follow a structured methodology
 4.  **Establish a plan of action:** Once the root cause is identified, plan how to resolve it safely without causing data loss.
 5.  **Verify full system functionality:** Fix the issue and test the system. Implement preventive measures so it doesn't happen again.
 6.  **Document findings:** Write down the symptoms, the cause, and the solution. Documentation is the lifeline of an efficient IT department.
+
+![CompTIA troubleshooting methodology flow](tech-plus-troubleshooting-flow.svg)
 
 > [!TIP]
 > **Always start at Layer 1.** Physical issues (unplugged power cables, severed ethernet cables) account for a surprisingly high percentage of IT support tickets. Never assume the hardware is properly connected.
@@ -213,6 +230,12 @@ When disaster strikes-be it a ransomware attack, a hurricane, or a massive hardw
 
 ## Conclusion
 
-The CompTIA Tech+ certification is an extraordinary milestone. It demystifies the black boxes of technology, revealing how hardware, software, networking, and security interplay to drive the modern world. By internalizing these foundational concepts, you are not merely memorizing terms to pass an exam-you are building a robust technical vocabulary that will serve as the bedrock for a successful, lifelong career in Information Technology. 
+The CompTIA Tech+ certification is an extraordinary milestone. It demystifies the black boxes of technology, revealing how hardware, software, networking, and security interplay to drive the modern world. By internalizing these foundational concepts, you are not merely memorizing terms to pass an exam - you are building a robust technical vocabulary that will serve as the bedrock for a successful, lifelong career in Information Technology.
 
 Keep exploring, keep building, and stay curious. The world of IT is vast, and you have just taken the perfect first step.
+
+---
+
+## Sources
+
+- [CompTIA Tech+ certification page](https://www.comptia.org/en-us/certifications/tech/)

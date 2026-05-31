@@ -2,7 +2,7 @@
 title: "AMD Ryzen 9 9900X vs Intel Core Ultra 9 285K: The Ultimate Flagship CPU Battle"
 description: "An in-depth comparison of AMD Ryzen 9 9900X and Intel Core Ultra 9 285K covering specifications, gaming performance, productivity benchmarks, power consumption, and value for high-end PC builds."
 date: 2025-11-18
-tags: ["Hardware", "CPU", "IT", "TechReview", "TechComparison"]
+tags: ["hardware", "cpu", "pc-building", "tech-review", "tech-comparison"]
 categories: ["technology"]
 ---
 

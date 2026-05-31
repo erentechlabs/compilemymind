@@ -2,11 +2,11 @@
 name = "Mana"
 license = "MIT"
 licenselink = "https://github.com/Livour/hugo-mana-theme/blob/main/LICENSE"
-description = "Futuristic theme featuring a dark theme, clean aesthetics, and modern functionality."
+description = "Cyber-inspired dark theme for technical blogs focused on security, infrastructure, systems, and cloud."
 homepage = "https://github.com/Livour/hugo-mana-theme"
 demosite = "https://managuide.blog/"
 
-tags = ["blog", "responsive", "personal", "dark", "minimal", "modern", "code-highlighting", "light", "dark mode", "popular", "light mode","multilingual"]
+tags = ["blog", "responsive", "personal", "dark", "cybersecurity", "infrastructure", "systems", "code-highlighting", "light", "dark mode", "light mode", "multilingual"]
 features = ["responsive", "dark mode", "light mode", "blog", "social icons", "code highlighting", "clean design", "sticky header", "search", "table of contents", "syntax highlighting", "post filtering", "tag search", "archive pages", "multilingual"]
 
 [author]
@@ -16,5 +16,5 @@ features = ["responsive", "dark mode", "light mode", "blog", "social icons", "co
 [module]
   [module.hugoVersion]
     extended = true
-    min = "0.100.0"
+    min = "0.162.1"
 

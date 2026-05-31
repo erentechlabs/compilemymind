@@ -2,19 +2,24 @@
 title: "AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide"
 date: 2026-04-22T23:00:00+03:00
 description: "A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI - everything you need to pass the Azure Fundamentals exam."
-tags:
-  - azure
-  - cloud
-  - certification
-  - az-900
-  - microsoft
-  - cheatsheet
+tags: ["azure", "cloud", "certification", "az-900", "microsoft", "cheatsheet"]
+categories: ["guide", "certification"]
 draft: false
 ---
 
 Passing the **Microsoft AZ-900: Azure Fundamentals** exam is your first step into the Azure cloud ecosystem. Whether you're a developer, sysadmin, security professional, or IT manager, this certification validates your cloud literacy. This cheatsheet condenses every exam domain into a structured, scannable reference - study it, revisit it, and walk into the exam with confidence.
 
 > **Exam breakdown:** ~40–60 questions · ~60 minutes · Score 700/1000 to pass · Available in person or online proctored
+
+> **Current objective note:** Microsoft Learn lists the current AZ-900 skills measured as of **January 14, 2026**. The exam is organized into three domains: cloud concepts, Azure architecture and services, and Azure management and governance.
+
+![AZ-900 domain weighting](azure-domain-weighting.svg)
+
+| Domain | Weight | What To Prioritize |
+|---|---:|---|
+| Cloud concepts | 25-30% | Cloud models, shared responsibility, cloud benefits, service types, consumption pricing |
+| Azure architecture and services | 35-40% | Regions, availability zones, compute, networking, storage, databases, identity, access, security |
+| Azure management and governance | 30-35% | Cost management, pricing tools, Azure Policy, locks, tags, Purview, portal, Cloud Shell, ARM, monitoring |
 
 ---
 
@@ -153,6 +158,8 @@ Microsoft has made significant commitments to sustainability:
 ---
 
 ## Domain 2.0 - Describe Azure Architecture and Services (35–40%)
+
+![Azure fundamentals service map](azure-service-map.svg)
 
 ### 2.1 Azure Physical Infrastructure
 
@@ -639,6 +646,13 @@ Management Group (Root)
 8. **Resource Locks override RBAC** - even an Owner can't delete a locked resource without first removing the lock.
 9. **Azure Monitor = metrics + logs; Service Health = Azure platform health affecting your resources.**
 10. **Responsible AI:** Memorise all 6 principles - Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability.
+
+---
+
+## Sources
+
+- [Microsoft Learn AZ-900 study guide](https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/az-900)
+- [Microsoft Certified: Azure Fundamentals certification page](https://learn.microsoft.com/en-us/credentials/certifications/exams/az-900/)
 
 ---
 

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 620" role="img" aria-labelledby="title desc">
+  <title id="title">CompTIA Tech Plus domain weighting</title>
+  <desc id="desc">A bar chart showing Tech Plus exam domains: IT concepts 13 percent, infrastructure 24 percent, applications and software 18 percent, software development 13 percent, data and databases 13 percent, and security 19 percent.</desc>
+  <rect width="1000" height="620" rx="18" fill="#f8fafc"/>
+  <text x="60" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">CompTIA Tech+ Domain Weighting</text>
+  <text x="60" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">FC0-U71 / V6 exam objectives from CompTIA.</text>
+
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="60" y="170" font-size="17" font-weight="700" fill="#0f172a">IT concepts and terminology</text>
+    <rect x="330" y="148" width="338" height="30" rx="8" fill="#2563eb"/>
+    <text x="685" y="170" font-size="16" font-weight="700" fill="#2563eb">13%</text>
+
+    <text x="60" y="240" font-size="17" font-weight="700" fill="#0f172a">Infrastructure</text>
+    <rect x="330" y="218" width="624" height="30" rx="8" fill="#059669"/>
+    <text x="915" y="240" font-size="16" font-weight="700" fill="#059669">24%</text>
+
+    <text x="60" y="310" font-size="17" font-weight="700" fill="#0f172a">Applications and software</text>
+    <rect x="330" y="288" width="468" height="30" rx="8" fill="#f59e0b"/>
+    <text x="815" y="310" font-size="16" font-weight="700" fill="#f59e0b">18%</text>
+
+    <text x="60" y="380" font-size="17" font-weight="700" fill="#0f172a">Software development</text>
+    <rect x="330" y="358" width="338" height="30" rx="8" fill="#7c3aed"/>
+    <text x="685" y="380" font-size="16" font-weight="700" fill="#7c3aed">13%</text>
+
+    <text x="60" y="450" font-size="17" font-weight="700" fill="#0f172a">Data and databases</text>
+    <rect x="330" y="428" width="338" height="30" rx="8" fill="#0ea5e9"/>
+    <text x="685" y="450" font-size="16" font-weight="700" fill="#0ea5e9">13%</text>
+
+    <text x="60" y="520" font-size="17" font-weight="700" fill="#0f172a">Security</text>
+    <rect x="330" y="498" width="494" height="30" rx="8" fill="#ef4444"/>
+    <text x="840" y="520" font-size="16" font-weight="700" fill="#ef4444">19%</text>
+  </g>
+
+  <text x="60" y="580" font-family="Segoe UI, Arial, sans-serif" font-size="15" fill="#64748b">Study priority: infrastructure is the largest domain, followed by security and applications/software.</text>
+</svg>

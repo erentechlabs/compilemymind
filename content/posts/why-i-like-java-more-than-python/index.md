@@ -2,7 +2,7 @@
 title: "Why I Still Prefer Java Over Python"
 description: "A developer's perspective on why Java's strictness, performance, and ecosystem make it the right choice for building serious, long-lived software."
 date: 2025-03-28
-tags: ["Programming", "Java", "SoftwareDevelopment", "Opinion"]
+tags: ["programming", "java", "python", "software-development", "opinion"]
 categories: ["technology"]
 ---
 

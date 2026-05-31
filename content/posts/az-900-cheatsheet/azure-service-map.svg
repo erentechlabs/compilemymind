@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" role="img" aria-labelledby="title desc">
+  <title id="title">Azure fundamentals service map</title>
+  <desc id="desc">A visual map of Azure fundamentals services grouped into compute, networking, storage, databases, identity and security, governance, monitoring, and AI.</desc>
+  <rect width="1100" height="720" rx="18" fill="#f8fafc"/>
+  <text x="60" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Azure Fundamentals Service Map</text>
+  <text x="60" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">Use this as the mental index for AZ-900 scenario questions.</text>
+
+  <defs>
+    <style>
+      .title{font-family:Segoe UI,Arial,sans-serif;font-size:21px;font-weight:700;fill:#0f172a}
+      .chip{font-family:Segoe UI,Arial,sans-serif;font-size:14px;font-weight:700;fill:#111827}
+      .hint{font-family:Segoe UI,Arial,sans-serif;font-size:14px;fill:#475569}
+    </style>
+  </defs>
+
+  <g transform="translate(60 150)">
+    <rect width="235" height="180" rx="14" fill="#dbeafe" stroke="#93c5fd"/>
+    <text class="title" x="22" y="38">Compute</text>
+    <text class="hint" x="22" y="66">Run workloads</text>
+    <rect x="22" y="88" width="72" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="108">VMs</text>
+    <rect x="104" y="88" width="94" height="30" rx="15" fill="#ffffff"/><text class="chip" x="122" y="108">Functions</text>
+    <rect x="22" y="130" width="102" height="30" rx="15" fill="#ffffff"/><text class="chip" x="41" y="150">Containers</text>
+  </g>
+  <g transform="translate(320 150)">
+    <rect width="235" height="180" rx="14" fill="#dcfce7" stroke="#86efac"/>
+    <text class="title" x="22" y="38">Networking</text>
+    <text class="hint" x="22" y="66">Connect securely</text>
+    <rect x="22" y="88" width="78" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="108">VNet</text>
+    <rect x="110" y="88" width="72" height="30" rx="15" fill="#ffffff"/><text class="chip" x="131" y="108">DNS</text>
+    <rect x="22" y="130" width="72" height="30" rx="15" fill="#ffffff"/><text class="chip" x="41" y="150">VPN</text>
+    <rect x="104" y="130" width="106" height="30" rx="15" fill="#ffffff"/><text class="chip" x="121" y="150">ExpressRoute</text>
+  </g>
+  <g transform="translate(580 150)">
+    <rect width="235" height="180" rx="14" fill="#fef3c7" stroke="#fcd34d"/>
+    <text class="title" x="22" y="38">Storage</text>
+    <text class="hint" x="22" y="66">Persist data</text>
+    <rect x="22" y="88" width="82" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="108">Blob</text>
+    <rect x="114" y="88" width="78" height="30" rx="15" fill="#ffffff"/><text class="chip" x="134" y="108">Files</text>
+    <rect x="22" y="130" width="86" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="150">Queues</text>
+    <rect x="118" y="130" width="84" height="30" rx="15" fill="#ffffff"/><text class="chip" x="138" y="150">Tables</text>
+  </g>
+  <g transform="translate(840 150)">
+    <rect width="200" height="180" rx="14" fill="#ede9fe" stroke="#c4b5fd"/>
+    <text class="title" x="22" y="38">Databases</text>
+    <text class="hint" x="22" y="66">Store structured data</text>
+    <rect x="22" y="88" width="76" height="30" rx="15" fill="#ffffff"/><text class="chip" x="43" y="108">SQL</text>
+    <rect x="108" y="88" width="78" height="30" rx="15" fill="#ffffff"/><text class="chip" x="124" y="108">Cosmos</text>
+    <rect x="22" y="130" width="104" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="150">PostgreSQL</text>
+  </g>
+
+  <g transform="translate(60 380)">
+    <rect width="235" height="180" rx="14" fill="#fee2e2" stroke="#fca5a5"/>
+    <text class="title" x="22" y="38">Identity and Security</text>
+    <text class="hint" x="22" y="66">Protect access</text>
+    <rect x="22" y="88" width="92" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="108">Entra ID</text>
+    <rect x="124" y="88" width="76" height="30" rx="15" fill="#ffffff"/><text class="chip" x="144" y="108">RBAC</text>
+    <rect x="22" y="130" width="96" height="30" rx="15" fill="#ffffff"/><text class="chip" x="39" y="150">Defender</text>
+  </g>
+  <g transform="translate(320 380)">
+    <rect width="235" height="180" rx="14" fill="#e0f2fe" stroke="#7dd3fc"/>
+    <text class="title" x="22" y="38">Governance</text>
+    <text class="hint" x="22" y="66">Control resources</text>
+    <rect x="22" y="88" width="74" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="108">Policy</text>
+    <rect x="106" y="88" width="86" height="30" rx="15" fill="#ffffff"/><text class="chip" x="124" y="108">Locks</text>
+    <rect x="22" y="130" width="70" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="150">Tags</text>
+    <rect x="102" y="130" width="70" height="30" rx="15" fill="#ffffff"/><text class="chip" x="122" y="150">Arc</text>
+  </g>
+  <g transform="translate(580 380)">
+    <rect width="235" height="180" rx="14" fill="#f3e8ff" stroke="#d8b4fe"/>
+    <text class="title" x="22" y="38">Monitoring</text>
+    <text class="hint" x="22" y="66">Observe and improve</text>
+    <rect x="22" y="88" width="86" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="108">Monitor</text>
+    <rect x="118" y="88" width="88" height="30" rx="15" fill="#ffffff"/><text class="chip" x="137" y="108">Advisor</text>
+    <rect x="22" y="130" width="112" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="150">Service Health</text>
+  </g>
+  <g transform="translate(840 380)">
+    <rect width="200" height="180" rx="14" fill="#ffedd5" stroke="#fdba74"/>
+    <text class="title" x="22" y="38">AI and Apps</text>
+    <text class="hint" x="22" y="66">Build higher-level solutions</text>
+    <rect x="22" y="88" width="94" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="108">App Service</text>
+    <rect x="22" y="130" width="112" height="30" rx="15" fill="#ffffff"/><text class="chip" x="40" y="150">Azure OpenAI</text>
+  </g>
+
+  <text x="60" y="650" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#475569">Scenario trick: identify the workload first, then match it to the service family before choosing the exact product.</text>
+</svg>

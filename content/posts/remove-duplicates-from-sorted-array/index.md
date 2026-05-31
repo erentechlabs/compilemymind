@@ -2,7 +2,7 @@
 title: "Remove Duplicates from a Sorted Array - The Two-Pointer Technique"
 description: "A clean walkthrough of the Remove Duplicates from Sorted Array problem in Java, with focus on the two-pointer pattern and in-place array manipulation."
 date: 2025-08-09
-tags: ["Programming", "Java", "Algorithms", "ProblemSolving"]
+tags: ["programming", "java", "algorithms", "problem-solving"]
 categories: ["technology"]
 ---
 

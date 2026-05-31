@@ -2,7 +2,7 @@
 title: "Understanding Internet Connectivity and Network Cabling: A Complete Guide"
 description: "How ISPs deliver internet, what connection types actually mean, and the physical cabling infrastructure that underlies every modern network."
 date: 2025-11-27
-tags: ["Networking", "IT", "Sysadmin", "Infrastructure", "Cybersecurity"]
+tags: ["networking", "it-fundamentals", "sysadmin", "infrastructure"]
 categories: ["technology"]
 ---
 

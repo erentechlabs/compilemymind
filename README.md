@@ -1,6 +1,6 @@
 # 🧠 Compile My Mind
 
-[![Hugo Version](https://img.shields.io/badge/Hugo-%E2%89%A5%200.110.0-FF4088?logo=hugo)](https://gohugo.io/)
+[![Hugo Version](https://img.shields.io/badge/Hugo-v0.162.1-8b5cf6?logo=hugo)](https://gohugo.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > **Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a cybersecurity engineer decoding the complexities of digital defense.**
@@ -36,7 +36,7 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 
 ## 🛠️ Tech Stack
 
-*   **Framework:** [Hugo](https://gohugo.io/) (Extended Edition)
+*   **Framework:** [Hugo](https://gohugo.io/) v0.162.1 (Extended Edition)
 *   **Theme:** [Mana Theme](https://github.com/Livour/hugo-mana-theme) (customized)
 *   **Hosting/Deployment:** [Cloudflare Pages](https://pages.cloudflare.com/)
 *   **Language:** Markdown / HTML / SCSS / Go Templates

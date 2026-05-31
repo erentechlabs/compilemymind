@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 720" role="img" aria-labelledby="title desc">
+  <title id="title">CompTIA Tech Plus foundation map</title>
+  <desc id="desc">A visual map of CompTIA Tech Plus concepts grouped into computing basics, infrastructure, applications, software development, data, and security.</desc>
+  <rect width="1100" height="720" rx="18" fill="#f8fafc"/>
+  <text x="60" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#111827">Tech+ Foundation Map</text>
+  <text x="60" y="110" font-family="Segoe UI, Arial, sans-serif" font-size="17" fill="#4b5563">The exam is a vocabulary and systems-thinking test: know what each layer does and how it fails.</text>
+
+  <defs>
+    <style>
+      .box-title{font-family:Segoe UI,Arial,sans-serif;font-size:21px;font-weight:700;fill:#0f172a}
+      .hint{font-family:Segoe UI,Arial,sans-serif;font-size:14px;fill:#475569}
+      .chip{font-family:Segoe UI,Arial,sans-serif;font-size:14px;font-weight:700;fill:#111827}
+    </style>
+  </defs>
+
+  <g transform="translate(60 150)">
+    <rect width="310" height="190" rx="14" fill="#dbeafe" stroke="#93c5fd"/>
+    <text class="box-title" x="24" y="40">Computing Basics</text>
+    <text class="hint" x="24" y="68">How machines represent and process data</text>
+    <rect x="24" y="94" width="78" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">Binary</text>
+    <rect x="112" y="94" width="86" height="30" rx="15" fill="#ffffff"/><text class="chip" x="132" y="114">Storage</text>
+    <rect x="24" y="136" width="122" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="156">Troubleshooting</text>
+  </g>
+
+  <g transform="translate(395 150)">
+    <rect width="310" height="190" rx="14" fill="#dcfce7" stroke="#86efac"/>
+    <text class="box-title" x="24" y="40">Infrastructure</text>
+    <text class="hint" x="24" y="68">Hardware, networking, cloud, and endpoints</text>
+    <rect x="24" y="94" width="76" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">CPU</text>
+    <rect x="110" y="94" width="76" height="30" rx="15" fill="#ffffff"/><text class="chip" x="130" y="114">RAM</text>
+    <rect x="196" y="94" width="80" height="30" rx="15" fill="#ffffff"/><text class="chip" x="216" y="114">Cloud</text>
+    <rect x="24" y="136" width="88" height="30" rx="15" fill="#ffffff"/><text class="chip" x="43" y="156">Network</text>
+  </g>
+
+  <g transform="translate(730 150)">
+    <rect width="310" height="190" rx="14" fill="#fef3c7" stroke="#fcd34d"/>
+    <text class="box-title" x="24" y="40">Apps and Software</text>
+    <text class="hint" x="24" y="68">Operating systems and user software</text>
+    <rect x="24" y="94" width="64" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">OS</text>
+    <rect x="98" y="94" width="92" height="30" rx="15" fill="#ffffff"/><text class="chip" x="117" y="114">Browsers</text>
+    <rect x="24" y="136" width="116" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="156">Productivity</text>
+  </g>
+
+  <g transform="translate(60 390)">
+    <rect width="310" height="190" rx="14" fill="#ede9fe" stroke="#c4b5fd"/>
+    <text class="box-title" x="24" y="40">Software Development</text>
+    <text class="hint" x="24" y="68">How instructions become behavior</text>
+    <rect x="24" y="94" width="84" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">Logic</text>
+    <rect x="118" y="94" width="102" height="30" rx="15" fill="#ffffff"/><text class="chip" x="136" y="114">Variables</text>
+    <rect x="24" y="136" width="102" height="30" rx="15" fill="#ffffff"/><text class="chip" x="42" y="156">Pseudocode</text>
+  </g>
+
+  <g transform="translate(395 390)">
+    <rect width="310" height="190" rx="14" fill="#e0f2fe" stroke="#7dd3fc"/>
+    <text class="box-title" x="24" y="40">Data and Databases</text>
+    <text class="hint" x="24" y="68">Turning raw data into useful information</text>
+    <rect x="24" y="94" width="74" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">SQL</text>
+    <rect x="108" y="94" width="82" height="30" rx="15" fill="#ffffff"/><text class="chip" x="128" y="114">NoSQL</text>
+    <rect x="24" y="136" width="92" height="30" rx="15" fill="#ffffff"/><text class="chip" x="43" y="156">Backups</text>
+  </g>
+
+  <g transform="translate(730 390)">
+    <rect width="310" height="190" rx="14" fill="#fee2e2" stroke="#fca5a5"/>
+    <text class="box-title" x="24" y="40">Security</text>
+    <text class="hint" x="24" y="68">Protect devices, data, and access</text>
+    <rect x="24" y="94" width="64" height="30" rx="15" fill="#ffffff"/><text class="chip" x="44" y="114">CIA</text>
+    <rect x="98" y="94" width="70" height="30" rx="15" fill="#ffffff"/><text class="chip" x="118" y="114">MFA</text>
+    <rect x="178" y="94" width="100" height="30" rx="15" fill="#ffffff"/><text class="chip" x="197" y="114">Encryption</text>
+    <rect x="24" y="136" width="86" height="30" rx="15" fill="#ffffff"/><text class="chip" x="43" y="156">Patching</text>
+  </g>
+
+  <text x="60" y="660" font-family="Segoe UI, Arial, sans-serif" font-size="16" fill="#475569">Good Tech+ answers connect vocabulary to real symptoms: what failed, where it failed, and what control or component fixes it.</text>
+</svg>

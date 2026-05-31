@@ -172,7 +172,7 @@
 .toc-toggle-text {
   flex: 1;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0;
   font-size: 0.75rem;
   color: var(--text-muted);
 }

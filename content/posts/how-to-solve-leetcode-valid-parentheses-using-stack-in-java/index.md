@@ -2,7 +2,7 @@
 title: "Solving LeetCode's Valid Parentheses Problem with a Stack in Java"
 description: "A beginner-friendly walkthrough of the Valid Parentheses problem - using the stack data structure to implement a clean, O(n) solution in Java."
 date: 2025-08-06
-tags: ["Programming", "Java", "Algorithms", "ProblemSolving"]
+tags: ["programming", "java", "algorithms", "problem-solving"]
 categories: ["technology"]
 ---
 

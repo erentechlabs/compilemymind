@@ -2,7 +2,7 @@
 title: "What's New in Java 25 (JDK 25)"
 description: "A developer-friendly tour of the most important changes in Java 25 (LTS): language improvements, concurrency, performance work, JFR tooling, AOT ergonomics, GC updates, and more."
 date: 2025-10-24
-tags: ["Programming", "Java", "Cybersecurity", "TechTrends"]
+tags: ["programming", "java", "jdk", "tech-trends"]
 categories: ["technology"]
 ---
 
