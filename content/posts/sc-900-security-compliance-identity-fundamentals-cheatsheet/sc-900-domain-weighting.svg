@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">SC-900 domain weighting chart</title>
+  <desc id="desc">A horizontal bar chart showing the four SC-900 exam domains and their approximate official weight ranges.</desc>
+  <rect width="960" height="520" rx="24" fill="#100719"/>
+  <text x="48" y="58" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">SC-900 Skills Measured</text>
+  <text x="48" y="92" fill="#b9a8d8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">Official Microsoft Learn weighting as of the November 7, 2025 skills update</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <line x1="330" y1="130" x2="890" y2="130" stroke="#2e1b45" stroke-width="2"/>
+    <line x1="330" y1="430" x2="890" y2="430" stroke="#2e1b45" stroke-width="2"/>
+    <g fill="#75648f" font-size="13">
+      <text x="330" y="456">0%</text>
+      <text x="464" y="456">10%</text>
+      <text x="604" y="456">20%</text>
+      <text x="744" y="456">30%</text>
+      <text x="874" y="456">40%</text>
+    </g>
+    <g stroke="#2e1b45" stroke-width="1">
+      <line x1="330" y1="130" x2="330" y2="430"/>
+      <line x1="470" y1="130" x2="470" y2="430"/>
+      <line x1="610" y1="130" x2="610" y2="430"/>
+      <line x1="750" y1="130" x2="750" y2="430"/>
+      <line x1="890" y1="130" x2="890" y2="430"/>
+    </g>
+
+    <g>
+      <text x="48" y="170" fill="#f5f3ff" font-size="18" font-weight="700">Security, compliance, identity concepts</text>
+      <text x="48" y="196" fill="#b9a8d8" font-size="14">Shared responsibility, Zero Trust, GRC, identity basics</text>
+      <rect x="330" y="150" width="175" height="34" rx="8" fill="#7c3aed"/>
+      <text x="522" y="173" fill="#f5f3ff" font-size="16" font-weight="700">10-15%</text>
+    </g>
+
+    <g>
+      <text x="48" y="240" fill="#f5f3ff" font-size="18" font-weight="700">Microsoft Entra</text>
+      <text x="48" y="266" fill="#b9a8d8" font-size="14">Identity types, MFA, Conditional Access, roles, governance</text>
+      <rect x="330" y="220" width="385" height="34" rx="8" fill="#a855f7"/>
+      <text x="732" y="243" fill="#f5f3ff" font-size="16" font-weight="700">25-30%</text>
+    </g>
+
+    <g>
+      <text x="48" y="310" fill="#f5f3ff" font-size="18" font-weight="700">Microsoft security solutions</text>
+      <text x="48" y="336" fill="#b9a8d8" font-size="14">Azure security, Defender for Cloud, Sentinel, Defender XDR</text>
+      <rect x="330" y="290" width="525" height="34" rx="8" fill="#22d3ee"/>
+      <text x="872" y="313" fill="#f5f3ff" font-size="16" font-weight="700">35-40%</text>
+    </g>
+
+    <g>
+      <text x="48" y="380" fill="#f5f3ff" font-size="18" font-weight="700">Microsoft compliance solutions</text>
+      <text x="48" y="406" fill="#b9a8d8" font-size="14">Service Trust Portal, Purview, DLP, records, audit, eDiscovery</text>
+      <rect x="330" y="360" width="315" height="34" rx="8" fill="#c084fc"/>
+      <text x="662" y="383" fill="#f5f3ff" font-size="16" font-weight="700">20-25%</text>
+    </g>
+  </g>
+</svg>

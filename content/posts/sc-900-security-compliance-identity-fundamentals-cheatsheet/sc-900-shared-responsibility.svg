@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+  <title id="title">Shared responsibility model chart</title>
+  <desc id="desc">A chart comparing customer and Microsoft responsibilities across on-premises, IaaS, PaaS, and SaaS.</desc>
+  <rect width="960" height="540" rx="24" fill="#100719"/>
+  <text x="48" y="58" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Shared Responsibility Model</text>
+  <text x="48" y="92" fill="#b9a8d8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">As cloud services become more managed, Microsoft handles more platform layers, but customers always protect data, accounts, and access.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" font-size="15">
+    <g fill="#b9a8d8" font-weight="700">
+      <text x="300" y="134">On-premises</text>
+      <text x="474" y="134">IaaS</text>
+      <text x="625" y="134">PaaS</text>
+      <text x="775" y="134">SaaS</text>
+    </g>
+
+    <g fill="#c7b8e6">
+      <text x="60" y="180">Customer data</text>
+      <text x="60" y="220">Identities and users</text>
+      <text x="60" y="260">Applications</text>
+      <text x="60" y="300">Network controls</text>
+      <text x="60" y="340">Operating system</text>
+      <text x="60" y="380">Physical hosts</text>
+      <text x="60" y="420">Physical network</text>
+      <text x="60" y="460">Physical datacenter</text>
+    </g>
+
+    <g stroke="#2e1b45" stroke-width="1">
+      <line x1="270" y1="148" x2="270" y2="474"/>
+      <line x1="420" y1="148" x2="420" y2="474"/>
+      <line x1="570" y1="148" x2="570" y2="474"/>
+      <line x1="720" y1="148" x2="720" y2="474"/>
+      <line x1="870" y1="148" x2="870" y2="474"/>
+      <line x1="48" y1="154" x2="890" y2="154"/>
+      <line x1="48" y1="474" x2="890" y2="474"/>
+    </g>
+
+    <g text-anchor="middle" font-size="13" font-weight="700">
+      <g fill="#7c3aed">
+        <rect x="288" y="160" width="105" height="26" rx="8"/><text x="340" y="179" fill="#fff">Customer</text>
+        <rect x="438" y="160" width="105" height="26" rx="8"/><text x="490" y="179" fill="#fff">Customer</text>
+        <rect x="588" y="160" width="105" height="26" rx="8"/><text x="640" y="179" fill="#fff">Customer</text>
+        <rect x="738" y="160" width="105" height="26" rx="8"/><text x="790" y="179" fill="#fff">Customer</text>
+
+        <rect x="288" y="200" width="105" height="26" rx="8"/><text x="340" y="219" fill="#fff">Customer</text>
+        <rect x="438" y="200" width="105" height="26" rx="8"/><text x="490" y="219" fill="#fff">Customer</text>
+        <rect x="588" y="200" width="105" height="26" rx="8"/><text x="640" y="219" fill="#fff">Customer</text>
+        <rect x="738" y="200" width="105" height="26" rx="8"/><text x="790" y="219" fill="#fff">Customer</text>
+
+        <rect x="288" y="240" width="105" height="26" rx="8"/><text x="340" y="259" fill="#fff">Customer</text>
+        <rect x="438" y="240" width="105" height="26" rx="8"/><text x="490" y="259" fill="#fff">Customer</text>
+      </g>
+      <g fill="#a855f7">
+        <rect x="588" y="240" width="105" height="26" rx="8"/><text x="640" y="259" fill="#fff">Shared</text>
+        <rect x="738" y="240" width="105" height="26" rx="8"/><text x="790" y="259" fill="#fff">Shared</text>
+        <rect x="588" y="280" width="105" height="26" rx="8"/><text x="640" y="299" fill="#fff">Shared</text>
+      </g>
+      <g fill="#22d3ee">
+        <rect x="738" y="280" width="105" height="26" rx="8"/><text x="790" y="299" fill="#06121a">Microsoft</text>
+        <rect x="588" y="320" width="105" height="26" rx="8"/><text x="640" y="339" fill="#06121a">Microsoft</text>
+        <rect x="738" y="320" width="105" height="26" rx="8"/><text x="790" y="339" fill="#06121a">Microsoft</text>
+        <rect x="438" y="360" width="105" height="26" rx="8"/><text x="490" y="379" fill="#06121a">Microsoft</text>
+        <rect x="588" y="360" width="105" height="26" rx="8"/><text x="640" y="379" fill="#06121a">Microsoft</text>
+        <rect x="738" y="360" width="105" height="26" rx="8"/><text x="790" y="379" fill="#06121a">Microsoft</text>
+        <rect x="438" y="400" width="105" height="26" rx="8"/><text x="490" y="419" fill="#06121a">Microsoft</text>
+        <rect x="588" y="400" width="105" height="26" rx="8"/><text x="640" y="419" fill="#06121a">Microsoft</text>
+        <rect x="738" y="400" width="105" height="26" rx="8"/><text x="790" y="419" fill="#06121a">Microsoft</text>
+        <rect x="438" y="440" width="105" height="26" rx="8"/><text x="490" y="459" fill="#06121a">Microsoft</text>
+        <rect x="588" y="440" width="105" height="26" rx="8"/><text x="640" y="459" fill="#06121a">Microsoft</text>
+        <rect x="738" y="440" width="105" height="26" rx="8"/><text x="790" y="459" fill="#06121a">Microsoft</text>
+      </g>
+      <g fill="#7c3aed">
+        <rect x="288" y="280" width="105" height="26" rx="8"/><text x="340" y="299" fill="#fff">Customer</text>
+        <rect x="438" y="280" width="105" height="26" rx="8"/><text x="490" y="299" fill="#fff">Customer</text>
+        <rect x="288" y="320" width="105" height="26" rx="8"/><text x="340" y="339" fill="#fff">Customer</text>
+        <rect x="438" y="320" width="105" height="26" rx="8"/><text x="490" y="339" fill="#fff">Customer</text>
+        <rect x="288" y="360" width="105" height="26" rx="8"/><text x="340" y="379" fill="#fff">Customer</text>
+        <rect x="288" y="400" width="105" height="26" rx="8"/><text x="340" y="419" fill="#fff">Customer</text>
+        <rect x="288" y="440" width="105" height="26" rx="8"/><text x="340" y="459" fill="#fff">Customer</text>
+      </g>
+    </g>
+  </g>
+</svg>

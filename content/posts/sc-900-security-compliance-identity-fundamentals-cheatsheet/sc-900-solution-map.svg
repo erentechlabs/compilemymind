@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" role="img" aria-labelledby="title desc">
+  <title id="title">Microsoft SC-900 solution map</title>
+  <desc id="desc">A solution map showing how Microsoft Entra, Defender, Sentinel, and Purview fit together for SC-900.</desc>
+  <rect width="960" height="620" rx="24" fill="#100719"/>
+  <text x="48" y="58" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Microsoft SCI Solution Map</text>
+  <text x="48" y="92" fill="#b9a8d8" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">Security, compliance, and identity services are easier when you group them by job</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif" text-anchor="middle">
+    <rect x="350" y="238" width="260" height="126" rx="22" fill="#211433" stroke="#a855f7" stroke-width="2"/>
+    <text x="480" y="288" fill="#f5f3ff" font-size="24" font-weight="700">Identity + Policy</text>
+    <text x="480" y="318" fill="#c7b8e6" font-size="15">Microsoft Entra ID</text>
+    <text x="480" y="340" fill="#c7b8e6" font-size="15">Conditional Access, MFA, PIM</text>
+
+    <g>
+      <rect x="70" y="160" width="220" height="116" rx="18" fill="#160d25" stroke="#7c3aed"/>
+      <text x="180" y="204" fill="#f5f3ff" font-size="20" font-weight="700">Azure Security</text>
+      <text x="180" y="232" fill="#c7b8e6" font-size="14">DDoS, Firewall, WAF,</text>
+      <text x="180" y="252" fill="#c7b8e6" font-size="14">NSGs, Bastion, Key Vault</text>
+    </g>
+
+    <g>
+      <rect x="670" y="160" width="220" height="116" rx="18" fill="#160d25" stroke="#22d3ee"/>
+      <text x="780" y="204" fill="#f5f3ff" font-size="20" font-weight="700">Defender</text>
+      <text x="780" y="232" fill="#c7b8e6" font-size="14">Defender for Cloud, XDR,</text>
+      <text x="780" y="252" fill="#c7b8e6" font-size="14">Endpoint, Office, Identity</text>
+    </g>
+
+    <g>
+      <rect x="70" y="406" width="220" height="116" rx="18" fill="#160d25" stroke="#c084fc"/>
+      <text x="180" y="450" fill="#f5f3ff" font-size="20" font-weight="700">Microsoft Sentinel</text>
+      <text x="180" y="478" fill="#c7b8e6" font-size="14">SIEM, SOAR, incidents,</text>
+      <text x="180" y="498" fill="#c7b8e6" font-size="14">analytics, hunting, playbooks</text>
+    </g>
+
+    <g>
+      <rect x="670" y="406" width="220" height="116" rx="18" fill="#160d25" stroke="#a855f7"/>
+      <text x="780" y="450" fill="#f5f3ff" font-size="20" font-weight="700">Microsoft Purview</text>
+      <text x="780" y="478" fill="#c7b8e6" font-size="14">Compliance Manager, labels,</text>
+      <text x="780" y="498" fill="#c7b8e6" font-size="14">DLP, records, audit, eDiscovery</text>
+    </g>
+
+    <path d="M290 218c82 0 96 83 60 83" stroke="#7c3aed" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M670 218c-82 0-96 83-60 83" stroke="#22d3ee" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M290 464c82 0 96-100 60-100" stroke="#c084fc" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M670 464c-82 0-96-100-60-100" stroke="#a855f7" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <circle cx="480" cy="301" r="8" fill="#22d3ee"/>
+  </g>
+</svg>
