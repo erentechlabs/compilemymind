@@ -378,6 +378,15 @@
   margin-bottom: var(--spacing-md);
 }
 
+.post-content-main img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  margin: var(--spacing-lg) auto;
+  border-radius: 0.5rem;
+}
+
 .post-content-main ul,
 .post-content-main ol {
   margin-bottom: var(--spacing-md);
