@@ -1,7 +1,7 @@
 ---
 title: "AMD Ryzen 7 9700X vs Intel Core Ultra 7 265KF: The Ultimate CPU Showdown"
 description: "A comprehensive comparison of AMD Ryzen 7 9700X and Intel Core Ultra 7 265KF covering specifications, performance benchmarks, gaming FPS, power efficiency, and value for different workloads."
-date: 2025-11-18
+date: 2025-11-18T00:00:00+03:00
 tags: ["hardware", "cpu", "pc-building", "tech-review", "tech-comparison"]
 categories: ["technology"]
 ---

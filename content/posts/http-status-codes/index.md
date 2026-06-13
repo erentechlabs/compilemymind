@@ -1,7 +1,7 @@
 ---
 title: "Understanding HTTP Status Codes: What They Mean and How to Use Them"
 description: "A practical guide to HTTP status codes - what they mean, when to use them, and why getting them right matters for API design and security."
-date: 2025-11-23
+date: 2025-11-23T00:00:00+03:00
 tags: ["web", "networking", "api-design", "protocols"]
 categories: ["technology"]
 ---

@@ -1,7 +1,7 @@
 ---
 title: "@Component vs @Bean in Spring: When to Use Each"
 description: "A clear explanation of the difference between @Component and @Bean in Spring - with practical examples and guidelines for choosing the right approach."
-date: 2025-07-31
+date: 2025-07-31T00:00:00+03:00
 tags: ["programming", "java", "spring-boot", "software-development"]
 categories: ["technology"]
 ---

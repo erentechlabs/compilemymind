@@ -1,7 +1,7 @@
 ---
 title: "Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean"
 description: "A practical guide to the most important Spring Framework annotations - what they do, when to use them, and how they fit together in a real application."
-date: 2025-07-15
+date: 2025-07-15T00:00:00+03:00
 tags: ["programming", "java", "spring-boot", "software-development"]
 categories: ["technology"]
 ---

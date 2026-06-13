@@ -1,7 +1,7 @@
 ---
 title: "Network Communication Basics: Ethernet, MAC Addressing, and How Local Networks Work"
 description: "A clear, technical introduction to how local networks actually communicate - covering Ethernet frames, MAC addresses, ARP, switches, and hierarchical network design."
-date: 2025-11-27
+date: 2025-11-27T00:00:00+03:00
 tags: ["networking", "protocols", "it-fundamentals", "sysadmin"]
 categories: ["technology"]
 ---

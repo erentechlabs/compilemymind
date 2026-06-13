@@ -1,7 +1,7 @@
 ---
 title: "Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling"
 description: "Google's Gemini 3 brings deep reasoning, stronger code capabilities, new agent features and Antigravity - a developer platform for autonomous tooling."
-date: 2025-11-19
+date: 2025-11-19T00:00:00+03:00
 tags: ["ai", "google", "developer-tools", "tech-trends"]
 categories: ["technology"]
 ---

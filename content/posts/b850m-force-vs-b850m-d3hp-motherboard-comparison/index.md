@@ -1,7 +1,7 @@
 ---
 title: "B850M FORCE vs B850M D3HP: Which Intel B850 Motherboard Should You Buy?"
 description: "An in-depth comparison of GIGABYTE B850M FORCE and B850M D3HP motherboards covering features, VRM quality, connectivity, pricing, and which one offers better value for Intel Core Ultra builds."
-date: 2025-11-18
+date: 2025-11-18T00:00:00+03:00
 tags: ["hardware", "motherboards", "pc-building", "tech-review", "tech-comparison"]
 categories: ["technology"]
 ---

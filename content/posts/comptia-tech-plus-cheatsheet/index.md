@@ -1,7 +1,7 @@
 ---
 title: "The Ultimate CompTIA Tech+ Cheatsheet: Mastering the Fundamentals of IT"
 description: "A comprehensive, deep-dive guide into the CompTIA Tech+ (FC0-U71) certification. Explore detailed explanations, real-world examples, and foundational IT concepts spanning infrastructure, software, databases, and cybersecurity."
-date: 2026-05-19
+date: 2026-05-19T00:00:00+03:00
 tags: ["comptia", "tech-plus", "certification", "it-fundamentals", "career", "cheatsheet"]
 categories: ["guide", "certification"]
 ---
