@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 600" role="img" aria-labelledby="title desc">
+  <title id="title">Passkey sign-in flow</title>
+  <desc id="desc">A simplified passkey registration and sign-in flow using public key cryptography.</desc>
+  <rect width="1040" height="600" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">How a Passkey Sign-In Works</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">The server stores a public key. The private key stays with the authenticator and signs a challenge.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g transform="translate(70 150)">
+      <rect width="250" height="126" rx="20" fill="#211433" stroke="#7c3aed"/>
+      <text x="125" y="42" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">1. Register</text>
+      <text x="125" y="74" fill="#c7b8e6" font-size="14" text-anchor="middle">Authenticator creates a</text>
+      <text x="125" y="96" fill="#c7b8e6" font-size="14" text-anchor="middle">unique key pair for the site</text>
+    </g>
+    <g transform="translate(395 150)">
+      <rect width="250" height="126" rx="20" fill="#211433" stroke="#a855f7"/>
+      <text x="125" y="42" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">2. Store</text>
+      <text x="125" y="74" fill="#c7b8e6" font-size="14" text-anchor="middle">Public key goes to service</text>
+      <text x="125" y="96" fill="#c7b8e6" font-size="14" text-anchor="middle">Private key stays protected</text>
+    </g>
+    <g transform="translate(720 150)">
+      <rect width="250" height="126" rx="20" fill="#211433" stroke="#22d3ee"/>
+      <text x="125" y="42" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">3. Challenge</text>
+      <text x="125" y="74" fill="#c7b8e6" font-size="14" text-anchor="middle">Service sends a fresh</text>
+      <text x="125" y="96" fill="#c7b8e6" font-size="14" text-anchor="middle">challenge during sign-in</text>
+    </g>
+
+    <g transform="translate(232 386)">
+      <rect width="250" height="126" rx="20" fill="#211433" stroke="#c084fc"/>
+      <text x="125" y="42" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">4. Unlock</text>
+      <text x="125" y="74" fill="#c7b8e6" font-size="14" text-anchor="middle">User unlocks private key</text>
+      <text x="125" y="96" fill="#c7b8e6" font-size="14" text-anchor="middle">with PIN, face, or fingerprint</text>
+    </g>
+    <g transform="translate(558 386)">
+      <rect width="250" height="126" rx="20" fill="#211433" stroke="#22d3ee"/>
+      <text x="125" y="42" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">5. Verify</text>
+      <text x="125" y="74" fill="#c7b8e6" font-size="14" text-anchor="middle">Signed response proves</text>
+      <text x="125" y="96" fill="#c7b8e6" font-size="14" text-anchor="middle">possession of the private key</text>
+    </g>
+
+    <g stroke="#7c3aed" stroke-width="5" stroke-linecap="round" fill="none">
+      <path d="M320 213h60"/>
+      <path d="M645 213h60"/>
+      <path d="M845 288c0 76-56 123-151 123"/>
+      <path d="M558 449h-60"/>
+      <path d="M357 386c-55-42-96-76-156-98"/>
+    </g>
+    <g fill="#7c3aed">
+      <path d="M380 203l20 10-20 10z"/>
+      <path d="M705 203l20 10-20 10z"/>
+      <path d="M694 401l-20 10 20 10z"/>
+      <path d="M498 439l-20 10 20 10z"/>
+    </g>
+
+    <text x="520" y="560" fill="#b9a8d8" font-size="15" text-anchor="middle">A phishing site cannot use the credential for the real service because the passkey is bound to that service domain.</text>
+  </g>
+</svg>

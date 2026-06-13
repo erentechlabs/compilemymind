@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 620" role="img" aria-labelledby="title desc">
+  <title id="title">MFA passwordless and passkey comparison matrix</title>
+  <desc id="desc">A comparison matrix for traditional MFA, passwordless authentication, and passkeys.</desc>
+  <rect width="1040" height="620" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">MFA vs Passwordless vs Passkeys</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">The categories overlap, but they do not mean the same thing.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g fill="#211433" stroke="#392354">
+      <rect x="54" y="136" width="932" height="58" rx="14"/>
+      <rect x="54" y="212" width="932" height="58" rx="14"/>
+      <rect x="54" y="288" width="932" height="58" rx="14"/>
+      <rect x="54" y="364" width="932" height="58" rx="14"/>
+      <rect x="54" y="440" width="932" height="58" rx="14"/>
+    </g>
+
+    <g fill="#f5f3ff" font-size="17" font-weight="700">
+      <text x="82" y="171">Traditional MFA</text>
+      <text x="82" y="247">Passwordless</text>
+      <text x="82" y="323">Passkeys</text>
+      <text x="82" y="399">Device-bound passkeys</text>
+      <text x="82" y="475">Synced passkeys</text>
+    </g>
+
+    <g fill="#c7b8e6" font-size="14">
+      <text x="316" y="171">Password plus second factor, such as app push, OTP, SMS, or hardware key</text>
+      <text x="316" y="247">No password used during normal sign-in; method may or may not be phishing-resistant</text>
+      <text x="316" y="323">FIDO/WebAuthn credentials using public-key cryptography and domain binding</text>
+      <text x="316" y="399">Private key stays on one authenticator, often preferred for high-assurance accounts</text>
+      <text x="316" y="475">Credential can be available across user devices through a credential manager</text>
+    </g>
+
+    <g text-anchor="middle" font-size="14" font-weight="700">
+      <rect x="778" y="151" width="164" height="28" rx="9" fill="#a855f7"/>
+      <text x="860" y="170" fill="#fff">varies by method</text>
+      <rect x="778" y="227" width="164" height="28" rx="9" fill="#c084fc"/>
+      <text x="860" y="246" fill="#160d25">removes password</text>
+      <rect x="778" y="303" width="164" height="28" rx="9" fill="#22d3ee"/>
+      <text x="860" y="322" fill="#06121a">phishing-resistant</text>
+      <rect x="778" y="379" width="164" height="28" rx="9" fill="#7c3aed"/>
+      <text x="860" y="398" fill="#fff">strong provenance</text>
+      <rect x="778" y="455" width="164" height="28" rx="9" fill="#8b5cf6"/>
+      <text x="860" y="474" fill="#fff">best usability</text>
+    </g>
+
+    <text x="54" y="556" fill="#b9a8d8" font-size="15">Shortcut: MFA means multiple factors. Passwordless means no password. Passkeys are a standards-based way to do passwordless, phishing-resistant authentication.</text>
+  </g>
+</svg>

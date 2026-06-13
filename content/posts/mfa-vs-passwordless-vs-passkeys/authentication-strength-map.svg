@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 560" role="img" aria-labelledby="title desc">
+  <title id="title">Authentication strength map</title>
+  <desc id="desc">A visual comparison of passwords, traditional MFA, passwordless authentication, and passkeys.</desc>
+  <rect width="1040" height="560" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">Authentication Strength Map</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">Stronger sign-in methods remove shared secrets, reduce phishing exposure, and improve user experience.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <line x1="112" y1="430" x2="930" y2="430" stroke="#392354" stroke-width="8" stroke-linecap="round"/>
+    <path d="M908 412l34 18-34 18z" fill="#392354"/>
+
+    <g transform="translate(72 156)">
+      <rect width="190" height="210" rx="20" fill="#211433" stroke="#7c3aed"/>
+      <text x="95" y="44" fill="#f5f3ff" font-size="21" font-weight="700" text-anchor="middle">Password</text>
+      <text x="95" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">One shared secret</text>
+      <text x="95" y="108" fill="#c7b8e6" font-size="14" text-anchor="middle">High phishing risk</text>
+      <text x="95" y="134" fill="#c7b8e6" font-size="14" text-anchor="middle">Easy to reuse</text>
+      <text x="95" y="172" fill="#ffb4a2" font-size="15" font-weight="700" text-anchor="middle">Weak baseline</text>
+    </g>
+
+    <g transform="translate(302 156)">
+      <rect width="190" height="210" rx="20" fill="#211433" stroke="#a855f7"/>
+      <text x="95" y="44" fill="#f5f3ff" font-size="21" font-weight="700" text-anchor="middle">MFA</text>
+      <text x="95" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">Password plus</text>
+      <text x="95" y="108" fill="#c7b8e6" font-size="14" text-anchor="middle">another factor</text>
+      <text x="95" y="134" fill="#c7b8e6" font-size="14" text-anchor="middle">Strength varies</text>
+      <text x="95" y="172" fill="#f5f3ff" font-size="15" font-weight="700" text-anchor="middle">Better, not equal</text>
+    </g>
+
+    <g transform="translate(532 156)">
+      <rect width="190" height="210" rx="20" fill="#211433" stroke="#c084fc"/>
+      <text x="95" y="44" fill="#f5f3ff" font-size="21" font-weight="700" text-anchor="middle">Passwordless</text>
+      <text x="95" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">No password in</text>
+      <text x="95" y="108" fill="#c7b8e6" font-size="14" text-anchor="middle">normal sign-in</text>
+      <text x="95" y="134" fill="#c7b8e6" font-size="14" text-anchor="middle">Can still vary</text>
+      <text x="95" y="172" fill="#f5f3ff" font-size="15" font-weight="700" text-anchor="middle">Usability boost</text>
+    </g>
+
+    <g transform="translate(762 156)">
+      <rect width="190" height="210" rx="20" fill="#211433" stroke="#22d3ee"/>
+      <text x="95" y="44" fill="#f5f3ff" font-size="21" font-weight="700" text-anchor="middle">Passkey</text>
+      <text x="95" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">FIDO/WebAuthn</text>
+      <text x="95" y="108" fill="#c7b8e6" font-size="14" text-anchor="middle">public-key sign-in</text>
+      <text x="95" y="134" fill="#c7b8e6" font-size="14" text-anchor="middle">Phishing-resistant</text>
+      <text x="95" y="172" fill="#22d3ee" font-size="15" font-weight="700" text-anchor="middle">Strong target state</text>
+    </g>
+
+    <g fill="#f5f3ff" font-size="14" font-weight="700" text-anchor="middle">
+      <text x="167" y="460">lowest</text>
+      <text x="397" y="460">stronger</text>
+      <text x="627" y="460">smoother</text>
+      <text x="857" y="460">phishing-resistant</text>
+    </g>
+  </g>
+</svg>
