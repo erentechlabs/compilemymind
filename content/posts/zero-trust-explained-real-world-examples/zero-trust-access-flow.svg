@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 560" role="img" aria-labelledby="title desc">
+  <title id="title">Zero Trust access decision flow</title>
+  <desc id="desc">A diagram showing how identity, device, location, app, data, and risk signals feed a Zero Trust policy decision.</desc>
+  <rect width="1040" height="560" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">Zero Trust Access Decision</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">Every request is evaluated by context, not by network location alone.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g fill="#211433" stroke="#7c3aed" stroke-width="2">
+      <rect x="56" y="146" width="190" height="72" rx="16"/>
+      <rect x="56" y="246" width="190" height="72" rx="16"/>
+      <rect x="56" y="346" width="190" height="72" rx="16"/>
+      <rect x="794" y="146" width="190" height="72" rx="16"/>
+      <rect x="794" y="246" width="190" height="72" rx="16"/>
+      <rect x="794" y="346" width="190" height="72" rx="16"/>
+    </g>
+    <g fill="#f5f3ff" font-size="18" font-weight="700">
+      <text x="88" y="176">Identity</text>
+      <text x="88" y="276">Device posture</text>
+      <text x="88" y="376">Location</text>
+      <text x="826" y="176">Application</text>
+      <text x="826" y="276">Data sensitivity</text>
+      <text x="826" y="376">Risk signals</text>
+    </g>
+    <g fill="#c7b8e6" font-size="14">
+      <text x="88" y="198">User, role, group, session</text>
+      <text x="88" y="298">Managed, patched, healthy</text>
+      <text x="88" y="398">Trusted, unknown, impossible</text>
+      <text x="826" y="198">Target app or workload</text>
+      <text x="826" y="298">Public, internal, confidential</text>
+      <text x="826" y="398">Anomaly, threat, behavior</text>
+    </g>
+
+    <g>
+      <rect x="360" y="186" width="320" height="172" rx="24" fill="#160d25" stroke="#22d3ee" stroke-width="3"/>
+      <text x="520" y="238" fill="#f5f3ff" font-size="24" font-weight="700" text-anchor="middle">Policy Decision Point</text>
+      <text x="520" y="272" fill="#c7b8e6" font-size="15" text-anchor="middle">Evaluate all signals against policy</text>
+      <text x="520" y="298" fill="#c7b8e6" font-size="15" text-anchor="middle">before granting, limiting, or blocking access</text>
+      <circle cx="520" cy="334" r="10" fill="#22d3ee"/>
+    </g>
+
+    <g stroke="#7c3aed" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M246 182h96"/>
+      <path d="M246 282h96"/>
+      <path d="M246 382h96"/>
+      <path d="M794 182h-96"/>
+      <path d="M794 282h-96"/>
+      <path d="M794 382h-96"/>
+    </g>
+    <g fill="#7c3aed">
+      <path d="M342 174l16 8-16 8z"/>
+      <path d="M342 274l16 8-16 8z"/>
+      <path d="M342 374l16 8-16 8z"/>
+      <path d="M698 174l-16 8 16 8z"/>
+      <path d="M698 274l-16 8 16 8z"/>
+      <path d="M698 374l-16 8 16 8z"/>
+    </g>
+
+    <g transform="translate(168 466)">
+      <rect width="704" height="54" rx="16" fill="#211433" stroke="#a855f7"/>
+      <text x="352" y="34" fill="#f5f3ff" font-size="18" font-weight="700" text-anchor="middle">Result: allow, require MFA, require compliant device, limit session, or block</text>
+    </g>
+  </g>
+</svg>

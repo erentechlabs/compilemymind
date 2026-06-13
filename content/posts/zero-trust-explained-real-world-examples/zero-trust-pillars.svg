@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 600" role="img" aria-labelledby="title desc">
+  <title id="title">Zero Trust security pillars</title>
+  <desc id="desc">A map of Zero Trust pillars across identity, devices, networks, applications, data, infrastructure, and security operations.</desc>
+  <rect width="1040" height="600" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">Zero Trust Pillars</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">A practical architecture touches every layer where access, risk, and data movement happen.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g transform="translate(74 150)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#7c3aed"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Identity</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">MFA, passwordless, SSO,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">conditional access, privilege</text>
+    </g>
+    <g transform="translate(390 150)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#a855f7"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Devices</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">Health, compliance, patching,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">endpoint detection and response</text>
+    </g>
+    <g transform="translate(706 150)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#22d3ee"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Networks</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">Segmentation, inspection,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">private access, threat filtering</text>
+    </g>
+
+    <g transform="translate(74 324)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#c084fc"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Applications</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">App access, API permissions,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">workload identities, session control</text>
+    </g>
+    <g transform="translate(390 324)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#7c3aed"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Data</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">Classification, encryption, DLP,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">retention, least-access sharing</text>
+    </g>
+    <g transform="translate(706 324)">
+      <rect width="260" height="116" rx="18" fill="#211433" stroke="#a855f7"/>
+      <text x="28" y="40" fill="#f5f3ff" font-size="22" font-weight="700">Infrastructure</text>
+      <text x="28" y="70" fill="#c7b8e6" font-size="14">Posture management, hardening,</text>
+      <text x="28" y="92" fill="#c7b8e6" font-size="14">vulnerability and workload protection</text>
+    </g>
+
+    <g transform="translate(232 484)">
+      <rect width="576" height="64" rx="18" fill="#160d25" stroke="#22d3ee"/>
+      <text x="288" y="39" fill="#f5f3ff" font-size="20" font-weight="700" text-anchor="middle">Security Operations: monitor, correlate, investigate, automate, improve</text>
+    </g>
+  </g>
+</svg>

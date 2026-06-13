@@ -16,5 +16,5 @@ features = ["responsive", "dark mode", "light mode", "blog", "social icons", "co
 [module]
   [module.hugoVersion]
     extended = true
-    min = "0.162.1"
+    min = "0.163.1"
 
