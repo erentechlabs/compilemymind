@@ -162,17 +162,24 @@
 }
 
 .topic-browser {
-  max-width: 900px;
+  width: min(100%, 900px);
   margin: 0 auto;
 }
 
 .topic-browser-header {
   margin-bottom: var(--spacing-lg);
+  text-align: center;
+}
+
+.topic-browser-header .list-description {
+  max-width: 44rem;
+  margin: 0 auto;
 }
 
 .topic-filter-bar {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--spacing-sm);
   margin-bottom: var(--spacing-xl);
 }
@@ -180,7 +187,10 @@
 .topic-filter-button {
   display: inline-flex;
   align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
   gap: 0.45rem;
+  min-height: 2.45rem;
   padding: 0.55rem 0.8rem;
   color: var(--text-secondary);
   font-family: var(--font-mono);
@@ -194,6 +204,10 @@
     background 0.2s ease,
     border-color 0.2s ease,
     transform 0.2s ease;
+}
+
+.topic-filter-button span:first-child {
+  min-width: 0;
 }
 
 .topic-filter-button:hover,
@@ -344,6 +358,57 @@ pre::-webkit-scrollbar-thumb:hover {
     transform: translateX(-50%);
   }
 
+  .topic-browser {
+    padding-inline: clamp(0.25rem, 2vw, 0.75rem);
+  }
+
+  .topic-browser-header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  .topic-browser-header .list-title-line2 {
+    font-size: clamp(2rem, 11vw, 3rem);
+    -webkit-text-stroke-width: 1.4px;
+    text-stroke-width: 1.4px;
+  }
+
+  .topic-browser-header .list-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  .topic-filter-bar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    width: 100%;
+    gap: 0.65rem;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .topic-filter-button {
+    width: 100%;
+    min-height: 3.15rem;
+    padding: 0.65rem 0.7rem;
+    font-size: clamp(0.78rem, 3vw, 0.84rem);
+    text-align: left;
+    line-height: 1.25;
+  }
+
+  .topic-filter-count {
+    flex: 0 0 auto;
+  }
+
+  .topic-posts-list {
+    gap: var(--spacing-lg);
+  }
+
+  .topic-posts-list .post-card {
+    padding: var(--spacing-md);
+    border-radius: 0.65rem;
+  }
+
   /* ── Table of Contents: compact & collapsed on mobile ── */
 
   /* TOC sits in normal flow (not sticky) so it doesn't eat top space */
@@ -395,5 +460,11 @@ pre::-webkit-scrollbar-thumb:hover {
 
   .toc-nav ul ul {
     padding-left: 0.85rem;
+  }
+}
+
+@media (max-width: 340px) {
+  .topic-filter-bar {
+    grid-template-columns: 1fr;
   }
 }
