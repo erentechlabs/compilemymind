@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 620" role="img" aria-labelledby="title desc">
+  <title id="title">SOC incident workflow with SIEM XDR and SOAR</title>
+  <desc id="desc">An incident workflow showing how telemetry moves into detection, investigation, automation, and remediation.</desc>
+  <rect width="1040" height="620" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">How They Work Together in an Incident</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">A mature SOC usually combines broad telemetry, correlated detection, analyst investigation, and automated response.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g fill="#211433" stroke="#392354" stroke-width="2">
+      <rect x="54" y="158" width="174" height="86" rx="16"/>
+      <rect x="54" y="278" width="174" height="86" rx="16"/>
+      <rect x="54" y="398" width="174" height="86" rx="16"/>
+    </g>
+    <g fill="#f5f3ff" font-size="18" font-weight="700" text-anchor="middle">
+      <text x="141" y="196">Endpoints</text>
+      <text x="141" y="316">Identity</text>
+      <text x="141" y="436">Cloud and Apps</text>
+    </g>
+    <g fill="#c7b8e6" font-size="13" text-anchor="middle">
+      <text x="141" y="222">EDR and device telemetry</text>
+      <text x="141" y="342">Sign-ins and privilege</text>
+      <text x="141" y="462">SaaS, APIs, workloads</text>
+    </g>
+
+    <g transform="translate(326 214)">
+      <rect width="188" height="154" rx="20" fill="#211433" stroke="#7c3aed" stroke-width="2"/>
+      <text x="94" y="48" fill="#f5f3ff" font-size="24" font-weight="700" text-anchor="middle">SIEM</text>
+      <text x="94" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">Ingest logs</text>
+      <text x="94" y="106" fill="#c7b8e6" font-size="14" text-anchor="middle">Normalize events</text>
+      <text x="94" y="130" fill="#c7b8e6" font-size="14" text-anchor="middle">Correlate rules</text>
+    </g>
+    <g transform="translate(594 214)">
+      <rect width="188" height="154" rx="20" fill="#211433" stroke="#22d3ee" stroke-width="2"/>
+      <text x="94" y="48" fill="#f5f3ff" font-size="24" font-weight="700" text-anchor="middle">XDR</text>
+      <text x="94" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">Join product signals</text>
+      <text x="94" y="106" fill="#c7b8e6" font-size="14" text-anchor="middle">Group alerts</text>
+      <text x="94" y="130" fill="#c7b8e6" font-size="14" text-anchor="middle">Build attack story</text>
+    </g>
+    <g transform="translate(850 214)">
+      <rect width="140" height="154" rx="20" fill="#211433" stroke="#c084fc" stroke-width="2"/>
+      <text x="70" y="48" fill="#f5f3ff" font-size="24" font-weight="700" text-anchor="middle">SOAR</text>
+      <text x="70" y="82" fill="#c7b8e6" font-size="14" text-anchor="middle">Enrich</text>
+      <text x="70" y="106" fill="#c7b8e6" font-size="14" text-anchor="middle">Contain</text>
+      <text x="70" y="130" fill="#c7b8e6" font-size="14" text-anchor="middle">Ticket</text>
+    </g>
+
+    <g stroke="#7c3aed" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M228 201c42 0 62 42 92 72"/>
+      <path d="M228 321h88"/>
+      <path d="M228 441c42 0 62-42 92-72"/>
+      <path d="M514 291h80"/>
+      <path d="M782 291h68"/>
+    </g>
+    <g fill="#7c3aed">
+      <path d="M320 265l16 8-16 8z"/>
+      <path d="M316 313l16 8-16 8z"/>
+      <path d="M320 361l16 8-16 8z"/>
+      <path d="M594 283l16 8-16 8z"/>
+      <path d="M850 283l16 8-16 8z"/>
+    </g>
+
+    <g transform="translate(250 464)">
+      <rect width="560" height="74" rx="18" fill="#160d25" stroke="#392354"/>
+      <text x="280" y="31" fill="#f5f3ff" font-size="18" font-weight="700" text-anchor="middle">Analyst decision loop</text>
+      <text x="280" y="56" fill="#c7b8e6" font-size="14" text-anchor="middle">Triage, scope, approve actions, document lessons, tune detections</text>
+    </g>
+  </g>
+</svg>

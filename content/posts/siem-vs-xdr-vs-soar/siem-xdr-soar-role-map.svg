@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 600" role="img" aria-labelledby="title desc">
+  <title id="title">SIEM XDR SOAR role map</title>
+  <desc id="desc">A role map showing how SIEM, XDR, and SOAR fit into security operations.</desc>
+  <rect width="1040" height="600" rx="28" fill="#100719"/>
+  <text x="54" y="62" fill="#f5f3ff" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="32" font-weight="700">SIEM vs XDR vs SOAR</text>
+  <text x="54" y="98" fill="#c7b8e6" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="16">They overlap in the SOC, but they solve different parts of detection, investigation, and response.</text>
+
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <g transform="translate(68 158)">
+      <rect width="280" height="260" rx="24" fill="#211433" stroke="#7c3aed" stroke-width="2"/>
+      <circle cx="140" cy="76" r="42" fill="#7c3aed"/>
+      <text x="140" y="85" fill="#fff" font-size="28" font-weight="700" text-anchor="middle">SIEM</text>
+      <text x="140" y="150" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">Collect and Correlate</text>
+      <text x="34" y="190" fill="#c7b8e6" font-size="15">Logs, events, detections,</text>
+      <text x="34" y="214" fill="#c7b8e6" font-size="15">compliance evidence, dashboards,</text>
+      <text x="34" y="238" fill="#c7b8e6" font-size="15">search, and threat hunting.</text>
+    </g>
+
+    <g transform="translate(380 158)">
+      <rect width="280" height="260" rx="24" fill="#211433" stroke="#22d3ee" stroke-width="2"/>
+      <circle cx="140" cy="76" r="42" fill="#22d3ee"/>
+      <text x="140" y="85" fill="#06121a" font-size="28" font-weight="700" text-anchor="middle">XDR</text>
+      <text x="140" y="150" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">Detect and Investigate</text>
+      <text x="34" y="190" fill="#c7b8e6" font-size="15">Native signals across endpoint,</text>
+      <text x="34" y="214" fill="#c7b8e6" font-size="15">identity, email, cloud apps,</text>
+      <text x="34" y="238" fill="#c7b8e6" font-size="15">and workloads.</text>
+    </g>
+
+    <g transform="translate(692 158)">
+      <rect width="280" height="260" rx="24" fill="#211433" stroke="#c084fc" stroke-width="2"/>
+      <circle cx="140" cy="76" r="42" fill="#c084fc"/>
+      <text x="140" y="85" fill="#160d25" font-size="28" font-weight="700" text-anchor="middle">SOAR</text>
+      <text x="140" y="150" fill="#f5f3ff" font-size="22" font-weight="700" text-anchor="middle">Automate Response</text>
+      <text x="34" y="190" fill="#c7b8e6" font-size="15">Playbooks, case enrichment,</text>
+      <text x="34" y="214" fill="#c7b8e6" font-size="15">ticketing, containment actions,</text>
+      <text x="34" y="238" fill="#c7b8e6" font-size="15">and repeatable workflows.</text>
+    </g>
+
+    <g stroke="#7c3aed" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M348 288h32"/>
+      <path d="M660 288h32"/>
+    </g>
+    <g fill="#7c3aed">
+      <path d="M380 280l16 8-16 8z"/>
+      <path d="M692 280l16 8-16 8z"/>
+    </g>
+
+    <rect x="156" y="486" width="728" height="58" rx="18" fill="#160d25" stroke="#392354"/>
+    <text x="520" y="522" fill="#f5f3ff" font-size="18" font-weight="700" text-anchor="middle">Best SOC outcome: SIEM for broad visibility, XDR for high-fidelity correlated detection, SOAR for consistent response.</text>
+  </g>
+</svg>
