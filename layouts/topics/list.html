@@ -1,17 +1,122 @@
 {{ define "main" }}
-  <div class="single-post-wrapper">
-    <article class="single-post">
-      <header class="post-header">
-        {{ partial "breadcrumb.html" . }}
-        <h1 class="post-title-main">{{ .Title }}</h1>
-        {{ if .Description }}
-          <p class="post-description-main">{{ .Description }}</p>
-        {{ end }}
-      </header>
+  {{ $topics := slice
+    (dict
+      "key" "cybersecurity"
+      "label" "Cybersecurity"
+      "tags" (slice "cybersecurity" "zero-trust" "identity" "mfa" "passwordless" "passkeys" "authentication" "network-security" "cloud-security" "security-architecture" "vulnerability-analysis" "heartbleed" "openssl" "tls" "siem" "xdr" "soar" "soc" "incident-response" "security-operations" "sc-900"))
+    (dict
+      "key" "networking-it"
+      "label" "Networking & IT"
+      "tags" (slice "networking" "it-fundamentals" "sysadmin" "protocols" "infrastructure" "web" "api-design"))
+    (dict
+      "key" "microsoft-cloud-security"
+      "label" "Microsoft Cloud & Security"
+      "tags" (slice "microsoft" "azure" "cloud" "microsoft-365" "entra" "defender" "sentinel" "purview" "compliance" "licensing" "az-900" "ms-900" "sc-900"))
+    (dict
+      "key" "software-engineering"
+      "label" "Software Engineering"
+      "tags" (slice "programming" "java" "spring-boot" "software-development" "algorithms" "api-design" "architecture" "jdk" "c-sharp" "python" "developer-tools" "problem-solving"))
+    (dict
+      "key" "hardware-pc-building"
+      "label" "Hardware & PC Building"
+      "tags" (slice "hardware" "pc-building" "cpu" "gpu" "motherboards"))
+    (dict
+      "key" "certifications"
+      "label" "Certifications"
+      "tags" (slice "certification" "comptia" "tech-plus" "az-900" "ms-900" "sc-900" "cheatsheet" "career"))
+  }}
+  {{ $posts := where site.RegularPages "Type" "posts" }}
+  {{ $defaultTopic := "cybersecurity" }}
 
-      <div class="post-content-main">
-        {{ .Content }}
-      </div>
-    </article>
+  <div class="topic-browser">
+    <header class="list-header topic-browser-header">
+      <h1 class="list-title">
+        <span class="list-title-line2">{{ .Title | upper }}</span>
+      </h1>
+      {{ if .Description }}
+        <p class="list-description">{{ .Description }}</p>
+      {{ end }}
+    </header>
+
+    <div class="topic-filter-bar" role="tablist" aria-label="Post topics">
+      {{ range $topics }}
+        {{ $topic := . }}
+        {{ $count := 0 }}
+        {{ range $posts }}
+          {{ $postTags := .Params.tags | default (slice) }}
+          {{ if gt (len (intersect $postTags $topic.tags)) 0 }}
+            {{ $count = add $count 1 }}
+          {{ end }}
+        {{ end }}
+        <button
+          class="topic-filter-button{{ if eq .key $defaultTopic }} active{{ end }}"
+          type="button"
+          role="tab"
+          aria-selected="{{ if eq .key $defaultTopic }}true{{ else }}false{{ end }}"
+          data-topic-filter="{{ .key }}">
+          <span>{{ .label }}</span>
+          <span class="topic-filter-count">{{ $count }}</span>
+        </button>
+      {{ end }}
+    </div>
+
+    <div class="posts-list topic-posts-list" id="topic-posts-container">
+      {{ range $posts }}
+        {{ $postTopics := slice }}
+        {{ $postTags := .Params.tags | default (slice) }}
+        {{ range $topics }}
+          {{ if gt (len (intersect $postTags .tags)) 0 }}
+            {{ $postTopics = $postTopics | append .key }}
+          {{ end }}
+        {{ end }}
+        {{ if gt (len $postTopics) 0 }}
+          <div
+            class="topic-result-card"
+            data-topic-list="{{ delimit $postTopics "," }}"
+            {{ if not (in $postTopics $defaultTopic) }}hidden{{ end }}>
+            {{ partial "post-card.html" (dict
+              "page" .
+              "limit" 3
+              "dataYearMonth" (.Date.Format "2006-01")
+              "dataTags" (delimit (.Params.tags | default (slice)) ","))
+            }}
+          </div>
+        {{ end }}
+      {{ end }}
+    </div>
   </div>
+
+  <script>
+    (function () {
+      const buttons = Array.from(document.querySelectorAll("[data-topic-filter]"));
+      const cards = Array.from(document.querySelectorAll("[data-topic-list]"));
+      if (!buttons.length || !cards.length) return;
+
+      function setTopic(topic) {
+        buttons.forEach((button) => {
+          const isActive = button.dataset.topicFilter === topic;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-selected", String(isActive));
+        });
+
+        cards.forEach((card) => {
+          const topics = (card.dataset.topicList || "").split(",");
+          card.hidden = !topics.includes(topic);
+        });
+
+        if (window.location.hash !== "#" + topic) {
+          history.replaceState(null, "", "#" + topic);
+        }
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => setTopic(button.dataset.topicFilter));
+      });
+
+      const hashTopic = window.location.hash.replace("#", "");
+      if (buttons.some((button) => button.dataset.topicFilter === hashTopic)) {
+        setTopic(hashTopic);
+      }
+    })();
+  </script>
 {{ end }}
