@@ -16,14 +16,14 @@
 {{ end }}
 {{ $blogPosting := dict
   "@context" "https://schema.org"
-  "@type" "BlogPosting"
+  "@type" (cond (eq .Section "posts") "BlogPosting" "WebPage")
   "headline" .Title
   "description" (cond (ne .Description "") .Description (.Summary | plainify | truncate 160))
   "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
   "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
   "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
   "url" .Permalink
-  "inLanguage" .Language.LanguageCode
+  "inLanguage" .Language.Locale
   "wordCount" .WordCount
   "timeRequired" (printf "PT%dM" .ReadingTime)
   "author" $author
@@ -32,6 +32,8 @@
 {{ $resolvedImage := partial "post-image-resolve.html" . }}
 {{ if $resolvedImage.image }}
   {{ $blogPosting = merge $blogPosting (dict "image" ($resolvedImage.image | absURL)) }}
+{{ else if site.Params.defaultImage }}
+  {{ $blogPosting = merge $blogPosting (dict "image" (site.Params.defaultImage | absURL)) }}
 {{ else if and site.Params.avatar site.Params.avatar.home.assetPath }}
   {{ $blogPosting = merge $blogPosting (dict "image" (site.Params.avatar.home.assetPath | absURL)) }}
 {{ end }}
@@ -41,13 +43,14 @@
 {{ printf "<script type=\"application/ld+json\">%s</script>" ($blogPosting | jsonify) | safeHTML }}
 {{ end }}
 
-{{ if and .IsPage (not .IsHome) }}
-  {{ $postsPage := site.GetPage "/posts" }}
+{{ if and (or .IsPage .IsSection) (not .IsHome) }}
+  {{ $sectionPage := site.GetPage (printf "/%s" .Section) }}
+  {{ $hasSectionCrumb := and .Section $sectionPage (ne $sectionPage.Permalink .Permalink) }}
   {{ $breadcrumbItems := slice (dict "@type" "ListItem" "position" 1 "name" (i18n "home" | default "Home") "item" site.Home.Permalink) }}
-  {{ if $postsPage }}
-    {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" 2 "name" (i18n "posts" | default "Posts") "item" $postsPage.Permalink) }}
+  {{ if $hasSectionCrumb }}
+    {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" 2 "name" $sectionPage.Title "item" $sectionPage.Permalink) }}
   {{ end }}
-  {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" (cond $postsPage 3 2) "name" .Title "item" .Permalink) }}
+  {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" (add (len $breadcrumbItems) 1) "name" .Title "item" .Permalink) }}
 {{ printf "<script type=\"application/ld+json\">%s</script>" (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $breadcrumbItems | jsonify) | safeHTML }}
 {{ end }}
 

@@ -1,8 +1,14 @@
 {{- $image := "" -}}
 {{- if .Params.image -}}
   {{- $image = .Params.image | absURL -}}
-{{- else if site.Params.avatar -}}
-  {{- $image = site.Params.avatar.url -}}
+{{- else if .Params.images -}}
+  {{- $image = (index .Params.images 0) | absURL -}}
+{{- else if site.Params.defaultImage -}}
+  {{- $image = site.Params.defaultImage | absURL -}}
+{{- else if and site.Params.avatar site.Params.avatar.home site.Params.avatar.home.assetPath -}}
+  {{- $image = site.Params.avatar.home.assetPath | absURL -}}
+{{- else if and site.Params.avatar site.Params.avatar.url -}}
+  {{- $image = site.Params.avatar.url | absURL -}}
 {{- end -}}
 
 {{- $title := "" -}}
@@ -23,11 +29,11 @@
 
 
 <!-- Open Graph / Facebook -->
-{{- $locale := replace site.Language.LanguageCode "-" "_" -}}
+{{- $locale := replace site.Language.Locale "-" "_" -}}
 <meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
 <meta property="og:locale" content="{{ $locale }}">
 {{ range .Translations -}}
-{{- $altLocale := replace .Language.LanguageCode "-" "_" -}}
+{{- $altLocale := replace .Language.Locale "-" "_" -}}
 <meta property="og:locale:alternate" content="{{ $altLocale }}">
 {{ end -}}
 <meta property="og:title" content="{{ $title }}">

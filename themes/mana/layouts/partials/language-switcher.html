@@ -1,9 +1,5 @@
-{{ if gt (len site.Languages) 1 }}
-  {{ $translations := .Translations }}
-  {{ if .IsHome }}
-    {{ $translations = .Site.Home.AllTranslations }}
-  {{ end }}
-  {{ if or .IsHome (gt (len $translations) 0) }}
+{{ with .Rotate "language" }}
+  {{ if gt (len .) 1 }}
     <div class="language-switcher">
       <button
         class="language-switcher-toggle"
@@ -19,10 +15,10 @@
             d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
         </svg>
         <span class="language-switcher-label">{{ i18n "language" }}</span>
-      </button>
+        </button>
       <div class="language-switcher-dropdown" aria-hidden="true">
         <ul class="language-switcher-list" role="listbox">
-          {{ range $translations }}
+          {{ range . }}
             {{ if ne .Lang $.Lang }}
               <li role="option">
                 <a href="{{ .RelPermalink }}" class="language-switcher-link" hreflang="{{ .Lang }}">

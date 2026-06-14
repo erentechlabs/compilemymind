@@ -1,8 +1,17 @@
+{{- $metaDescription := "" -}}
+{{- if .Description -}}
+  {{- $metaDescription = .Description -}}
+{{- else if .IsHome -}}
+  {{- $metaDescription = site.Params.description -}}
+{{- else -}}
+  {{- $metaDescription = (.Summary | plainify | truncate 160) -}}
+{{- end -}}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="language" content="{{ site.Language.LanguageCode }}">
+<meta name="language" content="{{ site.Language.Locale }}">
 <meta name="theme-color" content="#BD5FFF">
+<meta name="generator" content="Hugo {{ hugo.Version }}">
 <script>
   // Set theme immediately to prevent flash
   (function () {
@@ -16,19 +25,10 @@
   // Search index URL for current language (multilingual support)
   window.MANA_SEARCH_INDEX_URL = '{{ "index.json" | relLangURL }}';
   // Language prefixes for URL normalization in page transitions
-  window.MANA_LANG_PREFIXES = '{{ range $i, $lang := site.Languages }}{{ if $i }},{{ end }}{{ $lang.Lang }}{{ end }}'.split(',');
+  window.MANA_LANG_PREFIXES = '{{ .Language.Lang }}'.split(',');
 </script>
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} | {{ site.Title }}{{ end }}</title>
-<meta
-  name="description"
-  content="{{ if .Description }}
-    {{ .Description }}
-  {{ else if .IsHome }}
-    {{ site.Params.description }}
-  {{ else }}
-    {{ .Summary | plainify | truncate 160 }}
-  {{ end }}
-  ">
+<meta name="description" content="{{ $metaDescription | plainify }}">
 
 {{ if .Params.tags }}
   <meta name="keywords" content="{{ delimit .Params.tags ", " }}">
@@ -45,10 +45,10 @@
 
 <!-- hreflang for multilingual SEO -->
 {{ range .Translations -}}
-<link rel="alternate" hreflang="{{ .Language.LanguageCode }}" href="{{ .Permalink }}">
+<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
 {{ end -}}
-<link rel="alternate" hreflang="{{ .Language.LanguageCode }}" href="{{ .Permalink }}">
-{{- $defaultLang := (index site.Languages 0).Lang -}}
+<link rel="alternate" hreflang="{{ .Language.Locale }}" href="{{ .Permalink }}">
+{{- $defaultLang := site.Language.Lang -}}
 {{ if eq .Language.Lang $defaultLang -}}
 <link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
 {{ else -}}
@@ -62,6 +62,10 @@
 {{ partial "head/robots.html" . }}
 {{ partial "head/opengraph.html" . }}
 {{ partial "head/json-ld.html" . }}
+
+{{ with site.Params.verification.google }}
+  <meta name="google-site-verification" content="{{ . }}">
+{{ end }}
 
 
 <!-- Google Fonts: Space Grotesk (headings), Inter (body), Outfit (logo), JetBrains Mono (code) -->

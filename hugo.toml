@@ -66,6 +66,7 @@ paginate = 12
 
   # Favicon
   favicon = "/favicon.ico"
+  defaultImage = "/og-default.png"
 
   [params.favicons]
     version = "20260531-purple-network-icon"
@@ -115,6 +116,16 @@ paginate = 12
   weight  = 20
 
 [[menus.main]]
+  name    = "Topics"
+  pageRef = "/topics"
+  weight  = 25
+
+[[menus.main]]
   name    = "Tags"
   pageRef = "/tags"
   weight  = 30
+
+[[menus.main]]
+  name    = "About"
+  pageRef = "/about"
+  weight  = 40
