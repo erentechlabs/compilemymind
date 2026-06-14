@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title desc">
+  <title id="title">TCP handshake compared with UDP datagram flow</title>
+  <desc id="desc">Diagram comparing the TCP three-way handshake with UDP connectionless datagram delivery.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10051d"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2L10 6L2 10Z" fill="#c4b5fd"/>
+    </marker>
+    <marker id="arrowBlue" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2L10 6L2 10Z" fill="#67e8f9"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="620" rx="28" fill="url(#bg)"/>
+  <text x="600" y="62" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="800">TCP Handshake vs UDP Datagram</text>
+  <text x="600" y="96" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">TCP establishes shared state. UDP sends independent messages.</text>
+
+  <g>
+    <rect x="70" y="135" width="500" height="415" rx="22" fill="#1b0f2f" stroke="#8b5cf6" stroke-opacity="0.5"/>
+    <text x="320" y="180" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="900">TCP</text>
+    <text x="320" y="208" text-anchor="middle" fill="#c4b5fd" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17">Connection setup before data</text>
+
+    <text x="150" y="255" text-anchor="middle" fill="#e5e7eb" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Client</text>
+    <text x="490" y="255" text-anchor="middle" fill="#e5e7eb" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Server</text>
+    <line x1="150" y1="280" x2="150" y2="500" stroke="#64748b" stroke-width="3"/>
+    <line x1="490" y1="280" x2="490" y2="500" stroke="#64748b" stroke-width="3"/>
+
+    <line x1="160" y1="305" x2="470" y2="345" stroke="#c4b5fd" stroke-width="4" marker-end="url(#arrow)"/>
+    <text x="315" y="310" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">SYN</text>
+
+    <line x1="480" y1="365" x2="170" y2="405" stroke="#c4b5fd" stroke-width="4" marker-end="url(#arrow)"/>
+    <text x="320" y="375" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">SYN-ACK</text>
+
+    <line x1="160" y1="425" x2="470" y2="465" stroke="#c4b5fd" stroke-width="4" marker-end="url(#arrow)"/>
+    <text x="315" y="430" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">ACK</text>
+
+    <text x="320" y="520" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Now reliable ordered data can flow.</text>
+  </g>
+
+  <g>
+    <rect x="630" y="135" width="500" height="415" rx="22" fill="#0f1b33" stroke="#38bdf8" stroke-opacity="0.45"/>
+    <text x="880" y="180" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="900">UDP</text>
+    <text x="880" y="208" text-anchor="middle" fill="#67e8f9" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17">No handshake, just datagrams</text>
+
+    <text x="710" y="255" text-anchor="middle" fill="#e5e7eb" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Client</text>
+    <text x="1050" y="255" text-anchor="middle" fill="#e5e7eb" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700">Server</text>
+    <line x1="710" y1="280" x2="710" y2="500" stroke="#64748b" stroke-width="3"/>
+    <line x1="1050" y1="280" x2="1050" y2="500" stroke="#64748b" stroke-width="3"/>
+
+    <line x1="720" y1="320" x2="1030" y2="350" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+    <text x="875" y="320" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Datagram 1</text>
+
+    <line x1="720" y1="390" x2="1030" y2="420" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrowBlue)" stroke-dasharray="9 9"/>
+    <text x="875" y="390" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Datagram 2 may be lost</text>
+
+    <line x1="720" y1="460" x2="1030" y2="490" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrowBlue)"/>
+    <text x="875" y="460" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">Datagram 3</text>
+
+    <text x="880" y="520" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">The application decides how much reliability it needs.</text>
+  </g>
+</svg>
