@@ -1,7 +1,7 @@
 # =============================================================================
 # Compile My Mind — Hugo Configuration
 # Theme: hugo-mana-theme (https://github.com/Livour/hugo-mana-theme)
-# Focus: Cybersecurity · IT Infrastructure · Cloud · Systems
+# Focus: Software · IT Infrastructure · Cloud · Systems
 # =============================================================================
 
 baseURL = "https://www.compilemymind.com/"
@@ -58,11 +58,11 @@ paginate = 12
   enableIntegrity = false
   relatedPostsCount = 4
 
-  description = "Practical guides, deep dives, and cheatsheets on cybersecurity, networking, cloud, IT infrastructure, and the systems that keep digital environments running."
+  description = "Practical guides, deep dives, and cheatsheets on software engineering, networking, cloud, IT operations, hardware, and the systems that keep digital work moving."
   author = "Eren"
   heroTitleLine1 = "COMPILE MY MIND"
-  heroTitleLine2 = "Cybersecurity · IT · Cloud"
-  custom404Message = "Page not found - even good recon turns up nothing sometimes."
+  heroTitleLine2 = "Software · IT · Cloud"
+  custom404Message = "Page not found - this link is outside the current build."
 
   # Favicon
   favicon = "/favicon.ico"

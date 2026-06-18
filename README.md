@@ -3,7 +3,7 @@
 [![Hugo Version](https://img.shields.io/badge/Hugo-v0.163.1-8b5cf6?logo=hugo)](https://gohugo.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-> **Deep dives into cybersecurity, networking, IT infrastructure, and the systems that power the digital world. Written by a cybersecurity engineer decoding the complexities of digital defense.**
+> **Deep dives into software engineering, networking, IT operations, cloud infrastructure, hardware, and the systems that power digital work.**
 
 [**Visit the Website**](https://www.compilemymind.com/)
 
@@ -13,13 +13,14 @@
 
 Welcome to the source code repository for **Compile My Mind**, my personal technical blog and knowledge repository. 
 
-This repository houses the Markdown content, Hugo templates, and configuration that generate the live website. It is built for blazing-fast performance and a clean reading experience, focusing on the intricate details of systems and security.
+This repository houses the Markdown content, Hugo templates, and configuration that generate the live website. It is built for fast performance and a clean reading experience, focusing on practical technical topics across software, infrastructure, operations, and systems.
 
 ### Key Topics Covered:
-- 🛡️ **Cybersecurity** — Defensive and offensive strategies, analysis, and news.
-- 🌐 **Networking** — Protocols, infrastructure, and web technologies.
-- 💻 **Systems Administration** — Linux, Windows, scripting, and automation.
-- 🏗️ **IT Infrastructure** — Architecture, cloud deployment, and DevOps.
+- **Software Engineering** - Programming, architecture, APIs, and developer tooling.
+- **Networking & IT** - Protocols, infrastructure, administration, and operations.
+- **Cloud & Systems** - Microsoft cloud, deployment models, automation, and reliability.
+- **Hardware & PC Building** - Components, troubleshooting, and practical build guidance.
+- **Security Fundamentals** - Identity, risk, and defensive concepts as part of broader IT.
 
 ---
 
@@ -61,7 +62,7 @@ compilemymind/
 ## 📝 Author
 
 **Eren**
-A cybersecurity engineer decoding the complexities of digital defense.
+A technical writer and engineer exploring software, IT infrastructure, cloud, hardware, and systems.
 
 *   **Website:** [compilemymind.com](https://www.compilemymind.com/)
 

@@ -15,8 +15,8 @@ html {
 }
 
 :root {
-  /* Cyber Violet Color Palette */
-  --bg-deep: #08030f;
+  /* Technical violet color palette */
+  --bg-deep: #0b1020;
   --accent-primary: #a855f7;
   --accent-mid-purple: #8b5cf6;
   --accent-light-purple: #d8b4fe;
@@ -87,7 +87,7 @@ html {
 
 [data-theme="light"] {
   --bg-primary: #ffffff;
-  /* Light theme cyber glassmorphism */
+  /* Light theme glass surface */
   --glass-surface: rgba(255, 255, 255, 0.48);
   --glass-border: rgba(124, 58, 237, 0.18);
   --glass-block: rgba(255, 255, 255, 0.8);
@@ -129,13 +129,13 @@ body {
     background-color var(--transition-base),
     color var(--transition-base);
 
-  /* Cyber background: violet glow plus a faint grid */
+  /* Technical workspace background: layered violet, blue, and slate light */
   background-image:
-    linear-gradient(rgba(168, 85, 247, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(34, 211, 238, 0.025) 1px, transparent 1px),
-    radial-gradient(circle at top, rgba(88, 28, 135, 0.28) 0%, var(--bg-deep) 58%);
+    radial-gradient(circle at 18% 12%, rgba(124, 58, 237, 0.22) 0%, transparent 34%),
+    radial-gradient(circle at 84% 18%, rgba(14, 165, 233, 0.13) 0%, transparent 32%),
+    linear-gradient(180deg, #0b1020 0%, #101827 48%, #111827 100%);
   background-attachment: fixed;
-  background-size: 42px 42px, 42px 42px, 100% 100%;
+  background-size: 100% 100%;
   background-position: center center;
 
   position: relative;
@@ -148,13 +148,13 @@ body {
 
 [data-theme="light"] body {
   background-color: #ffffff;
-  /* Light cyber background: quiet violet grid */
+  /* Light technical background: soft workspace tint */
   background-image:
-    linear-gradient(rgba(124, 58, 237, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(8, 145, 178, 0.035) 1px, transparent 1px),
-    radial-gradient(circle at top, rgba(233, 213, 255, 0.46) 0%, #ffffff 62%);
+    radial-gradient(circle at 18% 10%, rgba(216, 180, 254, 0.48) 0%, transparent 36%),
+    radial-gradient(circle at 84% 16%, rgba(186, 230, 253, 0.36) 0%, transparent 34%),
+    linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
   background-attachment: fixed;
-  background-size: 42px 42px, 42px 42px, 100% 100%;
+  background-size: 100% 100%;
   background-position: center center;
 }
 

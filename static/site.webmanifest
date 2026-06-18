@@ -1,7 +1,7 @@
 {
   "name": "Compile My Mind",
   "short_name": "Compile My Mind",
-  "description": "Cybersecurity, IT infrastructure, cloud, and systems guides.",
+  "description": "Software, networking, cloud, IT operations, hardware, and systems guides.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -14,7 +14,7 @@
       "type": "image/png"
     }
   ],
-  "theme_color": "#08030f",
-  "background_color": "#08030f",
+  "theme_color": "#0b1020",
+  "background_color": "#0b1020",
   "display": "standalone"
 }

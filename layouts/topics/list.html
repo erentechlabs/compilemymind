@@ -1,21 +1,17 @@
 {{ define "main" }}
   {{ $topics := slice
     (dict
-      "key" "cybersecurity"
-      "label" "Cybersecurity"
-      "tags" (slice "cybersecurity" "zero-trust" "identity" "mfa" "passwordless" "passkeys" "authentication" "network-security" "cloud-security" "security-architecture" "vulnerability-analysis" "heartbleed" "openssl" "tls" "siem" "xdr" "soar" "soc" "incident-response" "security-operations" "sc-900"))
+      "key" "software-engineering"
+      "label" "Software Engineering"
+      "tags" (slice "programming" "java" "spring-boot" "software-development" "algorithms" "api-design" "architecture" "jdk" "c-sharp" "python" "developer-tools" "problem-solving"))
     (dict
       "key" "networking-it"
       "label" "Networking & IT"
       "tags" (slice "networking" "it-fundamentals" "sysadmin" "protocols" "infrastructure" "web" "api-design"))
     (dict
       "key" "microsoft-cloud-security"
-      "label" "Microsoft Cloud & Security"
+      "label" "Microsoft Cloud"
       "tags" (slice "microsoft" "azure" "cloud" "microsoft-365" "entra" "defender" "sentinel" "purview" "compliance" "licensing" "az-900" "ms-900" "sc-900"))
-    (dict
-      "key" "software-engineering"
-      "label" "Software Engineering"
-      "tags" (slice "programming" "java" "spring-boot" "software-development" "algorithms" "api-design" "architecture" "jdk" "c-sharp" "python" "developer-tools" "problem-solving"))
     (dict
       "key" "hardware-pc-building"
       "label" "Hardware & PC Building"
@@ -24,9 +20,13 @@
       "key" "certifications"
       "label" "Certifications"
       "tags" (slice "certification" "comptia" "tech-plus" "az-900" "ms-900" "sc-900" "cheatsheet" "career"))
+    (dict
+      "key" "cybersecurity"
+      "label" "Security"
+      "tags" (slice "cybersecurity" "zero-trust" "identity" "mfa" "passwordless" "passkeys" "authentication" "network-security" "cloud-security" "security-architecture" "vulnerability-analysis" "heartbleed" "openssl" "tls" "siem" "xdr" "soar" "soc" "incident-response" "security-operations" "sc-900"))
   }}
   {{ $posts := where site.RegularPages "Type" "posts" }}
-  {{ $defaultTopic := "cybersecurity" }}
+  {{ $defaultTopic := "software-engineering" }}
 
   <div class="topic-browser">
     <header class="list-header topic-browser-header">

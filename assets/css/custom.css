@@ -12,20 +12,20 @@
   will-change: transform;
   animation: float 3.5s ease-in-out infinite, pulse-glow 4s ease-in-out infinite;
   filter:
-    drop-shadow(0 0 18px rgba(176, 99, 224, 0.6))
-    drop-shadow(0 0 40px rgba(0, 255, 255, 0.25));
+    drop-shadow(0 0 16px rgba(168, 85, 247, 0.42))
+    drop-shadow(0 0 34px rgba(14, 165, 233, 0.18));
 }
 
 @keyframes pulse-glow {
   0%, 100% {
     filter:
-      drop-shadow(0 0 18px rgba(176, 99, 224, 0.55))
-      drop-shadow(0 0 40px rgba(0, 255, 255, 0.2));
+      drop-shadow(0 0 16px rgba(168, 85, 247, 0.38))
+      drop-shadow(0 0 34px rgba(14, 165, 233, 0.15));
   }
   50% {
     filter:
-      drop-shadow(0 0 28px rgba(176, 99, 224, 0.85))
-      drop-shadow(0 0 60px rgba(0, 255, 255, 0.45));
+      drop-shadow(0 0 24px rgba(168, 85, 247, 0.68))
+      drop-shadow(0 0 48px rgba(14, 165, 233, 0.26));
   }
 }
 
@@ -36,26 +36,17 @@
   overflow: hidden;
 }
 
-/* Subtle cyber grid accent behind hero */
+/* Subtle technical surface accent behind hero */
 .hero-section::before {
   content: "";
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(168, 85, 247, 0.08) 1px, transparent 1px),
-    linear-gradient(rgba(34, 211, 238, 0.055) 1px, transparent 1px);
-  background-size: 64px 64px;
-  opacity: 0.3;
-  mask-image: linear-gradient(90deg, transparent 0%, #000 58%, transparent 100%);
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 58%, transparent 100%);
+    radial-gradient(circle at 24% 26%, rgba(168, 85, 247, 0.14) 0%, transparent 32%),
+    radial-gradient(circle at 78% 18%, rgba(14, 165, 233, 0.1) 0%, transparent 28%),
+    linear-gradient(135deg, rgba(148, 163, 184, 0.04), transparent 46%);
+  opacity: 0.8;
   pointer-events: none;
-  will-change: transform;
-  animation: grid-drift 12s linear infinite;
-}
-
-@keyframes grid-drift {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-64px, 0, 0); }
 }
 
 /* ── Respect reduced-motion preference ── */
@@ -69,8 +60,8 @@
   }
   .hero-logo {
     filter:
-      drop-shadow(0 0 18px rgba(176, 99, 224, 0.6))
-      drop-shadow(0 0 40px rgba(0, 255, 255, 0.25));
+      drop-shadow(0 0 16px rgba(168, 85, 247, 0.42))
+      drop-shadow(0 0 34px rgba(14, 165, 233, 0.18));
   }
 }
 

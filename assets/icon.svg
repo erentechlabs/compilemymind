@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
   <title id="title">Compile My Mind global networking icon</title>
-  <desc id="desc">A flat purplish globe with connected network nodes for an IT, networking, and cybersecurity blog.</desc>
+  <desc id="desc">A flat purplish globe with connected network nodes for a software, IT, and networking blog.</desc>
   <defs>
     <clipPath id="globeClip">
       <circle cx="256" cy="256" r="212"/>
