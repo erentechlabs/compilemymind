@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Common network ports cheat sheet</title>
+  <desc id="desc">A categorized cheat sheet of common network ports for web, DNS, remote access, email, Windows, monitoring, and database services.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="50%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="760" rx="34" fill="url(#bg)"/>
+  <circle cx="124" cy="110" r="128" fill="#a855f7" opacity="0.12"/>
+  <circle cx="1070" cy="620" r="168" fill="#38bdf8" opacity="0.10"/>
+  <text x="600" y="58" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="850" text-anchor="middle">Common Ports IT Students Should Recognize</text>
+  <text x="600" y="92" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" text-anchor="middle">Memorize by use case, not by random number list.</text>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif" filter="url(#shadow)">
+    <g transform="translate(70 135)">
+      <rect width="315" height="145" rx="24" fill="url(#panel)" stroke="#a78bfa" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Web</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">80 TCP - HTTP</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">443 TCP/UDP - HTTPS / HTTP/3</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">8080, 8443 - alternates</text>
+    </g>
+    <g transform="translate(442 135)">
+      <rect width="315" height="145" rx="24" fill="url(#panel)" stroke="#38bdf8" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Naming and Addressing</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">53 UDP/TCP - DNS</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">67 UDP - DHCP server</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">68 UDP - DHCP client</text>
+    </g>
+    <g transform="translate(814 135)">
+      <rect width="315" height="145" rx="24" fill="url(#panel)" stroke="#a78bfa" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Remote Access</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">22 TCP - SSH / SFTP</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">3389 TCP/UDP - RDP</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">5985/5986 TCP - WinRM</text>
+    </g>
+    <g transform="translate(70 327)">
+      <rect width="315" height="170" rx="24" fill="url(#panel)" stroke="#38bdf8" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Email</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">25 TCP - SMTP transfer</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">587 / 465 TCP - submission</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">143 / 993 TCP - IMAP / IMAPS</text>
+      <text x="24" y="163" fill="#cbd5e1" font-size="17">110 / 995 TCP - POP3 / POP3S</text>
+    </g>
+    <g transform="translate(442 327)">
+      <rect width="315" height="170" rx="24" fill="url(#panel)" stroke="#a78bfa" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Windows and Directory</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">88 TCP/UDP - Kerberos</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">389 / 636 - LDAP / LDAPS</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">445 TCP - SMB</text>
+      <text x="24" y="163" fill="#cbd5e1" font-size="17">135, 137-139 - RPC / NetBIOS</text>
+    </g>
+    <g transform="translate(814 327)">
+      <rect width="315" height="170" rx="24" fill="url(#panel)" stroke="#38bdf8" stroke-opacity="0.55"/>
+      <text x="24" y="38" fill="#f8fafc" font-size="23" font-weight="850">Monitoring</text>
+      <text x="24" y="73" fill="#cbd5e1" font-size="17">123 UDP - NTP</text>
+      <text x="24" y="103" fill="#cbd5e1" font-size="17">161 UDP - SNMP</text>
+      <text x="24" y="133" fill="#cbd5e1" font-size="17">162 UDP - SNMP traps</text>
+      <text x="24" y="163" fill="#cbd5e1" font-size="17">514, 6514 - Syslog</text>
+    </g>
+    <g transform="translate(255 545)">
+      <rect width="690" height="112" rx="24" fill="url(#panel)" stroke="#a78bfa" stroke-opacity="0.55"/>
+      <text x="345" y="38" fill="#f8fafc" font-size="23" font-weight="850" text-anchor="middle">Databases and App Backends</text>
+      <text x="34" y="78" fill="#cbd5e1" font-size="17">1433 SQL Server</text>
+      <text x="214" y="78" fill="#cbd5e1" font-size="17">1521 Oracle</text>
+      <text x="374" y="78" fill="#cbd5e1" font-size="17">3306 MySQL</text>
+      <text x="534" y="78" fill="#cbd5e1" font-size="17">5432 PostgreSQL</text>
+      <text x="214" y="104" fill="#cbd5e1" font-size="17">6379 Redis</text>
+      <text x="374" y="104" fill="#cbd5e1" font-size="17">27017 MongoDB</text>
+    </g>
+  </g>
+
+  <rect x="275" y="690" width="650" height="44" rx="16" fill="#020617" opacity="0.42" stroke="#a855f7" stroke-opacity="0.26"/>
+  <text x="600" y="718" fill="#e0e7ff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="750" text-anchor="middle">A port number is a strong clue, but confirm the actual service before making decisions.</text>
+</svg>
