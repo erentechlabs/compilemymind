@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">JPA Hibernate JDBC decision map</title>
+  <desc id="desc">A decision map showing when to choose JDBC, JPA with Hibernate, Spring Data JPA, or Hibernate-specific features.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="55%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.06"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="14" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2 2 L10 6 L2 10 Z" fill="#c4b5fd"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="700" rx="34" fill="url(#bg)"/>
+  <circle cx="130" cy="110" r="130" fill="#a855f7" opacity="0.12"/>
+  <circle cx="1070" cy="585" r="165" fill="#38bdf8" opacity="0.10"/>
+
+  <text x="600" y="58" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="850" text-anchor="middle">Which Persistence Tool Should You Use?</text>
+  <text x="600" y="92" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" text-anchor="middle">Pick the layer that matches the job, not the trend.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="448" y="135" width="304" height="86" rx="24" fill="#111827" stroke="#a78bfa" stroke-opacity="0.6"/>
+    <rect x="70" y="320" width="250" height="132" rx="24" fill="url(#panel)" stroke="#38bdf8" stroke-opacity="0.55"/>
+    <rect x="350" y="320" width="250" height="132" rx="24" fill="url(#panel)" stroke="#a78bfa" stroke-opacity="0.55"/>
+    <rect x="630" y="320" width="250" height="132" rx="24" fill="url(#panel)" stroke="#c084fc" stroke-opacity="0.55"/>
+    <rect x="910" y="320" width="250" height="132" rx="24" fill="url(#panel)" stroke="#38bdf8" stroke-opacity="0.55"/>
+    <rect x="250" y="532" width="700" height="78" rx="22" fill="#020617" opacity="0.48" stroke="#a855f7" stroke-opacity="0.28"/>
+  </g>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <text x="600" y="170" fill="#f8fafc" font-size="24" font-weight="900">Start with the data access need</text>
+    <text x="600" y="199" fill="#cbd5e1" font-size="15">Control, standard ORM, convenience, or provider-specific tuning?</text>
+
+    <text x="195" y="360" fill="#f8fafc" font-size="23" font-weight="850">Use JDBC</text>
+    <text x="195" y="392" fill="#cbd5e1" font-size="15">Exact SQL control</text>
+    <text x="195" y="418" fill="#cbd5e1" font-size="15">Reports, batch jobs, tuning</text>
+
+    <text x="475" y="360" fill="#f8fafc" font-size="23" font-weight="850">Use JPA</text>
+    <text x="475" y="392" fill="#cbd5e1" font-size="15">Standard ORM API</text>
+    <text x="475" y="418" fill="#cbd5e1" font-size="15">Entities and relationships</text>
+
+    <text x="755" y="360" fill="#f8fafc" font-size="23" font-weight="850">Use Spring Data JPA</text>
+    <text x="755" y="392" fill="#cbd5e1" font-size="15">Repository convenience</text>
+    <text x="755" y="418" fill="#cbd5e1" font-size="15">CRUD-heavy Spring apps</text>
+
+    <text x="1035" y="360" fill="#f8fafc" font-size="23" font-weight="850">Use Hibernate Features</text>
+    <text x="1035" y="392" fill="#cbd5e1" font-size="15">Advanced ORM tuning</text>
+    <text x="1035" y="418" fill="#cbd5e1" font-size="15">Accept provider coupling</text>
+
+    <text x="600" y="565" fill="#f8fafc" font-size="21" font-weight="850">Best learning path</text>
+    <text x="600" y="593" fill="#e0e7ff" font-size="16">Understand JDBC basics first, then JPA concepts, then Hibernate behavior.</text>
+  </g>
+
+  <g fill="none" stroke="#c4b5fd" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M540 222 C430 260 300 275 210 315"/>
+    <path d="M580 222 C530 260 500 280 482 315"/>
+    <path d="M620 222 C670 260 720 280 750 315"/>
+    <path d="M660 222 C795 260 930 275 1025 315"/>
+    <path d="M195 452 C260 500 350 520 500 532"/>
+    <path d="M475 452 C520 500 555 518 585 532"/>
+    <path d="M755 452 C720 500 680 518 620 532"/>
+    <path d="M1035 452 C940 500 830 520 700 532"/>
+  </g>
+</svg>
