@@ -148,6 +148,15 @@ class AutopublisherTests(unittest.TestCase):
             with self.assertRaises(autopublisher.GeminiQuotaError):
                 client.grounded_research("test")
 
+    def test_publish_result_marker_records_explicit_result(self):
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "publish-result.json"
+            with patch.object(autopublisher, "PUBLISH_RESULT_PATH", marker):
+                autopublisher.write_publish_result("rejected", reason="qa_failed")
+            payload = json.loads(marker.read_text(encoding="utf-8"))
+        self.assertEqual(payload["result"], "rejected")
+        self.assertEqual(payload["reason"], "qa_failed")
+
     def test_maintenance_stops_cleanly_when_grounded_research_is_quota_limited(self):
         state = {"maintenance_reviews": {}, "last_runs": {}}
         post = SimpleNamespace(slug="test-post", title="Test post", date="2026-01-01", body="A readable article body.")

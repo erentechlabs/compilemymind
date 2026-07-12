@@ -49,6 +49,7 @@ AUTOPUBLISHER_DIR = ROOT / ".autopublisher"
 CONFIG_PATH = AUTOPUBLISHER_DIR / "config.json"
 STATE_PATH = AUTOPUBLISHER_DIR / "state.json"
 MODEL_STATE_PATH = AUTOPUBLISHER_DIR / "model-state.json"
+PUBLISH_RESULT_PATH = AUTOPUBLISHER_DIR / "publish-result.json"
 
 STOP_WORDS = {
     "a",
@@ -356,6 +357,10 @@ def load_model_state() -> dict[str, Any]:
 
 def save_state(state: dict[str, Any]) -> None:
     write_json(STATE_PATH, state)
+
+
+def write_publish_result(result: str, **fields: Any) -> None:
+    write_json(PUBLISH_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
 
 
 def load_posts(config: dict[str, Any]) -> list[Post]:
@@ -1592,6 +1597,7 @@ def run_publish(args: argparse.Namespace) -> int:
     config = load_config()
     state = load_state()
     log = EventLog()
+    write_publish_result("started")
     client = GeminiClient(config, log)
     client.require_key()
 
@@ -1599,6 +1605,7 @@ def run_publish(args: argparse.Namespace) -> int:
     research = collect_research(config, log)
     if not research:
         log.log("publish_skipped", reason="no_research_items")
+        write_publish_result("skipped", reason="no_research_items")
         return 0
     enrich_research_snippets(research, config, log)
 
@@ -1616,6 +1623,7 @@ def run_publish(args: argparse.Namespace) -> int:
             log.log("publish_quota_limited", stage="grounded_research", error=str(error))
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "grounded_research"}
             save_state(state)
+            write_publish_result("quota_limited", stage="grounded_research")
             return 0
         except Exception as error:
             grounded_brief = None
@@ -1627,10 +1635,12 @@ def run_publish(args: argparse.Namespace) -> int:
         log.log("publish_quota_limited", stage="topic_selection", error=str(error))
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
         save_state(state)
+        write_publish_result("quota_limited", stage="topic_selection")
         return 0
     if not topic:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "no_topic"}
         save_state(state)
+        write_publish_result("no_topic")
         return 0
 
     feedback = ""
@@ -1645,6 +1655,7 @@ def run_publish(args: argparse.Namespace) -> int:
             log.log("publish_quota_limited", stage="article_generation", attempt=attempt, error=str(error))
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "article_generation"}
             save_state(state)
+            write_publish_result("quota_limited", stage="article_generation", attempt=attempt)
             return 0
         article = normalize_article_payload(raw_article, topic, config, research)
         issues = deterministic_qa(article, topic, posts, config)
@@ -1658,6 +1669,7 @@ def run_publish(args: argparse.Namespace) -> int:
             log.log("publish_quota_limited", stage="quality_assurance", attempt=attempt, error=str(error))
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "quality_assurance"}
             save_state(state)
+            write_publish_result("quota_limited", stage="quality_assurance", attempt=attempt)
             return 0
         min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
         try:
@@ -1682,10 +1694,14 @@ def run_publish(args: argparse.Namespace) -> int:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "qa_failed"}
         save_state(state)
         log.log("publish_rejected_all_drafts", title=topic.get("title"), feedback=feedback)
+        write_publish_result("rejected", reason="qa_failed", title=topic.get("title"))
         return 0
 
     index_path = write_article_bundle(final_article, topic, config, log, dry_run=args.dry_run)
     if not args.dry_run and not run_hugo_build(log):
+        if index_path.parent.exists():
+            shutil.rmtree(index_path.parent)
+        write_publish_result("rejected", reason="build_failed", path=str(index_path.relative_to(ROOT)))
         return 1
 
     state.setdefault("generated_posts", []).append(
@@ -1702,6 +1718,11 @@ def run_publish(args: argparse.Namespace) -> int:
     )
     state["last_runs"]["publish"] = {"time": iso_z(), "result": "published" if not args.dry_run else "dry_run"}
     save_state(state)
+    write_publish_result(
+        "published" if not args.dry_run else "dry_run",
+        path=str(index_path.relative_to(ROOT)),
+        title=final_article["title"],
+    )
     return 0
 
 

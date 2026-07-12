@@ -17,3 +17,6 @@ Thumbs.db
 # Python local artifacts
 __pycache__/
 *.py[cod]
+
+# Per-run publication gate marker
+.autopublisher/publish-result.json

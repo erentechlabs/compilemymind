@@ -53,6 +53,28 @@ jobs:
       - name: Run autonomous research, generation, and QA
         run: python tools/autopublisher/autopublisher.py --mode publish
 
+      - name: Enforce approved publication gate
+        id: publication_gate
+        shell: bash
+        run: |
+          result=$(python -c 'import json; from pathlib import Path; print(json.loads(Path(".autopublisher/publish-result.json").read_text(encoding="utf-8")).get("result", "missing"))')
+          echo "result=$result" >> "$GITHUB_OUTPUT"
+          if test "$result" = "published"; then
+            if test -z "$(git status --porcelain=v1 -- content/posts)"; then
+              echo "::error::Publisher reported a successful publication but no content file changed."
+              exit 1
+            fi
+            echo "approved=true" >> "$GITHUB_OUTPUT"
+            echo "Approved publication confirmed with content changes."
+            exit 0
+          fi
+          if test -n "$(git status --porcelain=v1 -- content/posts)"; then
+            echo "::error::Content changed without an approved publication result; refusing to push."
+            exit 1
+          fi
+          echo "approved=false" >> "$GITHUB_OUTPUT"
+          echo "No approved article was produced; nothing will be pushed. Result: $result"
+
       - name: Rebuild and validate generated site
         run: |
           git diff --check
@@ -64,9 +86,9 @@ jobs:
         run: |
           git config user.name "compilemymind-autopublisher[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if test -z "$(git status --porcelain=v1 -- content/posts)"; then
+          if test "${{ steps.publication_gate.outputs.approved }}" != "true"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No article content was published; state-only publisher results will not be committed."
+            echo "No approved publication; nothing will be committed."
             exit 0
           fi
           if git diff --quiet -- content/posts .autopublisher/state.json; then
