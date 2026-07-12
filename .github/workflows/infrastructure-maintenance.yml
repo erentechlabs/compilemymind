@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 concurrency:
   group: infrastructure-maintenance
@@ -18,10 +17,6 @@ jobs:
     name: Prepare safe framework and tooling updates
     runs-on: ubuntu-latest
     timeout-minutes: 35
-
-    env:
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - name: Check out repository
@@ -66,27 +61,20 @@ jobs:
           /tmp/install-hugo.sh "$(tr -d '[:space:]' < .hugo-version)"
           hugo --minify
 
-      - name: Create pull request when changes exist
+      - name: Commit validated infrastructure updates
         shell: bash
         run: |
           set -euo pipefail
-          if [ -z "$(git status --short -- .hugo-version themes/mana/package.json themes/mana/package-lock.json)" ]; then
+          if [ -z "$(git status --short -- .hugo-version themes/mana/package.json themes/mana/package-lock.json .autopublisher/reports)" ]; then
             echo "No safe infrastructure changes were prepared."
             exit 0
           fi
-          REPORT="$(ls -1t .autopublisher/reports/infrastructure-maintenance-*.md | head -n 1)"
-          BRANCH="codex/autonomous-infra-maintenance-${GITHUB_RUN_ID}"
           git config user.name "compilemymind-maintenance"
           git config user.email "actions@github.com"
-          git checkout -b "${BRANCH}"
           git add .hugo-version themes/mana/package.json .autopublisher/reports
           if [ -f themes/mana/package-lock.json ]; then
             git add themes/mana/package-lock.json
           fi
-          git commit -m "chore: prepare infrastructure maintenance updates"
-          git push --set-upstream origin "${BRANCH}"
-          gh pr create \
-            --base "${GITHUB_REF_NAME}" \
-            --head "${BRANCH}" \
-            --title "chore: infrastructure maintenance updates" \
-            --body-file "${REPORT}"
+          git commit -m "chore: autonomous infrastructure maintenance"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

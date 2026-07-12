@@ -21,7 +21,7 @@ The default models are configured in `.autopublisher/config.json`.
 
 - `Autonomous Publishing`: runs three times per day. It researches trusted sources, chooses one non-duplicate topic, generates a long-form article, creates article assets, runs deterministic and Gemini QA, validates Hugo, then commits approved content to `main`.
 - `Content Maintenance`: runs twice per week. It reviews older posts, checks external links, uses Gemini grounded research to detect outdated facts, updates only when meaningful, validates Hugo, then commits approved maintenance changes.
-- `Infrastructure Maintenance`: runs every January and July. It checks Hugo and theme tooling updates, validates candidate updates, then opens a PR for manual review. It does not push infrastructure changes directly to `main`.
+- `Infrastructure Maintenance`: runs every January and July. It checks Hugo and theme tooling updates, applies candidate updates, validates the full Hugo build, then commits safe validated changes to `main` automatically.
 
 ## Quality Gates
 
@@ -47,7 +47,7 @@ Gemini image generation creates `featured.png` when available. If image generati
 
 - Runtime logs are written to `.autopublisher/logs/` and uploaded as GitHub Actions artifacts.
 - Durable state is stored in `.autopublisher/state.json`.
-- Infrastructure reports are stored in `.autopublisher/reports/` and committed only with maintenance PRs.
+- Infrastructure reports are stored in `.autopublisher/reports/` and committed with automated maintenance updates.
 
 ## Local Commands
 

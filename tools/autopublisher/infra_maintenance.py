@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Prepare low-risk infrastructure maintenance updates for manual review.
+"""Prepare and validate low-risk infrastructure maintenance updates.
 
 This script is intentionally conservative. It may update local version files and
-lockfiles inside a GitHub Actions branch, but the workflow that runs it opens a
-pull request instead of pushing directly to the production branch.
+lockfiles, but the workflow commits only after the generated site builds.
 """
 
 from __future__ import annotations
@@ -85,7 +84,7 @@ def write_report(data: dict[str, Any]) -> Path:
         "",
         f"Generated: {dt.datetime.utcnow().replace(microsecond=0).isoformat()}Z",
         "",
-        "This report was created by the autonomous maintenance workflow. Changes are prepared for pull request review and are not deployed automatically.",
+        "This report was created by the autonomous maintenance workflow. Safe changes are committed automatically only after validation passes.",
         "",
         "## Hugo",
         "",
@@ -150,7 +149,7 @@ def main() -> int:
     if latest and parse_version(latest) > parse_version(current):
         if args.apply_safe_updates:
             version_path.write_text(latest + "\n", encoding="utf-8")
-            data["hugo_action"] = f"updated .hugo-version to {latest} for PR validation"
+            data["hugo_action"] = f"updated .hugo-version to {latest} for automated validation"
         else:
             data["hugo_action"] = f"candidate update available: {latest}"
 
