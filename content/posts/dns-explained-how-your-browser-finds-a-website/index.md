@@ -15,12 +15,10 @@ That is what **DNS** does.
 
 The simplest version:
 
-```text
-You type a domain name.
-DNS finds the IP address.
-Your browser connects to that IP address.
-The website loads.
-```
+1. You type a domain name.
+2. DNS finds the IP address.
+3. Your browser connects to that IP address.
+4. The website loads.
 
 But the real process is more interesting. DNS involves caches, recursive resolvers, root servers, TLD servers, authoritative nameservers, record types, time-to-live values, and sometimes privacy or security layers such as DNS over HTTPS and DNSSEC.
 
@@ -29,6 +27,8 @@ This guide explains the full journey in practical terms.
 If you want the lower-level networking foundation first, read [Network Communication Basics](/posts/network-communication-basics/), [Internet Protocol (IP) Explained](/posts/internet-protocol-ip-basics/), and [TCP vs UDP Explained With Examples](/posts/tcp-vs-udp-explained-with-examples/).
 
 ![DNS resolution flow](dns-resolution-flow.svg)
+
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
 
 ---
 
@@ -57,20 +57,15 @@ Computers route traffic using IP addresses. Humans prefer names.
 
 Imagine if you had to remember websites like this:
 
-```text
-142.250.184.206
-151.101.1.140
-104.18.32.47
-```
+- 142.250.184.206
+- 151.101.1.140
+- 104.18.32.47
 
 That would be miserable, and it would also be fragile. Websites move between hosting providers, use CDNs, add IPv6, change load balancers, and route users to different regions.
 
 DNS solves that by separating the name from the location.
 
-```text
-Human remembers: compilemymind.com
-Network uses:    one or more IP addresses
-```
+DNS separates the stable name a person remembers, such as `compilemymind.com`, from the one or more IP addresses the network uses.
 
 That separation lets site owners change infrastructure without forcing every visitor to learn a new address.
 
@@ -97,9 +92,7 @@ The browser usually does not talk directly to root or authoritative nameservers.
 
 Let's say you type:
 
-```text
-https://www.example.com/
-```
+`https://www.example.com/`
 
 The browser needs the IP address for `www.example.com`.
 
@@ -109,9 +102,7 @@ Browsers keep DNS answers for a short time.
 
 If you recently visited the same site, the browser may already know the answer:
 
-```text
-www.example.com -> 93.184.216.34
-```
+`www.example.com -> 93.184.216.34`
 
 If the answer is still valid, the browser can skip a network DNS request.
 
@@ -147,9 +138,7 @@ That resolver might be:
 
 The resolver receives a question like:
 
-```text
 What is the A record for www.example.com?
-```
 
 If it has the answer cached, it returns it immediately. If not, it starts the recursive lookup process.
 
@@ -161,9 +150,7 @@ The root nameservers do not usually know the IP address of `www.example.com`. In
 
 The resolver asks:
 
-```text
 Where do I find information about .com?
-```
 
 The root nameserver answers with a referral to the `.com` TLD nameservers.
 
@@ -174,9 +161,7 @@ The root nameserver answers with a referral to the `.com` TLD nameservers.
 
 Next, the recursive resolver asks a `.com` TLD nameserver:
 
-```text
 Where do I find information about example.com?
-```
 
 The `.com` TLD server does not usually return the website IP either. It returns the authoritative nameservers for `example.com`.
 
@@ -184,15 +169,11 @@ The `.com` TLD server does not usually return the website IP either. It returns 
 
 Now the resolver asks the authoritative nameserver:
 
-```text
 What is the A record for www.example.com?
-```
 
 The authoritative nameserver responds with the actual DNS answer, such as:
 
-```text
-www.example.com.  3600  IN  A  93.184.216.34
-```
+`www.example.com.  3600  IN  A  93.184.216.34`
 
 That answer includes a **TTL**, or **time to live**, which tells resolvers how long they may cache the response.
 
@@ -208,24 +189,20 @@ DNS is done. The browser can now connect to the server.
 
 For an HTTPS website, the simplified flow looks like this:
 
-```text
-DNS lookup -> IP address
-TCP or QUIC connection -> server
-TLS handshake -> encrypted session
-HTTP request -> website response
-```
+| Stage | What it accomplishes |
+| --- | --- |
+| DNS lookup | Find an IP address |
+| TCP or QUIC connection | Reach the server |
+| TLS handshake | Establish encryption |
+| HTTP request | Ask for the website response |
 
 DNS answers the question:
 
-```text
 Where is this website?
-```
 
 HTTP answers the question:
 
-```text
 What content should the website send back?
-```
 
 ---
 
@@ -240,17 +217,14 @@ DNS explanations often use the words **recursive** and **iterative**. They are r
 
 From your computer's perspective, DNS is usually recursive:
 
-```text
-Computer -> Resolver: Please find the answer for me.
-```
+`Computer -> Resolver: Please find the answer for me.`
 
 From the resolver's perspective, the process is iterative:
 
-```text
-Resolver -> Root: Where is .com?
-Resolver -> .com TLD: Where is example.com?
-Resolver -> Authoritative NS: What is www.example.com?
-```
+1. The computer asks the recursive resolver to find the answer.
+2. The resolver asks a root server where to find the `.com` TLD.
+3. The resolver asks the `.com` TLD where `example.com` is delegated.
+4. The resolver asks the authoritative nameserver for `www.example.com`.
 
 That division is why DNS can be both convenient for clients and scalable for the internet.
 
@@ -287,19 +261,13 @@ Many websites use aliases.
 
 For example:
 
-```text
-www.example.com  CNAME  example.com
-example.com      A      93.184.216.34
-```
+A CNAME chain can look like this: `www.example.com` is an alias for `example.com`, and `example.com` returns an A record such as `93.184.216.34`.
 
 The browser asks for `www.example.com`.
 
 DNS says:
 
-```text
-www.example.com is an alias for example.com
-example.com resolves to 93.184.216.34
-```
+In other words, the alias is resolved first and the target hostname supplies the final address: `www.example.com` → `example.com` → `93.184.216.34`.
 
 The final connection still goes to an IP address, but DNS may follow one or more aliases first.
 
@@ -318,9 +286,7 @@ Common use cases for `CNAME` records:
 
 Example:
 
-```text
-www.example.com.  300  IN  A  93.184.216.34
-```
+`www.example.com.  300  IN  A  93.184.216.34`
 
 The `300` means the answer may be cached for 300 seconds, or 5 minutes.
 
@@ -343,13 +309,7 @@ DNS is heavily cached. That is good for performance, but it can be confusing whe
 
 Common cache layers:
 
-```text
-Browser cache
-Operating system cache
-Router cache
-Recursive resolver cache
-CDN or DNS provider behavior
-```
+A DNS answer may already exist in the browser cache, the operating system cache, the router, a recursive resolver, or a CDN/provider layer. Each cache can remove a network lookup until its TTL expires.
 
 When you update a DNS record, not everyone sees the change at the same time. Some users may still receive the old answer until the old TTL expires.
 
@@ -368,9 +328,7 @@ Instead of returning one fixed server address for everyone, DNS may help route u
 
 A CDN-backed site may use records like:
 
-```text
-www.example.com  CNAME  example.cdn-provider.net
-```
+A CDN-backed record can point `www.example.com` to `example.cdn-provider.net`; the CDN then returns an address for a nearby or healthy edge server.
 
 The CDN can then return different IP addresses depending on:
 
@@ -388,17 +346,13 @@ This is one reason two people in different countries may resolve the same domain
 
 The classic beginner rule is:
 
-```text
-DNS uses UDP port 53.
-```
+**DNS uses UDP port 53.**
 
 That is mostly true for ordinary lookups, because UDP is fast and simple. A small DNS query and response can fit nicely into a single request and response.
 
 But the complete answer is:
 
-```text
-DNS commonly uses UDP/53, but it can also use TCP/53.
-```
+`DNS commonly uses UDP/53, but it can also use TCP/53.`
 
 DNS may use TCP when:
 
@@ -539,14 +493,14 @@ DNS problems can look like browser problems, server problems, or internet proble
 
 When a website loads, think of the process like this:
 
-```text
-1. Name:       What website did the user request?
-2. DNS:        What IP address does that name resolve to?
-3. Routing:    Can packets reach that IP address?
-4. Transport:  Can TCP, UDP, or QUIC connect?
-5. TLS:        Can the browser establish a trusted encrypted session?
-6. HTTP:       Does the server return the expected content?
-```
+| Layer | Question |
+| --- | --- |
+| Name | What website did the user request? |
+| DNS | What IP address does the name resolve to? |
+| Routing | Can packets reach that IP address? |
+| Transport | Can TCP, UDP, or QUIC connect? |
+| TLS | Can the browser establish a trusted encrypted session? |
+| HTTP | Does the server return the expected content? |
 
 DNS is only step 2, but if step 2 fails, everything after it fails too.
 
@@ -580,9 +534,7 @@ DNS is the internet's address book, but that phrase undersells it. DNS is also a
 
 When you understand DNS, website loading feels less mysterious. You can see the chain:
 
-```text
-domain name -> DNS answer -> IP address -> connection -> encrypted session -> HTTP response
-```
+The complete mental model is: domain name → DNS answer → IP address → network connection → encrypted session → HTTP response.
 
 That chain is useful for troubleshooting, system administration, cloud work, web development, and everyday IT support.
 

@@ -15,6 +15,8 @@ This post explains the difference in plain language, with real-world examples an
 
 ![Authentication strength map](authentication-strength-map.svg)
 
+> **Reading path:** Start with the core security model, connect it to the real-world scenario, and finish with the controls or checklist that make the idea actionable.
+
 ---
 
 ## The Short Version
@@ -27,11 +29,7 @@ This post explains the difference in plain language, with real-world examples an
 
 The shortest mental model:
 
-```text
-MFA = more than one factor
-Passwordless = no password in the normal login flow
-Passkeys = a modern, phishing-resistant way to do passwordless authentication
-```
+The terms are related but distinct: **MFA** uses more than one factor, **passwordless** removes the password from the normal flow, and **passkeys** provide a modern, phishing-resistant passwordless method.
 
 The categories overlap. A passkey can be passwordless. A passkey can satisfy MFA because it combines possession of an authenticator with a local user verification gesture such as a PIN, fingerprint, or face unlock. But not all MFA is passwordless, and not all passwordless authentication is a passkey.
 
@@ -209,12 +207,12 @@ The confusion comes from overlap.
 
 The hierarchy is not perfect, but it is useful:
 
-```text
-Password-only: weakest baseline
-Traditional MFA: better, but method quality varies
-Passwordless: better user experience and less password risk
-Passkeys/FIDO: passwordless plus phishing resistance
-```
+| Approach | What it means |
+| --- | --- |
+| Password-only | The weakest baseline |
+| Traditional MFA | A stronger login, although factor quality varies |
+| Passwordless | No password in the normal login flow |
+| Passkeys/FIDO | Passwordless authentication with phishing resistance |
 
 ---
 

@@ -10,6 +10,8 @@ HTTP status codes are the server's vocabulary for telling clients what happened.
 
 This guide covers what each status code category means, when to use specific codes, and a few security considerations that most tutorials skip.
 
+> **Reading path:** Use the status-code categories as the map, then work through the API example and the mistakes that commonly produce misleading responses.
+
 ---
 
 ## The Five Categories
@@ -175,9 +177,11 @@ Notice: the `500` response returns a generic message. The actual exception is lo
 
 ## TL;DR
 
-- **2xx** - success. Use the specific one: `201` for creation, `204` for deletion.
-- **3xx** - redirection. Use `301` for permanent, `302`/`307` for temporary.
-- **4xx** - client error. `400` bad input, `401` unauthenticated, `403` unauthorized, `404` not found, `429` rate limited.
-- **5xx** - server error. Never expose internals in the response body.
+| Concept | Explanation |
+| --- | --- |
+| 2xx | success. Use the specific one: `201` for creation, `204` for deletion. |
+| 3xx | redirection. Use `301` for permanent, `302`/`307` for temporary. |
+| 4xx | client error. `400` bad input, `401` unauthenticated, `403` unauthorized, `404` not found, `429` rate limited. |
+| 5xx | server error. Never expose internals in the response body. |
 
 Getting status codes right isn't pedantry - it's the contract your API makes with its consumers.

@@ -20,6 +20,8 @@ But design is only half the battle. How do you prove that your application will 
 
 If you are new to the core building blocks of Microsoft's cloud, check out our [AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide](/posts/az-900-cheatsheet/) to understand how Virtual Machines, Scale Sets, and Resource Groups operate before diving into advanced chaos experimentation.
 
+> **Reading path:** Learn the resilience model first, then follow the experiment workflow before applying the safety and governance recommendations.
+
 ---
 
 ## The Core Principles of Chaos Engineering

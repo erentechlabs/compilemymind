@@ -10,6 +10,8 @@ Spring's annotation model can feel overwhelming at first. There are annotations 
 
 This guide covers six of the most important annotations in day-to-day Spring development.
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## @Component

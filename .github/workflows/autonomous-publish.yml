@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: autonomous-publish-${{ github.ref }}
+  group: autonomous-content-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:

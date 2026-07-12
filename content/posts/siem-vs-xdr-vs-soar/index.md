@@ -19,13 +19,15 @@ They are often discussed together because they all live in the security operatio
 
 The simplest way to remember it:
 
-```text
-SIEM = visibility and correlation
-XDR  = integrated detection and investigation
-SOAR = automated and repeatable response
-```
+| Tooling | Primary role |
+| --- | --- |
+| SIEM | Visibility and correlation |
+| XDR | Integrated detection and investigation |
+| SOAR | Automated and repeatable response |
 
 ![SIEM XDR SOAR role map](siem-xdr-soar-role-map.svg)
+
+> **Reading path:** Start with the core security model, connect it to the real-world scenario, and finish with the controls or checklist that make the idea actionable.
 
 ---
 

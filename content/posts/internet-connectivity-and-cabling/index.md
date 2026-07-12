@@ -10,6 +10,8 @@ Before a single packet reaches your application, it has to traverse an enormous 
 
 This guide covers how internet connectivity is delivered and the physical cabling technologies that underpin modern networks.
 
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
+
 ---
 
 ## How ISPs Deliver Internet

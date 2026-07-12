@@ -10,6 +10,8 @@ Java 25 (JDK 25) is here - and it's an LTS release. That means most vendors will
 
 This post is based on the official OpenJDK pages and JEPs for JDK 25.
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## Quick Summary

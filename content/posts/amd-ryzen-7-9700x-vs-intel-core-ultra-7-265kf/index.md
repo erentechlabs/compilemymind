@@ -10,6 +10,8 @@ The battle between AMD and Intel continues to heat up in 2025, with both compani
 
 Whether you're building a gaming rig, a productivity workstation, or a versatile all-rounder, this detailed comparison will help you make an informed decision. Let's dive into the specs, benchmarks, and real-world performance to see which processor deserves a spot in your next build.
 
+> **Reading path:** Read the specification table first, then compare workload results, thermals, platform value, and the final use-case recommendation.
+
 ---
 
 ## Technical Specifications Comparison

@@ -17,6 +17,8 @@ Zero Trust is the answer to that reality: **do not grant access because a reques
 
 ![Zero Trust access decision flow](zero-trust-access-flow.svg)
 
+> **Reading path:** Start with the core security model, connect it to the real-world scenario, and finish with the controls or checklist that make the idea actionable.
+
 ---
 
 ## What Zero Trust Actually Means
@@ -181,12 +183,7 @@ Modern systems often communicate service-to-service. A background job reads from
 
 Bad pattern:
 
-```text
-Application stores a long-lived secret in a config file.
-The secret has broad permissions.
-Nobody rotates it.
-Logs do not show clearly which workload used it.
-```
+A weak workload-identity design stores a long-lived secret in a configuration file, grants it broad permissions, never rotates it, and leaves poor evidence of which workload used it.
 
 Better Zero Trust pattern:
 

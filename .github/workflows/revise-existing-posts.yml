@@ -1,8 +1,8 @@
-name: Autonomous content maintenance
+name: Revise existing posts
 
 on:
   schedule:
-    - cron: "31 2 * * 1,4"
+    - cron: "47 3 * * *"
   workflow_dispatch:
 
 concurrency:
@@ -13,9 +13,9 @@ permissions:
   contents: write
 
 jobs:
-  maintain:
+  revise:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 35
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GEMINI_TEXT_MODEL: ${{ vars.GEMINI_TEXT_MODEL }}
@@ -49,43 +49,40 @@ jobs:
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/hugo/hugo" version
 
-      - name: Review links and stale facts
-        run: python tools/autopublisher/autopublisher.py --mode maintain
+      - name: Rewrite one existing post with Gemini and QA
+        run: python tools/autopublisher/revise_posts.py --max-posts 1
 
-      - name: Rebuild and validate maintained site
+      - name: Validate revised content
         run: |
           git diff --check
+          python tools/autopublisher/autopublisher.py --mode audit
           hugo --minify
 
-      - name: Commit and push approved maintenance
+      - name: Commit and push approved revision
         id: commit
         shell: bash
         run: |
-          git config user.name "compilemymind-maintenance[bot]"
+          git config user.name "compilemymind-editorial[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet -- content/posts .autopublisher/state.json; then
+          if git diff --quiet -- content/posts .autopublisher/revision-state.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No maintenance changes were required."
+            echo "No approved revision was produced."
             exit 0
           fi
-          git add content/posts .autopublisher/state.json
+          git add content/posts .autopublisher/revision-state.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          git commit -m "chore(content): autonomous maintenance"
+          git commit -m "chore(content): improve existing article readability"
           git push origin "HEAD:${GITHUB_REF_NAME}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Report deployment configuration
-        if: steps.commit.outputs.changed == 'true'
-        run: echo "Maintenance was pushed. Cloudflare Pages Git integration will deploy the new commit."
-
-      - name: Upload maintenance logs
+      - name: Upload revision logs
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: autonomous-maintenance-${{ github.run_id }}
+          name: revise-existing-posts-${{ github.run_id }}
           path: .autopublisher/logs/
           if-no-files-found: ignore
           retention-days: 30

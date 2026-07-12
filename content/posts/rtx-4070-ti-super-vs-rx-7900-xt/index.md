@@ -10,6 +10,8 @@ The $700–900 GPU segment is one of the most competitive in the market, and two
 
 NVIDIA focuses on ray tracing, DLSS 3, and power efficiency, while AMD offers raw rasterization performance and more VRAM at a competitive price. This detailed comparison will help you decide which card deserves your hard-earned money.
 
+> **Reading path:** Read the specification table first, then compare workload results, thermals, platform value, and the final use-case recommendation.
+
 ---
 
 ## Quick Overview

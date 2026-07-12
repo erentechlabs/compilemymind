@@ -10,6 +10,8 @@ Every device on the internet speaks one language at the network layer: **IP**. W
 
 This guide takes you through the mechanics of IPv4 addressing, subnetting, DHCP, and NAT. No hand-waving. Just the internals.
 
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
+
 ---
 
 ## What Is an IP Address?
@@ -25,9 +27,7 @@ At the network layer, IP ensures:
 
 IPv4 addresses are **32-bit binary numbers**, written in dotted-decimal notation for human readability:
 
-```
-192.168.1.5  →  11000000.10101000.00000001.00000101
-```
+`192.168.1.5  →  11000000.10101000.00000001.00000101`
 
 Each octet (8-bit group) ranges from **0 to 255**, giving IPv4 a theoretical address space of **~4.3 billion** unique addresses. In practice, much of that space is reserved, multicast, or private - which is exactly why NAT and IPv6 exist.
 
@@ -40,11 +40,7 @@ An IPv4 address is split into two parts:
 - **Network portion** - identifies *which network* the device belongs to
 - **Host portion** - identifies *which device* within that network
 
-```
-192.168.18.57
-  ↑ Network  ↑ Host
-  192.168.18   57
-```
+With a `/24`-style boundary, the first three octets identify the network (`192.168.18`) and the final octet identifies the host (`57`).
 
 Routers use only the network portion to make forwarding decisions. This hierarchical design is what makes the internet scalable: routers don't need to know about individual hosts, only about network prefixes.
 
@@ -68,11 +64,11 @@ The `1` bits in the mask indicate the network portion; the `0` bits mark the hos
 
 Given IP `192.168.1.5` with mask `255.255.255.0` (`/24`):
 
-```
-Network address:    192.168.1.0
-Broadcast address:  192.168.1.255
-Usable host range:  192.168.1.1  –  192.168.1.254
-```
+| Address | Example |
+| --- | --- |
+| Network address | `192.168.1.0` |
+| Broadcast address | `192.168.1.255` |
+| Usable host range | `192.168.1.1` – `192.168.1.254` |
 
 The formula for usable hosts: **2^(host bits) − 2**
 
@@ -149,14 +145,12 @@ IP supports three communication models:
 
 Most devices get their IP address automatically via **DHCP (Dynamic Host Configuration Protocol)**. The process follows a four-step handshake known as **DORA**:
 
-```
-Client                          DHCP Server
-  │                                  │
-  │── DISCOVER (broadcast) ─────────>│  "I need an address"
-  │<─ OFFER ─────────────────────────│  "Here's 192.168.1.42"
-  │── REQUEST (broadcast) ──────────>│  "I'll take it"
-  │<─ ACK ───────────────────────────│  "It's yours for 24h"
-```
+| Message | Direction | Purpose |
+| --- | --- | --- |
+| DHCPDISCOVER | Client → server | Find an available DHCP server |
+| DHCPOFFER | Server → client | Offer an address such as `192.168.1.42` |
+| DHCPREQUEST | Client → server | Request the offered address |
+| DHCPACK | Server → client | Confirm the lease and its duration |
 
 DHCP leases are temporary. When a lease expires, the client must renew or acquire a new address.
 
@@ -183,10 +177,7 @@ DHCP leases are temporary. When a lease expires, the client must renew or acquir
 
 Since private IPs can't be routed on the internet, **NAT** translates them to a public IP at the router boundary.
 
-```
-Internal (private)              Router                External (public)
-192.168.1.10:54321  ──────>  203.0.113.5:54321  ──────>  93.184.216.34:80
-```
+NAT can translate a private flow such as `192.168.1.10:54321` through the router's public address before it reaches `93.184.216.34:80`.
 
 **Why NAT matters:**
 - Conserves the exhausted IPv4 public address space
@@ -201,13 +192,7 @@ Internal (private)              Router                External (public)
 
 A **default gateway** is the router interface that handles traffic destined for other networks. Hosts that don't know how to reach a destination send their packets to the gateway and let it figure out the path.
 
-```
-Your PC (192.168.1.10)
-    │
-    └── Default gateway: 192.168.1.1 (router LAN interface)
-            │
-            └── WAN interface: 203.0.113.5 (public IP from ISP)
-```
+A private host such as `192.168.1.10` sends traffic to its default gateway, for example `192.168.1.1`; the router then uses its public WAN address, such as `203.0.113.5`, to reach the internet.
 
 The gateway address is assigned either statically by an admin or automatically via DHCP.
 

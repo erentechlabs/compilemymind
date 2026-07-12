@@ -45,6 +45,12 @@
     "treat_403_as_broken": false,
     "update_similarity_floor": 0.55
   },
+  "revision": {
+    "enabled": true,
+    "max_posts_per_run": 1,
+    "min_paragraphs": 5,
+    "min_preserved_length_ratio": 0.72
+  },
   "taxonomy": {
     "balance_categories": [
       "software-engineering",

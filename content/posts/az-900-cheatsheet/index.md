@@ -21,6 +21,8 @@ Passing the **Microsoft AZ-900: Azure Fundamentals** exam is your first step int
 | Azure architecture and services | 35-40% | Regions, availability zones, compute, networking, storage, databases, identity, access, security |
 | Azure management and governance | 30-35% | Cost management, pricing tools, Azure Policy, locks, tags, Purview, portal, Cloud Shell, ARM, monitoring |
 
+> **Reading path:** Use the domain map as a study plan, read the explanations in order, and return to the reference tables when you revise.
+
 ---
 
 ## Domain 1.0 - Describe Cloud Concepts (25–30%)
@@ -63,12 +65,7 @@ Passing the **Microsoft AZ-900: Azure Fundamentals** exam is your first step int
 - **Use case:** End-user productivity, collaboration, CRM.
 - **Azure examples:** Microsoft 365, Dynamics 365, Microsoft Teams.
 
-```
-Think of it like a pizza analogy:
-IaaS = Pizza ingredients delivered (you cook)
-PaaS = Pizza oven + ingredients (you bake)
-SaaS = Pizza delivered, ready to eat
-```
+A simple pizza analogy makes the service models memorable: with **IaaS**, you receive the ingredients and cook the meal yourself; with **PaaS**, the oven and much of the preparation are managed for you; with **SaaS**, the finished pizza is delivered and ready to use.
 
 ---
 
@@ -175,16 +172,16 @@ A region is a set of datacenters deployed within a defined perimeter, connected 
 **Availability Zones**
 Physically separate datacenters *within* a single region, each with independent power, cooling, and networking.
 
-- **Purpose:** Protect against single datacenter failure within a region.
-- **Minimum:** 3 zones per region (where supported).
-- **Use case:** Deploy VMs across zones for 99.99% uptime SLA.
+| Concept | Explanation |
+| --- | --- |
+| Purpose | Protect against single datacenter failure within a region. |
+| Minimum | 3 zones per region (where supported). |
+| Use case | Deploy VMs across zones for 99.99% uptime SLA. |
 
-```
-Region: East US
-  ├── Availability Zone 1 (Datacenter A)
-  ├── Availability Zone 2 (Datacenter B)
-  └── Availability Zone 3 (Datacenter C)
-```
+| Azure layer | Example | Why it matters |
+| --- | --- | --- |
+| Region | East US | A geographic area that contains Azure datacenters |
+| Availability zones | Zones 1, 2, and 3 | Physically separate datacenters within the region |
 
 **Region Pairs**
 - Each Azure region is paired with another region at least 300 miles away.
@@ -222,14 +219,11 @@ The fundamental unit of Azure - anything you create and use: a VM, a database, a
 - Apply Azure Policies and RBAC at the management group level - these cascade down to all subscriptions and resources beneath.
 - Up to **6 levels deep** (excluding root).
 
-```
-Management Group (Root)
-  ├── Management Group: Production
-  │     ├── Subscription: Finance-Prod
-  │     └── Subscription: HR-Prod
-  └── Management Group: Development
-        └── Subscription: DevTest
-```
+| Scope | Example | Typical use |
+| --- | --- | --- |
+| Root management group | Organization | Top-level governance boundary |
+| Management group | Production or Development | Group subscriptions by purpose |
+| Subscription | Finance-Prod, HR-Prod, or DevTest | Billing and resource boundary |
 
 ---
 

@@ -10,13 +10,15 @@ Some LeetCode problems feel like busy work. The Valid Parentheses problem is not
 
 The problem: given a string containing only `(`, `)`, `{`, `}`, `[`, and `]`, determine if the input is valid. A string is valid if every opening bracket is closed by the correct bracket type, in the correct order.
 
-```
-"()" → valid
-"()[]{}" → valid
-"({[]})" → valid
-"([)]" → invalid (wrong order)
-"{[]" → invalid (unclosed bracket)
-```
+| Input | Result |
+| --- | --- |
+| `()` | Valid |
+| `()[]{}` | Valid |
+| `({[]})` | Valid |
+| `([)]` | Invalid: wrong order |
+| `{[]` | Invalid: unclosed bracket |
+
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
 
@@ -26,17 +28,12 @@ The key insight: **you only ever need to remember the most recently opened brack
 
 That's a last-in, first-out (LIFO) pattern - exactly what a **stack** provides.
 
-```
-Processing: ( { [ ] } )
-
-Push (   → stack: [(]
-Push {   → stack: [(, {]
-Push [   → stack: [(, {, []
-See ]    → peek: [ → match! pop → stack: [(, {]
-See }    → peek: { → match! pop → stack: [(]
-See )    → peek: ( → match! pop → stack: []
-Done     → stack empty → valid ✓
-```
+1. Start with the sequence `( { [ ] } )`.
+2. Push `(`, then `{`, then `[` onto the stack.
+3. When `]` appears, the top of the stack is `[`, so pop it.
+4. When `}` appears, the top is `{`, so pop it.
+5. When `)` appears, the top is `(`, so pop it.
+6. The stack is empty at the end, so the input is valid.
 
 If at any point the closing bracket doesn't match the top of the stack, the string is invalid. If the string ends with items still in the stack, some brackets were never closed - also invalid.
 
@@ -158,10 +155,12 @@ The space complexity is O(n) in the worst case (a string of `n` opening brackets
 
 The stack-based bracket matching pattern appears in real software:
 
-- **Compilers** - validating syntax trees and expression nesting
-- **Text editors** - bracket highlighting and auto-close features  
-- **XML/HTML parsers** - validating tag nesting
-- **JSON parsers** - validating object and array nesting
-- **Security tools** - parsing firewall rules, network protocols, file formats
+| Concept | Explanation |
+| --- | --- |
+| Compilers | validating syntax trees and expression nesting |
+| Text editors | bracket highlighting and auto-close features |
+| XML/HTML parsers | validating tag nesting |
+| JSON parsers | validating object and array nesting |
+| Security tools | parsing firewall rules, network protocols, file formats |
 
 Understanding the stack pattern is understanding how a significant portion of parsing works. The Valid Parentheses problem is a good entry point precisely because the problem is small enough to fully grasp in one sitting, but the underlying pattern scales to complex real-world applications.

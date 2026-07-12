@@ -8,6 +8,8 @@ categories: ["technology"]
 
 The AI arms race is accelerating, and Google is stepping up with Gemini 3 - a new multimodal model designed to reason, code, and generate interactive outputs at a new level. In this post I summarize what Google announced, how the new capabilities differ from previous releases, and what developers and everyday users should expect from Gemini 3, Gemini 3 Pro, Gemini Agent, Gemini 3 Deep Think, and Antigravity.
 
+> **Reading path:** Read the feature overview and benchmark context together, then use the product and developer sections to judge practical relevance.
+
 ---
 
 ## TL;DR
@@ -25,10 +27,12 @@ The AI arms race is accelerating, and Google is stepping up with Gemini 3 - a ne
 
 Gemini 3 and its related services bring a few meaningful changes beyond raw model size or latency:
 
-- **Multimodal reasoning at scale:** The model simultaneously handles text, images, and other media types with better reasoning - analysis and multi-step answers that combine different formats.
-- **Deep Think mode:** A variant called Gemini 3 Deep Think evaluates multiple hypotheses in parallel and chooses the best path - an approach designed for complex scientific and long-horizon planning. Deep Think will be available first to Google AI Ultra subscribers.
-- **Gemini Agent:** Agent features are now part of Gemini's public offering. Agents can perform multi-step tasks from inbox triage to travel booking, pairing with the app UI to perform workflows that feel more like a small task executor than a simple chat model.
-- **Antigravity:** A developer platform for agent-driven code workflows. Antigravity offers multiple panes (editor, terminal, browser) where agents can write, run tests, and validate code - enabling more autonomous end-to-end developer workflows.
+| Concept | Explanation |
+| --- | --- |
+| Multimodal reasoning at scale | The model simultaneously handles text, images, and other media types with better reasoning - analysis and multi-step answers that combine different formats. |
+| Deep Think mode | A variant called Gemini 3 Deep Think evaluates multiple hypotheses in parallel and chooses the best path - an approach designed for complex scientific and long-horizon planning. Deep Think will be available first to Google AI Ultra subscribers. |
+| Gemini Agent | Agent features are now part of Gemini's public offering. Agents can perform multi-step tasks from inbox triage to travel booking, pairing with the app UI to perform workflows that feel more like a small task executor than a simple chat model. |
+| Antigravity | A developer platform for agent-driven code workflows. Antigravity offers multiple panes (editor, terminal, browser) where agents can write, run tests, and validate code - enabling more autonomous end-to-end developer workflows. |
 
 ---
 

@@ -13,17 +13,13 @@ IP addresses tell you **which device** traffic is going to. Ports tell you **whi
 
 If you see this:
 
-```text
-192.168.1.10:443
-```
+`192.168.1.10:443`
 
 You are looking at:
 
-```text
-Host: 192.168.1.10
-Port: 443
-Likely service: HTTPS
-```
+- Host: 192.168.1.10
+- Port: 443
+- Likely service: HTTPS
 
 That small number after the colon gives you a strong clue about what is happening on the network.
 
@@ -33,6 +29,8 @@ If you are building the foundation, read [Network Communication Basics](/posts/n
 
 ![Network port ranges](network-port-ranges.svg)
 
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
+
 ---
 
 ## What Is a Port?
@@ -41,21 +39,13 @@ A **port** is a 16-bit number used by transport protocols such as TCP and UDP to
 
 The port number is not enough by itself. A network conversation is identified by a combination of values:
 
-```text
-Source IP
-Source port
-Destination IP
-Destination port
-Transport protocol
-```
+A network conversation is identified by five values: **source IP**, **source port**, **destination IP**, **destination port**, and the **transport protocol**.
 
 Example:
 
-```text
-Client: 192.168.1.25:51432
-Server: 93.184.216.34:443
-Protocol: TCP
-```
+- Client: 192.168.1.25:51432
+- Server: 93.184.216.34:443
+- Protocol: TCP
 
 In that example:
 
@@ -72,9 +62,7 @@ The server listens on a known port. The client usually uses a temporary high-num
 
 This is one of the most important lessons in the whole post:
 
-```text
-Port number != guaranteed application
-```
+`Port number != guaranteed application`
 
 Port `443` usually means HTTPS, but an administrator can run something else on 443. Malware can use common ports to blend in. Developers can run web apps on `8080`. A database can be moved from its default port to a custom one.
 
@@ -110,21 +98,14 @@ The same port number can exist for both TCP and UDP.
 
 For example:
 
-```text
-53/tcp
-53/udp
-```
+- 53/tcp
+- 53/udp
 
 Both are DNS-related, but they are different transport sockets.
 
 That is why you should write ports with the protocol when clarity matters:
 
-```text
-TCP/443
-UDP/53
-TCP/22
-UDP/123
-```
+When clarity matters, write the transport with the port: `TCP/443`, `UDP/53`, `TCP/22`, or `UDP/123`.
 
 ---
 
@@ -195,33 +176,23 @@ Web traffic is where most students first see ports in action.
 
 When you type:
 
-```text
-https://example.com
-```
+`https://example.com`
 
 The browser assumes:
 
-```text
-TCP/443
-```
+`TCP/443`
 
 Unless the URL specifies another port:
 
-```text
-https://example.com:8443
-```
+`https://example.com:8443`
 
 For plain HTTP:
 
-```text
-http://example.com
-```
+`http://example.com`
 
 The browser assumes:
 
-```text
-TCP/80
-```
+`TCP/80`
 
 Modern browsers may also use HTTP/3, which runs over QUIC on UDP/443. That is why UDP/443 in logs is not automatically suspicious. It may be normal modern web traffic.
 
@@ -245,9 +216,7 @@ DHCP uses UDP because a new client may not have a working IP address yet. It nee
 
 If a user says:
 
-```text
-I am connected to Wi-Fi, but websites do not open.
-```
+> **Troubleshooting symptom:** “I am connected to Wi-Fi, but websites do not open.”
 
 Think about:
 
@@ -301,10 +270,7 @@ Email has more ports than many beginners expect because sending and receiving ma
 
 The practical distinction:
 
-```text
-SMTP sends mail.
-IMAP and POP3 retrieve mail.
-```
+The practical distinction is simple: **SMTP sends mail**, while **IMAP and POP3 retrieve mail**.
 
 For most modern clients, IMAP over TLS on `993` is more common than POP3.
 
@@ -334,9 +300,7 @@ TFTP is simple and commonly seen in device bootstrapping, firmware workflows, PX
 
 SMB is central to Windows file sharing:
 
-```text
-\\server\share
-```
+A Windows UNC path such as `\\server\share` normally points to an SMB file share, commonly reached over TCP/445.
 
 That usually means TCP/445 somewhere in the background.
 
@@ -462,52 +426,52 @@ Sometimes it is easier to remember ports by workflow rather than by number.
 
 ### Loading a Website
 
-```text
-DNS:       UDP/TCP 53
-HTTP:      TCP 80
-HTTPS:     TCP 443
-HTTP/3:    UDP 443
-```
+| Service | Transport and port |
+| --- | --- |
+| DNS | UDP/TCP 53 |
+| HTTP | TCP 80 |
+| HTTPS | TCP 443 |
+| HTTP/3 | UDP 443 |
 
 ### Getting an IP Address
 
-```text
-DHCP server: UDP 67
-DHCP client: UDP 68
-```
+| Role | Port |
+| --- | --- |
+| DHCP server | UDP 67 |
+| DHCP client | UDP 68 |
 
 ### Remote Admin
 
-```text
-SSH:   TCP 22
-RDP:   TCP/UDP 3389
-WinRM: TCP 5985 / 5986
-```
+| Service | Transport and port |
+| --- | --- |
+| SSH | TCP 22 |
+| RDP | TCP/UDP 3389 |
+| WinRM | TCP 5985 or 5986 |
 
 ### Sending and Reading Email
 
-```text
-SMTP server transfer: TCP 25
-SMTP submission:      TCP 587 or 465
-IMAP secure:          TCP 993
-POP3 secure:          TCP 995
-```
+| Mail function | Transport and port |
+| --- | --- |
+| Server-to-server SMTP | TCP 25 |
+| SMTP submission | TCP 587 or 465 |
+| Secure IMAP | TCP 993 |
+| Secure POP3 | TCP 995 |
 
 ### Windows File Sharing
 
-```text
-SMB: TCP 445
-NetBIOS legacy: UDP 137, UDP 138, TCP 139
-```
+| Service | Transport and port |
+| --- | --- |
+| SMB | TCP 445 |
+| Legacy NetBIOS | UDP 137, UDP 138, and TCP 139 |
 
 ### Monitoring
 
-```text
-NTP:    UDP 123
-SNMP:   UDP 161
-Traps:  UDP 162
-Syslog: UDP/TCP 514
-```
+| Service | Transport and port |
+| --- | --- |
+| NTP | UDP 123 |
+| SNMP | UDP 161 |
+| SNMP traps | UDP 162 |
+| Syslog | UDP/TCP 514 |
 
 ---
 
@@ -519,13 +483,11 @@ Ports show up in real support tickets all the time.
 
 Start with layers:
 
-```text
-Can the user resolve the name?
-Can the user reach the IP?
-Can the user connect to TCP/443?
-Does TLS succeed?
-Does HTTP return a valid response?
-```
+1. Can the user resolve the name?
+2. Can the user reach the IP?
+3. Can the user connect to TCP/443?
+4. Does TLS succeed?
+5. Does HTTP return a valid response?
 
 Useful commands:
 
@@ -662,9 +624,7 @@ This checks the HTTP layer, not just the port.
 
 That distinction matters:
 
-```text
-Port open does not mean application healthy.
-```
+A port can be open while the application behind it is unhealthy, misconfigured, or unable to complete its protocol handshake.
 
 ---
 
@@ -672,13 +632,7 @@ Port open does not mean application healthy.
 
 Firewall rules usually need five things:
 
-```text
-Source
-Destination
-Protocol
-Port
-Action
-```
+A firewall rule usually describes five fields: its **source**, **destination**, **protocol**, **port**, and the resulting **action**.
 
 Example:
 
@@ -739,11 +693,9 @@ Some ports are not always bad, but they deserve extra attention when exposed bro
 
 The lesson is not "block everything." The lesson is:
 
-```text
-Expose only what needs to be exposed.
-Restrict who can reach it.
-Monitor what happens.
-```
+- Expose only what needs to be exposed.
+- Restrict who can reach it.
+- Monitor what happens.
 
 ---
 
@@ -765,13 +717,11 @@ Group them by job:
 
 Then practice recognizing them in context:
 
-```text
-Why would a client talk to UDP/53 before TCP/443?
-Why would a Windows file server need TCP/445?
-Why is UDP/123 important for authentication?
-Why is TCP/3389 risky on the public internet?
-Why would a database port be blocked by default?
-```
+1. Why would a client talk to UDP/53 before TCP/443?
+2. Why would a Windows file server need TCP/445?
+3. Why is UDP/123 important for authentication?
+4. Why is TCP/3389 risky on the public internet?
+5. Why would a database port be blocked by default?
 
 Questions like these turn memorization into understanding.
 
@@ -844,10 +794,6 @@ They help you read firewall rules, understand packet captures, troubleshoot appl
 
 The key is to remember the role of ports without overtrusting them:
 
-```text
-IP address = which host
-Port number = which service
-Protocol = how the communication behaves
-```
+A useful memory aid is: **IP address = which host**, **port number = which service**, and **protocol = how the communication behaves**.
 
 Once you understand that, the port list stops being trivia. It becomes a practical map of how real networks work.

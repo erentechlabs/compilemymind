@@ -16,6 +16,8 @@ Output: k = 5
         nums = [0, 1, 2, 3, 4, _, _, _, _, _]
 ```
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## The Key Observation
@@ -45,22 +47,12 @@ The logic:
 
 ## Walking Through an Example
 
-```
-nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]
-k = 1
-
-i=1: nums[1]=0, nums[0]=0  → same, skip
-i=2: nums[2]=1, nums[1]=0  → different → nums[1]=1, k=2
-i=3: nums[3]=1, nums[2]=1  → same, skip
-i=4: nums[4]=1, nums[3]=1  → same, skip
-i=5: nums[5]=2, nums[4]=1  → different → nums[2]=2, k=3
-i=6: nums[6]=2, nums[5]=2  → same, skip
-i=7: nums[7]=3, nums[6]=2  → different → nums[3]=3, k=4
-i=8: nums[8]=3, nums[7]=3  → same, skip
-i=9: nums[9]=4, nums[8]=3  → different → nums[4]=4, k=5
-
-Result: nums = [0, 1, 2, 3, 4, ...], k = 5
-```
+1. Start with `nums = [0, 0, 1, 1, 1, 2, 2, 3, 3, 4]` and `k = 1`.
+2. Skip repeated values and write each new value at the next position.
+3. After processing the second `1`, the unique prefix is `[0, 1]` and `k = 2`.
+4. After processing `2`, the unique prefix is `[0, 1, 2]` and `k = 3`.
+5. After processing `3`, the unique prefix is `[0, 1, 2, 3]` and `k = 4`.
+6. After processing `4`, the final unique prefix is `[0, 1, 2, 3, 4]` and `k = 5`.
 
 The array modifies itself in-place. No extra memory. One pass.
 

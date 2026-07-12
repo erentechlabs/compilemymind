@@ -10,6 +10,8 @@ Networks are everywhere, but most people - including many IT professionals - tre
 
 This guide covers the fundamentals of local network communication: how devices talk to each other at the Ethernet layer, how addresses work, and how the physical and logical design of a network shapes its behavior.
 
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
+
 ---
 
 ## The Modern Integrated Network
@@ -52,16 +54,14 @@ Every network has two representations:
 
 ### Anatomy of an Ethernet Frame
 
-```
-┌──────────┬───────────┬──────────┬──────┬─────────┬─────┐
-│ Preamble │ Dest MAC  │ Src MAC  │ Type │ Payload │ FCS │
-└──────────┴───────────┴──────────┴──────┴─────────┴─────┘
-```
+An Ethernet frame carries a preamble, destination MAC, source MAC, EtherType, payload, and frame check sequence (FCS).
 
-- **Destination MAC** - who the frame is for
-- **Source MAC** - who sent it
-- **EtherType** - what's in the payload (`0x0800` = IPv4, `0x0806` = ARP)
-- **FCS** - Frame Check Sequence for error detection
+| Concept | Explanation |
+| --- | --- |
+| Destination MAC | who the frame is for |
+| Source MAC | who sent it |
+| EtherType | what's in the payload (`0x0800` = IPv4, `0x0806` = ARP) |
+| FCS | Frame Check Sequence for error detection |
 
 Corrupted frames (bad FCS) are silently dropped - which is why physical layer issues can cause mysterious packet loss without obvious errors.
 
@@ -71,10 +71,7 @@ Corrupted frames (bad FCS) are silently dropped - which is why physical layer is
 
 Every network interface has a **MAC address** - a 48-bit identifier assigned by the manufacturer.
 
-```
-00:1A:2B:3C:4D:5E
-└──OUI──┘ └─Device─┘
-```
+A MAC address is commonly read as a three-byte organizationally unique identifier (OUI) followed by a three-byte device-specific identifier.
 
 The first three octets identify the manufacturer (OUI). MAC addresses are used for frame delivery within a local network segment.
 
@@ -89,11 +86,9 @@ The first three octets identify the manufacturer (OUI). MAC addresses are used f
 
 When a device knows the IP address of a target but needs the MAC address to deliver a frame, it uses **ARP**:
 
-```
-1. Host A broadcasts: "Who has 192.168.1.20?"
-2. Host B replies:    "That's me - my MAC is AA:BB:CC:DD:EE:FF"
-3. Host A caches the mapping and uses it for future frames
-```
+1. Host A broadcasts a question: who has `192.168.1.20`?
+2. Host B replies with its MAC address.
+3. Host A caches the mapping and reuses it for later frames.
 
 ARP is stateless and **completely unauthenticated**. Any device can claim any IP in an ARP reply - this is the root of **ARP poisoning**.
 
@@ -135,13 +130,11 @@ From a security perspective, segmentation is not optional. A flat network - wher
 
 Enterprise networks follow a three-layer model:
 
-```
-[Core Layer]          - High-speed backbone, minimal processing
-      │
-[Distribution Layer]  - Routing, policy enforcement, inter-VLAN routing
-      │
-[Access Layer]        - End devices connect here
-```
+| Layer | Primary responsibility |
+| --- | --- |
+| Core | High-speed backbone with minimal processing |
+| Distribution | Routing, policy enforcement, and inter-VLAN routing |
+| Access | Connecting end devices to the network |
 
 Security controls typically live at the **distribution layer** - between where untrusted endpoints connect (access) and the high-speed core. This is where ACLs, firewall policies, and traffic inspection happen.
 

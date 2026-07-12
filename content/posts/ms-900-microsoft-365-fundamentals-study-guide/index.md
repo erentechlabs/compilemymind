@@ -17,6 +17,8 @@ This guide walks through the four Microsoft 365 Fundamentals domains: cloud conc
 
 *The platform is easier to reason about when you separate identity, devices, apps, and data before layering licensing, support, and governance on top.*
 
+> **Reading path:** Use the domain map as a study plan, read the explanations in order, and return to the reference tables when you revise.
+
 ---
 
 ## Quick Domain Map
@@ -206,9 +208,11 @@ Analytics in Microsoft 365 ranges from simple admin reports to full business int
 
 Microsoft's Zero Trust model is usually summarized as:
 
-- **Verify explicitly:** Make access decisions using identity, location, device health, risk, application, and data sensitivity.
-- **Use least privilege access:** Give users the minimum access they need, for the shortest reasonable time.
-- **Assume breach:** Design as if attackers may already be inside the network, then limit blast radius and detect suspicious behavior.
+| Concept | Explanation |
+| --- | --- |
+| Verify explicitly | Make access decisions using identity, location, device health, risk, application, and data sensitivity. |
+| Use least privilege access | Give users the minimum access they need, for the shortest reasonable time. |
+| Assume breach | Design as if attackers may already be inside the network, then limit blast radius and detect suspicious behavior. |
 
 <figure>
   <img src="https://learn.microsoft.com/en-us/security/zero-trust/media/zero-trust-ramp-overview/zero-trust-architecture.svg" alt="Microsoft Zero Trust architecture" loading="lazy" style="max-width: 100%; height: auto;">

@@ -10,6 +10,8 @@ Spring's dependency injection is powerful, but it gives you more than one way to
 
 Understanding which to use - and why - leads to cleaner, more intentional Spring code.
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## What Is a Spring Bean?

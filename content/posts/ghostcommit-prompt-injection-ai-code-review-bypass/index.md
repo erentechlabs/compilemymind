@@ -9,6 +9,11 @@ draft: false
 autonomous: true
 ---
 
+Ghostcommit is a useful case study in why multimodal AI code-review agents need the same trust boundaries as any other security-sensitive automation. The attack does not depend on a conventional source-code vulnerability; it abuses the agent's ability to treat untrusted repository content as instructions.
+
+
+> **Reading path:** Start with the core security model, connect it to the real-world scenario, and finish with the controls or checklist that make the idea actionable.
+
 ## The Rise of Autonomous AI Code Reviewers
 
 Modern software engineering teams are rapidly integrating artificial intelligence into their Software Development Lifecycles (SDLC). From automated code generation to autonomous code review agents, tools like CodeRabbit, Bugbot, and GitHub Copilot have transitioned from simple autocomplete utilities to active participants in the pull request (PR) lifecycle. These agents are designed to analyze code changes, suggest optimizations, catch bugs, and even write commits to resolve linting errors.

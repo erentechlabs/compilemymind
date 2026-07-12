@@ -22,6 +22,8 @@ This guide is written as a practical cheatsheet, not a dictionary. The goal is t
 | Microsoft security solutions | 35-40% | Azure infrastructure security, Defender for Cloud, CSPM, Microsoft Sentinel, Microsoft Defender XDR |
 | Microsoft compliance solutions | 20-25% | Service Trust Portal, privacy, Purview portal, Compliance Manager, information protection, DLP, records, eDiscovery, audit |
 
+> **Reading path:** Use the domain map as a study plan, read the explanations in order, and return to the reference tables when you revise.
+
 ---
 
 ## How To Use This Guide

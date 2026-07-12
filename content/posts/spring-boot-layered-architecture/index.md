@@ -10,28 +10,17 @@ One of the first questions you face when building a Spring Boot application is h
 
 This isn't arbitrary organization. Each layer has a specific responsibility and talks only to its adjacent layers. The result is code that's easier to test, easier to change, and much easier for a new developer to navigate.
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## The Three Layers
 
-```
-HTTP Request
-     │
-     ▼
-┌─────────────┐
-│  Controller │   ← Handles HTTP: routing, request parsing, response formatting
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Service   │   ← Business logic: the rules your application enforces
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│ Repository  │   ← Data access: reads and writes to the database
-└─────────────┘
-```
+| Layer | Responsibility |
+| --- | --- |
+| Controller | Handles HTTP routing, request parsing, validation, and response formatting |
+| Service | Applies the business rules enforced by the application |
+| Repository | Reads and writes data through the persistence layer |
 
 Data flows down on requests and back up on responses. Each layer has one job and one job only.
 
@@ -162,9 +151,11 @@ The repository should never contain business logic - that belongs in the service
 
 Each layer can be tested in isolation:
 
-- **Controller tests** - test HTTP routing, request parsing, and response formatting with `@WebMvcTest` (no database needed)
-- **Service tests** - test business logic with mock repositories using Mockito
-- **Repository tests** - test queries with `@DataJpaTest` against an in-memory database
+| Concept | Explanation |
+| --- | --- |
+| Controller tests | test HTTP routing, request parsing, and response formatting with `@WebMvcTest` (no database needed) |
+| Service tests | test business logic with mock repositories using Mockito |
+| Repository tests | test queries with `@DataJpaTest` against an in-memory database |
 
 Without this separation, every test requires spinning up the entire application stack.
 
@@ -182,16 +173,14 @@ When a business rule changes, you know exactly where to look: the service layer.
 
 ## The Full Request Flow
 
-```
-1. Client → POST /api/users { name: "Alice", email: "alice@example.com" }
-2. Controller receives request, validates structure (@Valid)
-3. Controller calls userService.createUser(request)
-4. Service checks: does this email exist? → calls userRepository.existsByEmail()
-5. Service creates User entity, calls userRepository.save()
-6. Service triggers side effects (welcome email)
-7. Service converts User → UserDto, returns to Controller
-8. Controller returns 201 Created with UserDto as JSON body
-```
+1. The client sends `POST /api/users` with a name and email.
+2. The controller validates the request structure with `@Valid`.
+3. The controller calls `userService.createUser(request)`.
+4. The service checks whether the email exists through `userRepository.existsByEmail()`.
+5. The service creates and saves the user entity.
+6. The service triggers side effects such as a welcome email.
+7. The service maps the entity to a DTO and returns it to the controller.
+8. The controller returns `201 Created` with the DTO as JSON.
 
 Each step has exactly one layer responsible for it. That clarity is the point.
 

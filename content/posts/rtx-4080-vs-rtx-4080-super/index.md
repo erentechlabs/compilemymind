@@ -10,6 +10,8 @@ NVIDIA's RTX 40-series lineup received a mid-generation refresh with the "Super"
 
 This detailed comparison breaks down the specifications, real-world gaming performance, ray tracing capabilities, power consumption, and overall value to help you make an informed decision.
 
+> **Reading path:** Read the specification table first, then compare workload results, thermals, platform value, and the final use-case recommendation.
+
 ---
 
 ## Quick Overview

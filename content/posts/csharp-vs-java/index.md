@@ -10,6 +10,8 @@ Java and C# are often described as rivals - born from similar philosophical root
 
 And yet, they've evolved in meaningfully different directions. Knowing which to reach for - and why - is the mark of a developer who has thought carefully about the tools, not just learned whichever one came first.
 
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
+
 ---
 
 ## Brief History
@@ -24,11 +26,13 @@ And yet, they've evolved in meaningfully different directions. Knowing which to 
 
 Before the differences: Java and C# share more DNA than their different ecosystems suggest.
 
-- **Object-oriented** - Both are built around classes, inheritance, and interfaces
-- **Garbage collection** - Both manage memory automatically via GC
-- **Strong type systems** - Static typing with generics in both
-- **Multithreading** - Both have robust concurrency primitives
-- **Cross-platform** - Both run on Windows, Linux, and macOS as of 2025
+| Concept | Explanation |
+| --- | --- |
+| Object-oriented | Both are built around classes, inheritance, and interfaces |
+| Garbage collection | Both manage memory automatically via GC |
+| Strong type systems | Static typing with generics in both |
+| Multithreading | Both have robust concurrency primitives |
+| Cross-platform | Both run on Windows, Linux, and macOS as of 2025 |
 
 ---
 

@@ -25,6 +25,8 @@ In this extensive guide, we will break down all six domains of the CompTIA Tech+
 
 ![CompTIA Tech+ foundation map](tech-plus-foundation-map.svg)
 
+> **Reading path:** Use the domain map as a study plan, read the explanations in order, and return to the reference tables when you revise.
+
 ---
 
 ## Domain 1.0: IT Concepts and Terminology (13%)

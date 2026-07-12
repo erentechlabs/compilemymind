@@ -10,6 +10,8 @@ Choosing the right motherboard is crucial for building a stable and future-proof
 
 Both motherboards support Intel's latest Core Ultra processors (Arrow Lake) on the LGA 1851 socket, but they differ significantly in features, build quality, and price. This comprehensive comparison will help you decide which board is the better fit for your build.
 
+> **Reading path:** Read the specification table first, then compare workload results, thermals, platform value, and the final use-case recommendation.
+
 ---
 
 ## Quick Overview

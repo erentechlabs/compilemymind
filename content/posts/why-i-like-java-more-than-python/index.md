@@ -12,6 +12,15 @@ And yet, I keep coming back to Java. Not out of stubbornness or habit - but beca
 
 Here's why.
 
+> **Reading path:** Read this as a trade-off analysis: each section explains where Java's constraints help and where Python remains the better tool.
+
+| Dimension | Java's advantage | Python's advantage |
+| --- | --- | --- |
+| Feedback | Static typing and compiler checks | Fast experimentation and concise syntax |
+| Runtime profile | JVM JIT optimization for long-lived services | Excellent scripting and data workflows |
+| Ecosystem highlighted here | Spring, JUnit, Mockito, and Testcontainers | NumPy, pandas, PyTorch, and scikit-learn |
+| Best fit in this article | Durable, team-maintained production systems | Automation, prototyping, data science, and machine learning |
+
 ---
 
 ## 1. Static Typing Catches Errors Before They Cost You

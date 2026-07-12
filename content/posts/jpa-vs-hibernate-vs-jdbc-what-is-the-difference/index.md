@@ -9,11 +9,9 @@ draft: false
 
 Java gives you several ways to talk to a relational database. Three names appear constantly:
 
-```text
-JDBC
-JPA
-Hibernate
-```
+- JDBC
+- JPA
+- Hibernate
 
 They are related, but they are not the same thing.
 
@@ -27,15 +25,13 @@ The short version:
 
 If you remember only one thing, remember this:
 
-```text
-JDBC is the foundation.
-JPA is the standard abstraction.
-Hibernate is a popular implementation of that abstraction.
-```
+The relationship is easiest to remember this way: JDBC is the foundation, JPA is the standard abstraction, and Hibernate is a popular implementation of that abstraction.
 
 This guide explains the difference in practical terms, especially for Spring Boot developers.
 
 ![JPA Hibernate JDBC stack](jpa-hibernate-jdbc-stack.svg)
+
+> **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
 
@@ -43,13 +39,7 @@ This guide explains the difference in practical terms, especially for Spring Boo
 
 Most business applications need to store and retrieve data:
 
-```text
-Create user
-Find order by ID
-Update payment status
-Delete expired session
-Search products
-```
+Typical persistence operations include creating a user, finding an order by ID, updating a payment status, deleting an expired session, and searching products.
 
 Relational databases store data in tables:
 
@@ -75,9 +65,7 @@ public class User {
 
 The core challenge is translating between:
 
-```text
-Java objects <-> SQL rows
-```
+All three technologies help translate between Java objects and SQL rows, but they expose different amounts of that translation to the developer.
 
 JDBC, JPA, and Hibernate all help with that translation, but at different levels of abstraction.
 
@@ -282,10 +270,7 @@ It is also the most common JPA implementation in Spring Boot applications.
 
 That sentence matters:
 
-```text
-Hibernate can be used through the JPA API.
-Hibernate also has its own native APIs and features.
-```
+Hibernate can be used through the JPA API, or through its own native APIs when an application deliberately needs provider-specific behavior.
 
 So Hibernate is both:
 
@@ -294,21 +279,7 @@ So Hibernate is both:
 
 When you use Spring Boot with `spring-boot-starter-data-jpa`, you are usually using:
 
-```text
-Spring Data JPA
-       |
-       v
-JPA API
-       |
-       v
-Hibernate
-       |
-       v
-JDBC
-       |
-       v
-Database
-```
+In a typical Spring application, Spring Data JPA sits above the JPA API; Hibernate implements that API, JDBC carries the calls to the driver, and the driver communicates with the database.
 
 That stack explains a lot of confusion.
 
@@ -353,24 +324,7 @@ If you move from Hibernate to another JPA provider, Hibernate-specific features 
 
 The relationship is layered.
 
-```text
-Your application code
-        |
-        v
-JPA API or Hibernate API
-        |
-        v
-Hibernate ORM
-        |
-        v
-JDBC
-        |
-        v
-Database driver
-        |
-        v
-Database
-```
+The runtime path is application code → JPA or Hibernate API → Hibernate ORM → JDBC → database driver → database.
 
 JDBC is still involved even when you use Hibernate.
 
@@ -541,10 +495,7 @@ That is not automatically bad. It is a tradeoff.
 
 The practical rule:
 
-```text
-Use standard JPA by default.
-Use Hibernate-specific features deliberately.
-```
+A sensible default is to use standard JPA and reach for Hibernate-specific features deliberately when the benefit justifies the coupling.
 
 ---
 
@@ -556,21 +507,7 @@ It is not the same thing as JPA.
 
 Spring Data JPA is a Spring project that makes repository creation easier on top of JPA.
 
-```text
-Spring Data JPA
-       |
-       v
-JPA
-       |
-       v
-Hibernate
-       |
-       v
-JDBC
-       |
-       v
-Database
-```
+The simplified stack is Spring Data JPA → JPA → Hibernate → JDBC → database.
 
 When you write:
 
@@ -786,11 +723,7 @@ For serious work, use proper logging and database query analysis rather than rel
 
 My practical recommendation:
 
-```text
-Learn JDBC first enough to understand connections, SQL, parameters, and result sets.
-Then learn JPA enough to understand entities, transactions, and persistence context.
-Then learn Hibernate details because Spring Boot uses it heavily in real projects.
-```
+A practical learning path is to understand JDBC connections, SQL, parameters, and result sets first; then learn JPA entities, transactions, and persistence context; finally study the Hibernate details that appear in real Spring Boot applications.
 
 That order gives you depth instead of just framework habits.
 

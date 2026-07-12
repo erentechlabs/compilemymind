@@ -10,6 +10,8 @@ The flagship CPU battle between AMD and Intel has never been more intense. AMD's
 
 If you're building an ultimate gaming rig or a professional workstation and budget isn't your primary concern, this comprehensive comparison will help you choose between these two powerhouse CPUs.
 
+> **Reading path:** Read the specification table first, then compare workload results, thermals, platform value, and the final use-case recommendation.
+
 ---
 
 ## Quick Overview

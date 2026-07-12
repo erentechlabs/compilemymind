@@ -20,24 +20,20 @@ If you are still building the lower-level foundation, read [Network Communicatio
 
 ![TCP and UDP transport layer map](tcp-udp-transport-map.svg)
 
+> **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
+
 ---
 
 ## The Transport Layer in Plain English
 
 When your laptop talks to a server, there are several layers involved:
 
-```text
-Application data
-      |
-      v
-Transport layer: TCP or UDP, source port, destination port
-      |
-      v
-Network layer: source IP, destination IP
-      |
-      v
-Link layer: source MAC, destination MAC on the local segment
-```
+| Layer | What it contributes |
+| --- | --- |
+| Application | The data the program wants to send |
+| Transport | TCP or UDP, plus source and destination ports |
+| Network | Source and destination IP addresses |
+| Link | Source and destination MAC addresses on the local segment |
 
 The IP address gets traffic to the right host. The **port number** gets traffic to the right application on that host.
 
@@ -92,11 +88,9 @@ Before TCP sends application data, it establishes a connection:
 
 The classic TCP handshake:
 
-```text
-Client -> Server: SYN
-Server -> Client: SYN-ACK
-Client -> Server: ACK
-```
+1. The client sends `SYN` to request a connection.
+2. The server replies with `SYN-ACK`.
+3. The client sends `ACK`, completing the TCP three-way handshake.
 
 After that, application data can flow.
 
@@ -150,11 +144,9 @@ UDP is not "bad TCP." It is a different tool.
 
 The practical rule:
 
-```text
-Need complete, ordered, reliable data? Use TCP.
-Need low latency and can tolerate some loss? Use UDP.
-Need UDP speed plus modern reliability? Look at QUIC.
-```
+- Need complete, ordered, reliable data? Use TCP.
+- Need low latency and can tolerate some loss? Use UDP.
+- Need UDP speed plus modern reliability? Look at QUIC.
 
 ---
 
@@ -162,9 +154,7 @@ Need UDP speed plus modern reliability? Look at QUIC.
 
 When you visit a traditional HTTPS website, your browser usually uses TCP:
 
-```text
-Browser -> TCP connection -> TLS encryption -> HTTP request -> Server response
-```
+A typical web request follows this path: browser → TCP connection → TLS encryption → HTTP request → server response.
 
 TCP makes sure HTML, CSS, JavaScript, and API responses arrive correctly. A missing chunk of JavaScript could break the page.
 
@@ -178,10 +168,7 @@ This is why you may see UDP/443 in firewall logs for web traffic. It is often HT
 
 DNS commonly uses UDP port 53:
 
-```text
-Client -> UDP/53 -> DNS server
-DNS server -> UDP/53 -> Client
-```
+A basic DNS exchange can be summarized as: client → UDP/53 → DNS server, followed by the response from the DNS server back to the client.
 
 Why UDP? Most DNS queries are tiny. A connection handshake would add unnecessary delay.
 
@@ -202,12 +189,7 @@ Real-time communication often prefers UDP because latency matters more than perf
 
 Imagine a video call:
 
-```text
-Frame 1 arrives
-Frame 2 partially arrives
-Frame 3 arrives
-Frame 4 arrives
-```
+UDP does not repair missing data: if frames arrive partially or out of order, the application must tolerate the loss or implement its own recovery strategy.
 
 If part of Frame 2 is lost, the application may conceal the loss, reduce quality, or skip ahead. Waiting for a retransmission could freeze the call.
 

@@ -11,9 +11,7 @@ Microsoft Entra ID is one of those platforms that sounds simple until you actual
 
 At first, it looks like a login system:
 
-```text
-User signs in -> Microsoft checks the password -> application opens
-```
+`User signs in -> Microsoft checks the password -> application opens`
 
 But that is only the surface.
 
@@ -21,11 +19,13 @@ In real organizations, Microsoft Entra ID is the identity control plane for user
 
 This post explains Microsoft Entra ID through five core building blocks:
 
-- **Users** - people and external identities that sign in.
-- **Groups** - collections used for access, licensing, and policy targeting.
-- **Apps** - application registrations, enterprise apps, and service principals.
-- **Roles** - administrative permissions inside Entra ID.
-- **Conditional Access** - policy decisions based on identity, device, app, risk, and location signals.
+| Concept | Explanation |
+| --- | --- |
+| Users | people and external identities that sign in. |
+| Groups | collections used for access, licensing, and policy targeting. |
+| Apps | application registrations, enterprise apps, and service principals. |
+| Roles | administrative permissions inside Entra ID. |
+| Conditional Access | policy decisions based on identity, device, app, risk, and location signals. |
 
 If you understand these five pieces, Entra ID becomes much less mysterious.
 
@@ -33,6 +33,8 @@ If you understand these five pieces, Entra ID becomes much less mysterious.
 
 > [!NOTE]
 > Current terminology note: Azure Active Directory is now **Microsoft Entra ID**. You may still see "Azure AD" in older documentation, scripts, screenshots, or admin habits, but the current product name is Microsoft Entra ID.
+
+> **Reading path:** Start with the core security model, connect it to the real-world scenario, and finish with the controls or checklist that make the idea actionable.
 
 ---
 
@@ -44,13 +46,11 @@ The important word is **identity**.
 
 Before a system can make an access decision, it needs to know:
 
-```text
-Who is asking?
-What are they trying to access?
-What permissions do they have?
-What conditions are true right now?
-Should access be allowed?
-```
+1. Who is asking?
+2. What are they trying to access?
+3. What permissions do they have?
+4. What conditions are true right now?
+5. Should access be allowed?
 
 Microsoft Entra ID helps answer those questions.
 
@@ -76,27 +76,19 @@ Inside the tenant, you have a **directory** that stores identity objects:
 
 Every new Microsoft Entra tenant has an initial domain name such as:
 
-```text
-contoso.onmicrosoft.com
-```
+`contoso.onmicrosoft.com`
 
 Organizations can add custom domains such as:
 
-```text
-contoso.com
-```
+`contoso.com`
 
 That allows users to sign in with names like:
 
-```text
-alex@contoso.com
-```
+`alex@contoso.com`
 
 Instead of:
 
-```text
-alex@contoso.onmicrosoft.com
-```
+`alex@contoso.onmicrosoft.com`
 
 The tenant is where the organization's identity rules live.
 
@@ -106,19 +98,14 @@ The tenant is where the organization's identity rules live.
 
 Microsoft Entra ID makes more sense when you think in layers:
 
-```text
-Tenant
-  |
-  +-- Users and groups
-  |
-  +-- Applications and service principals
-  |
-  +-- Roles and permissions
-  |
-  +-- Conditional Access policies
-  |
-  +-- Sign-in logs, audit logs, and risk signals
-```
+| Building block | Role in the model |
+| --- | --- |
+| Tenant | The organization's identity boundary |
+| Users and groups | People and collections used for access |
+| Applications and service principals | Workloads and their tenant-local identities |
+| Roles and permissions | Administrative authority |
+| Conditional Access policies | Rules that evaluate sign-in context |
+| Sign-in and audit logs | Evidence of what happened and how risky it was |
 
 Users and apps are the identities.
 
@@ -147,10 +134,8 @@ In a workforce tenant, common user types include:
 
 For most administrators, the day-to-day distinction is:
 
-```text
-Member = belongs to the organization
-Guest = invited from outside the organization
-```
+- Member = belongs to the organization
+- Guest = invited from outside the organization
 
 But in large environments, the details matter because user type can affect default permissions, collaboration behavior, licensing, and access policies.
 
@@ -158,9 +143,7 @@ But in large environments, the details matter because user type can affect defau
 
 The sign-in name is usually the **User Principal Name**, or UPN:
 
-```text
-first.last@company.com
-```
+`first.last@company.com`
 
 The UPN often looks like an email address, but technically it is the user's sign-in identifier. In many organizations, the UPN and email address match. In some hybrid environments, they may differ because of legacy naming, mergers, or on-premises directory design.
 
@@ -189,20 +172,13 @@ Groups are how you avoid assigning everything one user at a time.
 
 Instead of doing this:
 
-```text
-Give Alice access to App A
-Give Bob access to App A
-Give Chen access to App A
-Give Deniz access to App A
-```
+Assigning the same application directly to Alice, Bob, Chen, and Deniz works at first, but a group-based assignment is easier to review and maintain as the organization changes.
 
 You do this:
 
-```text
-Create group: App A Users
-Add users to group
-Assign group to App A
-```
+- Create group: App A Users
+- Add users to group
+- Assign group to App A
 
 That makes access easier to understand, audit, and remove.
 
@@ -240,9 +216,7 @@ Group membership can be assigned manually or calculated dynamically.
 
 Example dynamic rule:
 
-```text
 user.department -eq "Finance"
-```
 
 That rule can automatically place Finance users into a group when their department attribute is correct.
 
@@ -280,11 +254,9 @@ When an app integrates with Microsoft Entra ID, the directory needs to understan
 
 This is where three terms often confuse people:
 
-```text
-App registration
-Application object
-Service principal
-```
+- App registration
+- Application object
+- Service principal
 
 ![Microsoft Entra app objects and service principals](entra-id-app-service-principal.svg)
 
@@ -327,13 +299,9 @@ If the application object is the blueprint, the service principal is the tenant-
 
 For example:
 
-```text
-Software vendor registers app in Vendor Tenant
-Customer A consents to the app
-Customer A gets a service principal for that app
-Customer B consents to the app
-Customer B gets a separate service principal for that app
-```
+1. The software vendor registers the application in its own tenant.
+2. Each customer consents to the requested permissions.
+3. Each customer receives a separate service principal in its own tenant.
 
 Each tenant can manage its local service principal:
 
@@ -353,9 +321,7 @@ Instead of storing an app secret in code, an Azure resource can use a managed id
 
 Example:
 
-```text
-Azure Function -> managed identity -> access Key Vault
-```
+`Azure Function -> managed identity -> access Key Vault`
 
 The developer does not need to manage a password or client secret. The platform handles credential rotation and token acquisition.
 
@@ -420,9 +386,7 @@ Examples:
 
 The exact list of built-in roles changes over time as Microsoft adds services and separates permissions more carefully. The principle does not change:
 
-```text
 Assign the least privileged role that can do the job.
-```
 
 ### Entra Roles vs. Azure RBAC
 
@@ -435,15 +399,11 @@ This is a common confusion.
 
 Example:
 
-```text
 User Administrator
-```
 
 This is a Microsoft Entra role. It lets someone manage users in the directory.
 
-```text
 Virtual Machine Contributor
-```
 
 This is an Azure RBAC role. It lets someone manage virtual machines in Azure.
 
@@ -464,10 +424,8 @@ Instead of making a user permanently active as Global Administrator, PIM can mak
 
 The idea is simple:
 
-```text
-Do not keep powerful access active all the time.
-Activate it only when needed.
-```
+- Do not keep powerful access active all the time.
+- Activate it only when needed.
 
 ---
 
@@ -477,17 +435,13 @@ Conditional Access is where Entra ID turns sign-in context into an access decisi
 
 The basic pattern is:
 
-```text
-If this user accesses this app under these conditions,
-then require these controls.
-```
+- If this user accesses this app under these conditions,
+- then require these controls.
 
 Example:
 
-```text
-If a user signs in to Microsoft 365 from outside trusted locations,
-then require multifactor authentication.
-```
+- If a user signs in to Microsoft 365 from outside trusted locations,
+- then require multifactor authentication.
 
 Microsoft describes Conditional Access as a Zero Trust policy engine because it uses identity-driven signals instead of trusting only the network perimeter.
 
@@ -546,12 +500,7 @@ Conditional Access is powerful because these controls can be combined.
 
 Example:
 
-```text
-Allow access to Exchange Online only if:
-- User completes MFA
-- Device is compliant
-- Sign-in risk is not high
-```
+For example, an Exchange Online policy could require MFA, a compliant device, and a sign-in risk that is not high.
 
 ---
 
@@ -577,9 +526,7 @@ Start with report-only mode where possible. Then review sign-in logs and impact 
 
 A Conditional Access policy has three big parts:
 
-```text
-Assignments -> Conditions -> Access controls
-```
+`Assignments -> Conditions -> Access controls`
 
 ### 1. Assignments
 
@@ -618,11 +565,9 @@ Examples:
 
 This structure makes policies readable:
 
-```text
-Who and what?
-Under which conditions?
-What should happen?
-```
+- Who and what?
+- Under which conditions?
+- What should happen?
 
 ---
 
@@ -652,9 +597,7 @@ Direct user assignments are easy at first and painful later.
 
 Better pattern:
 
-```text
-User -> Group -> App / license / policy
-```
+`User -> Group -> App / license / policy`
 
 That makes onboarding, offboarding, and audits easier.
 
@@ -714,26 +657,13 @@ Imagine an organization has a finance application used by accounting employees.
 
 The clean Entra ID design might look like this:
 
-```text
-User attributes
-  Department = Finance
-       |
-       v
-Dynamic group
-  Finance Users
-       |
-       v
-Enterprise app assignment
-  Finance App
-       |
-       v
-Conditional Access policy
-  Require MFA + compliant device
-       |
-       v
-Access decision
-  Allow only if controls are satisfied
-```
+| Stage | Example |
+| --- | --- |
+| User attribute | Department = Finance |
+| Dynamic group | Finance Users |
+| Application assignment | Finance App |
+| Conditional Access | Require MFA and a compliant device |
+| Access decision | Allow only if controls are satisfied |
 
 This design separates concerns:
 
@@ -767,12 +697,10 @@ Hybrid organizations often use both.
 
 Example:
 
-```text
-On-prem AD stores user accounts
-Microsoft Entra Connect syncs users to Entra ID
-Users sign in to Microsoft 365 with cloud identity
-Conditional Access controls cloud access
-```
+1. On-premises Active Directory stores the user accounts.
+2. Microsoft Entra Connect synchronizes users to Entra ID.
+3. Users sign in to Microsoft 365 with the cloud identity.
+4. Conditional Access controls the cloud access decision.
 
 Understanding the difference helps avoid bad assumptions. A domain controller and a Microsoft Entra tenant are not the same kind of system.
 
@@ -819,13 +747,7 @@ It is the system that ties identity objects, application access, administrative 
 
 The practical model is:
 
-```text
-Users identify people.
-Groups organize access.
-Apps define what can be accessed.
-Roles define who can administer the directory.
-Conditional Access decides whether a sign-in should be allowed right now.
-```
+The core model is: users identify people, groups organize access, apps define what can be accessed, roles define who can administer the directory, and Conditional Access decides whether a sign-in should be allowed now.
 
 That is the core of modern Microsoft identity.
 
