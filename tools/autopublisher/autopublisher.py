@@ -847,7 +847,7 @@ def topic_selection_prompt(
     seasonal = config.get("seasonal_focus", {}).get(month, [])
     grounded = grounded_brief or {"text": "", "citations": []}
     return f"""
-You are the autonomous editor for Compile My Mind, a technical blog about software engineering, networking, IT operations, cloud infrastructure, hardware, cybersecurity, Microsoft cloud, and practical systems knowledge.
+You are the autonomous editor for Compile My Mind, a technical blog about software engineering, AI engineering, programming languages, systems design, developer tools, open source, databases, networking, IT operations, cloud infrastructure, hardware, cybersecurity, Microsoft cloud, and practical systems knowledge.
 
 Choose the strongest publishable article topic for the next autonomous post.
 
@@ -857,6 +857,8 @@ Hard requirements:
 - Avoid duplicates and near-duplicates of existing posts.
 - Prioritize current, trustworthy, high-interest topics with durable search demand.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
+- Treat AI engineering, programming languages and runtimes, compilers, distributed systems, system design, databases, developer experience, observability, open source, and emerging software tools as first-class editorial areas.
+- Include both durable technical explainers and timely release-driven articles when reliable sources support them.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Create a multi-part series only when the topic naturally benefits from it.
 - Return exactly 8 candidate topics, ranked best to worst.
@@ -1025,7 +1027,7 @@ def fallback_topic_from_research(
                 "search_intent": f"Readers want a practical explanation of {item.title} and what it changes for technical teams.",
                 "why_now": f"Based on a recent item from {item.source}: {item.title}",
                 "source_urls": [item.url],
-                "needs_diagram": primary in {"software-engineering", "networking", "cybersecurity", "microsoft-cloud", "cloud"},
+                "needs_diagram": primary in {"software-engineering", "ai-engineering", "programming-languages", "systems-design", "developer-tools", "networking", "cybersecurity", "microsoft-cloud", "cloud"},
                 "needs_chart": bool(re.search(r"(?i)\b(cost|price|benchmark|performance|percent|growth|compare|comparison)\b", item.title + " " + item.summary)),
                 "series": {"name": "", "part": None, "total_estimate": None, "planned_next_parts": []},
             }
@@ -1048,7 +1050,7 @@ def fallback_topic_title(item: ResearchItem, primary_category: str) -> str:
         return f"{base}: What It Means for Modern Network Operations"
     if primary_category in {"cloud", "microsoft-cloud"}:
         return f"{base}: Practical Cloud Architecture Guide"
-    if primary_category == "software-engineering":
+    if primary_category in {"software-engineering", "ai-engineering", "programming-languages", "systems-design", "developer-tools"}:
         return f"{base}: Practical Guide for Developers"
     if primary_category == "hardware":
         return f"{base}: Practical Hardware Buying and Performance Guide"
@@ -1114,8 +1116,10 @@ Editorial style:
 - Never refer to yourself, the prompt, or limitations of being an AI system.
 - The sources array must include at least {required_sources} URLs selected from the research snippets.
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
+- For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
 - Minimum target length: {min_words} words.
-- If diagrams or charts help understanding, request them in the diagrams/charts arrays and reference the filenames in the Markdown.
+- Do not create a featured image, hero image, thumbnail, or image before the article title.
+- Body diagrams, charts, and data visualizations are allowed only when they materially improve understanding; reference generated filenames in the Markdown.
 
 Available internal links:
 {json.dumps(internal_links, ensure_ascii=False, indent=2)}
@@ -1133,7 +1137,6 @@ Return JSON only with this shape:
   "description": "145-160 character SEO description",
   "categories": ["guide", "allowed-category"],
   "tags": ["tag-one"],
-  "image_prompt": "Detailed prompt for a 1200x630 editorial featured image, no brand logos, no tiny text.",
   "article_markdown": "Markdown body only, no front matter, no H1.",
   "diagrams": [
     {{
@@ -1263,7 +1266,6 @@ def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], co
     article["charts"] = [
         item for item in article.get("charts", []) if isinstance(item, dict)
     ] if isinstance(article.get("charts"), list) else []
-    article["image_prompt"] = normalize_space(str(article.get("image_prompt", "")))
     markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
     markdown = ensure_asset_references(markdown, article["diagrams"], article["charts"])
     article["article_markdown"] = ensure_sources_section(markdown, article["sources"])
@@ -1289,8 +1291,6 @@ def deterministic_qa(
         issues.append(f"Article is too short: {word_count(markdown)} words, expected at least {min_words}.")
     if len(str(article.get("description", ""))) < 105:
         issues.append("SEO description is too short.")
-    if config.get("publishing", {}).get("require_featured_image", True) and not article.get("image_prompt"):
-        issues.append("Article is missing a topic-relevant featured image prompt.")
     if config.get("publishing", {}).get("require_table", True) and "|" not in markdown:
         issues.append("Article should include at least one useful Markdown table.")
     if len(article.get("sources", []) or []) < int(config.get("publishing", {}).get("required_source_count", 3)):
@@ -1354,7 +1354,7 @@ Topic:
 {json.dumps(topic, ensure_ascii=False, indent=2)}
 
 Article payload:
-{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "image_prompt", "diagrams", "charts", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
+{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "diagrams", "charts", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
 
 Return JSON only:
 {{
@@ -1474,39 +1474,10 @@ def render_bar_chart_svg(chart: dict[str, Any], path: Path) -> None:
     path.write_text("\n".join(parts), encoding="utf-8")
 
 
-def render_featured_svg(article: dict[str, Any], output_path: Path) -> None:
-    title = str(article.get("title", "Compile My Mind"))
-    tags = " / ".join(article.get("tags", [])[:3])
-    lines = svg_text_lines(title, 34)
-    parts = [
-        '<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">',
-        "<defs>",
-        '<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#0f172a"/><stop offset="0.55" stop-color="#1d4ed8"/><stop offset="1" stop-color="#0f766e"/></linearGradient>',
-        '<pattern id="grid" width="56" height="56" patternUnits="userSpaceOnUse"><path d="M56 0H0V56" fill="none" stroke="#ffffff" stroke-opacity=".08"/></pattern>',
-        "</defs>",
-        '<rect width="1200" height="630" fill="url(#bg)"/>',
-        '<rect width="1200" height="630" fill="url(#grid)"/>',
-        f'<title id="title">{html.escape(title)}</title>',
-        f'<desc id="desc">Featured image for {html.escape(title)}</desc>',
-        '<text x="90" y="112" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#bfdbfe">Compile My Mind</text>',
-    ]
-    y = 260
-    for line in lines:
-        parts.append(f'<text x="90" y="{y}" font-family="Inter, Arial, sans-serif" font-size="60" font-weight="800" fill="#ffffff">{html.escape(line)}</text>')
-        y += 72
-    parts.append(f'<text x="90" y="540" font-family="Inter, Arial, sans-serif" font-size="27" fill="#ccfbf1">{html.escape(tags)}</text>')
-    parts.append('<circle cx="1010" cy="170" r="86" fill="#ffffff" fill-opacity=".13"/>')
-    parts.append('<circle cx="980" cy="202" r="28" fill="#67e8f9" fill-opacity=".85"/>')
-    parts.append('<circle cx="1058" cy="236" r="20" fill="#bfdbfe" fill-opacity=".85"/>')
-    parts.append("</svg>")
-    output_path.write_text("\n".join(parts), encoding="utf-8")
-
-
 def write_article_bundle(
     article: dict[str, Any],
     topic: dict[str, Any],
     config: dict[str, Any],
-    client: GeminiClient,
     log: EventLog,
     *,
     dry_run: bool,
@@ -1530,23 +1501,6 @@ def write_article_bundle(
         chart["filename"] = filename
         render_bar_chart_svg(chart, post_dir / filename)
 
-    image_name = "featured.png"
-    image_path = post_dir / image_name
-    image_enabled = bool(config.get("gemini", {}).get("enable_image_generation", True))
-    image_prompt = str(article.get("image_prompt", "")).strip()
-    if image_enabled and image_prompt:
-        prompt = (
-            image_prompt
-            + "\nCreate a clean 1200x630 editorial featured image for a technical blog. "
-            + "Avoid brand logos, screenshots of proprietary UI, tiny text, and misleading product claims."
-        )
-        if not client.generate_image(prompt, image_path):
-            image_name = "featured.svg"
-            render_featured_svg(article, post_dir / image_name)
-    else:
-        image_name = "featured.svg"
-        render_featured_svg(article, post_dir / image_name)
-
     now = local_now(config)
     frontmatter: dict[str, Any] = {
         "title": article["title"],
@@ -1554,7 +1508,6 @@ def write_article_bundle(
         "description": article["description"],
         "tags": article["tags"],
         "categories": article["categories"],
-        "image": image_name,
         "author": config.get("site", {}).get("author", "Eren"),
         "draft": False,
         "autonomous": True,
@@ -1603,7 +1556,7 @@ def run_publish(args: argparse.Namespace) -> int:
         try:
             grounded_prompt = (
                 "Find current high-interest, trustworthy technical article opportunities for Compile My Mind. "
-                "Focus on software engineering, networking, cybersecurity, Microsoft cloud, certification, hardware, and cloud infrastructure. "
+                "Focus on software engineering, AI engineering, programming languages, systems design, developer tools, open source, databases, networking, cybersecurity, Microsoft cloud, certification, hardware, and cloud infrastructure. "
                 "Return concise findings with citations."
             )
             grounded_brief = client.grounded_research(grounded_prompt)
@@ -1675,7 +1628,7 @@ def run_publish(args: argparse.Namespace) -> int:
         log.log("publish_rejected_all_drafts", title=topic.get("title"), feedback=feedback)
         return 0
 
-    index_path = write_article_bundle(final_article, topic, config, client, log, dry_run=args.dry_run)
+    index_path = write_article_bundle(final_article, topic, config, log, dry_run=args.dry_run)
     if not args.dry_run and not run_hugo_build(log):
         return 1
 

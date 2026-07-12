@@ -2,7 +2,7 @@ name: Infrastructure maintenance
 
 on:
   schedule:
-    - cron: "0 4 1 1,7 *"
+    - cron: "0 4 1 * *"
   workflow_dispatch:
 
 concurrency:
@@ -19,6 +19,9 @@ jobs:
     timeout-minutes: 30
     env:
       GITHUB_TOKEN: ${{ github.token }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -80,6 +83,10 @@ jobs:
       - name: Stop after a failed regression test
         if: steps.infra.outcome == 'failure'
         run: exit 1
+
+      - name: Synchronize Hugo version with Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        run: python tools/maintenance/sync_cloudflare_hugo.py
 
       - name: Prepare a draft review PR for risky updates
         if: steps.infra.outputs.manual_review == 'true'

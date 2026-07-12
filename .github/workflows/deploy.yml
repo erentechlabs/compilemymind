@@ -38,14 +38,13 @@ jobs:
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/hugo/hugo" version
 
+      - name: Synchronize Hugo version with Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        run: python3 tools/maintenance/sync_cloudflare_hugo.py
+
       - name: Build Hugo site
         run: hugo --minify
 
-      - name: Deploy to Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
-        shell: bash
-        run: npx --yes wrangler@4 pages deploy public --project-name="$CLOUDFLARE_PAGES_PROJECT" --branch="${GITHUB_REF_NAME}"
-
       - name: Report deployment configuration
         if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == ''
-        run: echo "Hugo build passed. Configure Cloudflare Pages Git integration or the optional direct-deploy settings to deploy from this workflow."
+        run: echo "Hugo build passed. Cloudflare Pages Git integration will deploy the site; API synchronization was skipped because its settings are incomplete."
