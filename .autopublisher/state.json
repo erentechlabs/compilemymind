@@ -1,7 +1,51 @@
 {
   "version": 1,
-  "generated_posts": [],
+  "generated_posts": [
+    {
+      "time": "2026-07-12T19:15:08.041301Z",
+      "title": "Proving Application Resilience on Azure: A Practical Guide to Chaos Studio",
+      "slug": "azure-chaos-studio-application-resilience-guide",
+      "categories": [
+        "microsoft-cloud",
+        "guide"
+      ],
+      "tags": [
+        "azure",
+        "chaos-engineering",
+        "chaos-studio",
+        "resilience",
+        "cloud-architecture"
+      ],
+      "sources": [
+        {
+          "title": "Proving application resilience on Azure with Chaos Studio",
+          "url": "https://azure.microsoft.com/en-us/blog/proving-application-resilience-on-azure-with-chaos-studio/"
+        },
+        {
+          "title": "Built to bounce back: How Azure resiliency evolved",
+          "url": "https://azure.microsoft.com/en-us/blog/built-to-bounce-back-how-azure-resiliency-evolved/"
+        },
+        {
+          "title": "Contributing to U.K. financial sector resilience as a critical third party",
+          "url": "https://cloud.google.com/blog/products/identity-security/contributing-to-uk-financial-sector-resilience-as-a-critical-third-party/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.6,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, highly detailed, and structured logically. It provides a clear, step-by-step guide to using Azure Chaos Studio, complete with an architecture diagram definition, a comprehensive comparison table, and actionable best practices. It successfully integrates internal links and aligns perfectly with the provided sources and search intent."
+      },
+      "path": "content/posts/azure-chaos-studio-application-resilience-guide/index.md"
+    }
+  ],
   "maintenance_reviews": {},
   "failures": [],
-  "last_runs": {}
+  "last_runs": {
+    "publish": {
+      "time": "2026-07-12T19:15:08.041438Z",
+      "result": "published"
+    }
+  }
 }
