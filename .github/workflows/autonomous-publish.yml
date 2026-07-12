@@ -64,16 +64,9 @@ jobs:
         run: |
           git config user.name "compilemymind-autopublisher[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if test -z "$(git status --porcelain=v1 -- content/posts)" && python - <<'PY'
-          import json
-          from pathlib import Path
-
-          state = json.loads(Path('.autopublisher/state.json').read_text(encoding='utf-8'))
-          raise SystemExit(0 if state.get('last_runs', {}).get('publish', {}).get('result') == 'quota_limited' else 1)
-          PY
-          then
+          if test -z "$(git status --porcelain=v1 -- content/posts)"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "Publishing was quota-limited; no state-only deployment commit will be created."
+            echo "No article content was published; state-only publisher results will not be committed."
             exit 0
           fi
           if git diff --quiet -- content/posts .autopublisher/state.json; then
