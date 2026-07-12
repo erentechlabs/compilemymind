@@ -42,15 +42,21 @@ At its core, every computing device-from a smart thermostat to a supercomputer-o
 
 ### 1.2 Notational Systems
 Computers do not speak English; they speak numbers. Understanding how data is represented is crucial:
-*   **Binary (Base-2):** The fundamental language of computing, consisting entirely of `0`s and `1`s. Every image, video, and text document is ultimately broken down into binary data.
-*   **Hexadecimal (Base-16):** Uses numbers `0-9` and letters `A-F`. It is primarily used to make long strings of binary more human-readable. You will frequently encounter Hex in MAC addresses (e.g., `00:1A:2B:3C:4D:5E`) and IPv6 addresses.
-*   **Decimal (Base-10):** The standard numbering system we use in everyday life. Used in IPv4 addresses (e.g., `192.168.1.1`).
+
+| Concept | Explanation |
+| --- | --- |
+| Binary (Base-2) | The fundamental language of computing, consisting entirely of `0`s and `1`s. Every image, video, and text document is ultimately broken down into binary data. |
+| Hexadecimal (Base-16) | Uses numbers `0-9` and letters `A-F`. It is primarily used to make long strings of binary more human-readable. You will frequently encounter Hex in MAC addresses (e.g., `00:1A:2B:3C:4D:5E`) and IPv6 addresses. |
+| Decimal (Base-10) | The standard numbering system we use in everyday life. Used in IPv4 addresses (e.g., `192.168.1.1`). |
 
 ### 1.3 Common Units of Measure
 Knowing how to measure IT resources prevents bottlenecks and ensures system efficiency.
-*   **Storage Capacity (Bytes):** A single letter is 1 Byte. Storage is measured in Kilobytes (KB), Megabytes (MB), Gigabytes (GB), and Terabytes (TB). 
-*   **Throughput/Speed (Bits per second - bps):** Network speed is measured in bits, not bytes. An internet connection might be 1 Gigabit per second (Gbps) or 100 Megabits per second (Mbps). Notice the lowercase 'b' for bits and uppercase 'B' for Bytes.
-*   **Processing Frequency (Hertz - Hz):** Measures how many cycles a processor can execute per second. A 3.5 GHz CPU can process 3.5 billion cycles every second.
+
+| Concept | Explanation |
+| --- | --- |
+| Storage Capacity (Bytes) | A single letter is 1 Byte. Storage is measured in Kilobytes (KB), Megabytes (MB), Gigabytes (GB), and Terabytes (TB). |
+| Throughput/Speed (Bits per second - bps) | Network speed is measured in bits, not bytes. An internet connection might be 1 Gigabit per second (Gbps) or 100 Megabits per second (Mbps). Notice the lowercase 'b' for bits and uppercase 'B' for Bytes. |
+| Processing Frequency (Hertz - Hz) | Measures how many cycles a processor can execute per second. A 3.5 GHz CPU can process 3.5 billion cycles every second. |
 
 ### 1.4 The Troubleshooting Methodology
 A professional IT technician doesn't guess; they follow a structured methodology to resolve issues efficiently:
@@ -73,27 +79,39 @@ A professional IT technician doesn't guess; they follow a structured methodology
 Infrastructure is the backbone of IT. It encompasses the hardware you can touch, the networks that connect them, and the cloud services that scale them.
 
 ### 2.1 Computing Devices and Their Purposes
-*   **Traditional PCs & Laptops:** General-purpose computing for productivity and content creation.
-*   **Mobile Devices (Tablets/Smartphones):** ARM-based processors optimized for battery life and portability.
-*   **IoT (Internet of Things):** Smart appliances, security cameras, and industrial sensors. IoT devices prioritize connectivity and specialized functions over general processing power.
+
+| Concept | Explanation |
+| --- | --- |
+| Traditional PCs & Laptops | General-purpose computing for productivity and content creation. |
+| Mobile Devices (Tablets/Smartphones) | ARM-based processors optimized for battery life and portability. |
+| IoT (Internet of Things) | Smart appliances, security cameras, and industrial sensors. IoT devices prioritize connectivity and specialized functions over general processing power. |
 
 ### 2.2 Internal Computing Components
-*   **Motherboard:** The central nervous system. It connects all components and allows them to communicate via data pathways called "buses."
-*   **CPU (Central Processing Unit):** The brain. It executes software instructions.
-*   **RAM (Random Access Memory):** The volatile, short-term workspace. It stores data currently in use. When the computer turns off, RAM is wiped clean.
-*   **GPU (Graphics Processing Unit):** Originally designed for rendering images, GPUs are now heavily used for parallel processing tasks like AI training and cryptocurrency mining.
-*   **PSU (Power Supply Unit):** Converts AC power from your wall outlet into the DC power required by internal components.
+
+| Concept | Explanation |
+| --- | --- |
+| Motherboard | The central nervous system. It connects all components and allows them to communicate via data pathways called "buses." |
+| CPU (Central Processing Unit) | The brain. It executes software instructions. |
+| RAM (Random Access Memory) | The volatile, short-term workspace. It stores data currently in use. When the computer turns off, RAM is wiped clean. |
+| GPU (Graphics Processing Unit) | Originally designed for rendering images, GPUs are now heavily used for parallel processing tasks like AI training and cryptocurrency mining. |
+| PSU (Power Supply Unit) | Converts AC power from your wall outlet into the DC power required by internal components. |
 
 ### 2.3 Storage Types
-*   **HDD (Hard Disk Drive):** Uses spinning magnetic platters. They are inexpensive and offer massive storage capacities but are slow and fragile.
-*   **SSD (Solid State Drive):** Uses NAND flash memory with zero moving parts. They are incredibly fast, durable, and energy-efficient.
-*   **NVMe (Non-Volatile Memory Express):** A protocol specifically designed for SSDs that connects directly to the motherboard's PCIe bus, offering blistering speeds that dwarf traditional SATA SSDs.
+
+| Concept | Explanation |
+| --- | --- |
+| HDD (Hard Disk Drive) | Uses spinning magnetic platters. They are inexpensive and offer massive storage capacities but are slow and fragile. |
+| SSD (Solid State Drive) | Uses NAND flash memory with zero moving parts. They are incredibly fast, durable, and energy-efficient. |
+| NVMe (Non-Volatile Memory Express) | A protocol specifically designed for SSDs that connects directly to the motherboard's PCIe bus, offering blistering speeds that dwarf traditional SATA SSDs. |
 
 ### 2.4 & 2.5 Peripheral Devices and Interfaces
 Peripherals expand a computer's capabilities. They connect via standardized interfaces:
-*   **USB-C:** The modern king of interfaces. It is reversible and can simultaneously transmit data, deliver power (up to 240W), and stream 4K video.
-*   **HDMI & DisplayPort:** The industry standards for transmitting high-definition audio and video to monitors.
-*   **Bluetooth:** Used for short-range wireless peripherals like headsets and mice.
+
+| Concept | Explanation |
+| --- | --- |
+| USB-C | The modern king of interfaces. It is reversible and can simultaneously transmit data, deliver power (up to 240W), and stream 4K video. |
+| HDMI & DisplayPort | The industry standards for transmitting high-definition audio and video to monitors. |
+| Bluetooth | Used for short-range wireless peripherals like headsets and mice. |
 
 ### 2.6 Virtualization and Cloud Technologies
 *   **Virtualization:** The use of software (a Hypervisor) to abstract physical hardware, allowing you to run multiple independent Virtual Machines (VMs) on a single physical server. It maximizes hardware utilization.
@@ -117,20 +135,29 @@ Peripherals expand a computer's capabilities. They connect via standardized inte
 Hardware is merely dead metal and silicon without software to tell it what to do.
 
 ### 3.1 Software Types
-*   **Productivity:** Word processors, spreadsheet applications (Excel), and presentation software.
-*   **Collaboration:** Tools designed for teamwork, such as Microsoft Teams, Slack, and Zoom.
-*   **Business/Enterprise:** CRM (Customer Relationship Management) software like Salesforce, or ERP (Enterprise Resource Planning) software like SAP.
+
+| Concept | Explanation |
+| --- | --- |
+| Productivity | Word processors, spreadsheet applications (Excel), and presentation software. |
+| Collaboration | Tools designed for teamwork, such as Microsoft Teams, Slack, and Zoom. |
+| Business/Enterprise | CRM (Customer Relationship Management) software like Salesforce, or ERP (Enterprise Resource Planning) software like SAP. |
 
 ### 3.2 Operating Systems (OS)
 The OS acts as the mediator between the hardware and the user. It handles file management, memory allocation, and provides a User Interface (GUI or CLI).
-*   **Windows:** Dominates the corporate desktop environment.
-*   **macOS:** UNIX-based OS known for its tight integration with Apple hardware and popularity among creatives.
-*   **Linux:** Open-source, incredibly stable, and the undisputed king of web servers, cloud infrastructure, and IoT devices.
+
+| Concept | Explanation |
+| --- | --- |
+| Windows | Dominates the corporate desktop environment. |
+| macOS | UNIX-based OS known for its tight integration with Apple hardware and popularity among creatives. |
+| Linux | Open-source, incredibly stable, and the undisputed king of web servers, cloud infrastructure, and IoT devices. |
 
 ### 3.3 Software Licensing
-*   **Open Source:** The source code is publicly available. Anyone can view, modify, and distribute it (e.g., Linux, Mozilla Firefox).
-*   **Proprietary / Commercial:** The source code is hidden, and you must purchase a license to use the compiled software (e.g., Microsoft Office).
-*   **Subscription:** You pay a recurring fee (monthly/annually) for access. If you stop paying, the software stops working (e.g., Adobe Creative Cloud).
+
+| Concept | Explanation |
+| --- | --- |
+| Open Source | The source code is publicly available. Anyone can view, modify, and distribute it (e.g., Linux, Mozilla Firefox). |
+| Proprietary / Commercial | The source code is hidden, and you must purchase a license to use the compiled software (e.g., Microsoft Office). |
+| Subscription | You pay a recurring fee (monthly/annually) for access. If you stop paying, the software stops working (e.g., Adobe Creative Cloud). |
 
 ### 3.4 Web Browser Features
 *   **Cookies:** Small text files saved by websites to remember your preferences or keep you logged in.
@@ -151,22 +178,31 @@ AI is no longer science fiction; it is woven into modern IT.
 You don't need to be a senior software engineer to pass Tech+, but you must understand how code dictates system behavior.
 
 ### 4.1 Programming Language Categories
-*   **Compiled Languages:** Code is translated into machine language all at once by a compiler before execution. These programs run very fast (e.g., C, C++, Go).
-*   **Interpreted Languages:** Code is read and executed line-by-line by an interpreter at runtime. They are highly flexible and great for scripting (e.g., Python, JavaScript).
-*   **Query Languages:** Used specifically to interact with databases to retrieve or manipulate data (e.g., SQL).
+
+| Concept | Explanation |
+| --- | --- |
+| Compiled Languages | Code is translated into machine language all at once by a compiler before execution. These programs run very fast (e.g., C, C++, Go). |
+| Interpreted Languages | Code is read and executed line-by-line by an interpreter at runtime. They are highly flexible and great for scripting (e.g., Python, JavaScript). |
+| Query Languages | Used specifically to interact with databases to retrieve or manipulate data (e.g., SQL). |
 
 ### 4.2 Fundamental Data Types
 When coding, you must tell the computer what type of data it is handling:
-*   **String:** A sequence of characters, like `"Hello, World!"` or `"Password123"`.
-*   **Integer:** A whole number, like `42` or `-10`.
-*   **Float:** A decimal number, like `3.14159`.
-*   **Boolean:** Represents a logical state; it can only be `True` or `False`.
+
+| Concept | Explanation |
+| --- | --- |
+| String | A sequence of characters, like `"Hello, World!"` or `"Password123"`. |
+| Integer | A whole number, like `42` or `-10`. |
+| Float | A decimal number, like `3.14159`. |
+| Boolean | Represents a logical state; it can only be `True` or `False`. |
 
 ### 4.3 & 4.4 Programming Logic and Concepts
-*   **Variables:** Think of them as labeled containers. If you declare `score = 100`, the variable `score` holds the integer 100.
-*   **Branching (If/Else):** Allows the program to make decisions. *If* the user enters the correct password, grant access; *Else*, show an error message.
-*   **Looping:** Executes a block of code repeatedly. A `While` loop runs *while* a certain condition remains true. A `For` loop runs a specific number of times.
-*   **Object-Oriented Programming (OOP):** A paradigm that organizes software design around data, or "objects," rather than functions and logic. It utilizes "Classes" (blueprints) and "Objects" (instances of the blueprint).
+
+| Concept | Explanation |
+| --- | --- |
+| Variables | Think of them as labeled containers. If you declare `score = 100`, the variable `score` holds the integer 100. |
+| Branching (If/Else) | Allows the program to make decisions. *If* the user enters the correct password, grant access; *Else*, show an error message. |
+| Looping | Executes a block of code repeatedly. A `While` loop runs *while* a certain condition remains true. A `For` loop runs a specific number of times. |
+| Object-Oriented Programming (OOP) | A paradigm that organizes software design around data, or "objects," rather than functions and logic. It utilizes "Classes" (blueprints) and "Objects" (instances of the blueprint). |
 
 ---
 
@@ -186,9 +222,12 @@ Why use a database instead of a spreadsheet? Databases handle millions of record
 
 ### 5.4 Data Backup Concepts
 Hardware will inevitably fail, and cyberattacks will happen. Backups are your ultimate failsafe.
-*   **Full Backup:** Copies absolutely everything. It takes the longest to run and uses the most storage space, but it is the fastest to restore.
-*   **Incremental Backup:** Copies only the data that has changed since the *last backup* (of any type). Fast to run, but restoring requires the last Full Backup plus every subsequent Incremental Backup in order.
-*   **Differential Backup:** Copies all data that has changed since the *last Full Backup*. Faster to restore than Incremental, as it only requires the Full Backup and the latest Differential Backup.
+
+| Concept | Explanation |
+| --- | --- |
+| Full Backup | Copies absolutely everything. It takes the longest to run and uses the most storage space, but it is the fastest to restore. |
+| Incremental Backup | Copies only the data that has changed since the *last backup* (of any type). Fast to run, but restoring requires the last Full Backup plus every subsequent Incremental Backup in order. |
+| Differential Backup | Copies all data that has changed since the *last Full Backup*. Faster to restore than Incremental, as it only requires the Full Backup and the latest Differential Backup. |
 
 > [!IMPORTANT]
 > **The 3-2-1 Rule of Backups:** Maintain **3** copies of your data, stored on **2** different types of media, with at least **1** copy kept securely off-site (like in the cloud).
@@ -206,9 +245,12 @@ The foundation of all cybersecurity frameworks relies on three core principles:
 3.  **Availability:** Ensuring systems and data are accessible to authorized users when needed. We achieve this through hardware redundancy, backups, and DDoS protection.
 
 ### 6.2 Security Best Practices
-*   **Principle of Least Privilege (PoLP):** Users should only be given the absolute minimum access rights necessary to perform their job functions. An intern doesn't need domain administrator rights.
-*   **Patch Management:** Software vulnerabilities are constantly discovered. Regularly applying security updates (patches) to OS and applications is critical.
-*   **Endpoint Protection:** Utilizing Next-Generation Antivirus (NGAV) and Host-Based Firewalls to block malicious software.
+
+| Concept | Explanation |
+| --- | --- |
+| Principle of Least Privilege (PoLP) | Users should only be given the absolute minimum access rights necessary to perform their job functions. An intern doesn't need domain administrator rights. |
+| Patch Management | Software vulnerabilities are constantly discovered. Regularly applying security updates (patches) to OS and applications is critical. |
+| Endpoint Protection | Utilizing Next-Generation Antivirus (NGAV) and Host-Based Firewalls to block malicious software. |
 
 ### 6.3 Password and Authentication Practices
 Passwords are the weakest link in security.
@@ -223,10 +265,13 @@ Encryption uses complex mathematical algorithms to scramble data so it cannot be
 
 ### 6.5 Business Continuity
 When disaster strikes-be it a ransomware attack, a hurricane, or a massive hardware failure-the business must survive.
-*   **Disaster Recovery (DR):** The technical process of restoring IT infrastructure.
-*   **RTO (Recovery Time Objective):** How quickly must the system be brought back online? (e.g., The system must be up within 4 hours).
-*   **RPO (Recovery Point Objective):** How much data loss can the business tolerate? (e.g., If backups happen nightly, the RPO is 24 hours of data loss).
-*   **Fault Tolerance:** Building systems with redundant components (like dual power supplies or RAID storage arrays) so that if one piece fails, the system continues to run seamlessly.
+
+| Concept | Explanation |
+| --- | --- |
+| Disaster Recovery (DR) | The technical process of restoring IT infrastructure. |
+| RTO (Recovery Time Objective) | How quickly must the system be brought back online? (e.g., The system must be up within 4 hours). |
+| RPO (Recovery Point Objective) | How much data loss can the business tolerate? (e.g., If backups happen nightly, the RPO is 24 hours of data loss). |
+| Fault Tolerance | Building systems with redundant components (like dual power supplies or RAID storage arrays) so that if one piece fails, the system continues to run seamlessly. |
 
 ---
 

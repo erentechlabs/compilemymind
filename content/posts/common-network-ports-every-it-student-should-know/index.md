@@ -70,13 +70,8 @@ So port numbers are extremely useful clues, but they are not final proof.
 
 You should combine port information with:
 
-- Process information on the host.
-- Service banners.
-- Firewall rules.
-- Packet inspection.
-- Application logs.
-- TLS certificate details.
-- Endpoint or server configuration.
+
+The key items here are Process information on the host, Service banners, Firewall rules, Packet inspection, Application logs, TLS certificate details, and Endpoint or server configuration.
 
 IANA, the official registry authority for service names and port numbers, makes the same general point: assigned ports help identify services, but traffic on a registered port is not automatically good traffic and does not necessarily correspond to the registered service.
 
@@ -330,12 +325,8 @@ For a domain-joined Windows machine, "network login" is not one single thing. It
 
 That is why Active Directory troubleshooting often starts with:
 
-- DNS resolution.
-- Time sync.
-- Domain controller reachability.
-- Kerberos.
-- LDAP.
-- SMB.
+
+The key items here are DNS resolution, Time sync, Domain controller reachability, Kerberos, LDAP, and SMB.
 
 ---
 
@@ -355,10 +346,8 @@ Time synchronization deserves special attention.
 
 If clocks are wrong, many systems become painful:
 
-- Kerberos authentication can fail.
-- Logs are harder to correlate.
-- Certificates can appear not yet valid or expired.
-- Incident timelines become unreliable.
+
+The key items here are Kerberos authentication can fail, Logs are harder to correlate, Certificates can appear not yet valid or expired, and Incident timelines become unreliable.
 
 NTP on UDP/123 is boring until it breaks.
 
@@ -386,12 +375,8 @@ A public website may need to expose TCP/443 to the internet. A production databa
 
 Better patterns include:
 
-- Private networks.
-- Firewall allowlists.
-- VPN or private access.
-- Managed database private endpoints.
-- Strong authentication.
-- TLS for database connections.
+
+The key items here are Private networks, Firewall allowlists, VPN or private access, Managed database private endpoints, Strong authentication, and TLS for database connections.
 
 ---
 
@@ -409,10 +394,8 @@ Authentication and authorization systems have their own common ports.
 
 RADIUS is common in:
 
-- Wi-Fi authentication.
-- VPN authentication.
-- Network access control.
-- 802.1X environments.
+
+The key items here are Wi-Fi authentication, VPN authentication, Network access control, and 802.1X environments.
 
 LDAP and Kerberos are common in enterprise identity environments, especially Active Directory.
 
@@ -527,11 +510,8 @@ That points toward the local network path.
 
 Check:
 
-- DHCP DNS server assignment.
-- Local resolver health.
-- Firewall rules for UDP/TCP 53.
-- VPN or proxy settings.
-- DNS over HTTPS settings in the browser.
+
+The key items here are DHCP DNS server assignment, Local resolver health, Firewall rules for UDP/TCP 53, VPN or proxy settings, and DNS over HTTPS settings in the browser.
 
 ### Example 4: Email Client Cannot Send Mail
 
@@ -583,10 +563,8 @@ netstat -ano
 
 Useful columns:
 
-- Local address.
-- Foreign address.
-- State.
-- PID.
+
+The key items here are Local address, Foreign address, State, and PID.
 
 The PID can be matched to a process in Task Manager or PowerShell.
 

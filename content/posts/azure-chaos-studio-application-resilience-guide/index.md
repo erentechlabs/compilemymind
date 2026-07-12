@@ -54,9 +54,12 @@ Chaos Studio categorizes faults into two distinct execution models:
 
 ### 3. Chaos Experiments
 An **Experiment** is an Azure Resource Manager (ARM) resource that defines the chaos workflow. It is structured hierarchically:
-* **Steps:** Executed sequentially. A step might represent a phase of your test (e.g., "Phase 1: Database Degradation").
-* **Branches:** Executed in parallel within a step. This allows you to inject multiple faults simultaneously (e.g., stressing the CPU of VM-A while blocking network access to VM-B).
-* **Actions:** The actual fault execution (e.g., CPU pressure) along with parameters like duration, stress percentage, and target resource IDs.
+
+| Concept | Explanation |
+| --- | --- |
+| Steps | Executed sequentially. A step might represent a phase of your test (e.g., "Phase 1: Database Degradation"). |
+| Branches | Executed in parallel within a step. This allows you to inject multiple faults simultaneously (e.g., stressing the CPU of VM-A while blocking network access to VM-B). |
+| Actions | The actual fault execution (e.g., CPU pressure) along with parameters like duration, stress percentage, and target resource IDs. |
 
 ---
 

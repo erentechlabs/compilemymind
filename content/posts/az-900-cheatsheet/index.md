@@ -420,12 +420,15 @@ The fundamental unit of Azure - anything you create and use: a VM, a database, a
 5. **Azure Marketplace** - Third-party software licences may add cost.
 
 **Cost Optimisation Strategies:**
-- **Reserved Instances:** Commit 1 or 3 years → save up to 72%.
-- **Azure Hybrid Benefit:** Use existing Windows Server/SQL Server licences on Azure.
-- **Spot VMs:** Use spare capacity at up to 90% discount (interruptible).
-- **Right-sizing:** Monitor usage and downsize over-provisioned resources.
-- **Auto-shutdown:** Schedule VMs to shut down outside business hours.
-- **Tags:** Tag resources to allocate costs to teams/projects.
+
+| Concept | Explanation |
+| --- | --- |
+| Reserved Instances | Commit 1 or 3 years → save up to 72%. |
+| Azure Hybrid Benefit | Use existing Windows Server/SQL Server licences on Azure. |
+| Spot VMs | Use spare capacity at up to 90% discount (interruptible). |
+| Right-sizing | Monitor usage and downsize over-provisioned resources. |
+| Auto-shutdown | Schedule VMs to shut down outside business hours. |
+| Tags | Tag resources to allocate costs to teams/projects. |
 
 **Azure Pricing Calculator**
 - Estimate the cost of Azure services *before* you deploy.
@@ -568,10 +571,13 @@ The fundamental unit of Azure - anything you create and use: a VM, a database, a
 - **Use cases:** Copilot applications, document summarisation, code generation, semantic search, customer service bots.
 
 **Key Models Available:**
-- **GPT-4 / GPT-3.5-Turbo:** Large language models for text generation, chat, summarisation.
-- **DALL-E:** Image generation from text prompts.
-- **Whisper:** Speech-to-text transcription.
-- **Ada / text-embedding models:** Generate vector embeddings for semantic search (RAG patterns).
+
+| Concept | Explanation |
+| --- | --- |
+| GPT-4 / GPT-3.5-Turbo | Large language models for text generation, chat, summarisation. |
+| DALL-E | Image generation from text prompts. |
+| Whisper | Speech-to-text transcription. |
+| Ada / text-embedding models | Generate vector embeddings for semantic search (RAG patterns). |
 
 **Microsoft's 6 Responsible AI Principles:**
 

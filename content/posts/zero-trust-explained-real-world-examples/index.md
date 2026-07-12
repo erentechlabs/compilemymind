@@ -265,14 +265,8 @@ Zero Trust works best as an incremental program. Trying to redesign every contro
 
 Inventory the important assets:
 
-- Identity systems.
-- Email and collaboration data.
-- Source code repositories.
-- Production infrastructure.
-- Databases and storage accounts.
-- Admin consoles.
-- Sensitive documents.
-- Critical SaaS applications.
+
+The key items here are Identity systems, Email and collaboration data, Source code repositories, Production infrastructure, Databases and storage accounts, Admin consoles, Sensitive documents, and Critical SaaS applications.
 
 Zero Trust is resource-centric. If you do not know the resources, you cannot design access properly.
 
@@ -295,12 +289,8 @@ Permanent high privilege is convenient until it is compromised.
 
 Reduce it with:
 
-- Role-based access control.
-- Just-in-time privilege.
-- Just-enough access.
-- Separate admin accounts.
-- Approval workflows for sensitive actions.
-- Regular access reviews.
+
+The key items here are Role-based access control, Just-in-time privilege, Just-enough access, Separate admin accounts, Approval workflows for sensitive actions, and Regular access reviews.
 
 ### Step 4: Add Device and Session Conditions
 
@@ -333,13 +323,8 @@ Zero Trust needs feedback. If you cannot see access activity, you cannot improve
 
 Collect and correlate:
 
-- Sign-in logs.
-- Endpoint alerts.
-- Cloud app activity.
-- Admin changes.
-- Data access and sharing events.
-- Network and workload telemetry.
-- Security incidents.
+
+The key items here are Sign-in logs, Endpoint alerts, Cloud app activity, Admin changes, Data access and sharing events, Network and workload telemetry, and Security incidents.
 
 Then automate common responses where safe: revoke sessions, isolate devices, disable accounts, require password reset, open tickets, or trigger investigation workflows.
 

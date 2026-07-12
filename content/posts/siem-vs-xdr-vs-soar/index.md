@@ -70,13 +70,8 @@ Common SIEM data sources:
 
 SIEM strengths:
 
-- Broad visibility across many systems.
-- Centralized search and investigation.
-- Custom detection rules.
-- Long-term retention for compliance and forensics.
-- Dashboards and reporting.
-- Threat hunting across historical data.
-- Integration with ticketing, case management, and SOAR.
+
+The key items here are Broad visibility across many systems, Centralized search and investigation, Custom detection rules, Long-term retention for compliance and forensics, Dashboards and reporting, Threat hunting across historical data, and Integration with ticketing, case management, and SOAR.
 
 SIEM weaknesses:
 
@@ -92,11 +87,8 @@ An attacker signs in using a stolen account, creates a new inbox forwarding rule
 
 A SIEM can correlate:
 
-- Entra ID sign-in logs.
-- Exchange audit logs.
-- SharePoint file access events.
-- Risky sign-in detections.
-- Geo-location anomalies.
+
+The key items here are Entra ID sign-in logs, Exchange audit logs, SharePoint file access events, Risky sign-in detections, and Geo-location anomalies.
 
 The analyst can search across all those data sources and build a timeline.
 
@@ -140,11 +132,8 @@ A user receives a phishing email. They click a link, enter credentials, and late
 
 XDR can connect:
 
-- The original phishing email.
-- The clicked URL.
-- The endpoint process tree.
-- The suspicious sign-in.
-- The cloud app download activity.
+
+The correlated evidence can include the original phishing email, the clicked URL, the endpoint process tree, the suspicious sign-in, and the cloud app download activity.
 
 Instead of five separate alerts, the analyst sees one incident with a related attack chain.
 
@@ -170,11 +159,8 @@ Common SOAR actions:
 
 SOAR strengths:
 
-- Reduces repetitive analyst work.
-- Makes response more consistent.
-- Speeds up triage and containment.
-- Connects security tooling with IT operations.
-- Helps enforce process and documentation.
+
+The key items here are Reduces repetitive analyst work, Makes response more consistent, Speeds up triage and containment, Connects security tooling with IT operations, and Helps enforce process and documentation.
 
 SOAR weaknesses:
 
@@ -250,11 +236,8 @@ A user reports a suspicious email. Several other employees received the same mes
 
 The SIEM can search across:
 
-- Email gateway logs.
-- Entra ID sign-in logs.
-- Proxy or DNS logs.
-- Endpoint events.
-- Cloud app activity.
+
+The key items here are Email gateway logs, Entra ID sign-in logs, Proxy or DNS logs, Endpoint events, and Cloud app activity.
 
 It answers: "Where else did this show up?"
 
@@ -262,11 +245,8 @@ It answers: "Where else did this show up?"
 
 XDR can connect:
 
-- The phishing email.
-- The URL click.
-- Endpoint behavior after the click.
-- Suspicious sign-in behavior.
-- Related alerts involving the same user.
+
+The investigation can connect the phishing email, the URL click, endpoint behavior after the click, suspicious sign-in behavior, and related alerts involving the same user.
 
 It answers: "Is this one user's mailbox issue, or a broader attack chain?"
 
@@ -305,12 +285,8 @@ An employee downloads unusual amounts of data from a cloud file platform before 
 
 SIEM is useful because the evidence may span:
 
-- HR status changes.
-- File access logs.
-- Cloud app activity.
-- Endpoint USB events.
-- Email forwarding rules.
-- VPN activity.
+
+The key items here are HR status changes, File access logs, Cloud app activity, Endpoint USB events, Email forwarding rules, and VPN activity.
 
 XDR may help if the activity touches protected endpoints, identities, and cloud apps. SOAR can notify legal, HR, security, and management teams through controlled workflows, but the response may require human approval because the business context is sensitive.
 
@@ -324,11 +300,8 @@ A cloud storage account is made public, and shortly after, there are unusual API
 
 SIEM can combine:
 
-- Cloud audit logs.
-- Resource configuration changes.
-- Identity and access events.
-- API activity.
-- Network logs.
+
+The key items here are Cloud audit logs, Resource configuration changes, Identity and access events, API activity, and Network logs.
 
 XDR can help if the cloud workload, identity, and endpoint signals are covered by the platform. SOAR can trigger a playbook that notifies the cloud owner, creates a ticket, snapshots configuration, and optionally reverts the risky setting after approval.
 

@@ -155,11 +155,8 @@ Most devices get their IP address automatically via **DHCP (Dynamic Host Configu
 DHCP leases are temporary. When a lease expires, the client must renew or acquire a new address.
 
 **What DHCP provides:**
-- IP address
-- Subnet mask
-- Default gateway
-- DNS server(s)
-- Lease duration
+
+The key items here are IP address, Subnet mask, Default gateway, DNS server(s), and Lease duration.
 
 > [!WARNING]
 > **DHCP starvation** is a common Layer 2 attack: an attacker floods a DHCP server with fake requests, exhausting its address pool. Legitimate clients then can't get addresses. **DHCP snooping** on managed switches mitigates this.

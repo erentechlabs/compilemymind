@@ -94,9 +94,7 @@ This is as efficient as it gets - linear time, constant space.
 
 In-place array algorithms are a fundamental class of problems in systems programming, performance-critical code, and embedded systems where memory is constrained. The two-pointer pattern - maintaining a slow pointer for writing and a fast pointer for reading - appears in:
 
-- String manipulation without extra allocation
-- Partitioning arrays (used in quicksort)
-- Merging sorted arrays in-place
-- Many competitive programming and interview problems
+
+The key items here are String manipulation without extra allocation, Partitioning arrays (used in quicksort), Merging sorted arrays in-place, and Many competitive programming and interview problems.
 
 Understanding this pattern is about more than passing interviews. It's about having a mental model for solving a whole category of problems efficiently.

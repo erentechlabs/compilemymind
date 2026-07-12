@@ -104,11 +104,8 @@ This handshake adds a small delay, but it gives both sides a shared connection s
 
 UDP does not provide:
 
-- Connection setup.
-- Delivery guarantees.
-- Built-in retransmission.
-- Built-in ordering.
-- Built-in congestion control.
+
+The key items here are Connection setup, Delivery guarantees, Built-in retransmission, Built-in ordering, and Built-in congestion control.
 
 That sounds bad until you understand the use case. Sometimes late data is useless data.
 
@@ -205,10 +202,8 @@ If a 500 MB file arrives with missing pieces, it is not "mostly fine." It is cor
 
 Examples that typically rely on TCP:
 
-- SFTP over SSH.
-- HTTPS downloads.
-- SMB file shares.
-- Database backups over a network.
+
+The key items here are SFTP over SSH, HTTPS downloads, SMB file shares, and Database backups over a network.
 
 The transfer may be slower than a raw UDP stream, but correctness matters more.
 

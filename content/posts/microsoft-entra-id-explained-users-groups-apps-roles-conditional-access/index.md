@@ -66,13 +66,8 @@ A **tenant** is a dedicated instance of Microsoft Entra ID for an organization. 
 
 Inside the tenant, you have a **directory** that stores identity objects:
 
-- Users.
-- Groups.
-- Devices.
-- Applications.
-- Service principals.
-- Roles.
-- Policies.
+
+The key items here are Users, Groups, Devices, Applications, Service principals, Roles, and Policies.
 
 Every new Microsoft Entra tenant has an initial domain name such as:
 
@@ -184,12 +179,8 @@ That makes access easier to understand, audit, and remove.
 
 Microsoft Entra groups are commonly used for:
 
-- Application access.
-- Microsoft 365 collaboration.
-- License assignment.
-- Conditional Access targeting.
-- Device management targeting with Intune.
-- Role assignments in specific scenarios.
+
+The key items here are Application access, Microsoft 365 collaboration, License assignment, Conditional Access targeting, Device management targeting with Intune, and Role assignments in specific scenarios.
 
 ### Security Groups vs. Microsoft 365 Groups
 
@@ -266,13 +257,8 @@ An **app registration** is the configuration that lets an application use Micros
 
 When you register an application, you define settings such as:
 
-- Supported account types.
-- Redirect URI.
-- Client ID.
-- Certificates or secrets.
-- API permissions.
-- Exposed scopes.
-- Branding and publisher information.
+
+The key items here are Supported account types, Redirect URI, Client ID, Certificates or secrets, API permissions, Exposed scopes, and Branding and publisher information.
 
 The app registration lives in the application's home tenant.
 
@@ -282,10 +268,8 @@ The **application object** is the global definition of the app. It is like the b
 
 It describes how the app should work with Entra ID:
 
-- How tokens can be issued.
-- Which permissions the app asks for.
-- Which reply URLs are allowed.
-- Which APIs the app exposes.
+
+The key items here are How tokens can be issued, Which permissions the app asks for, Which reply URLs are allowed, and Which APIs the app exposes.
 
 For a single-tenant app, this may feel straightforward because the app is used only in one tenant.
 
@@ -305,11 +289,8 @@ For example:
 
 Each tenant can manage its local service principal:
 
-- Who can use the app.
-- Which permissions were consented.
-- Whether user assignment is required.
-- Sign-in logs for that enterprise app.
-- Conditional Access policies targeting the app.
+
+The key items here are Who can use the app, Which permissions were consented, Whether user assignment is required, Sign-in logs for that enterprise app, and Conditional Access policies targeting the app.
 
 In the Microsoft Entra admin center, **App registrations** usually represent application objects. **Enterprise applications** usually represent service principals.
 
@@ -415,12 +396,8 @@ For privileged roles, organizations often use **Privileged Identity Management**
 
 Instead of making a user permanently active as Global Administrator, PIM can make the role:
 
-- Eligible.
-- Time-limited.
-- Approval-based.
-- MFA-protected.
-- Justification-required.
-- Audited.
+
+The key items here are Eligible, Time-limited, Approval-based, MFA-protected, Justification-required, and Audited.
 
 The idea is simple:
 
@@ -534,11 +511,8 @@ Assignments define who and what the policy applies to.
 
 Examples:
 
-- Include all users.
-- Exclude break-glass accounts.
-- Include specific groups.
-- Include privileged roles.
-- Include selected cloud apps.
+
+The key items here are Include all users, Exclude break-glass accounts, Include specific groups, Include privileged roles, and Include selected cloud apps.
 
 ### 2. Conditions
 
@@ -546,10 +520,8 @@ Conditions define when the policy should trigger.
 
 Examples:
 
-- Any location except trusted locations.
-- Sign-in risk is medium or high.
-- Device platform is Android.
-- Client app is legacy authentication.
+
+The key items here are Any location except trusted locations, Sign-in risk is medium or high, Device platform is Android, and Client app is legacy authentication.
 
 ### 3. Access Controls
 
@@ -613,11 +585,8 @@ Every serious tenant should have emergency access accounts, often called break-g
 
 They should be:
 
-- Cloud-only.
-- Highly protected.
-- Excluded from policies that could lock everyone out.
-- Monitored aggressively.
-- Used only for emergencies.
+
+The key items here are Cloud-only, Highly protected, Excluded from policies that could lock everyone out, Monitored aggressively, and Used only for emergencies.
 
 Do not exclude normal administrators from Conditional Access just because it is convenient.
 
@@ -627,11 +596,8 @@ A badly scoped Conditional Access policy can block users, admins, service accoun
 
 Use:
 
-- Report-only mode.
-- What If testing.
-- Pilot groups.
-- Sign-in logs.
-- Clear exclusions.
+
+The key items here are Report-only mode, What If testing, Pilot groups, Sign-in logs, and Clear exclusions.
 
 Then enforce gradually.
 
@@ -641,11 +607,8 @@ Enterprise apps can accumulate over time.
 
 Review:
 
-- Which apps exist.
-- Which permissions they have.
-- Who consented.
-- Whether the app is still used.
-- Whether the publisher is trusted.
+
+An application review should ask which apps exist, which permissions they have, who consented, whether the app is still used, and whether the publisher is trusted.
 
 Unused apps with powerful permissions are identity debt.
 

@@ -156,11 +156,8 @@ Identity becomes the control plane for:
 
 Examples:
 
-- Username and password.
-- Microsoft Authenticator approval.
-- FIDO2 security key.
-- Windows Hello for Business.
-- Certificate-based authentication.
+
+The key items here are Username and password, Microsoft Authenticator approval, FIDO2 security key, Windows Hello for Business, and Certificate-based authentication.
 
 **Authorization** answers: "What are you allowed to do?"
 
@@ -438,10 +435,8 @@ The **Microsoft Service Trust Portal** provides access to Microsoft compliance r
 
 Typical resources include:
 
-- Independent audit reports.
-- Compliance guides.
-- Data protection and security documentation.
-- Information about Microsoft cloud controls.
+
+The key items here are Independent audit reports, Compliance guides, Data protection and security documentation, and Information about Microsoft cloud controls.
 
 Microsoft privacy principles show up as trust concepts. You should understand ideas such as transparency, control, security, legal protection, and responsible data handling.
 

@@ -332,11 +332,8 @@ A CDN-backed record can point `www.example.com` to `example.cdn-provider.net`; t
 
 The CDN can then return different IP addresses depending on:
 
-- User location.
-- Network conditions.
-- Server health.
-- Traffic load.
-- IPv4 vs. IPv6 availability.
+
+The key items here are User location, Network conditions, Server health, Traffic load, and IPv4 vs. IPv6 availability.
 
 This is one reason two people in different countries may resolve the same domain to different IP addresses.
 
@@ -356,10 +353,8 @@ But the complete answer is:
 
 DNS may use TCP when:
 
-- The response is too large for UDP.
-- Zone transfers happen between DNS servers.
-- Reliability is needed.
-- Certain DNS security and privacy designs require it.
+
+DNS may use TCP when a response is too large for UDP, when zone transfers happen between DNS servers, when reliability is required, or when a security or privacy design calls for it.
 
 Modern encrypted DNS options also exist:
 
@@ -465,11 +460,8 @@ If one browser cannot load a site but another can, the problem might be browser 
 
 If no application can resolve names, check:
 
-- Local network connectivity.
-- DNS server configuration.
-- VPN state.
-- Firewall rules.
-- Router or ISP DNS issues.
+
+The key items here are Local network connectivity, DNS server configuration, VPN state, Firewall rules, and Router or ISP DNS issues.
 
 ---
 

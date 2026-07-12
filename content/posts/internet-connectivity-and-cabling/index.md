@@ -125,10 +125,8 @@ The most common cable in LAN environments. Pairs of copper conductors are twiste
 
 A central conductor surrounded by insulation, a braided shield, and an outer jacket. Originally dominant in LANs (10Base2, 10Base5), coax has largely been replaced by twisted-pair in most LAN environments but remains relevant for:
 
-- Cable internet (DOCSIS modems)
-- Cable television distribution
-- RF and antenna connections
-- CCTV systems
+
+The key items here are Cable internet (DOCSIS modems), Cable television distribution, RF and antenna connections, and CCTV systems.
 
 The shielding gives coax excellent noise immunity - why it's still used where interference is a concern.
 
@@ -139,10 +137,8 @@ The shielding gives coax excellent noise immunity - why it's still used where in
 Fiber transmits data as **pulses of light** through a glass or plastic core. No electromagnetic interference. No signal degradation from nearby power lines. Capable of transmitting over long distances at extremely high bandwidths.
 
 **Single-Mode Fiber (SMF):**
-- Very thin core (~9 µm)
-- Laser light source
-- Distances: 10km–100km+
-- Used for: WAN links, ISP backbones, long campus runs
+
+The key items here are Very thin core (~9 µm), Laser light source, Distances: 10km–100km+, and Used for: WAN links, ISP backbones, long campus runs.
 
 **Multi-Mode Fiber (MMF):**
 - Wider core (50 or 62.5 µm)

@@ -70,11 +70,8 @@ The difference between "MFA" and "strong MFA" is the whole game.
 
 Common MFA examples:
 
-- Password plus SMS code.
-- Password plus authenticator app push.
-- Password plus one-time code from an authenticator app.
-- Password plus hardware security key.
-- Password plus certificate.
+
+The key items here are Password plus SMS code, Password plus authenticator app push, Password plus one-time code from an authenticator app, Password plus hardware security key, and Password plus certificate.
 
 MFA is important because passwords fail constantly. They are reused, guessed, leaked, phished, sprayed, and stolen by malware. Adding another factor makes account compromise harder.
 
@@ -251,10 +248,8 @@ Basic setup:
 
 Better setup:
 
-- Conditional Access.
-- Number matching.
-- Device compliance checks.
-- Risk-based sign-in policies.
+
+The key items here are Conditional Access, Number matching, Device compliance checks, and Risk-based sign-in policies.
 
 Stronger target state:
 

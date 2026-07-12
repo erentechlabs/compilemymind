@@ -44,11 +44,8 @@ The core idea is simple: **AI systems inherit the permissions they are given.** 
 
 Traditional identity and access management focused on people:
 
-- Employees.
-- Administrators.
-- Contractors.
-- Partners.
-- Customers.
+
+The key items here are Employees, Administrators, Contractors, Partners, and Customers.
 
 That model is still important. Humans still need strong authentication, least privilege, conditional access, phishing-resistant MFA, session controls, and access reviews.
 
@@ -85,21 +82,13 @@ AI amplifies identity problems in five ways.
 
 Before AI, an organization might already have thousands of non-human identities:
 
-- CI/CD service accounts.
-- Cloud service principals.
-- Monitoring integrations.
-- Backup jobs.
-- SaaS connectors.
-- Security scanners.
-- Database jobs.
+
+The key items here are CI/CD service accounts, Cloud service principals, Monitoring integrations, Backup jobs, SaaS connectors, Security scanners, and Database jobs.
 
 AI adds more:
 
-- Copilot-style assistants.
-- AI agents with tool access.
-- Retrieval augmented generation systems connected to internal data.
-- Chatbots connected to ticketing, HR, CRM, finance, or engineering systems.
-- Autonomous remediation workflows.
+
+The key items here are Copilot-style assistants, AI agents with tool access, Retrieval augmented generation systems connected to internal data, Chatbots connected to ticketing, HR, CRM, finance, or engineering systems, and Autonomous remediation workflows.
 
 Each one needs an identity. Each identity needs permissions. Each permission needs a reason.
 
@@ -151,14 +140,8 @@ The security control should not depend only on the model refusing the request.
 
 Better controls include:
 
-- Tool allowlists.
-- Read-only mode by default.
-- Human approval for sensitive actions.
-- Data loss prevention.
-- Output filtering.
-- Strong separation between instructions and untrusted content.
-- Per-tool authorization checks.
-- Full logging of tool calls.
+
+The key items here are Tool allowlists, Read-only mode by default, Human approval for sensitive actions, Data loss prevention, Output filtering, Strong separation between instructions and untrusted content, Per-tool authorization checks, and Full logging of tool calls.
 
 Identity security is where these controls become enforceable.
 
@@ -253,16 +236,8 @@ You cannot secure what you cannot see.
 
 Inventory:
 
-- Human users.
-- Admin accounts.
-- External users.
-- Service accounts.
-- Workload identities.
-- Service principals.
-- OAuth apps.
-- API keys.
-- AI agents.
-- AI tools connected to data sources.
+
+The key items here are Human users, Admin accounts, External users, Service accounts, Workload identities, Service principals, OAuth apps, API keys, AI agents, and AI tools connected to data sources.
 
 For each identity, record:
 
@@ -313,14 +288,8 @@ AI can help prepare actions, but not every action should execute automatically.
 
 Require human approval for:
 
-- Deleting data.
-- Changing access policies.
-- Creating admin users.
-- Rotating production secrets.
-- Disabling security tools.
-- Deploying to production.
-- Sending external messages with sensitive content.
-- Moving money or approving financial changes.
+
+The key items here are Deleting data, Changing access policies, Creating admin users, Rotating production secrets, Disabling security tools, Deploying to production, Sending external messages with sensitive content, and Moving money or approving financial changes.
 
 The higher the blast radius, the more important approval becomes.
 
@@ -330,14 +299,8 @@ Identity monitoring should include both human and non-human identities.
 
 Watch for:
 
-- New high-privilege permissions.
-- Unusual sign-in locations.
-- Token use from unexpected systems.
-- Sudden spikes in API calls.
-- OAuth apps requesting broad scopes.
-- Service accounts used interactively.
-- AI agents accessing unusual data sources.
-- Dormant identities becoming active.
+
+The key items here are New high-privilege permissions, Unusual sign-in locations, Token use from unexpected systems, Sudden spikes in API calls, OAuth apps requesting broad scopes, Service accounts used interactively, AI agents accessing unusual data sources, and Dormant identities becoming active.
 
 This is where SIEM, XDR, and identity protection tools matter. Identity logs are not boring audit trails. They are often the first evidence of compromise.
 
@@ -347,13 +310,8 @@ AI tools change quickly. Permissions that made sense during a pilot may be dange
 
 Review:
 
-- Which AI tools are approved.
-- Which data sources they can access.
-- Which users can use them.
-- Which agents can call tools.
-- Which permissions are unused.
-- Which identities have no owner.
-- Which integrations are stale.
+
+An access review should ask which AI tools are approved, which data sources they can access, which users can use them, which agents can call tools, which permissions are unused, which identities have no owner, and which integrations are stale.
 
 Access review is not paperwork. It is how you stop privilege creep.
 

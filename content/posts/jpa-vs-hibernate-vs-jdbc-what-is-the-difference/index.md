@@ -79,13 +79,8 @@ It is the standard Java API for connecting to databases, sending SQL statements,
 
 With JDBC, you work directly with:
 
-- Connections.
-- SQL strings.
-- Prepared statements.
-- Result sets.
-- Transactions.
-- SQL exceptions.
-- Database-specific behavior.
+
+The key items here are Connections, SQL strings, Prepared statements, Result sets, Transactions, SQL exceptions, and Database-specific behavior.
 
 Example:
 
@@ -117,11 +112,8 @@ This is explicit. Nothing is hidden.
 
 You can see:
 
-- The SQL query.
-- The database connection.
-- The parameter binding.
-- The result set mapping.
-- The cleanup logic.
+
+The relevant details include the SQL query, the database connection, parameter binding, result-set mapping, and cleanup logic.
 
 That control is useful, but it becomes repetitive in large applications.
 
@@ -141,13 +133,8 @@ JDBC is excellent when you want direct control.
 
 JDBC is often a good fit for:
 
-- Reporting queries.
-- Batch jobs.
-- Stored procedure calls.
-- Performance-critical paths.
-- SQL-heavy applications.
-- Legacy systems.
-- Cases where object graphs are not useful.
+
+The key items here are Reporting queries, Batch jobs, Stored procedure calls, Performance-critical paths, SQL-heavy applications, Legacy systems, and Cases where object graphs are not useful.
 
 The tradeoff is boilerplate.
 
@@ -163,12 +150,8 @@ JPA is a **specification**, not a standalone product.
 
 That means JPA defines:
 
-- How entities are mapped.
-- How persistence contexts work.
-- How relationships are modeled.
-- How queries can be written with JPQL and Criteria.
-- How an `EntityManager` behaves.
-- How transactions interact with persistence.
+
+The key items here are How entities are mapped, How persistence contexts work, How relationships are modeled, How queries can be written with JPQL and Criteria, How an `EntityManager` behaves, and How transactions interact with persistence.
 
 But JPA does not do the work by itself. You need an implementation.
 
@@ -251,12 +234,8 @@ JPA is useful when your application has a rich domain model and many normal CRUD
 
 JPA is often a good fit for:
 
-- Business applications.
-- CRUD-heavy systems.
-- Spring Boot APIs.
-- Domain models with relationships.
-- Applications where portability matters.
-- Teams that want a standard Java persistence API.
+
+The key items here are Business applications, CRUD-heavy systems, Spring Boot APIs, Domain models with relationships, Applications where portability matters, and Teams that want a standard Java persistence API.
 
 But JPA is not magic. You still need to understand SQL, transactions, indexes, joins, and query performance.
 
@@ -293,16 +272,8 @@ Hibernate implements JPA, but it also has features of its own.
 
 Examples include:
 
-- Hibernate-specific annotations.
-- HQL features.
-- Advanced fetching options.
-- Batch fetching.
-- Caching features.
-- Filters.
-- Custom types.
-- Natural IDs.
-- More detailed dirty checking behavior.
-- Database dialect support.
+
+The key items here are Hibernate-specific annotations, HQL features, Advanced fetching options, Batch fetching, Caching features, Filters, Custom types, Natural IDs, More detailed dirty checking behavior, and Database dialect support.
 
 Example Hibernate-specific annotation:
 
@@ -411,13 +382,8 @@ Use JDBC when you want direct SQL control and the object mapping is simple or se
 
 Good use cases:
 
-- Complex reporting queries.
-- Bulk updates.
-- Data migration jobs.
-- Stored procedures.
-- Database-specific SQL.
-- Performance-sensitive read paths.
-- Applications that already think in SQL.
+
+The key items here are Complex reporting queries, Bulk updates, Data migration jobs, Stored procedures, Database-specific SQL, Performance-sensitive read paths, and Applications that already think in SQL.
 
 JDBC is also useful when an ORM would make the code harder, not easier.
 
@@ -444,12 +410,8 @@ Use JPA when you want a standard ORM API and your application works naturally wi
 
 Good use cases:
 
-- Business applications with domain entities.
-- CRUD APIs.
-- Systems with common entity relationships.
-- Applications that benefit from automatic dirty checking.
-- Projects where provider portability matters.
-- Spring Boot applications using repositories.
+
+The key items here are Business applications with domain entities, CRUD APIs, Systems with common entity relationships, Applications that benefit from automatic dirty checking, Projects where provider portability matters, and Spring Boot applications using repositories.
 
 Example:
 
@@ -586,10 +548,8 @@ That second line may trigger another SQL query.
 
 Lazy loading is useful, but it can cause:
 
-- N+1 query problems.
-- Unexpected database access.
-- Exceptions outside a transaction.
-- Serialization problems in REST APIs.
+
+The key items here are N+1 query problems, Unexpected database access, Exceptions outside a transaction, and Serialization problems in REST APIs.
 
 You cannot use JPA well without understanding lazy loading.
 
@@ -647,10 +607,8 @@ JPA behavior depends heavily on transactions.
 
 Without a transaction, you may see:
 
-- Lazy loading failures.
-- Changes not persisted.
-- Detached entity issues.
-- Inconsistent reads.
+
+The key items here are Lazy loading failures, Changes not persisted, Detached entity issues, and Inconsistent reads.
 
 In Spring applications, transaction boundaries usually belong in the service layer:
 
