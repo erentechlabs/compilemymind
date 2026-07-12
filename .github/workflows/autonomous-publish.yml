@@ -11,7 +11,6 @@ concurrency:
 
 permissions:
   contents: write
-  deployments: write
 
 jobs:
   publish:
@@ -23,9 +22,6 @@ jobs:
       GEMINI_QA_MODEL: ${{ vars.GEMINI_QA_MODEL }}
       GEMINI_GROUNDED_RESEARCH_MODEL: ${{ vars.GEMINI_GROUNDED_RESEARCH_MODEL }}
       GEMINI_IMAGE_MODEL: ${{ vars.GEMINI_IMAGE_MODEL }}
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -82,14 +78,9 @@ jobs:
           git push origin "HEAD:${GITHUB_REF_NAME}"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Deploy to Cloudflare Pages
-        if: steps.commit.outputs.changed == 'true' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
-        shell: bash
-        run: npx --yes wrangler@4 pages deploy public --project-name="$CLOUDFLARE_PAGES_PROJECT" --branch="${GITHUB_REF_NAME}"
-
       - name: Report deployment configuration
-        if: steps.commit.outputs.changed == 'true' && (env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == '')
-        run: echo "Content was pushed. Cloudflare Pages must use its Git integration, or the three optional Cloudflare settings must be configured for direct deployment."
+        if: steps.commit.outputs.changed == 'true'
+        run: echo "Content was pushed. Cloudflare Pages Git integration will deploy the new commit."
 
       - name: Upload autonomous run logs
         if: always()
