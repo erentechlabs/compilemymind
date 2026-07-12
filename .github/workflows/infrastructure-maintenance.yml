@@ -96,6 +96,7 @@ jobs:
           curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${selected_version}/$archive"
           tar -xzf "$RUNNER_TEMP/$archive" -C "$install_dir" hugo
           chmod +x "$install_dir/hugo"
+          echo "$install_dir" >> "$GITHUB_PATH"
           "$install_dir/hugo" version
 
           if ! "$install_dir/hugo" --minify; then
@@ -106,6 +107,11 @@ jobs:
             fi
             exit 1
           fi
+
+      - name: Run shared release gate
+        id: release_gate
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success'
+        run: python tools/ci/release_gate.py --mode infrastructure
 
       - name: Upload infrastructure report
         if: always()
@@ -119,7 +125,7 @@ jobs:
           retention-days: 180
 
       - name: Stop after a failed regression test
-        if: always() && (steps.infra.outcome == 'failure' || steps.hugo_candidate.outcome == 'failure')
+        if: always() && (steps.infra.outcome == 'failure' || steps.hugo_candidate.outcome == 'failure' || steps.release_gate.outcome == 'failure')
         run: exit 1
 
       - name: Synchronize Hugo version with Cloudflare Pages

@@ -52,10 +52,8 @@ jobs:
       - name: Review links and stale facts
         run: python tools/autopublisher/autopublisher.py --mode maintain
 
-      - name: Rebuild and validate maintained site
-        run: |
-          git diff --check
-          hugo --minify
+      - name: Run shared release gate
+        run: python tools/ci/release_gate.py --mode maintenance
 
       - name: Commit and push approved maintenance
         id: commit

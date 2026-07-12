@@ -35,6 +35,9 @@ jobs:
       - name: Discover and smoke-test newer stable Gemini Flash model
         run: python tools/maintenance/gemini_model_maintenance.py
 
+      - name: Run shared release gate
+        run: python tools/ci/release_gate.py --mode model
+
       - name: Commit activated model state
         shell: bash
         run: |

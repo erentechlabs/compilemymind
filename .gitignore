@@ -20,3 +20,5 @@ __pycache__/
 
 # Per-run publication gate marker
 .autopublisher/publish-result.json
+.autopublisher/release-gate-result.json
+infra-result.json

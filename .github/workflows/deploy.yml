@@ -42,11 +42,8 @@ jobs:
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
         run: python3 tools/maintenance/sync_cloudflare_hugo.py
 
-      - name: Audit every post image asset
-        run: python3 tools/autopublisher/autopublisher.py --mode audit
-
-      - name: Build Hugo site
-        run: hugo --minify
+      - name: Run shared release gate
+        run: python3 tools/ci/release_gate.py --mode validate
 
       - name: Report deployment configuration
         if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == ''

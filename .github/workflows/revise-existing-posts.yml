@@ -52,11 +52,8 @@ jobs:
       - name: Rewrite one existing post with Gemini and QA
         run: python tools/autopublisher/revise_posts.py --max-posts 1
 
-      - name: Validate revised content
-        run: |
-          git diff --check
-          python tools/autopublisher/autopublisher.py --mode audit
-          hugo --minify
+      - name: Run shared release gate
+        run: python tools/ci/release_gate.py --mode revision
 
       - name: Commit and push approved revision
         id: commit
