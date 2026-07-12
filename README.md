@@ -1,6 +1,6 @@
 # 🧠 Compile My Mind
 
-[![Hugo Version](https://img.shields.io/badge/Hugo-v0.163.1-8b5cf6?logo=hugo)](https://gohugo.io/)
+[![Hugo Version](https://img.shields.io/badge/Hugo-v0.164.0-8b5cf6?logo=hugo)](https://gohugo.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > **Deep dives into software engineering, networking, IT operations, cloud infrastructure, hardware, and the systems that power digital work.**
