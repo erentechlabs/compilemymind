@@ -63,6 +63,18 @@ jobs:
         run: |
           git config user.name "compilemymind-maintenance[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if test -z "$(git status --porcelain=v1 -- content/posts)" && python - <<'PY'
+          import json
+          from pathlib import Path
+
+          state = json.loads(Path('.autopublisher/state.json').read_text(encoding='utf-8'))
+          raise SystemExit(0 if state.get('last_runs', {}).get('maintain', {}).get('result') == 'quota_limited' else 1)
+          PY
+          then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Maintenance was quota-limited; no state-only deployment commit will be created."
+            exit 0
+          fi
           if git diff --quiet -- content/posts .autopublisher/state.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No maintenance changes were required."

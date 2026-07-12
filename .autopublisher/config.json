@@ -39,7 +39,7 @@
     "max_new_posts_per_run": 1
   },
   "maintenance": {
-    "max_articles_per_run": 3,
+    "max_articles_per_run": 1,
     "review_after_days": 45,
     "link_timeout_seconds": 12,
     "treat_403_as_broken": false,

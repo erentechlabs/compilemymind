@@ -1612,6 +1612,11 @@ def run_publish(args: argparse.Namespace) -> int:
             )
             grounded_brief = client.grounded_research(grounded_prompt)
             log.log("grounded_research_completed", citation_count=len(grounded_brief.get("citations", [])))
+        except GeminiQuotaError as error:
+            log.log("publish_quota_limited", stage="grounded_research", error=str(error))
+            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "grounded_research"}
+            save_state(state)
+            return 0
         except Exception as error:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))
@@ -1805,10 +1810,11 @@ def run_maintain(args: argparse.Namespace) -> int:
     client = GeminiClient(config, log)
     client.require_key()
     posts = load_posts(config)
-    limit = args.max_articles or int(config.get("maintenance", {}).get("max_articles_per_run", 3))
+    limit = args.max_articles or int(config.get("maintenance", {}).get("max_articles_per_run", 1))
     selected = select_posts_for_maintenance(posts, state, config, limit)
     log.log("maintenance_selected", count=len(selected), slugs=[post.slug for post in selected])
     exit_code = 0
+    quota_limited = False
     for post in selected:
         links = extract_links(post.body)
         broken: list[dict[str, str]] = []
@@ -1822,10 +1828,19 @@ def run_maintain(args: argparse.Namespace) -> int:
                 f"Find current, trustworthy updates relevant to this technical article: {post.title}. "
                 f"Focus on facts that may have changed since {post.date}. Include citations."
             )
+        except GeminiQuotaError as error:
+            log.log("maintenance_quota_limited", slug=post.slug, stage="grounded_research", error=str(error))
+            quota_limited = True
+            break
         except Exception as error:
             log.log("maintenance_grounded_research_failed", slug=post.slug, error=str(error))
+            continue
         try:
             payload = client.generate_json(maintenance_prompt(post, broken, grounded, config), model=client.text_model)
+        except GeminiQuotaError as error:
+            log.log("maintenance_quota_limited", slug=post.slug, stage="maintenance_review", error=str(error))
+            quota_limited = True
+            break
         except Exception as error:
             log.log("maintenance_ai_failed", slug=post.slug, error=str(error))
             exit_code = 1
@@ -1882,7 +1897,8 @@ def run_maintain(args: argparse.Namespace) -> int:
             "reason": payload.get("reason", ""),
             "broken_links": broken,
         }
-    state["last_runs"]["maintain"] = {"time": iso_z(), "result": "completed"}
+    result = "quota_limited" if quota_limited else ("completed_with_errors" if exit_code else "completed")
+    state["last_runs"]["maintain"] = {"time": iso_z(), "result": result}
     save_state(state)
     if not args.dry_run and exit_code == 0 and selected:
         if not run_hugo_build(log):

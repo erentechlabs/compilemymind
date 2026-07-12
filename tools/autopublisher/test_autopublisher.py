@@ -3,6 +3,7 @@ import os
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from pathlib import Path
 from unittest.mock import patch
 
@@ -139,6 +140,42 @@ class AutopublisherTests(unittest.TestCase):
         )
         self.assertFalse(result["approved"])
         self.assertEqual(result["score"], 0.0)
+
+    def test_grounded_research_429_raises_quota_error(self):
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}), \
+            patch.object(autopublisher, "http_request", return_value=(429, b"quota exceeded", {})):
+            client = autopublisher.GeminiClient({"gemini": {}}, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiQuotaError):
+                client.grounded_research("test")
+
+    def test_maintenance_stops_cleanly_when_grounded_research_is_quota_limited(self):
+        state = {"maintenance_reviews": {}, "last_runs": {}}
+        post = SimpleNamespace(slug="test-post", title="Test post", date="2026-01-01", body="A readable article body.")
+
+        class QuotaClient:
+            text_model = "test"
+
+            def require_key(self):
+                return None
+
+            def grounded_research(self, _prompt):
+                raise autopublisher.GeminiQuotaError("quota")
+
+            def generate_json(self, *_args, **_kwargs):
+                raise AssertionError("maintenance must not generate after a quota response")
+
+        with patch.object(autopublisher, "load_config", return_value={"maintenance": {"max_articles_per_run": 1}}), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[post]), \
+            patch.object(autopublisher, "select_posts_for_maintenance", return_value=[post]), \
+            patch.object(autopublisher, "GeminiClient", return_value=QuotaClient()), \
+            patch.object(autopublisher, "run_hugo_build", return_value=True), \
+            patch.object(autopublisher, "save_state") as save_state:
+            result = autopublisher.run_maintain(SimpleNamespace(max_articles=None, dry_run=False))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(state["last_runs"]["maintain"]["result"], "quota_limited")
+        save_state.assert_called_once_with(state)
 
 
 if __name__ == "__main__":
