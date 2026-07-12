@@ -80,11 +80,19 @@
     }
   ],
   "maintenance_reviews": {},
-  "failures": [],
+  "failures": [
+    {
+      "time": "2026-07-12T20:57:20.990039Z",
+      "mode": "publish",
+      "topic": "Securing Autonomous AI Agents: How to Safely Execute Untrusted AI-Generated Code",
+      "reason": "qa_failed",
+      "feedback": "Article contains external links that are not in its trusted source list.\nArticle is too similar to existing post 'How Ghostcommit Prompt Injections Bypass AI Code Review Agents' (0.53)."
+    }
+  ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-12T19:37:24.902948Z",
-      "result": "published"
+      "time": "2026-07-12T20:57:20.990046Z",
+      "result": "qa_failed"
     }
   }
 }
