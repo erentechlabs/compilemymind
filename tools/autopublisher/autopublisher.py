@@ -833,6 +833,9 @@ Hard requirements:
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Create a multi-part series only when the topic naturally benefits from it.
+- Return exactly 8 candidate topics, ranked best to worst.
+- Include backup candidates across at least 4 different categories so the automation can continue if the first idea is rejected as too similar.
+- Do not return only Azure fundamentals, IaaS basics, or certification-summary topics when similar existing Azure/certification articles already exist.
 
 Category counts:
 {json.dumps(counts, ensure_ascii=False, indent=2)}
@@ -888,6 +891,8 @@ def choose_topic(
     candidates = result.get("topics") or []
     if isinstance(result.get("topic"), dict):
         candidates.insert(0, result["topic"])
+    if isinstance(result.get("items"), list):
+        candidates.extend(item for item in result["items"] if isinstance(item, dict))
     existing_slugs = {post.slug for post in posts}
     max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
@@ -930,8 +935,98 @@ def choose_topic(
             reasoning=result.get("editorial_reasoning", ""),
         )
         return topic
+    fallback = fallback_topic_from_research(
+        research,
+        posts,
+        config,
+        log,
+        max_similarity=max_similarity,
+        max_title_similarity=max_title_similarity,
+    )
+    if fallback:
+        return fallback
     log.log("no_topic_selected", candidate_count=len(candidates))
     return None
+
+
+def fallback_topic_from_research(
+    research: list[ResearchItem],
+    posts: list[Post],
+    config: dict[str, Any],
+    log: EventLog,
+    *,
+    max_similarity: float,
+    max_title_similarity: float,
+) -> dict[str, Any] | None:
+    existing_slugs = {post.slug for post in posts}
+    target = target_category(posts, config)
+    allowed = set(config.get("taxonomy", {}).get("allowed_categories", []))
+    ranked = sorted(
+        research,
+        key=lambda item: (0.7 if target in item.categories else 0.0) + item.score,
+        reverse=True,
+    )
+    for allow_roundups in (False, True):
+        for item in ranked:
+            if not allow_roundups and is_roundup_research_item(item):
+                continue
+            primary = next((category for category in item.categories if category in allowed and category != "guide"), None)
+            primary = primary or (target if target in allowed else "technology")
+            title = fallback_topic_title(item, primary)
+            slug = slugify(title)
+            if slug in existing_slugs:
+                continue
+            categories = sanitize_categories([primary, *item.categories], primary, config)
+            tags = sanitize_tags([primary, item.source, *tokenize(item.title)[:5]], {"title": title})
+            similarity = max_existing_similarity(f"{title}\n{item.summary}\n{' '.join(tags)}", posts)
+            similar_post = similarity["post"]
+            if similarity["score"] > max_similarity or similarity["title_score"] > max_title_similarity:
+                log.log(
+                    "fallback_topic_rejected",
+                    title=title,
+                    reason="too_similar",
+                    similarity=round(float(similarity["score"]), 4),
+                    title_similarity=round(float(similarity["title_score"]), 4),
+                    similar_post=similar_post.title if similar_post else "",
+                )
+                continue
+            topic = {
+                "title": title,
+                "slug": slug,
+                "primary_category": primary,
+                "categories": categories,
+                "tags": tags,
+                "search_intent": f"Readers want a practical explanation of {item.title} and what it changes for technical teams.",
+                "why_now": f"Based on a recent item from {item.source}: {item.title}",
+                "source_urls": [item.url],
+                "needs_diagram": primary in {"software-engineering", "networking", "cybersecurity", "microsoft-cloud", "cloud"},
+                "needs_chart": bool(re.search(r"(?i)\b(cost|price|benchmark|performance|percent|growth|compare|comparison)\b", item.title + " " + item.summary)),
+                "series": {"name": "", "part": None, "total_estimate": None, "planned_next_parts": []},
+            }
+            log.log("fallback_topic_selected", title=title, slug=slug, categories=categories, source=item.source)
+            return topic
+    return None
+
+
+def is_roundup_research_item(item: ResearchItem) -> bool:
+    text = f"{item.title} {item.summary}"
+    return bool(re.search(r"(?i)\b(what['\u2019]?s new|weekly|roundup|release notes|changelog|this week|newsletter)\b", text))
+
+
+def fallback_topic_title(item: ResearchItem, primary_category: str) -> str:
+    base = re.sub(r"\s*[-|]\s*(Google Cloud|AWS|Microsoft|GitHub|Cloudflare).*$", "", item.title).strip()
+    base = base.rstrip(".")
+    if primary_category == "cybersecurity":
+        return f"{base}: Practical Security Lessons for IT Teams"
+    if primary_category == "networking":
+        return f"{base}: What It Means for Modern Network Operations"
+    if primary_category in {"cloud", "microsoft-cloud"}:
+        return f"{base}: Practical Cloud Architecture Guide"
+    if primary_category == "software-engineering":
+        return f"{base}: Practical Guide for Developers"
+    if primary_category == "hardware":
+        return f"{base}: Practical Hardware Buying and Performance Guide"
+    return f"{base}: Practical Guide and Real-World Examples"
 
 
 def sanitize_categories(values: Any, primary: Any, config: dict[str, Any]) -> list[str]:
