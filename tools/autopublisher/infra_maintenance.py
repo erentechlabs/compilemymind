@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Prepare and validate low-risk infrastructure maintenance updates.
+"""Prepare and validate infrastructure maintenance updates.
 
-This script is intentionally conservative. It may update local version files and
-lockfiles, but the workflow commits only after the generated site builds.
+Patch and minor Hugo releases are prepared for automatic validation. Major Hugo
+releases and major/minor npm updates remain manual-review candidates.
 """
 
 from __future__ import annotations
@@ -46,8 +46,6 @@ def version_risk(current: str, latest: str) -> str:
     if latest_version <= current_version:
         return "none"
     if latest_version[0] != current_version[0]:
-        return "high"
-    if latest_version[1] != current_version[1]:
         return "high"
     return "low"
 
@@ -127,7 +125,7 @@ def write_report(data: dict[str, Any]) -> Path:
         "",
         f"Generated: {now.replace(microsecond=0).isoformat().replace('+00:00', 'Z')}",
         "",
-        "This report was created by the autonomous maintenance workflow. Safe changes are committed automatically only after validation passes.",
+        "This report was created by the autonomous maintenance workflow. Hugo patch and minor changes are committed automatically only after candidate-version validation passes.",
         "",
         "## Decision",
         "",
@@ -179,7 +177,7 @@ def write_report(data: dict[str, Any]) -> Path:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Prepare safe infrastructure updates.")
+    parser = argparse.ArgumentParser(description="Prepare infrastructure updates for validation.")
     parser.add_argument("--apply-safe-updates", action="store_true", help="Apply candidate updates in the current branch.")
     args = parser.parse_args()
 
@@ -219,8 +217,8 @@ def main() -> int:
     if latest and parse_version(latest) > parse_version(current):
         if hugo_risk == "low" and args.apply_safe_updates and baseline["returncode"] == 0:
             version_path.write_text(latest + "\n", encoding="utf-8")
-            data["hugo_action"] = f"updated .hugo-version to low-risk patch {latest}"
-            data["safe_changes"].append(f"Hugo patch {current} -> {latest}")
+            data["hugo_action"] = f"prepared .hugo-version for automatic candidate validation: {latest}"
+            data["safe_changes"].append(f"Hugo release {current} -> {latest}")
         else:
             data["hugo_action"] = f"candidate update available: {latest}; manual review required"
             data["manual_review_required"] = True

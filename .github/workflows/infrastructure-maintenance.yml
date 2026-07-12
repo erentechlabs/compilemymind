@@ -50,7 +50,15 @@ jobs:
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/hugo/hugo" version
 
-      - name: Check and apply only low-risk updates
+      - name: Save infrastructure baseline
+        shell: bash
+        run: |
+          cp .hugo-version "$RUNNER_TEMP/original-hugo-version"
+          if test -f themes/mana/package-lock.json; then
+            cp themes/mana/package-lock.json "$RUNNER_TEMP/original-package-lock.json"
+          fi
+
+      - name: Check and prepare automatic updates
         id: infra
         continue-on-error: true
         shell: bash
@@ -69,6 +77,36 @@ jobs:
           fi
           exit $status
 
+      - name: Validate selected Hugo release
+        id: hugo_candidate
+        if: steps.infra.outcome == 'success' && steps.infra.outputs.manual_review != 'true'
+        shell: bash
+        run: |
+          original_version="$(tr -d '\r\n' < "$RUNNER_TEMP/original-hugo-version")"
+          selected_version="$(tr -d '\r\n' < .hugo-version)"
+          if test "$original_version" = "$selected_version"; then
+            echo "No Hugo version change requires a second candidate build."
+            exit 0
+          fi
+
+          archive="hugo_extended_${selected_version}_linux-amd64.tar.gz"
+          install_dir="$RUNNER_TEMP/hugo-selected"
+          rm -rf "$install_dir"
+          mkdir -p "$install_dir"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${selected_version}/$archive"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$install_dir" hugo
+          chmod +x "$install_dir/hugo"
+          "$install_dir/hugo" version
+
+          if ! "$install_dir/hugo" --minify; then
+            echo "The selected Hugo release failed its candidate build; restoring the previous version."
+            cp "$RUNNER_TEMP/original-hugo-version" .hugo-version
+            if test -f "$RUNNER_TEMP/original-package-lock.json"; then
+              cp "$RUNNER_TEMP/original-package-lock.json" themes/mana/package-lock.json
+            fi
+            exit 1
+          fi
+
       - name: Upload infrastructure report
         if: always()
         uses: actions/upload-artifact@v7
@@ -81,7 +119,7 @@ jobs:
           retention-days: 180
 
       - name: Stop after a failed regression test
-        if: steps.infra.outcome == 'failure'
+        if: always() && (steps.infra.outcome == 'failure' || steps.hugo_candidate.outcome == 'failure')
         run: exit 1
 
       - name: Synchronize Hugo version with Cloudflare Pages
@@ -108,7 +146,7 @@ jobs:
             --title "Infrastructure maintenance review (${GITHUB_RUN_ID})" \
             --body-file "${{ steps.infra.outputs.report }}"
 
-      - name: Commit validated low-risk updates
+      - name: Commit validated automatic updates
         id: commit
         if: steps.infra.outputs.manual_review != 'true'
         shell: bash
@@ -118,7 +156,7 @@ jobs:
           git add .autopublisher/reports .hugo-version
           if test -f themes/mana/package-lock.json; then git add themes/mana/package-lock.json; fi
           if git diff --cached --quiet; then
-            echo "No low-risk infrastructure updates were ready to commit."
+            echo "No validated infrastructure updates were ready to commit."
             exit 0
           fi
           git commit -m "chore(infra): apply validated maintenance updates"
