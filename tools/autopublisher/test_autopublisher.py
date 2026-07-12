@@ -1,6 +1,10 @@
+import json
+import os
 import sys
+import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -34,6 +38,45 @@ class AutopublisherTests(unittest.TestCase):
         client = autopublisher.GeminiClient({"gemini": {}}, autopublisher.EventLog())
         self.assertEqual(client.text_model, "gemini-3.5-flash")
         self.assertEqual(client.image_model, "gemini-3.1-flash-image")
+
+    def test_active_model_state_overrides_config_defaults(self):
+        with tempfile.TemporaryDirectory() as directory:
+            model_state_path = Path(directory) / "model-state.json"
+            model_state_path.write_text(
+                json.dumps(
+                    {
+                        "active_models": {
+                            "text": "gemini-4.0-flash",
+                            "qa": "gemini-4.0-flash",
+                            "grounded": "gemini-4.0-flash",
+                        }
+                    }
+                ),
+                encoding="utf-8",
+            )
+            with patch.object(autopublisher, "MODEL_STATE_PATH", model_state_path), patch.dict(
+                os.environ,
+                {
+                    "GEMINI_TEXT_MODEL": "",
+                    "GEMINI_QA_MODEL": "",
+                    "GEMINI_GROUNDED_RESEARCH_MODEL": "",
+                },
+                clear=False,
+            ):
+                client = autopublisher.GeminiClient(
+                    {
+                        "gemini": {
+                            "text_model": "gemini-3.5-flash",
+                            "qa_model": "gemini-3.5-flash",
+                            "grounded_research_model": "gemini-3.5-flash",
+                            "model_upgrade": {"enabled": True},
+                        }
+                    },
+                    autopublisher.EventLog(),
+                )
+        self.assertEqual(client.text_model, "gemini-4.0-flash")
+        self.assertEqual(client.qa_model, "gemini-4.0-flash")
+        self.assertEqual(client.grounded_model, "gemini-4.0-flash")
 
     def test_untrusted_model_sources_are_not_published(self):
         research = [

@@ -48,6 +48,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AUTOPUBLISHER_DIR = ROOT / ".autopublisher"
 CONFIG_PATH = AUTOPUBLISHER_DIR / "config.json"
 STATE_PATH = AUTOPUBLISHER_DIR / "state.json"
+MODEL_STATE_PATH = AUTOPUBLISHER_DIR / "model-state.json"
 
 STOP_WORDS = {
     "a",
@@ -346,6 +347,10 @@ def load_state() -> dict[str, Any]:
     )
 
 
+def load_model_state() -> dict[str, Any]:
+    return read_json(MODEL_STATE_PATH, {})
+
+
 def save_state(state: dict[str, Any]) -> None:
     write_json(STATE_PATH, state)
 
@@ -438,10 +443,23 @@ class GeminiClient:
         self.log = log
         self.api_key = os.environ.get("GEMINI_API_KEY", "").strip()
         gemini_config = config.get("gemini", {})
-        self.text_model = os.environ.get("GEMINI_TEXT_MODEL", "").strip() or gemini_config.get("text_model", "gemini-3.5-flash")
-        self.qa_model = os.environ.get("GEMINI_QA_MODEL", "").strip() or gemini_config.get("qa_model", self.text_model)
+        model_state = load_model_state() if gemini_config.get("model_upgrade", {}).get("enabled", True) else {}
+        active_models = model_state.get("active_models", {}) if isinstance(model_state, dict) else {}
+        if not isinstance(active_models, dict):
+            active_models = {}
+        self.text_model = (
+            os.environ.get("GEMINI_TEXT_MODEL", "").strip()
+            or active_models.get("text")
+            or gemini_config.get("text_model", "gemini-3.5-flash")
+        )
+        self.qa_model = (
+            os.environ.get("GEMINI_QA_MODEL", "").strip()
+            or active_models.get("qa")
+            or gemini_config.get("qa_model", self.text_model)
+        )
         self.grounded_model = (
             os.environ.get("GEMINI_GROUNDED_RESEARCH_MODEL", "").strip()
+            or active_models.get("grounded")
             or gemini_config.get("grounded_research_model", self.text_model)
         )
         self.image_model = os.environ.get("GEMINI_IMAGE_MODEL", "").strip() or gemini_config.get(

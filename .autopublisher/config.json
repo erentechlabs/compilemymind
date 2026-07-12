@@ -16,7 +16,15 @@
     "qa_temperature": 0.15,
     "max_output_tokens": 32768,
     "enable_google_search_grounding": true,
-    "enable_image_generation": false
+    "enable_image_generation": false,
+    "model_upgrade": {
+      "enabled": true,
+      "family": "flash",
+      "stable_only": true,
+      "max_major_jump": 1,
+      "min_input_token_limit": 32768,
+      "min_output_token_limit": 8192
+    }
   },
   "publishing": {
     "min_words": 1400,
