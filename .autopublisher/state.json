@@ -38,13 +38,52 @@
         "reason": "The article is technically accurate, highly detailed, and structured logically. It provides a clear, step-by-step guide to using Azure Chaos Studio, complete with an architecture diagram definition, a comprehensive comparison table, and actionable best practices. It successfully integrates internal links and aligns perfectly with the provided sources and search intent."
       },
       "path": "content/posts/azure-chaos-studio-application-resilience-guide/index.md"
+    },
+    {
+      "time": "2026-07-12T19:37:24.902818Z",
+      "title": "How Ghostcommit Prompt Injections Bypass AI Code Review Agents",
+      "slug": "ghostcommit-prompt-injection-ai-code-review-bypass",
+      "categories": [
+        "software-engineering",
+        "guide",
+        "cybersecurity"
+      ],
+      "tags": [
+        "ai-agents",
+        "prompt-injection",
+        "code-review",
+        "cybersecurity",
+        "software-security"
+      ],
+      "sources": [
+        {
+          "title": "Ghostcommit hides prompt injection in images to fool AI agents, steal secrets",
+          "url": "https://www.bleepingcomputer.com/news/security/ghostcommit-hides-prompt-injection-in-images-to-fool-ai-agents-steal-secrets/"
+        },
+        {
+          "title": "Safely run AI-generated code in Cloud Run sandboxes",
+          "url": "https://cloud.google.com/blog/topics/developers-practitioners/google-cloud-run-sandboxes-are-in-public-preview/"
+        },
+        {
+          "title": "Better tools made Copilot code review worse. Here’s how we actually improved it.",
+          "url": "https://github.blog/ai-and-ml/github-copilot/better-tools-made-copilot-code-review-worse-heres-how-we-actually-improved-it/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, well-structured, and provides excellent educational depth on the Ghostcommit vulnerability. It effectively balances the explanation of the attack vector with robust, actionable defensive strategies and code examples."
+      },
+      "path": "content/posts/ghostcommit-prompt-injection-ai-code-review-bypass/index.md"
     }
   ],
   "maintenance_reviews": {},
   "failures": [],
   "last_runs": {
     "publish": {
-      "time": "2026-07-12T19:15:08.041438Z",
+      "time": "2026-07-12T19:37:24.902948Z",
       "result": "published"
     }
   }
