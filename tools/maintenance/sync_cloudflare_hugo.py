@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import os
 import re
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -13,6 +15,18 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[2]
 API_ROOT = "https://api.cloudflare.com/client/v4"
+RETRYABLE_HTTP_CODES = {429, 500, 502, 503, 504, 522, 523, 524}
+MAX_RETRIES = 4
+
+
+def retry_delay(attempt: int, error: urllib.error.HTTPError | None = None) -> float:
+    retry_after = error.headers.get("Retry-After") if error is not None else None
+    try:
+        if retry_after:
+            return min(30.0, max(1.0, float(retry_after)))
+    except (TypeError, ValueError):
+        pass
+    return min(30.0, float(2**attempt))
 
 
 def api_request(url: str, token: str, method: str = "GET", payload: dict[str, Any] | None = None) -> dict[str, Any]:
@@ -24,14 +38,29 @@ def api_request(url: str, token: str, method: str = "GET", payload: dict[str, An
     if payload is not None:
         body = json.dumps(payload).encode("utf-8")
         headers["Content-Type"] = "application/json"
-    request = urllib.request.Request(url, data=body, headers=headers, method=method)
-    with urllib.request.urlopen(request, timeout=30) as response:
-        result = json.load(response)
-    if not result.get("success"):
-        errors = result.get("errors") or []
-        messages = ", ".join(str(error.get("message", error)) for error in errors)
-        raise RuntimeError(messages or "Cloudflare API request failed")
-    return result
+    for attempt in range(MAX_RETRIES + 1):
+        request = urllib.request.Request(url, data=body, headers=headers, method=method)
+        try:
+            with urllib.request.urlopen(request, timeout=30) as response:
+                result = json.load(response)
+            if not result.get("success"):
+                errors = result.get("errors") or []
+                messages = ", ".join(str(error.get("message", error)) for error in errors)
+                raise RuntimeError(messages or "Cloudflare API request failed")
+            return result
+        except urllib.error.HTTPError as error:
+            if error.code not in RETRYABLE_HTTP_CODES or attempt >= MAX_RETRIES:
+                raise
+            delay = retry_delay(attempt, error)
+            print(f"Transient Cloudflare API HTTP {error.code}; retrying in {delay:g}s ({attempt + 1}/{MAX_RETRIES})")
+            time.sleep(delay)
+        except (urllib.error.URLError, TimeoutError, ConnectionError) as error:
+            if attempt >= MAX_RETRIES:
+                raise
+            delay = retry_delay(attempt)
+            print(f"Transient Cloudflare API network error ({error}); retrying in {delay:g}s ({attempt + 1}/{MAX_RETRIES})")
+            time.sleep(delay)
+    raise RuntimeError("Cloudflare API request exhausted its retry budget")
 
 
 def main() -> int:
