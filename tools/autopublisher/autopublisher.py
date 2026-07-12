@@ -438,15 +438,14 @@ class GeminiClient:
         self.log = log
         self.api_key = os.environ.get("GEMINI_API_KEY", "").strip()
         gemini_config = config.get("gemini", {})
-        self.text_model = os.environ.get("GEMINI_TEXT_MODEL", gemini_config.get("text_model", "gemini-3.5-flash"))
-        self.qa_model = os.environ.get("GEMINI_QA_MODEL", gemini_config.get("qa_model", self.text_model))
-        self.grounded_model = os.environ.get(
-            "GEMINI_GROUNDED_RESEARCH_MODEL",
-            gemini_config.get("grounded_research_model", self.text_model),
+        self.text_model = os.environ.get("GEMINI_TEXT_MODEL", "").strip() or gemini_config.get("text_model", "gemini-3.5-flash")
+        self.qa_model = os.environ.get("GEMINI_QA_MODEL", "").strip() or gemini_config.get("qa_model", self.text_model)
+        self.grounded_model = (
+            os.environ.get("GEMINI_GROUNDED_RESEARCH_MODEL", "").strip()
+            or gemini_config.get("grounded_research_model", self.text_model)
         )
-        self.image_model = os.environ.get(
-            "GEMINI_IMAGE_MODEL",
-            gemini_config.get("image_model", "gemini-3.1-flash-image"),
+        self.image_model = os.environ.get("GEMINI_IMAGE_MODEL", "").strip() or gemini_config.get(
+            "image_model", "gemini-3.1-flash-image"
         )
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
 
@@ -538,6 +537,7 @@ class GeminiClient:
         config = {
             "temperature": 0.8,
             "responseModalities": ["TEXT", "IMAGE"],
+            "responseFormat": {"image": {"aspectRatio": "16:9", "imageSize": "2K"}},
         }
         try:
             response = self._generate_content(self.image_model, prompt, config, timeout=180)
@@ -561,12 +561,19 @@ class GeminiClient:
         *,
         timeout: int = 120,
     ) -> dict[str, Any]:
-        url = f"{self.base_url}/models/{urllib.parse.quote(model)}:generateContent?key={urllib.parse.quote(self.api_key)}"
+        url = f"{self.base_url}/models/{urllib.parse.quote(model)}:generateContent"
         payload = {
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
             "generationConfig": generation_config,
         }
-        status, body, _headers = http_request(url, method="POST", payload=payload, timeout=timeout, retries=2)
+        status, body, _headers = http_request(
+            url,
+            method="POST",
+            payload=payload,
+            headers={"x-goog-api-key": self.api_key},
+            timeout=timeout,
+            retries=2,
+        )
         if status >= 400:
             if status == 429:
                 raise GeminiQuotaError(f"Gemini quota exceeded for model {model}: HTTP {status}: {body[:1000]!r}")
@@ -1220,8 +1227,18 @@ def supplement_article_sources(
     config: dict[str, Any],
 ) -> list[dict[str, str]]:
     required = int(config.get("publishing", {}).get("required_source_count", 3))
-    sources = list(article_sources or [])
-    sources.extend({"url": url, "title": ""} for url in topic.get("source_urls", []) or [])
+    researched_urls = {item.url for item in research}
+    sources = [
+        source
+        for source in (article_sources or [])
+        if isinstance(source, dict)
+        if str(source.get("url", "")).strip() in researched_urls
+    ]
+    sources.extend(
+        {"url": url, "title": ""}
+        for url in topic.get("source_urls", []) or []
+        if str(url).strip() in researched_urls
+    )
     for item in research_items_for_topic(topic, research, limit=8):
         sources.append({"title": item.title, "url": item.url})
         if len(dedupe_sources(sources)) >= required:
@@ -1238,10 +1255,15 @@ def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], co
     article["categories"] = sanitize_categories(article.get("categories", topic.get("categories", [])), topic.get("primary_category"), config)
     article["tags"] = sanitize_tags(article.get("tags", topic.get("tags", [])), topic)
     article["sources"] = supplement_article_sources(article.get("sources", []), topic, research, config)
-    article["diagrams"] = article.get("diagrams", []) if isinstance(article.get("diagrams"), list) else []
+    article["diagrams"] = [
+        item for item in article.get("diagrams", []) if isinstance(item, dict)
+    ] if isinstance(article.get("diagrams"), list) else []
     if topic.get("needs_diagram") and not article["diagrams"]:
         article["diagrams"] = [default_diagram_for_topic(topic)]
-    article["charts"] = article.get("charts", []) if isinstance(article.get("charts"), list) else []
+    article["charts"] = [
+        item for item in article.get("charts", []) if isinstance(item, dict)
+    ] if isinstance(article.get("charts"), list) else []
+    article["image_prompt"] = normalize_space(str(article.get("image_prompt", "")))
     markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
     markdown = ensure_asset_references(markdown, article["diagrams"], article["charts"])
     article["article_markdown"] = ensure_sources_section(markdown, article["sources"])
@@ -1267,6 +1289,8 @@ def deterministic_qa(
         issues.append(f"Article is too short: {word_count(markdown)} words, expected at least {min_words}.")
     if len(str(article.get("description", ""))) < 105:
         issues.append("SEO description is too short.")
+    if config.get("publishing", {}).get("require_featured_image", True) and not article.get("image_prompt"):
+        issues.append("Article is missing a topic-relevant featured image prompt.")
     if config.get("publishing", {}).get("require_table", True) and "|" not in markdown:
         issues.append("Article should include at least one useful Markdown table.")
     if len(article.get("sources", []) or []) < int(config.get("publishing", {}).get("required_source_count", 3)):
@@ -1275,6 +1299,19 @@ def deterministic_qa(
         issues.append("Selected topic requested a diagram, but no diagram spec was returned.")
     if topic.get("needs_chart") and not article.get("charts") and not re.search(r"\|\s*[^|\n]+\s*\|", markdown):
         issues.append("Selected topic requested numerical comparison, but no chart or comparison table was returned.")
+    trusted_urls = {
+        str(source.get("url", "")).strip()
+        for source in article.get("sources", []) or []
+        if isinstance(source, dict) and source.get("url")
+    }
+    site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
+    untrusted_urls = [
+        url
+        for url in extract_links(markdown)
+        if url not in trusted_urls and not (site_base and url.startswith(site_base))
+    ]
+    if untrusted_urls:
+        issues.append("Article contains external links that are not in its trusted source list.")
     if re.search(r"(?i)\bas an ai language model\b|\bas a language model\b|\bi (?:cannot|can't) (?:browse|access|provide|verify)\b", markdown):
         issues.append("Article contains AI self-reference.")
     similarity = max_existing_similarity(
@@ -1317,7 +1354,7 @@ Topic:
 {json.dumps(topic, ensure_ascii=False, indent=2)}
 
 Article payload:
-{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
+{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "image_prompt", "diagrams", "charts", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
 
 Return JSON only:
 {{
@@ -1339,7 +1376,13 @@ Return JSON only:
         raise
     except Exception as error:
         log.log("ai_qa_failed", error=str(error))
-        return {"approved": True, "score": 0.7, "issues": ["AI QA unavailable; deterministic QA passed."], "reason": str(error)}
+        return {
+            "approved": False,
+            "score": 0.0,
+            "issues": ["AI QA was unavailable, so the article was rejected closed."],
+            "required_fixes": ["Retry the article generation and quality review."],
+            "reason": str(error),
+        }
 
 
 def svg_text_lines(label: str, max_chars: int) -> list[str]:
@@ -1607,7 +1650,14 @@ def run_publish(args: argparse.Namespace) -> int:
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "quality_assurance"}
             save_state(state)
             return 0
-        approved = bool(qa.get("approved")) and float(qa.get("score", 0.0) or 0.0) >= 0.72
+        min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
+        try:
+            qa_score = float(qa.get("score", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            qa_score = 0.0
+        approved_value = qa.get("approved")
+        approved = approved_value is True or str(approved_value).strip().lower() == "true"
+        approved = approved and qa_score >= min_quality_score
         if approved:
             final_article = article
             final_qa = qa
@@ -1787,6 +1837,28 @@ def run_maintain(args: argparse.Namespace) -> int:
             log.log("maintenance_no_update", slug=post.slug, reason=payload.get("reason", ""), broken_count=len(broken))
             continue
         updated = str(payload.get("updated_markdown", ""))
+        grounded_urls = {
+            str(source.get("url", "")).strip()
+            for source in grounded.get("citations", []) or []
+            if isinstance(source, dict) and source.get("url")
+        }
+        existing_urls = set(extract_links(post.body))
+        allowed_urls = existing_urls | grounded_urls
+        site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
+        untrusted_urls = [
+            url
+            for url in extract_links(updated)
+            if url not in allowed_urls and not (site_base and url.startswith(site_base))
+        ]
+        if untrusted_urls:
+            log.log("maintenance_update_rejected", slug=post.slug, reason="untrusted_new_links", urls=untrusted_urls[:10])
+            exit_code = 1
+            continue
+        payload["sources"] = [
+            source
+            for source in (payload.get("sources", []) or [])
+            if isinstance(source, dict) and str(source.get("url", "")).strip() in allowed_urls
+        ]
         if word_count(updated) < max(500, int(word_count(post.body) * 0.55)):
             log.log("maintenance_update_rejected", slug=post.slug, reason="updated_body_too_short")
             exit_code = 1

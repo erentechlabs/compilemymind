@@ -40,6 +40,18 @@ def parse_version(value: str) -> tuple[int, int, int]:
     return tuple(int(part) for part in match.groups())  # type: ignore[return-value]
 
 
+def version_risk(current: str, latest: str) -> str:
+    current_version = parse_version(current)
+    latest_version = parse_version(latest)
+    if latest_version <= current_version:
+        return "none"
+    if latest_version[0] != current_version[0]:
+        return "high"
+    if latest_version[1] != current_version[1]:
+        return "high"
+    return "low"
+
+
 def latest_hugo_version() -> str | None:
     request = urllib.request.Request(
         "https://api.github.com/repos/gohugoio/hugo/releases/latest",
@@ -54,11 +66,18 @@ def latest_hugo_version() -> str | None:
     return tag or None
 
 
+def npm_executable() -> str | None:
+    for candidate in ("npm.cmd", "npm.exe", "npm"):
+        path = shutil.which(candidate)
+        if path and Path(path).suffix.lower() not in {".ps1", ".psm1"}:
+            return path
+    return None
+
+
 def package_summary(theme_dir: Path) -> dict[str, Any]:
-    npm = shutil.which("npm") or shutil.which("npm.cmd")
+    npm = npm_executable()
     if not npm or not (theme_dir / "package.json").exists():
         return {"available": False, "reason": "npm or package.json unavailable"}
-    install = run([npm, "install", "--package-lock-only"], cwd=theme_dir, timeout=240)
     outdated = run([npm, "outdated", "--json"], cwd=theme_dir, timeout=120)
     outdated_json: dict[str, Any] = {}
     if outdated["stdout"]:
@@ -66,25 +85,55 @@ def package_summary(theme_dir: Path) -> dict[str, Any]:
             outdated_json = json.loads(outdated["stdout"])
         except json.JSONDecodeError:
             outdated_json = {"raw": outdated["stdout"]}
-    return {"available": True, "install": install, "outdated": outdated, "outdated_json": outdated_json}
+    updates = []
+    for name, info in outdated_json.items():
+        if not isinstance(info, dict):
+            continue
+        current = str(info.get("current") or "")
+        latest = str(info.get("latest") or "")
+        updates.append(
+            {
+                "name": name,
+                "current": current,
+                "wanted": str(info.get("wanted") or ""),
+                "latest": latest,
+                "risk": version_risk(current, latest),
+            }
+        )
+    return {
+        "available": True,
+        "outdated": outdated,
+        "outdated_json": outdated_json,
+        "updates": updates,
+        "lockfile": (theme_dir / "package-lock.json").exists(),
+    }
 
 
 def apply_npm_updates(theme_dir: Path) -> dict[str, Any]:
-    npm = shutil.which("npm") or shutil.which("npm.cmd")
+    npm = npm_executable()
     if not npm or not (theme_dir / "package.json").exists():
         return {"skipped": "npm or package.json unavailable"}
-    return run([npm, "update", "--package-lock-only"], cwd=theme_dir, timeout=240)
+    if not (theme_dir / "package-lock.json").exists():
+        return {"skipped": "package-lock.json is absent; no dependency lockfile was mutated"}
+    return run([npm, "update", "--package-lock-only", "--ignore-scripts"], cwd=theme_dir, timeout=240)
 
 
 def write_report(data: dict[str, Any]) -> Path:
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    path = REPORT_DIR / f"infrastructure-maintenance-{dt.datetime.utcnow().date().isoformat()}.md"
+    now = dt.datetime.now(dt.timezone.utc)
+    path = REPORT_DIR / f"infrastructure-maintenance-{now.date().isoformat()}.md"
     lines = [
         "# Infrastructure Maintenance Report",
         "",
-        f"Generated: {dt.datetime.utcnow().replace(microsecond=0).isoformat()}Z",
+        f"Generated: {now.replace(microsecond=0).isoformat().replace('+00:00', 'Z')}",
         "",
         "This report was created by the autonomous maintenance workflow. Safe changes are committed automatically only after validation passes.",
+        "",
+        "## Decision",
+        "",
+        f"- Manual review required: `{data.get('manual_review_required', False)}`",
+        f"- Safe changes: `{', '.join(data.get('safe_changes', [])) or 'none'}`",
+        f"- Review reasons: {', '.join(data.get('manual_review_reasons', [])) or 'none'}",
         "",
         "## Hugo",
         "",
@@ -134,8 +183,16 @@ def main() -> int:
     parser.add_argument("--apply-safe-updates", action="store_true", help="Apply candidate updates in the current branch.")
     args = parser.parse_args()
 
-    data: dict[str, Any] = {"validation": []}
+    data: dict[str, Any] = {
+        "validation": [],
+        "safe_changes": [],
+        "manual_review_reasons": [],
+        "manual_review_required": False,
+    }
     version_path = ROOT / ".hugo-version"
+    original_hugo_version = version_path.read_bytes() if version_path.exists() else None
+    package_lock_path = ROOT / "themes" / "mana" / "package-lock.json"
+    original_package_lock = package_lock_path.read_bytes() if package_lock_path.exists() else None
     current = version_path.read_text(encoding="utf-8").strip() if version_path.exists() else ""
     data["current_hugo"] = current
     try:
@@ -145,24 +202,70 @@ def main() -> int:
         data["hugo_error"] = str(error)
     data["latest_hugo"] = latest
     data["hugo_action"] = "none"
+    hugo_risk = version_risk(current, latest or current)
+    data["hugo_risk"] = hugo_risk
+
+    hugo = shutil.which("hugo")
+    baseline = run([hugo, "--minify"], timeout=240) if hugo else {
+        "command": "hugo --minify",
+        "returncode": 127,
+        "stderr": "Hugo is not installed",
+    }
+    data["validation"].append({"name": "baseline", **baseline})
+    if baseline["returncode"] != 0:
+        data["manual_review_required"] = True
+        data["manual_review_reasons"].append("baseline Hugo build failed")
 
     if latest and parse_version(latest) > parse_version(current):
-        if args.apply_safe_updates:
+        if hugo_risk == "low" and args.apply_safe_updates and baseline["returncode"] == 0:
             version_path.write_text(latest + "\n", encoding="utf-8")
-            data["hugo_action"] = f"updated .hugo-version to {latest} for automated validation"
+            data["hugo_action"] = f"updated .hugo-version to low-risk patch {latest}"
+            data["safe_changes"].append(f"Hugo patch {current} -> {latest}")
         else:
-            data["hugo_action"] = f"candidate update available: {latest}"
+            data["hugo_action"] = f"candidate update available: {latest}; manual review required"
+            data["manual_review_required"] = True
+            data["manual_review_reasons"].append(f"Hugo {hugo_risk}-risk update {current} -> {latest}")
 
     theme_dir = ROOT / "themes" / "mana"
     data["npm"] = package_summary(theme_dir)
-    if args.apply_safe_updates:
-        data["npm_update"] = apply_npm_updates(theme_dir)
+    npm_updates = data["npm"].get("updates", [])
+    npm_high_risk = [item for item in npm_updates if item.get("risk") == "high"]
+    if npm_high_risk:
+        data["manual_review_required"] = True
+        data["manual_review_reasons"].append(
+            "npm major/minor updates: " + ", ".join(item["name"] for item in npm_high_risk)
+        )
+        if data["safe_changes"]:
+            if original_hugo_version is None:
+                version_path.unlink(missing_ok=True)
+            else:
+                version_path.write_bytes(original_hugo_version)
+            data["safe_changes"] = []
+    if args.apply_safe_updates and baseline["returncode"] == 0 and not data["manual_review_required"]:
+        safe_npm = [item for item in npm_updates if item.get("risk") == "low"]
+        if safe_npm and data["npm"].get("lockfile"):
+            data["npm_update"] = apply_npm_updates(theme_dir)
+            if data["npm_update"].get("returncode") == 0:
+                data["safe_changes"].append("npm patch updates in themes/mana/package-lock.json")
+        elif safe_npm:
+            data["npm_update"] = {"skipped": "safe updates found but no package-lock.json exists"}
 
-    hugo = shutil.which("hugo")
-    if hugo:
-        data["validation"].append(run([hugo, "--minify"], timeout=240))
-    else:
-        data["validation"].append({"command": "hugo --minify", "returncode": 127, "stderr": "Hugo is not installed"})
+    post_update = run([hugo, "--minify"], timeout=240) if hugo and data["safe_changes"] else None
+    if post_update is not None:
+        data["validation"].append({"name": "after_safe_updates", **post_update})
+        if post_update["returncode"] != 0:
+            data["manual_review_required"] = True
+            data["manual_review_reasons"].append("Hugo build failed after safe updates")
+            if original_hugo_version is None:
+                version_path.unlink(missing_ok=True)
+            else:
+                version_path.write_bytes(original_hugo_version)
+            if original_package_lock is None:
+                package_lock_path.unlink(missing_ok=True)
+            else:
+                package_lock_path.write_bytes(original_package_lock)
+            data["safe_changes"] = []
+            data["rollback"] = "safe update candidates were reverted after the regression test failed"
 
     report_path = write_report(data)
     print(json.dumps({"report": str(report_path.relative_to(ROOT)), **data}, ensure_ascii=False, indent=2))

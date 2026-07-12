@@ -1,0 +1,112 @@
+name: Infrastructure maintenance
+
+on:
+  schedule:
+    - cron: "0 4 1 1,7 *"
+  workflow_dispatch:
+
+concurrency:
+  group: infrastructure-maintenance-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  maintain-infrastructure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read pinned Hugo version
+        id: hugo-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .hugo-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Hugo Extended
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ steps.hugo-version.outputs.version }}
+          extended: true
+
+      - name: Check and apply only low-risk updates
+        id: infra
+        continue-on-error: true
+        shell: bash
+        run: |
+          set +e
+          python tools/autopublisher/infra_maintenance.py --apply-safe-updates > infra-result.json
+          status=$?
+          cat infra-result.json
+          if test -s infra-result.json; then
+            manual_review=$(python -c 'import json; print(str(json.load(open("infra-result.json", encoding="utf-8")).get("manual_review_required", False)).lower())')
+            report=$(python -c 'import json; print(json.load(open("infra-result.json", encoding="utf-8")).get("report", ""))')
+            echo "manual_review=$manual_review" >> "$GITHUB_OUTPUT"
+            echo "report=$report" >> "$GITHUB_OUTPUT"
+          else
+            echo "manual_review=false" >> "$GITHUB_OUTPUT"
+          fi
+          exit $status
+
+      - name: Upload infrastructure report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: infrastructure-maintenance-${{ github.run_id }}
+          path: |
+            infra-result.json
+            .autopublisher/reports/
+          if-no-files-found: ignore
+          retention-days: 180
+
+      - name: Stop after a failed regression test
+        if: steps.infra.outcome == 'failure'
+        run: exit 1
+
+      - name: Prepare a draft review PR for risky updates
+        if: steps.infra.outputs.manual_review == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          branch="automation/infrastructure-review-${GITHUB_RUN_ID}"
+          git config user.name "compilemymind-infrastructure[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add .autopublisher/reports
+          git commit -m "chore(infra): prepare maintenance review"
+          git push --set-upstream origin "$branch"
+          gh pr create \
+            --draft \
+            --base "${GITHUB_REF_NAME}" \
+            --head "$branch" \
+            --title "Infrastructure maintenance review (${GITHUB_RUN_ID})" \
+            --body-file "${{ steps.infra.outputs.report }}"
+
+      - name: Commit validated low-risk updates
+        id: commit
+        if: steps.infra.outputs.manual_review != 'true'
+        shell: bash
+        run: |
+          git config user.name "compilemymind-infrastructure[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .autopublisher/reports .hugo-version
+          if test -f themes/mana/package-lock.json; then git add themes/mana/package-lock.json; fi
+          if git diff --cached --quiet; then
+            echo "No low-risk infrastructure updates were ready to commit."
+            exit 0
+          fi
+          git commit -m "chore(infra): apply validated maintenance updates"
+          git push origin "HEAD:${GITHUB_REF_NAME}"

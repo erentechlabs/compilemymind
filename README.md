@@ -33,6 +33,12 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 - **Dark/Light Mode:** Seamless switching to match user preference.
 - **SEO Optimized:** Automatic sitemap generation, structured data, and meta tags.
 
+## Autonomous publishing
+
+The site can publish and maintain its own technical content through Gemini and GitHub Actions. The automation researches trusted current sources, avoids similar existing posts, generates long-form Hugo page bundles with visuals and featured images, performs deterministic and Gemini quality gates, checks links and stale facts, and pushes only validated changes.
+
+See [docs/AUTONOMOUS_PUBLISHING.md](docs/AUTONOMOUS_PUBLISHING.md) for the one-time `GEMINI_API_KEY` setup, schedules, deployment settings, safety gates, and local validation commands.
+
 ---
 
 ## 🛠️ Tech Stack

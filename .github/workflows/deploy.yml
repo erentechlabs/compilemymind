@@ -1,0 +1,49 @@
+name: Deploy Hugo site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read pinned Hugo version
+        id: hugo-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .hugo-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Hugo Extended
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: ${{ steps.hugo-version.outputs.version }}
+          extended: true
+
+      - name: Build Hugo site
+        run: hugo --minify
+
+      - name: Deploy to Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ github.token }}
+          command: pages deploy public --project-name=$CLOUDFLARE_PAGES_PROJECT --branch=${{ github.ref_name }}
+
+      - name: Report deployment configuration
+        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == ''
+        run: echo "Hugo build passed. Configure Cloudflare Pages Git integration or the optional direct-deploy settings to deploy from this workflow."

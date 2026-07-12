@@ -1,76 +1,75 @@
 # Autonomous Publishing Platform
 
-This repository now includes an autonomous publishing layer for the Hugo site. It uses GitHub Actions for scheduling and Gemini for topic research, article generation, image generation, and quality review.
+The repository now contains a continuously scheduled Hugo publisher powered by Gemini and GitHub Actions. After the one-time GitHub setup below, it researches, writes, reviews, commits, and deploys content without routine manual operation.
 
-## Required Secret
+The only intentional human checkpoint is infrastructure work that could be breaking: those candidates become a draft pull request instead of being applied to the live branch.
 
-Add this repository secret in GitHub:
+## One-time GitHub setup
 
-- `GEMINI_API_KEY`: API key from Google AI Studio or your Gemini API project.
+Add this repository secret:
 
-Optional model overrides can be added as workflow environment variables:
+- `GEMINI_API_KEY`: a Google AI Studio/Gemini API key with access to the configured models.
+
+Optional repository variables override the defaults in `.autopublisher/config.json`:
 
 - `GEMINI_TEXT_MODEL`
 - `GEMINI_QA_MODEL`
 - `GEMINI_GROUNDED_RESEARCH_MODEL`
 - `GEMINI_IMAGE_MODEL`
 
-The default models are configured in `.autopublisher/config.json`.
+The workflow needs repository Actions permission set to **Read and write permissions** so its `GITHUB_TOKEN` can commit approved content. Do not use a personal access token for normal publishing.
 
-## Workflows
+Direct Cloudflare Pages deployment is optional because the repository can continue using Cloudflare's Git integration. To deploy from the workflow itself, add:
 
-- `Autonomous Publishing`: runs three times per day. It researches trusted sources, chooses one non-duplicate topic, generates a long-form article, creates article assets, runs deterministic and Gemini QA, validates Hugo, then commits approved content to `main`.
-- `Content Maintenance`: runs twice per week. It reviews older posts, checks external links, uses Gemini grounded research to detect outdated facts, updates only when meaningful, validates Hugo, then commits approved maintenance changes.
-- `Infrastructure Maintenance`: runs every January and July. It checks Hugo and theme tooling updates, applies candidate updates, validates the full Hugo build, then commits safe validated changes to `main` automatically.
+- Secret `CLOUDFLARE_API_TOKEN`
+- Secret `CLOUDFLARE_ACCOUNT_ID`
+- Repository variable `CLOUDFLARE_PAGES_PROJECT`
 
-## Quality Gates
+The Cloudflare token should be limited to the Pages account/project it deploys.
 
-The publisher rejects or regenerates content when it is too short, too similar to existing posts, missing required sources, missing useful tables, missing requested diagrams/charts, or rejected by Gemini QA.
+## Scheduled workflows
 
-Similarity checks compare the candidate article and title against existing posts with token-based cosine and Jaccard scoring. Thresholds live in `.autopublisher/config.json`.
+- `Autonomous publishing` runs four times daily. It reads the configured trusted RSS/Atom sources, enriches them with Gemini Google Search grounding, balances categories, scores topic potential, checks similarity, generates a long-form page bundle, creates diagrams/charts where useful, generates a featured image, runs deterministic and Gemini QA, builds Hugo, and pushes only approved content.
+- `Autonomous content maintenance` runs every Monday and Thursday. It reviews the oldest due articles, checks external links, researches changed facts, and updates an article only when the evidence supports a meaningful correction.
+- `Infrastructure maintenance` runs every January and July. It performs a baseline build, detects Hugo/npm updates, applies only low-risk patch updates when regression tests pass, and prepares a draft PR for major/minor or otherwise risky candidates.
+- `Deploy Hugo site` builds every `main` push and performs an explicit Cloudflare Pages deploy when the optional Cloudflare settings are present.
 
-## Content Assets
+The publishing and maintenance workflows deploy in the same run after pushing because commits made with `GITHUB_TOKEN` do not recursively start another Actions workflow.
 
-New posts are written as Hugo page bundles:
+## Quality and safety gates
+
+An article is rejected and regenerated when it is too short, shallow, repetitive, missing enough trusted sources, missing a useful table, missing a requested visual, missing a featured-image prompt, or rejected by Gemini QA. Gemini QA is fail-closed: an API outage never turns an unreviewed draft into a publication.
+
+Similarity detection uses token-based cosine and Jaccard scores against every existing Hugo post. Source URLs are accepted only when they came from the configured research inventory, and the final article must retain the configured minimum number of sources.
+
+Articles are written as Hugo page bundles:
 
 ```text
 content/posts/example-slug/
   index.md
-  featured.png
+  featured.png        # Gemini image, or a topic-labelled SVG fallback
   optional-diagram.svg
   optional-chart.svg
 ```
 
-Gemini image generation creates `featured.png` when available. If image generation fails, the system writes a branded fallback `featured.svg` so the post still has a featured image.
+## Logs, state, and retries
 
-## Logs And State
+- Network calls use bounded exponential retries for transient failures.
+- Durable scheduling and review state is stored in `.autopublisher/state.json`.
+- Runtime JSONL logs are stored in `.autopublisher/logs/` and uploaded as 30-day workflow artifacts.
+- Infrastructure reports are uploaded for 180 days; risky candidates are also preserved in a draft PR for review.
 
-- Runtime logs are written to `.autopublisher/logs/` and uploaded as GitHub Actions artifacts.
-- Durable state is stored in `.autopublisher/state.json`.
-- Infrastructure reports are stored in `.autopublisher/reports/` and committed with automated maintenance updates.
-
-## Local Commands
-
-Run an inventory audit:
+## Local validation
 
 ```bash
+python -m unittest discover -s tools/autopublisher -p "test_*.py"
 python tools/autopublisher/autopublisher.py --mode audit
-```
-
-Run a dry-run maintenance pass:
-
-```bash
 python tools/autopublisher/autopublisher.py --mode maintain --dry-run --max-articles 1
-```
-
-Run a real publishing pass locally:
-
-```bash
-GEMINI_API_KEY=your-key python tools/autopublisher/autopublisher.py --mode publish
-```
-
-Validate the site:
-
-```bash
 hugo --minify
+```
+
+For a real local publish, set `GEMINI_API_KEY` in the shell and run:
+
+```bash
+python tools/autopublisher/autopublisher.py --mode publish
 ```
