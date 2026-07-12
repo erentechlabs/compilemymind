@@ -22,7 +22,7 @@
     "min_words": 1400,
     "max_similarity": 0.42,
     "max_title_similarity": 0.55,
-    "max_regeneration_attempts": 2,
+    "max_regeneration_attempts": 4,
     "required_source_count": 3,
     "require_table": true,
     "prefer_internal_links": 4,
