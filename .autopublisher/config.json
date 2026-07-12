@@ -15,7 +15,7 @@
     "temperature": 0.55,
     "qa_temperature": 0.15,
     "max_output_tokens": 32768,
-    "enable_google_search_grounding": true,
+    "enable_google_search_grounding": false,
     "enable_image_generation": true
   },
   "publishing": {
@@ -107,7 +107,7 @@
       },
       {
         "name": "Google Cloud Blog",
-        "url": "https://cloud.google.com/blog/rss",
+        "url": "https://cloudblog.withgoogle.com/rss/",
         "categories": ["cloud", "software-engineering"],
         "weight": 1.05
       },

@@ -99,6 +99,10 @@ STOP_WORDS = {
 }
 
 
+class GeminiQuotaError(RuntimeError):
+    """Raised when Gemini reports rate-limit or quota exhaustion."""
+
+
 def utc_now() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -507,6 +511,8 @@ class GeminiClient:
             retries=2,
         )
         if status >= 400:
+            if status == 429:
+                raise GeminiQuotaError(f"Gemini grounded research quota exceeded: HTTP {status}: {body[:500]!r}")
             raise RuntimeError(f"Gemini grounded research failed: HTTP {status}: {body[:500]!r}")
         response = json.loads(body.decode("utf-8"))
         text_parts: list[str] = []
@@ -562,6 +568,8 @@ class GeminiClient:
         }
         status, body, _headers = http_request(url, method="POST", payload=payload, timeout=timeout, retries=2)
         if status >= 400:
+            if status == 429:
+                raise GeminiQuotaError(f"Gemini quota exceeded for model {model}: HTTP {status}: {body[:1000]!r}")
             raise RuntimeError(f"Gemini generateContent failed: HTTP {status}: {body[:1000]!r}")
         return json.loads(body.decode("utf-8"))
 
@@ -583,13 +591,25 @@ def parse_model_json(text: str) -> dict[str, Any]:
     cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned)
     cleaned = re.sub(r"\s*```$", "", cleaned)
     try:
-        return json.loads(cleaned)
+        parsed = json.loads(cleaned)
+        if isinstance(parsed, dict):
+            return parsed
+        if isinstance(parsed, list):
+            return {"items": parsed}
+        raise ValueError(f"Gemini JSON root must be an object or array, got {type(parsed).__name__}")
     except json.JSONDecodeError:
         pass
-    start = cleaned.find("{")
-    end = cleaned.rfind("}")
-    if start >= 0 and end > start:
-        return json.loads(cleaned[start : end + 1])
+    decoder = json.JSONDecoder()
+    starts = [index for index, char in enumerate(cleaned) if char in "{["]
+    for start in starts:
+        try:
+            parsed, _end = decoder.raw_decode(cleaned[start:])
+        except json.JSONDecodeError:
+            continue
+        if isinstance(parsed, dict):
+            return parsed
+        if isinstance(parsed, list):
+            return {"items": parsed}
     raise ValueError(f"Gemini response did not contain a JSON object: {cleaned[:500]}")
 
 
@@ -610,9 +630,16 @@ def first_text(element: ET.Element, *names: str) -> str:
 def fetch_feed(source: dict[str, Any], config: dict[str, Any], log: EventLog) -> list[ResearchItem]:
     url = source["url"]
     try:
-        status, body, _headers = http_request(url, timeout=25, retries=1)
+        status, body, _headers = http_request(
+            url,
+            headers={"Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, */*"},
+            timeout=25,
+            retries=1,
+        )
         if status >= 400:
             raise RuntimeError(f"HTTP {status}")
+        if not body.strip():
+            raise RuntimeError("empty feed response")
         root = ET.fromstring(body)
     except Exception as error:
         log.log("research_source_failed", source=source.get("name"), url=url, error=str(error))
@@ -1166,6 +1193,8 @@ Return JSON only:
             temperature=float(config.get("gemini", {}).get("qa_temperature", 0.15)),
             max_output_tokens=8192,
         )
+    except GeminiQuotaError:
+        raise
     except Exception as error:
         log.log("ai_qa_failed", error=str(error))
         return {"approved": True, "score": 0.7, "issues": ["AI QA unavailable; deterministic QA passed."], "reason": str(error)}
@@ -1398,7 +1427,13 @@ def run_publish(args: argparse.Namespace) -> int:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))
 
-    topic = choose_topic(client, research, grounded_brief, posts, config, log)
+    try:
+        topic = choose_topic(client, research, grounded_brief, posts, config, log)
+    except GeminiQuotaError as error:
+        log.log("publish_quota_limited", stage="topic_selection", error=str(error))
+        state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
+        save_state(state)
+        return 0
     if not topic:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "no_topic"}
         save_state(state)
@@ -1410,14 +1445,26 @@ def run_publish(args: argparse.Namespace) -> int:
     final_qa: dict[str, Any] | None = None
     for attempt in range(1, attempts + 1):
         log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
-        raw_article = client.generate_json(article_generation_prompt(topic, research, posts, config, feedback))
+        try:
+            raw_article = client.generate_json(article_generation_prompt(topic, research, posts, config, feedback))
+        except GeminiQuotaError as error:
+            log.log("publish_quota_limited", stage="article_generation", attempt=attempt, error=str(error))
+            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "article_generation"}
+            save_state(state)
+            return 0
         article = normalize_article_payload(raw_article, topic, config)
         issues = deterministic_qa(article, topic, posts, config)
         if issues:
             feedback = "\n".join(issues)
             log.log("article_deterministic_qa_failed", attempt=attempt, issues=issues)
             continue
-        qa = ai_qa(client, article, topic, config, log)
+        try:
+            qa = ai_qa(client, article, topic, config, log)
+        except GeminiQuotaError as error:
+            log.log("publish_quota_limited", stage="quality_assurance", attempt=attempt, error=str(error))
+            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "quality_assurance"}
+            save_state(state)
+            return 0
         approved = bool(qa.get("approved")) and float(qa.get("score", 0.0) or 0.0) >= 0.72
         if approved:
             final_article = article
