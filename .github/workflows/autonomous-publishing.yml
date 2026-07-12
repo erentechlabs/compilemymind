@@ -1,0 +1,73 @@
+name: Autonomous Publishing
+
+on:
+  schedule:
+    - cron: "17 5,11,17 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: autonomous-publishing
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Research, generate, QA, and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Hugo from .hugo-version
+        shell: bash
+        run: |
+          set -euo pipefail
+          HUGO_VERSION="$(tr -d '[:space:]' < .hugo-version)"
+          curl -fsSL -o /tmp/hugo.tar.gz "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          tar -xzf /tmp/hugo.tar.gz -C /tmp hugo
+          sudo mv /tmp/hugo /usr/local/bin/hugo
+          hugo version
+
+      - name: Audit content inventory
+        run: python tools/autopublisher/autopublisher.py --mode audit
+
+      - name: Run autonomous publisher
+        run: python tools/autopublisher/autopublisher.py --mode publish
+
+      - name: Commit approved content
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "$(git status --short -- content)" ]; then
+            echo "No approved content changes to publish."
+            exit 0
+          fi
+          git config user.name "compilemymind-autopublisher"
+          git config user.email "actions@github.com"
+          git add content .autopublisher/state.json
+          git commit -m "chore(content): autonomous article publication"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Upload automation logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: autonomous-publishing-logs
+          path: .autopublisher/logs/
+          if-no-files-found: ignore
+          retention-days: 30

@@ -1,0 +1,193 @@
+{
+  "site": {
+    "name": "Compile My Mind",
+    "base_url": "https://www.compilemymind.com/",
+    "timezone": "Europe/Istanbul",
+    "content_dir": "content/posts",
+    "author": "Eren",
+    "language": "en"
+  },
+  "gemini": {
+    "text_model": "gemini-3.5-flash",
+    "qa_model": "gemini-3.5-flash",
+    "grounded_research_model": "gemini-3.5-flash",
+    "image_model": "gemini-3.1-flash-image",
+    "temperature": 0.55,
+    "qa_temperature": 0.15,
+    "max_output_tokens": 32768,
+    "enable_google_search_grounding": true,
+    "enable_image_generation": true
+  },
+  "publishing": {
+    "min_words": 1400,
+    "max_similarity": 0.42,
+    "max_title_similarity": 0.55,
+    "max_regeneration_attempts": 2,
+    "required_source_count": 3,
+    "require_table": true,
+    "prefer_internal_links": 4,
+    "max_new_posts_per_run": 1
+  },
+  "maintenance": {
+    "max_articles_per_run": 3,
+    "review_after_days": 45,
+    "link_timeout_seconds": 12,
+    "treat_403_as_broken": false,
+    "update_similarity_floor": 0.55
+  },
+  "taxonomy": {
+    "balance_categories": [
+      "software-engineering",
+      "networking",
+      "cybersecurity",
+      "microsoft-cloud",
+      "certification",
+      "hardware",
+      "cloud",
+      "technology"
+    ],
+    "generic_categories": [
+      "guide",
+      "technology"
+    ],
+    "allowed_categories": [
+      "guide",
+      "technology",
+      "software-engineering",
+      "networking",
+      "cybersecurity",
+      "microsoft-cloud",
+      "certification",
+      "hardware",
+      "cloud"
+    ]
+  },
+  "seasonal_focus": {
+    "1": ["new year certification plans", "cloud cost optimization", "security planning"],
+    "2": ["identity security", "developer productivity", "home lab upgrades"],
+    "3": ["exam refreshes", "spring hardware buying", "network troubleshooting"],
+    "4": ["cloud governance", "software architecture", "cybersecurity fundamentals"],
+    "5": ["Microsoft Build announcements", "developer tooling", "AI in software engineering"],
+    "6": ["mid-year security posture", "network fundamentals", "certification study guides"],
+    "7": ["summer hardware buying", "mid-year cloud updates", "back-to-school IT preparation"],
+    "8": ["student IT fundamentals", "home lab networking", "developer interview practice"],
+    "9": ["fall certification planning", "Java releases", "cloud migration"],
+    "10": ["Cybersecurity Awareness Month", "identity protection", "secure architecture"],
+    "11": ["Black Friday hardware value", "year-end cloud releases", "developer tooling trends"],
+    "12": ["year-end retrospectives", "next-year technology planning", "security hardening"]
+  },
+  "research": {
+    "items_per_source": 6,
+    "max_items_for_model": 36,
+    "snippet_characters": 1400,
+    "trusted_sources": [
+      {
+        "name": "Microsoft Azure Blog",
+        "url": "https://azure.microsoft.com/en-us/blog/feed/",
+        "categories": ["microsoft-cloud", "cloud"],
+        "weight": 1.15
+      },
+      {
+        "name": "Microsoft DevBlogs Java",
+        "url": "https://devblogs.microsoft.com/java/feed/",
+        "categories": ["software-engineering"],
+        "weight": 1.1
+      },
+      {
+        "name": "Microsoft DevBlogs .NET",
+        "url": "https://devblogs.microsoft.com/dotnet/feed/",
+        "categories": ["software-engineering"],
+        "weight": 1.05
+      },
+      {
+        "name": "GitHub Blog",
+        "url": "https://github.blog/feed/",
+        "categories": ["software-engineering", "cloud"],
+        "weight": 1.05
+      },
+      {
+        "name": "Google Cloud Blog",
+        "url": "https://cloud.google.com/blog/rss",
+        "categories": ["cloud", "software-engineering"],
+        "weight": 1.05
+      },
+      {
+        "name": "AWS News Blog",
+        "url": "https://aws.amazon.com/blogs/aws/feed/",
+        "categories": ["cloud"],
+        "weight": 1.0
+      },
+      {
+        "name": "NIST Cybersecurity Insights",
+        "url": "https://www.nist.gov/blogs/cybersecurity-insights/rss.xml",
+        "categories": ["cybersecurity"],
+        "weight": 1.2
+      },
+      {
+        "name": "Krebs on Security",
+        "url": "https://krebsonsecurity.com/feed/",
+        "categories": ["cybersecurity"],
+        "weight": 1.05
+      },
+      {
+        "name": "BleepingComputer",
+        "url": "https://www.bleepingcomputer.com/feed/",
+        "categories": ["cybersecurity", "technology"],
+        "weight": 0.95
+      },
+      {
+        "name": "The Hacker News",
+        "url": "https://feeds.feedburner.com/TheHackersNews",
+        "categories": ["cybersecurity"],
+        "weight": 0.9
+      },
+      {
+        "name": "Cloudflare Blog",
+        "url": "https://blog.cloudflare.com/rss/",
+        "categories": ["networking", "cybersecurity", "cloud"],
+        "weight": 1.05
+      },
+      {
+        "name": "APNIC Blog",
+        "url": "https://blog.apnic.net/feed/",
+        "categories": ["networking"],
+        "weight": 1.0
+      },
+      {
+        "name": "Tom's Hardware",
+        "url": "https://www.tomshardware.com/feeds/all",
+        "categories": ["hardware"],
+        "weight": 0.9
+      },
+      {
+        "name": "Phoronix",
+        "url": "https://www.phoronix.com/rss.php",
+        "categories": ["hardware", "software-engineering"],
+        "weight": 0.85
+      }
+    ],
+    "high_interest_terms": [
+      "security",
+      "identity",
+      "AI",
+      "cloud",
+      "Azure",
+      "Microsoft",
+      "Java",
+      "Spring",
+      "network",
+      "DNS",
+      "zero trust",
+      "vulnerability",
+      "certification",
+      "GPU",
+      "CPU",
+      "performance",
+      "cost",
+      "migration",
+      "passkeys",
+      "Kubernetes",
+      "developer tools"
+    ]
+  }
+}

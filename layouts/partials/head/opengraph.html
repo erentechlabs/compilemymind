@@ -1,6 +1,9 @@
 {{- $image := "" -}}
-{{- if .Params.image -}}
-  {{- $image = .Params.image | absURL -}}
+{{- $resolvedImage := partial "post-image-resolve.html" . -}}
+{{- if $resolvedImage.imageResource -}}
+  {{- $image = $resolvedImage.imageResource.Permalink -}}
+{{- else if $resolvedImage.image -}}
+  {{- $image = $resolvedImage.image | absURL -}}
 {{- else if .Params.images -}}
   {{- $image = (index .Params.images 0) | absURL -}}
 {{- else if site.Params.defaultImage -}}

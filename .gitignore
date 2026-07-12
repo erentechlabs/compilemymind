@@ -13,3 +13,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Python local artifacts
+__pycache__/
+*.py[cod]

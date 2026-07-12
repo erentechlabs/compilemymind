@@ -30,7 +30,9 @@
   "publisher" $publisher
 }}
 {{ $resolvedImage := partial "post-image-resolve.html" . }}
-{{ if $resolvedImage.image }}
+{{ if $resolvedImage.imageResource }}
+  {{ $blogPosting = merge $blogPosting (dict "image" $resolvedImage.imageResource.Permalink) }}
+{{ else if $resolvedImage.image }}
   {{ $blogPosting = merge $blogPosting (dict "image" ($resolvedImage.image | absURL)) }}
 {{ else if site.Params.defaultImage }}
   {{ $blogPosting = merge $blogPosting (dict "image" (site.Params.defaultImage | absURL)) }}
