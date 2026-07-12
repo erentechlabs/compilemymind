@@ -31,6 +31,16 @@ class AutopublisherTests(unittest.TestCase):
             "dns-and-http-a-practical-guide",
         )
 
+    def test_safe_filename_preserves_the_file_extension(self):
+        self.assertEqual(
+            autopublisher.safe_filename("ghostcommit-attack-flow.svg", "diagram.svg"),
+            "ghostcommit-attack-flow.svg",
+        )
+        self.assertEqual(
+            autopublisher.safe_filename("../comparison-chart.png", "chart.svg"),
+            "comparison-chart.png",
+        )
+
     def test_model_json_parser_handles_markdown_fences(self):
         self.assertEqual(autopublisher.parse_model_json("```json\n{\"ok\": true}\n```"), {"ok": True})
 

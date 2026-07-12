@@ -167,10 +167,13 @@ def slugify(value: str, max_length: int = 82) -> str:
 
 
 def safe_filename(value: str, default: str) -> str:
-    stem = slugify(value, max_length=54) or default
-    if not stem.endswith(".svg"):
-        stem += ".svg"
-    return stem
+    raw_value = Path(str(value).strip()).name
+    raw_default = Path(str(default).strip()).name
+    extension = Path(raw_value).suffix.lower()
+    if extension not in {".svg", ".png", ".jpg", ".jpeg", ".webp", ".gif"}:
+        extension = Path(raw_default).suffix.lower() or ".svg"
+    stem = slugify(Path(raw_value).stem, max_length=54) or slugify(Path(raw_default).stem, max_length=54) or "asset"
+    return f"{stem}{extension}"
 
 
 def tokenize(value: str) -> list[str]:
@@ -1542,7 +1545,37 @@ def write_article_bundle(
     return index_path
 
 
+def content_asset_issues(config: dict[str, Any]) -> list[str]:
+    """Return broken local Markdown image references and forbidden featured images."""
+    content_dir = ROOT / config["site"].get("content_dir", "content/posts")
+    issues: list[str] = []
+    image_pattern = re.compile(r"!\[[^\]]*\]\(\s*(?:<([^>]+)>|([^\s)]+))")
+    for index_path in sorted(content_dir.glob("*/index.md")):
+        frontmatter, body = split_frontmatter(index_path.read_text(encoding="utf-8"))
+        if frontmatter.get("image"):
+            issues.append(f"{index_path.relative_to(ROOT)}: featured image front matter is not allowed")
+        post_root = index_path.parent.resolve()
+        for match in image_pattern.finditer(body):
+            reference = (match.group(1) or match.group(2) or "").strip()
+            reference = reference.split("#", 1)[0].strip()
+            if not reference or reference.startswith(("http://", "https://", "data:", "/")):
+                continue
+            target = (post_root / urllib.parse.unquote(reference)).resolve()
+            try:
+                target.relative_to(post_root)
+            except ValueError:
+                issues.append(f"{index_path.relative_to(ROOT)}: image escapes post bundle: {reference}")
+                continue
+            if not target.is_file():
+                issues.append(f"{index_path.relative_to(ROOT)}: missing image asset: {reference}")
+    return issues
+
+
 def run_hugo_build(log: EventLog) -> bool:
+    asset_issues = content_asset_issues(load_config())
+    if asset_issues:
+        log.log("content_asset_audit_failed", issues=asset_issues[:50], issue_count=len(asset_issues))
+        return False
     hugo = shutil.which("hugo")
     if not hugo:
         log.log("hugo_missing", message="Hugo is not installed on PATH; workflow should install it before publishing.")
@@ -1870,8 +1903,9 @@ def run_audit(_args: argparse.Namespace) -> int:
         hugo_available=bool(shutil.which("hugo")),
     )
     duplicate_slugs = [slug for slug, count in Counter(post.slug for post in posts).items() if count > 1]
-    if duplicate_slugs:
-        log.log("audit_failed", duplicate_slugs=duplicate_slugs)
+    asset_issues = content_asset_issues(config)
+    if duplicate_slugs or asset_issues:
+        log.log("audit_failed", duplicate_slugs=duplicate_slugs, asset_issues=asset_issues[:50], issue_count=len(asset_issues))
         return 1
     return 0
 
