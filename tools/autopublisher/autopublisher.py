@@ -109,6 +109,14 @@ class GeminiTransientError(RuntimeError):
     """Raised when Gemini is temporarily overloaded or unavailable."""
 
 
+class GitHubModelsQuotaError(GeminiQuotaError):
+    """Raised when GitHub Models reports a rate or usage limit."""
+
+
+class GitHubModelsTransientError(GeminiTransientError):
+    """Raised when GitHub Models is temporarily unavailable."""
+
+
 def utc_now() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -469,6 +477,24 @@ class GeminiClient:
         self.config = config
         self.log = log
         self.api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+        github_models = config.get("github_models", {})
+        self.github_models_enabled = bool(github_models.get("enabled", True))
+        self.github_models_token = (
+            os.environ.get("GITHUB_MODELS_TOKEN", "").strip()
+            or os.environ.get("GITHUB_TOKEN", "").strip()
+        )
+        self.github_models_endpoint = str(
+            github_models.get("endpoint", "https://models.github.ai/inference/chat/completions")
+        ).strip()
+        self.github_models_model = str(
+            github_models.get("model", "microsoft/phi-4-mini-instruct")
+        ).strip()
+        self.github_models_tasks = {
+            str(task).strip()
+            for task in github_models.get("lightweight_tasks", ["topic_selection"])
+            if str(task).strip()
+        }
+        self.github_models_max_output_tokens = int(github_models.get("max_output_tokens", 4096))
         gemini_config = config.get("gemini", {})
         model_state = load_model_state() if gemini_config.get("model_upgrade", {}).get("enabled", True) else {}
         active_models = model_state.get("active_models", {}) if isinstance(model_state, dict) else {}
@@ -505,8 +531,24 @@ class GeminiClient:
         model: str | None = None,
         temperature: float | None = None,
         max_output_tokens: int | None = None,
+        task: str | None = None,
     ) -> dict[str, Any]:
         self.require_key()
+        if self._use_lightweight_model(task):
+            try:
+                return self._github_models_generate_json(
+                    prompt,
+                    temperature=temperature,
+                    max_output_tokens=max_output_tokens,
+                    task=task or "",
+                )
+            except Exception as error:
+                self.log.log(
+                    "lightweight_model_fallback",
+                    task=task or "unknown",
+                    model=self.github_models_model,
+                    error=str(error),
+                )
         selected_model = model or self.text_model
         config = {
             "temperature": temperature
@@ -526,8 +568,24 @@ class GeminiClient:
         model: str | None = None,
         temperature: float | None = None,
         max_output_tokens: int | None = None,
+        task: str | None = None,
     ) -> str:
         self.require_key()
+        if self._use_lightweight_model(task):
+            try:
+                return self._github_models_generate_text(
+                    prompt,
+                    temperature=temperature,
+                    max_output_tokens=max_output_tokens,
+                    task=task or "",
+                )
+            except Exception as error:
+                self.log.log(
+                    "lightweight_model_fallback",
+                    task=task or "unknown",
+                    model=self.github_models_model,
+                    error=str(error),
+                )
         selected_model = model or self.text_model
         config = {
             "temperature": temperature
@@ -537,6 +595,113 @@ class GeminiClient:
         }
         response = self._generate_content(selected_model, prompt, config)
         return self._extract_text(response)
+
+    def _use_lightweight_model(self, task: str | None) -> bool:
+        return bool(
+            task
+            and self.github_models_enabled
+            and self.github_models_token
+            and task in self.github_models_tasks
+        )
+
+    def _github_models_generate_json(
+        self,
+        prompt: str,
+        *,
+        temperature: float | None,
+        max_output_tokens: int | None,
+        task: str,
+    ) -> dict[str, Any]:
+        response = self._github_models_request(
+            prompt,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+            task=task,
+        )
+        return parse_model_json(self._extract_chat_text(response))
+
+    def _github_models_generate_text(
+        self,
+        prompt: str,
+        *,
+        temperature: float | None,
+        max_output_tokens: int | None,
+        task: str,
+    ) -> str:
+        return self._extract_chat_text(
+            self._github_models_request(
+                prompt,
+                temperature=temperature,
+                max_output_tokens=max_output_tokens,
+                task=task,
+            )
+        )
+
+    def _github_models_request(
+        self,
+        prompt: str,
+        *,
+        temperature: float | None,
+        max_output_tokens: int | None,
+        task: str,
+    ) -> dict[str, Any]:
+        payload = {
+            "model": self.github_models_model,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": "Return only the requested answer. When JSON is requested, return valid JSON only.",
+                },
+                {"role": "user", "content": prompt},
+            ],
+            "temperature": temperature
+            if temperature is not None
+            else float(self.config.get("gemini", {}).get("temperature", 0.55)),
+            "max_tokens": min(
+                max_output_tokens or self.github_models_max_output_tokens,
+                self.github_models_max_output_tokens,
+            ),
+        }
+        status, body, _headers = http_request(
+            self.github_models_endpoint,
+            method="POST",
+            payload=payload,
+            headers={
+                "Authorization": f"Bearer {self.github_models_token}",
+                "Accept": "application/json",
+            },
+            timeout=120,
+            retries=4,
+        )
+        if status == 429:
+            raise GitHubModelsQuotaError(
+                f"GitHub Models quota exceeded for {self.github_models_model}: HTTP {status}: {body[:800]!r}"
+            )
+        if status in {500, 502, 503, 504}:
+            raise GitHubModelsTransientError(
+                f"GitHub Models temporarily unavailable: HTTP {status}: {body[:800]!r}"
+            )
+        if status >= 400:
+            raise RuntimeError(f"GitHub Models request failed: HTTP {status}: {body[:800]!r}")
+        response = json.loads(body.decode("utf-8"))
+        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
+        return response
+
+    @staticmethod
+    def _extract_chat_text(response: dict[str, Any]) -> str:
+        choices = response.get("choices", []) or []
+        if not choices:
+            raise RuntimeError(f"GitHub Models response did not contain choices: {json.dumps(response)[:800]}")
+        message = choices[0].get("message", {}) or {}
+        content = message.get("content", "")
+        if isinstance(content, list):
+            content = "\n".join(
+                str(part.get("text", "")) for part in content if isinstance(part, dict) and part.get("text")
+            )
+        text = str(content).strip()
+        if not text:
+            raise RuntimeError(f"GitHub Models response did not contain text: {json.dumps(response)[:800]}")
+        return text
 
     def grounded_research(self, prompt: str) -> dict[str, Any]:
         self.require_key()
@@ -964,7 +1129,10 @@ def choose_topic(
     config: dict[str, Any],
     log: EventLog,
 ) -> dict[str, Any] | None:
-    result = client.generate_json(topic_selection_prompt(research, grounded_brief, posts, config))
+    result = client.generate_json(
+        topic_selection_prompt(research, grounded_brief, posts, config),
+        task="topic_selection",
+    )
     candidates = result.get("topics") or []
     if isinstance(result.get("topic"), dict):
         candidates.insert(0, result["topic"])
@@ -1420,6 +1588,7 @@ Return JSON only:
             model=client.qa_model,
             temperature=float(config.get("gemini", {}).get("qa_temperature", 0.15)),
             max_output_tokens=8192,
+            task="quality_assurance",
         )
     except (GeminiQuotaError, GeminiTransientError):
         raise
@@ -1694,7 +1863,10 @@ def run_publish(args: argparse.Namespace) -> int:
     for attempt in range(1, attempts + 1):
         log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
         try:
-            raw_article = client.generate_json(article_generation_prompt(topic, research, posts, config, feedback))
+            raw_article = client.generate_json(
+                article_generation_prompt(topic, research, posts, config, feedback),
+                task="article_generation",
+            )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="article_generation", attempt=attempt, error=str(error))
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "article_generation"}
@@ -1909,7 +2081,11 @@ def run_maintain(args: argparse.Namespace) -> int:
             log.log("maintenance_grounded_research_failed", slug=post.slug, error=str(error))
             continue
         try:
-            payload = client.generate_json(maintenance_prompt(post, broken, grounded, config), model=client.text_model)
+            payload = client.generate_json(
+                maintenance_prompt(post, broken, grounded, config),
+                model=client.text_model,
+                task="maintenance_review",
+            )
         except GeminiQuotaError as error:
             log.log("maintenance_quota_limited", slug=post.slug, stage="maintenance_review", error=str(error))
             quota_limited = True

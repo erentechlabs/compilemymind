@@ -27,6 +27,15 @@
       "min_output_token_limit": 8192
     }
   },
+  "github_models": {
+    "enabled": true,
+    "endpoint": "https://models.github.ai/inference/chat/completions",
+    "model": "microsoft/phi-4-mini-instruct",
+    "lightweight_tasks": [
+      "topic_selection"
+    ],
+    "max_output_tokens": 4096
+  },
   "publishing": {
     "min_words": 1400,
     "max_similarity": 0.42,

@@ -249,7 +249,7 @@ def main() -> int:
         selected_any = True
         log.log("revision_started", slug=post.slug, title=post.title, signals=signals)
         try:
-            payload = client.generate_json(revision_prompt(post, signals, config))
+            payload = client.generate_json(revision_prompt(post, signals, config), task="revision")
         except Exception as error:
             record_attempt(state, post.slug, "generation_failed", error=str(error))
             log.log("revision_generation_failed", slug=post.slug, error=str(error))

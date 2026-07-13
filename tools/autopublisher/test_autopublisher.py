@@ -50,6 +50,54 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(client.text_model, "gemini-3.5-flash")
         self.assertEqual(client.image_model, "gemini-3.1-flash-image")
 
+    def test_topic_selection_uses_github_models_when_token_is_available(self):
+        response = {"choices": [{"message": {"content": '{"topics": []}'}}]}
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "microsoft/phi-4-mini-instruct",
+                "lightweight_tasks": ["topic_selection"],
+                "max_output_tokens": 4096,
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {"GEMINI_API_KEY": "gemini-key", "GITHUB_MODELS_TOKEN": "github-token"},
+            clear=False,
+        ), patch.object(autopublisher, "http_request", return_value=(200, json.dumps(response).encode(), {})) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json("Choose a topic", task="topic_selection")
+
+        self.assertEqual(result, {"topics": []})
+        self.assertIn("models.github.ai/inference/chat/completions", request.call_args.args[0])
+        self.assertEqual(request.call_args.kwargs["headers"]["Authorization"], "Bearer github-token")
+
+    def test_github_models_falls_back_to_gemini_when_rate_limited(self):
+        github_response = (429, b"rate limited", {})
+        gemini_response = (
+            200,
+            json.dumps({"candidates": [{"content": {"parts": [{"text": '{"topics": []}'}]}}]}).encode(),
+            {},
+        )
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "microsoft/phi-4-mini-instruct",
+                "lightweight_tasks": ["topic_selection"],
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {"GEMINI_API_KEY": "gemini-key", "GITHUB_MODELS_TOKEN": "github-token"},
+            clear=False,
+        ), patch.object(autopublisher, "http_request", side_effect=[github_response, gemini_response]):
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json("Choose a topic", task="topic_selection")
+
+        self.assertEqual(result, {"topics": []})
+
     def test_active_model_state_overrides_config_defaults(self):
         with tempfile.TemporaryDirectory() as directory:
             model_state_path = Path(directory) / "model-state.json"
@@ -210,7 +258,7 @@ class AutopublisherTests(unittest.TestCase):
             def grounded_research(self, _prompt):
                 raise autopublisher.GeminiQuotaError("grounding quota")
 
-            def generate_json(self, _prompt):
+            def generate_json(self, _prompt, **_kwargs):
                 return {}
 
         with patch.object(autopublisher, "load_config", return_value=config), \
@@ -256,7 +304,7 @@ class AutopublisherTests(unittest.TestCase):
             def require_key(self):
                 return None
 
-            def generate_json(self, _prompt):
+            def generate_json(self, _prompt, **_kwargs):
                 raise autopublisher.GeminiTransientError("model unavailable")
 
         with patch.object(autopublisher, "load_config", return_value=config), \
