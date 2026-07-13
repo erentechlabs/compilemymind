@@ -32,7 +32,8 @@
     "endpoint": "https://models.github.ai/inference/chat/completions",
     "model": "microsoft/phi-4-mini-instruct",
     "lightweight_tasks": [
-      "topic_selection"
+      "topic_selection",
+      "metadata_enrichment"
     ],
     "max_output_tokens": 4096
   },

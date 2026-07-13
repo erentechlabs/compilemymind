@@ -291,6 +291,7 @@ def compose_markdown(frontmatter: dict[str, Any], body: str) -> str:
         "date",
         "lastmod",
         "description",
+        "summary",
         "tags",
         "categories",
         "image",
@@ -1303,6 +1304,80 @@ def sanitize_tags(values: Any, topic: dict[str, Any]) -> list[str]:
     return tags[:8]
 
 
+def metadata_enrichment_prompt(article: dict[str, Any], topic: dict[str, Any], config: dict[str, Any]) -> str:
+    allowed_categories = config.get("taxonomy", {}).get("allowed_categories", [])
+    return f"""
+You are a lightweight editorial metadata assistant for Compile My Mind.
+
+Do not rewrite the article. Read the existing title and body, then return concise,
+accurate metadata that is faithful to the article. Do not invent facts, sources,
+or categories. Use only the allowed categories.
+
+Topic context:
+{json.dumps({k: topic.get(k) for k in ["title", "categories", "tags", "search_intent"]}, ensure_ascii=False, indent=2)}
+
+Current article metadata:
+{json.dumps({k: article.get(k) for k in ["title", "description", "summary", "categories", "tags"]}, ensure_ascii=False, indent=2)}
+
+Allowed categories:
+{json.dumps(allowed_categories, ensure_ascii=False)}
+
+Article body:
+{str(article.get("article_markdown", ""))[:18000]}
+
+Return JSON only:
+{{
+  "description": "105-180 character SEO description",
+  "summary": "one concise, reader-facing article summary",
+  "categories": ["guide", "one allowed technical category"],
+  "tags": ["specific-topic-tag", "technology-tag"]
+}}
+""".strip()
+
+
+def enrich_article_metadata(
+    client: GeminiClient,
+    article: dict[str, Any],
+    topic: dict[str, Any],
+    config: dict[str, Any],
+    log: EventLog,
+) -> dict[str, Any]:
+    """Use the lightweight model for metadata without changing article prose."""
+    metadata_topic = dict(topic)
+    metadata_topic["title"] = article.get("title") or topic.get("title", "")
+    metadata_topic["categories"] = article.get("categories") or topic.get("categories", [])
+    metadata_topic["tags"] = article.get("tags") or topic.get("tags", [])
+    try:
+        payload = client.generate_json(
+            metadata_enrichment_prompt(article, metadata_topic, config),
+            temperature=0.2,
+            max_output_tokens=1200,
+            task="metadata_enrichment",
+        )
+    except Exception as error:
+        # Metadata is helpful but must never turn a valid article into a failed run.
+        log.log("metadata_enrichment_skipped", error=str(error))
+        return article
+
+    description = normalize_space(str(payload.get("description", "")))[:180]
+    summary = normalize_space(str(payload.get("summary", "")))[:320]
+    if len(description) >= 105:
+        article["description"] = description
+    elif len(str(article.get("description", ""))) < 105 and len(summary) >= 105:
+        article["description"] = summary[:180]
+    if summary:
+        article["summary"] = summary
+    if isinstance(payload.get("categories"), list) and payload["categories"]:
+        article["categories"] = sanitize_categories(payload["categories"], None, config)
+    if isinstance(payload.get("tags"), list) and payload["tags"]:
+        article["tags"] = sanitize_tags(payload["tags"], metadata_topic)
+    log.log(
+        "metadata_enriched",
+        fields=[field for field in ["description", "summary", "categories", "tags"] if field in article],
+    )
+    return article
+
+
 def article_generation_prompt(
     topic: dict[str, Any],
     research: list[ResearchItem],
@@ -1495,6 +1570,25 @@ def word_count(markdown: str) -> int:
     return len(re.findall(r"\b[\w+#.-]+\b", text))
 
 
+def markdown_format_issues(markdown: str) -> list[str]:
+    """Catch structural Markdown errors before an article reaches the repository."""
+    issues: list[str] = []
+    if not markdown.strip():
+        return ["Article body is empty."]
+    if re.search(r"(?m)^\s*#\s+\S", markdown):
+        issues.append("Article body contains a top-level H1; the Hugo template supplies the title.")
+    if re.search(r"(?m)^\s*#{2,6}\s*$", markdown):
+        issues.append("Article contains an empty Markdown heading.")
+    for marker, label in (("```", "backtick"), ("~~~", "tilde")):
+        if len(re.findall(rf"(?m)^\s*{re.escape(marker)}", markdown)) % 2:
+            issues.append(f"{label.title()} code fences are unbalanced.")
+    if re.search(r"!\[[^\]]*\]\(\s*\)", markdown):
+        issues.append("Article contains an image reference with no target.")
+    if re.search(r"(?m)^\s*[-*+]\s*$", markdown):
+        issues.append("Article contains an empty bullet-list item.")
+    return issues
+
+
 def deterministic_qa(
     article: dict[str, Any],
     topic: dict[str, Any],
@@ -1503,6 +1597,7 @@ def deterministic_qa(
 ) -> list[str]:
     issues: list[str] = []
     markdown = str(article.get("article_markdown", ""))
+    issues.extend(markdown_format_issues(markdown))
     min_words = int(config.get("publishing", {}).get("min_words", 1400))
     if word_count(markdown) < min_words:
         issues.append(f"Article is too short: {word_count(markdown)} words, expected at least {min_words}.")
@@ -1730,6 +1825,8 @@ def write_article_bundle(
         "draft": False,
         "autonomous": True,
     }
+    if article.get("summary"):
+        frontmatter["summary"] = normalize_space(str(article["summary"]))[:320]
     if article.get("series_name"):
         frontmatter["series"] = article.get("series_name")
     if article.get("series_part"):
@@ -1878,6 +1975,7 @@ def run_publish(args: argparse.Namespace) -> int:
             record_publish_retryable(state, "article_generation", error)
             return 0
         article = normalize_article_payload(raw_article, topic, config, research)
+        enrich_article_metadata(client, article, topic, config, log)
         issues = deterministic_qa(article, topic, posts, config)
         if issues:
             feedback = "\n".join(issues)
@@ -2039,6 +2137,8 @@ def update_post_file(post: Post, payload: dict[str, Any], config: dict[str, Any]
         body = ensure_sources_section(body, sources)
     if payload.get("description"):
         frontmatter["description"] = normalize_space(str(payload["description"]))[:180]
+    if payload.get("summary"):
+        frontmatter["summary"] = normalize_space(str(payload["summary"]))[:320]
     if payload.get("tags"):
         frontmatter["tags"] = sanitize_tags(payload["tags"], {"title": post.title})
     if payload.get("categories"):

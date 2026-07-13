@@ -98,6 +98,50 @@ class AutopublisherTests(unittest.TestCase):
 
         self.assertEqual(result, {"topics": []})
 
+    def test_metadata_enrichment_uses_lightweight_task(self):
+        calls = []
+
+        class MetadataClient:
+            def generate_json(self, *args, **kwargs):
+                calls.append((args, kwargs))
+                return {
+                    "description": "A practical guide to designing reliable distributed systems with clear trade-offs, examples, and implementation advice for software teams.",
+                    "summary": "A practical distributed-systems guide.",
+                    "categories": ["software-engineering"],
+                    "tags": ["distributed-systems", "architecture"],
+                }
+
+        config = {
+            "taxonomy": {"allowed_categories": ["guide", "software-engineering"]},
+        }
+        article = {
+            "title": "Distributed Systems Design",
+            "description": "",
+            "categories": ["guide"],
+            "tags": ["systems"],
+            "article_markdown": "A detailed article about distributed systems.",
+        }
+        autopublisher.enrich_article_metadata(
+            MetadataClient(),
+            article,
+            {"title": article["title"], "categories": ["guide"]},
+            config,
+            autopublisher.EventLog(),
+        )
+
+        self.assertEqual(calls[0][1]["task"], "metadata_enrichment")
+        self.assertEqual(article["categories"], ["guide", "software-engineering"])
+        self.assertEqual(article["tags"], ["distributed-systems", "architecture"])
+        self.assertIn("summary", article)
+
+    def test_markdown_format_issues_reject_structural_errors(self):
+        issues = autopublisher.markdown_format_issues(
+            "# Duplicate title\n\n##\n\n```python\nprint('hello')\n"
+        )
+        self.assertTrue(any("top-level H1" in issue for issue in issues))
+        self.assertTrue(any("empty Markdown heading" in issue for issue in issues))
+        self.assertTrue(any("code fences are unbalanced" in issue for issue in issues))
+
     def test_active_model_state_overrides_config_defaults(self):
         with tempfile.TemporaryDirectory() as directory:
             model_state_path = Path(directory) / "model-state.json"

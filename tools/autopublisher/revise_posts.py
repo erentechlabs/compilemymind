@@ -171,6 +171,7 @@ def validate_revision(
     updated = updated.strip()
     if not updated:
         return ["The revision returned an empty body."]
+    issues.extend(autopublisher.markdown_format_issues(updated))
     if re.search(r"(?m)^#\s+", updated):
         issues.append("The body contains a top-level H1.")
     if updated.count("```") % 2:
@@ -279,11 +280,27 @@ def main() -> int:
                 if url not in {item["url"] for item in sources}:
                     sources.append({"title": str(source.get("title", "")).strip() or urllib.parse.urlparse(url).netloc, "url": url})
 
-        article_for_qa = {
+        metadata_article = {
             "title": post.title,
             "description": str(payload.get("description") or post.description),
-            "categories": post.categories,
-            "tags": post.tags,
+            "summary": str(payload.get("summary") or ""),
+            "categories": payload.get("categories") or post.categories,
+            "tags": payload.get("tags") or post.tags,
+            "article_markdown": updated,
+        }
+        autopublisher.enrich_article_metadata(
+            client,
+            metadata_article,
+            {"title": post.title, "categories": post.categories, "tags": post.tags},
+            config,
+            log,
+        )
+        article_for_qa = {
+            "title": post.title,
+            "description": metadata_article["description"],
+            "summary": metadata_article.get("summary", ""),
+            "categories": metadata_article["categories"],
+            "tags": metadata_article["tags"],
             "sources": sources,
             "diagrams": [],
             "charts": [],
@@ -310,9 +327,10 @@ def main() -> int:
             post,
             {
                 "updated_markdown": updated,
-                "description": payload.get("description", ""),
-                "tags": payload.get("tags", []),
-                "categories": payload.get("categories", []),
+                "description": metadata_article["description"],
+                "summary": metadata_article.get("summary", ""),
+                "tags": metadata_article["tags"],
+                "categories": metadata_article["categories"],
                 "sources": sources,
             },
             config,
