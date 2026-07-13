@@ -618,6 +618,7 @@ class GeminiClient:
             temperature=temperature,
             max_output_tokens=max_output_tokens,
             task=task,
+            json_mode=True,
         )
         return parse_model_json(self._extract_chat_text(response))
 
@@ -645,6 +646,7 @@ class GeminiClient:
         temperature: float | None,
         max_output_tokens: int | None,
         task: str,
+        json_mode: bool = False,
     ) -> dict[str, Any]:
         payload = {
             "model": self.github_models_model,
@@ -663,13 +665,16 @@ class GeminiClient:
                 self.github_models_max_output_tokens,
             ),
         }
+        if json_mode:
+            payload["response_format"] = {"type": "json_object"}
         status, body, _headers = http_request(
             self.github_models_endpoint,
             method="POST",
             payload=payload,
             headers={
                 "Authorization": f"Bearer {self.github_models_token}",
-                "Accept": "application/json",
+                "Accept": "application/vnd.github+json",
+                "X-GitHub-Api-Version": "2026-03-10",
             },
             timeout=120,
             retries=4,
@@ -1172,6 +1177,7 @@ def choose_topic(
 ) -> dict[str, Any] | None:
     result = client.generate_json(
         topic_selection_prompt(research, grounded_brief, posts, config),
+        temperature=float(config.get("github_models", {}).get("topic_selection_temperature", 0.1)),
         max_output_tokens=int(config.get("github_models", {}).get("topic_selection_max_output_tokens", 2400)),
         task="topic_selection",
     )

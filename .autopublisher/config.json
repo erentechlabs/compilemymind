@@ -36,6 +36,7 @@
       "metadata_enrichment"
     ],
     "max_output_tokens": 4096,
+    "topic_selection_temperature": 0.1,
     "topic_selection_max_output_tokens": 2400
   },
   "publishing": {

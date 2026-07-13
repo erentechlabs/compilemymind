@@ -72,6 +72,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(result, {"topics": []})
         self.assertIn("models.github.ai/inference/chat/completions", request.call_args.args[0])
         self.assertEqual(request.call_args.kwargs["headers"]["Authorization"], "Bearer github-token")
+        self.assertEqual(request.call_args.kwargs["payload"]["response_format"], {"type": "json_object"})
 
     def test_github_models_falls_back_to_gemini_when_rate_limited(self):
         github_response = (429, b"rate limited", {})
