@@ -83,6 +83,7 @@
       "containers",
       "observability",
       "web-development",
+      "mobile-development",
       "data-engineering",
       "operating-systems",
       "ai-tools",
@@ -112,6 +113,7 @@
       "containers",
       "observability",
       "web-development",
+      "mobile-development",
       "data-engineering",
       "operating-systems",
       "ai-tools"
@@ -123,10 +125,10 @@
     "3": ["exam refreshes", "spring hardware buying", "network troubleshooting"],
     "4": ["cloud governance", "software architecture", "cybersecurity fundamentals"],
     "5": ["Microsoft Build announcements", "developer tooling", "AI in software engineering"],
-    "6": ["mid-year security posture", "network fundamentals", "certification study guides"],
+    "6": ["mid-year security posture", "network fundamentals", "certification study guides", "Apple WWDC and mobile platform releases"],
     "7": ["summer hardware buying", "mid-year cloud updates", "back-to-school IT preparation"],
     "8": ["student IT fundamentals", "home lab networking", "developer interview practice"],
-    "9": ["fall certification planning", "Java releases", "cloud migration"],
+    "9": ["fall certification planning", "Java releases", "cloud migration", "iPhone and Android platform releases"],
     "10": ["Cybersecurity Awareness Month", "identity protection", "secure architecture"],
     "11": ["Black Friday hardware value", "year-end cloud releases", "developer tooling trends"],
     "12": ["year-end retrospectives", "next-year technology planning", "security hardening"]
@@ -199,13 +201,43 @@
       {
         "name": "Kotlin Blog",
         "url": "https://blog.jetbrains.com/kotlin/feed/",
-        "categories": ["programming-languages", "software-engineering"],
+        "categories": ["programming-languages", "mobile-development", "software-engineering"],
         "weight": 1.05
       },
       {
         "name": "Node.js Blog",
         "url": "https://nodejs.org/en/feed/blog.xml",
         "categories": ["programming-languages", "web-development", "developer-tools"],
+        "weight": 1.05
+      },
+      {
+        "name": "Apple Developer News",
+        "url": "https://developer.apple.com/news/rss/news.rss",
+        "categories": ["mobile-development", "software-engineering", "hardware"],
+        "weight": 1.15
+      },
+      {
+        "name": "Android Developers Blog",
+        "url": "https://android-developers.googleblog.com/feeds/posts/default",
+        "categories": ["mobile-development", "software-engineering", "developer-tools"],
+        "weight": 1.15
+      },
+      {
+        "name": "Swift.org Blog",
+        "url": "https://www.swift.org/atom.xml",
+        "categories": ["mobile-development", "programming-languages", "software-engineering"],
+        "weight": 1.1
+      },
+      {
+        "name": "React Native Blog",
+        "url": "https://reactnative.dev/blog/rss.xml",
+        "categories": ["mobile-development", "web-development", "developer-tools"],
+        "weight": 1.05
+      },
+      {
+        "name": "Flutter Blog",
+        "url": "https://blog.flutter.dev/feed",
+        "categories": ["mobile-development", "software-engineering", "developer-tools"],
         "weight": 1.05
       },
       {
@@ -377,6 +409,24 @@
       "Go",
       "Rust",
       "Kotlin",
+      "Swift",
+      "SwiftUI",
+      "Objective-C",
+      "iOS",
+      "iPadOS",
+      "macOS development",
+      "Apple platforms",
+      "Xcode",
+      "Android",
+      "Android SDK",
+      "Jetpack Compose",
+      "mobile development",
+      "mobile app architecture",
+      "mobile app testing",
+      "mobile app security",
+      "React Native",
+      "Flutter",
+      "Expo",
       "compilers",
       "runtimes",
       "distributed systems",

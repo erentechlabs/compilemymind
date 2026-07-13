@@ -32,7 +32,7 @@ The Cloudflare token should be limited to the Pages account/project it deploys.
 ## Scheduled workflows
 
 - `Autonomous publishing` runs four times daily. It reads the configured trusted RSS/Atom sources, enriches them with Gemini Google Search grounding, balances categories, scores topic potential with the lightweight model, checks local similarity, generates a long-form page bundle, enriches metadata, creates diagrams/charts where useful, runs deterministic and Gemini QA, builds Hugo, and pushes only approved content.
-- The research inventory deliberately spans software and language releases, Python/Java/.NET/TypeScript/Node.js, current AI models and tools, cloud services, databases, DevOps, containers, observability, operating systems, hardware, cybersecurity, and certification topics.
+- The research inventory deliberately spans software and language releases, Python/Java/.NET/TypeScript/Node.js, Swift and Apple platforms, iOS, Android, Kotlin, React Native, Flutter, current AI models and tools, cloud services, databases, DevOps, containers, observability, operating systems, hardware, cybersecurity, and certification topics.
 - `Autonomous content maintenance` runs every Monday and Thursday. It reviews the oldest due articles, checks external links, researches changed facts, and updates an article only when the evidence supports a meaningful correction.
 - `Revise existing posts` runs daily and uses Gemini for the prose revision, then the lightweight model for metadata cleanup and the shared QA gate before committing an accepted revision.
 - `Gemini model maintenance` runs monthly and discovers/smoke-tests newer compatible stable Gemini models.
