@@ -1110,7 +1110,7 @@ def topic_selection_prompt(
         ][:6],
     }
     return f"""
-You are the autonomous editor for Compile My Mind, a technical blog about software engineering, AI engineering, programming languages, systems design, developer tools, open source, databases, networking, IT operations, cloud infrastructure, hardware, cybersecurity, Microsoft cloud, and practical systems knowledge.
+You are the autonomous editor for Compile My Mind, a technical blog covering the full computer, software, and IT landscape: software engineering, current AI models and AI developer tools, programming languages and version releases (Java, C#, .NET, Python, TypeScript, JavaScript, Go, Rust, Kotlin, C/C++), compilers and runtimes, web development, systems design, databases, data engineering, developer tools, open source, DevOps, containers, observability, operating systems, networking, IT operations, cloud services, hardware, cybersecurity, Microsoft cloud, certification, and practical systems knowledge.
 
 Choose the strongest publishable article topic for the next autonomous post.
 
@@ -1121,6 +1121,7 @@ Hard requirements:
 - Prioritize current, trustworthy, high-interest topics with durable search demand.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
 - Treat AI engineering, programming languages and runtimes, compilers, distributed systems, system design, databases, developer experience, observability, open source, and emerging software tools as first-class editorial areas.
+- Actively consider new language/runtime versions, AI model and API releases, cloud service changes, developer tooling, certification updates, and practical implementation guides—not only security or Azure topics.
 - Include both durable technical explainers and timely release-driven articles when reliable sources support them.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Create a multi-part series only when the topic naturally benefits from it.

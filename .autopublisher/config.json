@@ -79,6 +79,13 @@
       "developer-tools",
       "open-source",
       "databases",
+      "devops",
+      "containers",
+      "observability",
+      "web-development",
+      "data-engineering",
+      "operating-systems",
+      "ai-tools",
       "technology"
     ],
     "generic_categories": [
@@ -100,7 +107,14 @@
       "systems-design",
       "developer-tools",
       "open-source",
-      "databases"
+      "databases",
+      "devops",
+      "containers",
+      "observability",
+      "web-development",
+      "data-engineering",
+      "operating-systems",
+      "ai-tools"
     ]
   },
   "seasonal_focus": {
@@ -141,6 +155,24 @@
         "weight": 1.05
       },
       {
+        "name": "Python Insider",
+        "url": "https://blog.python.org/feeds/posts/default",
+        "categories": ["programming-languages", "software-engineering", "open-source"],
+        "weight": 1.15
+      },
+      {
+        "name": "Inside Java",
+        "url": "https://inside.java/feed.xml",
+        "categories": ["programming-languages", "software-engineering"],
+        "weight": 1.15
+      },
+      {
+        "name": "TypeScript Team Blog",
+        "url": "https://devblogs.microsoft.com/typescript/feed/",
+        "categories": ["programming-languages", "web-development", "developer-tools"],
+        "weight": 1.1
+      },
+      {
         "name": "GitHub Blog",
         "url": "https://github.blog/feed/",
         "categories": ["software-engineering", "cloud"],
@@ -171,6 +203,12 @@
         "weight": 1.05
       },
       {
+        "name": "Node.js Blog",
+        "url": "https://nodejs.org/en/feed/blog.xml",
+        "categories": ["programming-languages", "web-development", "developer-tools"],
+        "weight": 1.05
+      },
+      {
         "name": "Kubernetes Blog",
         "url": "https://kubernetes.io/feed.xml",
         "categories": ["systems-design", "cloud", "developer-tools"],
@@ -189,9 +227,45 @@
         "weight": 1.0
       },
       {
+        "name": "OpenTelemetry Blog",
+        "url": "https://opentelemetry.io/blog/index.xml",
+        "categories": ["observability", "devops", "systems-design"],
+        "weight": 1.05
+      },
+      {
+        "name": "PostgreSQL News",
+        "url": "https://www.postgresql.org/news.rss",
+        "categories": ["databases", "data-engineering", "software-engineering"],
+        "weight": 1.1
+      },
+      {
         "name": "Hugging Face Blog",
         "url": "https://huggingface.co/blog/feed.xml",
         "categories": ["ai-engineering", "open-source", "software-engineering"],
+        "weight": 1.05
+      },
+      {
+        "name": "OpenAI News",
+        "url": "https://openai.com/news/rss.xml",
+        "categories": ["ai-engineering", "ai-tools", "developer-tools"],
+        "weight": 1.1
+      },
+      {
+        "name": "Google AI Blog",
+        "url": "https://blog.google/technology/ai/rss/",
+        "categories": ["ai-engineering", "ai-tools", "software-engineering"],
+        "weight": 1.1
+      },
+      {
+        "name": "Google DeepMind Blog",
+        "url": "https://deepmind.google/blog/rss.xml",
+        "categories": ["ai-engineering", "ai-tools"],
+        "weight": 1.05
+      },
+      {
+        "name": "NVIDIA Developer Blog",
+        "url": "https://developer.nvidia.com/blog/feed/",
+        "categories": ["ai-engineering", "hardware", "developer-tools"],
         "weight": 1.05
       },
       {
@@ -275,11 +349,26 @@
       "cost",
       "migration",
       "passkeys",
+      "Java version releases",
+      "JVM",
+      "C#",
+      ".NET",
+      "Python",
+      "Python version releases",
+      "TypeScript",
+      "JavaScript",
+      "Node.js",
       "Kubernetes",
       "developer tools",
       "AI engineering",
       "LLM applications",
       "AI agents",
+      "AI model releases",
+      "Gemini",
+      "GPT",
+      "open source models",
+      "AI APIs",
+      "AI developer tools",
       "RAG",
       "model evaluation",
       "inference",
@@ -295,6 +384,19 @@
       "databases",
       "PostgreSQL",
       "observability",
+      "OpenTelemetry",
+      "DevOps",
+      "CI/CD",
+      "containers",
+      "Docker",
+      "Kubernetes operators",
+      "web development",
+      "frontend engineering",
+      "backend engineering",
+      "data engineering",
+      "operating systems",
+      "Linux",
+      "Windows Server",
       "open source",
       "developer experience",
       "software architecture"
