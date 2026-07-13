@@ -208,6 +208,16 @@ class AutopublisherTests(unittest.TestCase):
             with patch.object(autopublisher, "ROOT", Path(directory)):
                 self.assertEqual(autopublisher.svg_text_overlap_issues(path), [])
 
+    def test_generated_chart_passes_text_collision_check(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "chart.svg"
+            autopublisher.render_bar_chart_svg(
+                {"title": "Comparison", "unit": "Score", "data": [{"label": "Option A", "value": 10}]},
+                path,
+            )
+            with patch.object(autopublisher, "ROOT", Path(directory)):
+                self.assertEqual(autopublisher.svg_text_overlap_issues(path), [])
+
     def test_topic_selection_prompt_is_compact_for_lightweight_models(self):
         research = [
             autopublisher.ResearchItem(

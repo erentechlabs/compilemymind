@@ -1937,7 +1937,7 @@ def render_bar_chart_svg(chart: dict[str, Any], path: Path) -> None:
     right = 1080
     max_value = max(float(item["value"]) for item in data) or 1.0
     parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc" data-text-collision-check="strict">',
         '<rect width="1200" height="100%" rx="28" fill="#f8fafc"/>',
         f'<title id="title">{html.escape(str(chart.get("title", "Comparison Chart")))}</title>',
         f'<desc id="desc">A horizontal bar chart for {html.escape(str(chart.get("title", "article data")))}</desc>',
@@ -1987,7 +1987,11 @@ def write_article_bundle(
     for chart in article.get("charts", []) or []:
         filename = safe_filename(str(chart.get("filename", "")), "chart.svg")
         chart["filename"] = filename
-        render_bar_chart_svg(chart, post_dir / filename)
+        chart_path = post_dir / filename
+        render_bar_chart_svg(chart, chart_path)
+        chart_issues = svg_text_overlap_issues(chart_path)
+        if chart_issues:
+            raise ValueError("Generated chart failed its text-collision check: " + "; ".join(chart_issues))
 
     now = local_now(config)
     frontmatter: dict[str, Any] = {
