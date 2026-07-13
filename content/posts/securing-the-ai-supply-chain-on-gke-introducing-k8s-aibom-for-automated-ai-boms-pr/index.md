@@ -61,7 +61,7 @@ To understand how `k8s-aibom` operates without high privileges, let's look at it
 
 Refer to the diagram below for the architectural flow of detection and BOM generation:
 
-![k8s-aibom Architecture Flow](k8s-aibom-architecture.svg)
+![k8s-aibom Architecture Flow](k8s-aibom-architecture-v2.svg)
 
 ### The Step-by-Step Detection Pipeline
 

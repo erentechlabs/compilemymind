@@ -38,8 +38,7 @@
 <text x="306" y="768" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Security Team / Scanner</text>
 <text x="626.0" y="206.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">kubectl apply</text>
 <text x="626.0" y="334.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Pod Created Event</text>
-<text x="626.0" y="453.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Watch Pod Events • Inspect Image &amp;</text>
-<text x="626.0" y="471.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Args</text>
+<text x="626.0" y="462.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Watch Pod Events; Inspect Image &amp; Args</text>
 <text x="626.0" y="590.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Generate CycloneDX ML-BOM</text>
 <text x="626.0" y="718.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Audit &amp; Compliance Scan</text>
 </svg>
