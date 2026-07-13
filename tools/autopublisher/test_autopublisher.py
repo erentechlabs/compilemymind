@@ -142,6 +142,45 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(any("empty Markdown heading" in issue for issue in issues))
         self.assertTrue(any("code fences are unbalanced" in issue for issue in issues))
 
+    def test_topic_selection_prompt_is_compact_for_lightweight_models(self):
+        research = [
+            autopublisher.ResearchItem(
+                source=f"Source {index}",
+                title=f"Current technical update {index}",
+                url=f"https://example.com/{index}",
+                summary="summary " * 200,
+                published="2026-07-13",
+                categories=["software-engineering"],
+                score=1.0,
+                snippet="snippet " * 300,
+            )
+            for index in range(36)
+        ]
+        posts = [
+            autopublisher.Post(
+                path=Path(f"post-{index}/index.md"),
+                slug=f"post-{index}",
+                title=f"Existing post {index}",
+                description="description " * 100,
+                date="2026-01-01",
+                tags=["software-engineering"],
+                categories=["software-engineering"],
+                body="body",
+                frontmatter={},
+            )
+            for index in range(60)
+        ]
+        config = {
+            "site": {"timezone": "Europe/Istanbul"},
+            "research": {},
+            "taxonomy": {
+                "allowed_categories": ["guide", "software-engineering"],
+                "balance_categories": ["software-engineering"],
+            },
+        }
+        prompt = autopublisher.topic_selection_prompt(research, None, posts, config)
+        self.assertLess(len(prompt), 24000)
+
     def test_active_model_state_overrides_config_defaults(self):
         with tempfile.TemporaryDirectory() as directory:
             model_state_path = Path(directory) / "model-state.json"

@@ -1040,6 +1040,45 @@ def max_existing_similarity(candidate_text: str, posts: list[Post]) -> dict[str,
     return best
 
 
+def topic_selection_research_payload(research: list[ResearchItem], config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Build a compact research view that fits lightweight-model request limits."""
+    research_config = config.get("research", {})
+    limit = int(research_config.get("topic_selection_max_items", 12))
+    summary_chars = int(research_config.get("topic_selection_summary_characters", 260))
+    snippet_chars = int(research_config.get("topic_selection_snippet_characters", 180))
+    ranked = sorted(research, key=lambda item: item.score, reverse=True)[:limit]
+    return [
+        {
+            "source": item.source,
+            "title": item.title,
+            "url": item.url,
+            "summary": normalize_space(item.summary)[:summary_chars],
+            "published": item.published,
+            "categories": item.categories,
+            "score": item.score,
+            "snippet": normalize_space(item.snippet)[:snippet_chars],
+        }
+        for item in ranked
+    ]
+
+
+def topic_selection_existing_posts(posts: list[Post], config: dict[str, Any]) -> list[dict[str, Any]]:
+    """Keep duplicate context useful without sending every article body to Phi."""
+    research_config = config.get("research", {})
+    limit = int(research_config.get("topic_selection_max_existing_posts", 18))
+    description_chars = int(research_config.get("topic_selection_description_characters", 160))
+    return [
+        {
+            "title": post.title,
+            "slug": post.slug,
+            "categories": post.categories,
+            "tags": post.tags[:6],
+            "description": normalize_space(post.description)[:description_chars],
+        }
+        for post in posts[-limit:]
+    ]
+
+
 def topic_selection_prompt(
     research: list[ResearchItem],
     grounded_brief: dict[str, Any] | None,
@@ -1048,19 +1087,20 @@ def topic_selection_prompt(
 ) -> str:
     counts = category_counts(posts, config)
     underrepresented = target_category(posts, config)
-    existing_posts = [
-        {
-            "title": post.title,
-            "slug": post.slug,
-            "categories": post.categories,
-            "tags": post.tags,
-            "description": post.description,
-        }
-        for post in posts[-60:]
-    ]
+    existing_posts = topic_selection_existing_posts(posts, config)
     month = str(local_now(config).month)
     seasonal = config.get("seasonal_focus", {}).get(month, [])
-    grounded = grounded_brief or {"text": "", "citations": []}
+    grounded = {
+        "text": normalize_space(str((grounded_brief or {}).get("text", "")))[:1400],
+        "citations": [
+            {
+                "title": str(citation.get("title", ""))[:160],
+                "url": str(citation.get("url", "")),
+            }
+            for citation in ((grounded_brief or {}).get("citations", []) or [])
+            if isinstance(citation, dict) and citation.get("url")
+        ][:6],
+    }
     return f"""
 You are the autonomous editor for Compile My Mind, a technical blog about software engineering, AI engineering, programming languages, systems design, developer tools, open source, databases, networking, IT operations, cloud infrastructure, hardware, cybersecurity, Microsoft cloud, and practical systems knowledge.
 
@@ -1090,7 +1130,7 @@ Existing posts:
 {json.dumps(existing_posts, ensure_ascii=False, indent=2)}
 
 Research feed items:
-{json.dumps(research_for_prompt(research), ensure_ascii=False, indent=2)}
+{json.dumps(topic_selection_research_payload(research, config), ensure_ascii=False, indent=2)}
 
 Optional Gemini grounded research brief:
 {json.dumps(grounded, ensure_ascii=False, indent=2)}
@@ -1132,6 +1172,7 @@ def choose_topic(
 ) -> dict[str, Any] | None:
     result = client.generate_json(
         topic_selection_prompt(research, grounded_brief, posts, config),
+        max_output_tokens=int(config.get("github_models", {}).get("topic_selection_max_output_tokens", 2400)),
         task="topic_selection",
     )
     candidates = result.get("topics") or []

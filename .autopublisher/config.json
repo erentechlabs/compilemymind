@@ -35,7 +35,8 @@
       "topic_selection",
       "metadata_enrichment"
     ],
-    "max_output_tokens": 4096
+    "max_output_tokens": 4096,
+    "topic_selection_max_output_tokens": 2400
   },
   "publishing": {
     "min_words": 1400,
