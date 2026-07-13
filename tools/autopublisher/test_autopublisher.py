@@ -172,6 +172,42 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(any("empty Markdown heading" in issue for issue in issues))
         self.assertTrue(any("code fences are unbalanced" in issue for issue in issues))
 
+    def test_svg_text_collision_check_rejects_overlapping_labels(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "overlap.svg"
+            path.write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg">'
+                '<text x="100" y="100" font-size="20">First label</text>'
+                '<text x="100" y="100" font-size="20">Second label</text>'
+                '</svg>',
+                encoding="utf-8",
+            )
+            with patch.object(autopublisher, "ROOT", Path(directory)):
+                issues = autopublisher.svg_text_overlap_issues(path)
+        self.assertTrue(issues)
+
+    def test_flowchart_combines_multiple_labels_on_one_connector(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "flow.svg"
+            autopublisher.render_flowchart_svg(
+                {
+                    "title": "Flow",
+                    "nodes": [
+                        {"id": "controller", "label": "Controller"},
+                        {"id": "analysis", "label": "Analysis"},
+                    ],
+                    "edges": [
+                        {"from": "controller", "to": "analysis", "label": "Watch Pod Events"},
+                        {"from": "controller", "to": "analysis", "label": "Inspect Image & Args"},
+                    ],
+                },
+                path,
+            )
+            content = path.read_text(encoding="utf-8")
+            self.assertIn("Watch Pod Events • Inspect Image &amp;", content)
+            with patch.object(autopublisher, "ROOT", Path(directory)):
+                self.assertEqual(autopublisher.svg_text_overlap_issues(path), [])
+
     def test_topic_selection_prompt_is_compact_for_lightweight_models(self):
         research = [
             autopublisher.ResearchItem(

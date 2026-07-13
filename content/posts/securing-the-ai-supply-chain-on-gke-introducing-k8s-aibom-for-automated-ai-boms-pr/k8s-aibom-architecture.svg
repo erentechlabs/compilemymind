@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="906" viewBox="0 0 1200 906" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="906" viewBox="0 0 1200 906" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
 <defs>
 <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
 <marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
@@ -37,9 +37,9 @@
 <text x="264" y="784.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">6</text>
 <text x="306" y="768" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Security Team / Scanner</text>
 <text x="626.0" y="206.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">kubectl apply</text>
-<text x="626.0" y="462.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Watch Pod Events</text>
 <text x="626.0" y="334.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Pod Created Event</text>
-<text x="626.0" y="462.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Inspect Image &amp; Args</text>
+<text x="626.0" y="453.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Watch Pod Events • Inspect Image &amp;</text>
+<text x="626.0" y="471.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Args</text>
 <text x="626.0" y="590.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Generate CycloneDX ML-BOM</text>
 <text x="626.0" y="718.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Audit &amp; Compliance Scan</text>
 </svg>

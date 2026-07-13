@@ -1754,6 +1754,116 @@ def svg_text_lines(label: str, max_chars: int) -> list[str]:
     return textwrap.wrap(label, width=max_chars, break_long_words=False)[:3] or [""]
 
 
+def _svg_number(value: str | None, default: float) -> float:
+    match = re.search(r"[-+]?\d*\.?\d+", str(value or ""))
+    return float(match.group(0)) if match else default
+
+
+def _svg_declarations(value: str) -> dict[str, str]:
+    declarations: dict[str, str] = {}
+    for declaration in value.split(";"):
+        if ":" not in declaration:
+            continue
+        key, item = declaration.split(":", 1)
+        declarations[key.strip().lower()] = item.strip()
+    return declarations
+
+
+def _svg_class_styles(root: ET.Element) -> dict[str, dict[str, str]]:
+    styles: dict[str, dict[str, str]] = {}
+    for element in root.iter():
+        if str(element.tag).split("}")[-1] != "style":
+            continue
+        stylesheet = "".join(element.itertext())
+        for match in re.finditer(r"\.([\w-]+)\s*\{([^}]*)\}", stylesheet):
+            styles[match.group(1)] = _svg_declarations(match.group(2))
+    return styles
+
+
+def _svg_text_properties(element: ET.Element, class_styles: dict[str, dict[str, str]]) -> dict[str, str]:
+    properties: dict[str, str] = {}
+    for class_name in str(element.get("class", "")).split():
+        properties.update(class_styles.get(class_name, {}))
+    properties.update(_svg_declarations(element.get("style", "")))
+    return properties
+
+
+def _svg_font_size(element: ET.Element, properties: dict[str, str]) -> float:
+    direct_size = element.get("font-size") or properties.get("font-size")
+    if direct_size:
+        return _svg_number(direct_size, 16.0)
+    return _svg_number(properties.get("font"), 16.0)
+
+
+def _svg_translation(value: str | None) -> tuple[float, float]:
+    match = re.search(r"translate\(\s*([-+]?\d*\.?\d+)(?:[ ,]+([-+]?\d*\.?\d+))?", str(value or ""))
+    if not match:
+        return 0.0, 0.0
+    return float(match.group(1)), float(match.group(2) or 0.0)
+
+
+def svg_text_overlap_issues(path: Path) -> list[str]:
+    """Return visible SVG text collisions using conservative text bounding boxes."""
+    try:
+        root = ET.fromstring(path.read_text(encoding="utf-8"))
+    except (OSError, ET.ParseError) as error:
+        return [f"{path.relative_to(ROOT)}: invalid SVG ({error})"]
+
+    class_styles = _svg_class_styles(root)
+    strict = root.get("data-text-collision-check") == "strict"
+    boxes: list[tuple[str, float, float, float, float, float, float]] = []
+    text_index = 0
+
+    def visit(element: ET.Element, offset_x: float = 0.0, offset_y: float = 0.0) -> None:
+        nonlocal text_index
+        translate_x, translate_y = _svg_translation(element.get("transform"))
+        offset_x += translate_x
+        offset_y += translate_y
+        if str(element.tag).split("}")[-1] == "text":
+            value = normalize_space("".join(element.itertext()))
+            if value:
+                properties = _svg_text_properties(element, class_styles)
+                font_size = _svg_font_size(element, properties)
+                x = _svg_number(element.get("x"), 0.0) + offset_x
+                y = _svg_number(element.get("y"), 0.0) + offset_y
+                # Arial/Inter average glyph widths are below 0.6em; using 0.62em
+                # makes this a useful safety check without rejecting adjacent labels.
+                text_width = max(font_size * 0.62 * len(value), font_size * 0.5)
+                anchor = element.get("text-anchor") or properties.get("text-anchor", "start")
+                if anchor == "middle":
+                    left = x - text_width / 2
+                    right = x + text_width / 2
+                elif anchor == "end":
+                    left = x - text_width
+                    right = x
+                else:
+                    left = x
+                    right = x + text_width
+                # Baseline-to-baseline spacing can be slightly less than 1em
+                # without visible glyph collisions, so use a conservative glyph box.
+                top = y - font_size * 0.8
+                bottom = y + font_size * 0.2
+                boxes.append((f"text[{text_index}]={value[:80]!r}", x, y, left, top, right, bottom))
+                text_index += 1
+        for child in element:
+            visit(child, offset_x, offset_y)
+
+    visit(root)
+
+    issues: list[str] = []
+    for index, first in enumerate(boxes):
+        for second in boxes[index + 1 :]:
+            _, x_a, y_a, left_a, top_a, right_a, bottom_a = first
+            _, x_b, y_b, left_b, top_b, right_b, bottom_b = second
+            same_position = math.isclose(x_a, x_b, abs_tol=0.01) and math.isclose(y_a, y_b, abs_tol=0.01)
+            overlaps = left_a < right_b and right_a > left_b and top_a < bottom_b and bottom_a > top_b
+            if same_position or (strict and overlaps):
+                issues.append(
+                    f"{path.relative_to(ROOT)}: overlapping SVG text ({first[0]} and {second[0]})"
+                )
+    return issues
+
+
 def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
     nodes = diagram.get("nodes", []) or []
     edges = diagram.get("edges", []) or []
@@ -1767,7 +1877,7 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
     height = title_height + len(nodes) * (box_height + gap) + 42
     x = (width - box_width) // 2
     parts = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc" data-text-collision-check="strict">',
         "<defs>",
         '<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>',
         '<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>',
@@ -1786,7 +1896,7 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
         parts.append(f'<rect x="{x}" y="{y}" width="{box_width}" height="{box_height}" rx="18" fill="{fill}" stroke="#cbd5e1" stroke-width="2"/>')
         parts.append(f'<circle cx="{x + 44}" cy="{y + box_height / 2}" r="22" fill="#2563eb"/>')
         parts.append(f'<text x="{x + 44}" y="{y + box_height / 2 + 7}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">{index + 1}</text>')
-        for line_index, line in enumerate(svg_text_lines(str(node.get("label", "")), 58)):
+        for line_index, line in enumerate(svg_text_lines(str(node.get("label", "")), 52)):
             text_y = y + 32 + line_index * 22
             parts.append(f'<text x="{x + 86}" y="{text_y}" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">{html.escape(line)}</text>')
         if index < len(nodes) - 1:
@@ -1794,12 +1904,22 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
             y1 = y + box_height + 8
             y2 = y + box_height + gap - 12
             parts.append(f'<line x1="{x_mid}" y1="{y1}" x2="{x_mid}" y2="{y2}" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>')
+    edge_labels: dict[str, list[str]] = defaultdict(list)
     for edge in edges:
-        if edge.get("label"):
-            from_id = str(edge.get("from", ""))
-            if from_id in node_y:
-                y = node_y[from_id] + box_height + gap / 2
-                parts.append(f'<text x="{width / 2 + 26}" y="{y + 5}" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">{html.escape(str(edge.get("label")))}</text>')
+        label = normalize_space(str(edge.get("label", "")))
+        from_id = str(edge.get("from", ""))
+        if label and from_id in node_y and label not in edge_labels[from_id]:
+            edge_labels[from_id].append(label)
+    for from_id, labels in edge_labels.items():
+        y = node_y[from_id] + box_height + gap / 2
+        combined_label = " • ".join(labels)
+        lines = svg_text_lines(combined_label, 34)
+        first_y = y + 5 - (len(lines) - 1) * 9
+        for line_index, line in enumerate(lines):
+            parts.append(
+                f'<text x="{width / 2 + 26}" y="{first_y + line_index * 18}" '
+                f'font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">{html.escape(line)}</text>'
+            )
     parts.append("</svg>")
     path.write_text("\n".join(parts), encoding="utf-8")
 
@@ -1858,7 +1978,11 @@ def write_article_bundle(
     for diagram in article.get("diagrams", []) or []:
         filename = safe_filename(str(diagram.get("filename", "")), "diagram.svg")
         diagram["filename"] = filename
-        render_flowchart_svg(diagram, post_dir / filename)
+        diagram_path = post_dir / filename
+        render_flowchart_svg(diagram, diagram_path)
+        diagram_issues = svg_text_overlap_issues(diagram_path)
+        if diagram_issues:
+            raise ValueError("Generated diagram failed its text-collision check: " + "; ".join(diagram_issues))
 
     for chart in article.get("charts", []) or []:
         filename = safe_filename(str(chart.get("filename", "")), "chart.svg")
@@ -1913,6 +2037,8 @@ def content_asset_issues(config: dict[str, Any]) -> list[str]:
                 continue
             if not target.is_file():
                 issues.append(f"{index_path.relative_to(ROOT)}: missing image asset: {reference}")
+    for svg_path in sorted(content_dir.rglob("*.svg")):
+        issues.extend(svg_text_overlap_issues(svg_path))
     return issues
 
 
@@ -2070,7 +2196,14 @@ def run_publish(args: argparse.Namespace) -> int:
         write_publish_result("rejected", reason="qa_failed", title=topic.get("title"))
         return 0
 
-    index_path = write_article_bundle(final_article, topic, config, log, dry_run=args.dry_run)
+    try:
+        index_path = write_article_bundle(final_article, topic, config, log, dry_run=args.dry_run)
+    except ValueError as error:
+        failed_post_dir = ROOT / config["site"].get("content_dir", "content/posts") / str(final_article.get("slug", ""))
+        shutil.rmtree(failed_post_dir, ignore_errors=True)
+        log.log("publish_rejected", reason="asset_validation_failed", error=str(error))
+        write_publish_result("rejected", reason="asset_validation_failed", error=str(error))
+        return 0
     if not args.dry_run and not run_hugo_build(log):
         if index_path.parent.exists():
             shutil.rmtree(index_path.parent)

@@ -43,7 +43,7 @@ The publishing and maintenance workflows deploy in the same run after pushing be
 
 ## Quality and safety gates
 
-An article is rejected and regenerated when it is too short, shallow, repetitive, missing enough trusted sources, missing a useful table, missing a requested visual, contains malformed Markdown, or is rejected by Gemini QA. Gemini QA is fail-closed: an API outage never turns an unreviewed draft into a publication.
+An article is rejected and regenerated when it is too short, shallow, repetitive, missing enough trusted sources, missing a useful table, missing a requested visual, contains malformed Markdown, contains a diagram with colliding text, or is rejected by Gemini QA. Generated flowchart SVGs are wrapped and checked for text collisions before the bundle is accepted. Gemini QA is fail-closed: an API outage never turns an unreviewed draft into a publication.
 
 Similarity detection uses local token-based cosine and Jaccard scores against every existing Hugo post before generation and again during final QA. Source URLs are accepted only when they came from the configured research inventory, and the final article must retain the configured minimum number of sources. Basic Markdown structure is also checked without an AI call.
 
