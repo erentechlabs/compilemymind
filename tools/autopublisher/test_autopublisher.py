@@ -148,6 +148,13 @@ class AutopublisherTests(unittest.TestCase):
             with self.assertRaises(autopublisher.GeminiQuotaError):
                 client.grounded_research("test")
 
+    def test_generate_content_503_raises_transient_error(self):
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}), \
+            patch.object(autopublisher, "http_request", return_value=(503, b"temporarily overloaded", {})):
+            client = autopublisher.GeminiClient({"gemini": {}}, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiTransientError):
+                client.generate_json("test")
+
     def test_grounded_research_fallback_is_enabled_by_default(self):
         self.assertTrue(autopublisher.grounded_research_fallback_enabled({"gemini": {}}))
         self.assertFalse(
@@ -224,6 +231,52 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertIsNone(choose_topic.call_args.args[2])
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
+    def test_publish_records_retryable_when_generation_is_temporarily_unavailable(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {"max_regeneration_attempts": 0},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [
+            autopublisher.ResearchItem(
+                source="Trusted",
+                title="A current software engineering update",
+                url="https://trusted.example/update",
+                summary="A useful summary",
+                published="",
+                categories=["software-engineering"],
+                score=2.0,
+            )
+        ]
+        topic = {"title": "A current software engineering guide", "slug": "a-current-guide"}
+
+        class TransientClient:
+            def require_key(self):
+                return None
+
+            def generate_json(self, _prompt):
+                raise autopublisher.GeminiTransientError("model unavailable")
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=TransientClient()), \
+            patch.object(autopublisher, "choose_topic", return_value=topic), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result") as write_result:
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=False))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(state["last_runs"]["publish"]["result"], "retryable")
+        self.assertEqual(write_result.call_args_list[-1].args, ("retryable",))
+        self.assertEqual(
+            write_result.call_args_list[-1].kwargs,
+            {"stage": "article_generation", "error": "model unavailable"},
+        )
 
     def test_publish_result_marker_records_explicit_result(self):
         with tempfile.TemporaryDirectory() as directory:

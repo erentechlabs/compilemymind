@@ -105,6 +105,10 @@ class GeminiQuotaError(RuntimeError):
     """Raised when Gemini reports rate-limit or quota exhaustion."""
 
 
+class GeminiTransientError(RuntimeError):
+    """Raised when Gemini is temporarily overloaded or unavailable."""
+
+
 def utc_now() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -367,6 +371,13 @@ def save_state(state: dict[str, Any]) -> None:
     write_json(STATE_PATH, state)
 
 
+def record_publish_retryable(state: dict[str, Any], stage: str, error: Exception) -> None:
+    details = {"time": iso_z(), "result": "retryable", "stage": stage}
+    state["last_runs"]["publish"] = details
+    save_state(state)
+    write_publish_result("retryable", stage=stage, error=str(error))
+
+
 def write_publish_result(result: str, **fields: Any) -> None:
     write_json(PUBLISH_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
 
@@ -541,11 +552,13 @@ class GeminiClient:
             payload=payload,
             headers={"x-goog-api-key": self.api_key},
             timeout=90,
-            retries=2,
+            retries=4,
         )
         if status >= 400:
             if status == 429:
                 raise GeminiQuotaError(f"Gemini grounded research quota exceeded: HTTP {status}: {body[:500]!r}")
+            if status in {500, 502, 503, 504}:
+                raise GeminiTransientError(f"Gemini grounded research temporarily unavailable: HTTP {status}: {body[:500]!r}")
             raise RuntimeError(f"Gemini grounded research failed: HTTP {status}: {body[:500]!r}")
         response = json.loads(body.decode("utf-8"))
         text_parts: list[str] = []
@@ -606,11 +619,13 @@ class GeminiClient:
             payload=payload,
             headers={"x-goog-api-key": self.api_key},
             timeout=timeout,
-            retries=2,
+            retries=4,
         )
         if status >= 400:
             if status == 429:
                 raise GeminiQuotaError(f"Gemini quota exceeded for model {model}: HTTP {status}: {body[:1000]!r}")
+            if status in {500, 502, 503, 504}:
+                raise GeminiTransientError(f"Gemini generateContent temporarily unavailable: HTTP {status}: {body[:1000]!r}")
             raise RuntimeError(f"Gemini generateContent failed: HTTP {status}: {body[:1000]!r}")
         return json.loads(body.decode("utf-8"))
 
@@ -1406,7 +1421,7 @@ Return JSON only:
             temperature=float(config.get("gemini", {}).get("qa_temperature", 0.15)),
             max_output_tokens=8192,
         )
-    except GeminiQuotaError:
+    except (GeminiQuotaError, GeminiTransientError):
         raise
     except Exception as error:
         log.log("ai_qa_failed", error=str(error))
@@ -1642,6 +1657,14 @@ def run_publish(args: argparse.Namespace) -> int:
                 save_state(state)
                 write_publish_result("quota_limited", stage="grounded_research")
                 return 0
+        except GeminiTransientError as error:
+            grounded_brief = None
+            log.log(
+                "grounded_research_transient_fallback",
+                stage="grounded_research",
+                fallback="trusted_rss_feeds",
+                error=str(error),
+            )
         except Exception as error:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))
@@ -1653,6 +1676,10 @@ def run_publish(args: argparse.Namespace) -> int:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
         save_state(state)
         write_publish_result("quota_limited", stage="topic_selection")
+        return 0
+    except GeminiTransientError as error:
+        log.log("publish_retryable", stage="topic_selection", error=str(error))
+        record_publish_retryable(state, "topic_selection", error)
         return 0
     if not topic:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "no_topic"}
@@ -1674,6 +1701,10 @@ def run_publish(args: argparse.Namespace) -> int:
             save_state(state)
             write_publish_result("quota_limited", stage="article_generation", attempt=attempt)
             return 0
+        except GeminiTransientError as error:
+            log.log("publish_retryable", stage="article_generation", attempt=attempt, error=str(error))
+            record_publish_retryable(state, "article_generation", error)
+            return 0
         article = normalize_article_payload(raw_article, topic, config, research)
         issues = deterministic_qa(article, topic, posts, config)
         if issues:
@@ -1687,6 +1718,10 @@ def run_publish(args: argparse.Namespace) -> int:
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "quality_assurance"}
             save_state(state)
             write_publish_result("quota_limited", stage="quality_assurance", attempt=attempt)
+            return 0
+        except GeminiTransientError as error:
+            log.log("publish_retryable", stage="quality_assurance", attempt=attempt, error=str(error))
+            record_publish_retryable(state, "quality_assurance", error)
             return 0
         min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
         try:
