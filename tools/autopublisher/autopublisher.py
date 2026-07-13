@@ -355,6 +355,14 @@ def load_model_state() -> dict[str, Any]:
     return read_json(MODEL_STATE_PATH, {})
 
 
+def grounded_research_fallback_enabled(config: dict[str, Any]) -> bool:
+    """Allow publishing to continue from trusted feeds when Search grounding is unavailable."""
+    value = config.get("gemini", {}).get("grounded_research_fallback_to_feeds", True)
+    if isinstance(value, str):
+        return value.strip().lower() not in {"0", "false", "no", "off"}
+    return bool(value)
+
+
 def save_state(state: dict[str, Any]) -> None:
     write_json(STATE_PATH, state)
 
@@ -1620,11 +1628,20 @@ def run_publish(args: argparse.Namespace) -> int:
             grounded_brief = client.grounded_research(grounded_prompt)
             log.log("grounded_research_completed", citation_count=len(grounded_brief.get("citations", [])))
         except GeminiQuotaError as error:
-            log.log("publish_quota_limited", stage="grounded_research", error=str(error))
-            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "grounded_research"}
-            save_state(state)
-            write_publish_result("quota_limited", stage="grounded_research")
-            return 0
+            if grounded_research_fallback_enabled(config):
+                grounded_brief = None
+                log.log(
+                    "grounded_research_fallback",
+                    stage="grounded_research",
+                    fallback="trusted_rss_feeds",
+                    error=str(error),
+                )
+            else:
+                log.log("publish_quota_limited", stage="grounded_research", error=str(error))
+                state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "grounded_research"}
+                save_state(state)
+                write_publish_result("quota_limited", stage="grounded_research")
+                return 0
         except Exception as error:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))

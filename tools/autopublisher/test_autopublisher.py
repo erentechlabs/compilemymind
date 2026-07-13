@@ -148,6 +148,83 @@ class AutopublisherTests(unittest.TestCase):
             with self.assertRaises(autopublisher.GeminiQuotaError):
                 client.grounded_research("test")
 
+    def test_grounded_research_fallback_is_enabled_by_default(self):
+        self.assertTrue(autopublisher.grounded_research_fallback_enabled({"gemini": {}}))
+        self.assertFalse(
+            autopublisher.grounded_research_fallback_enabled(
+                {"gemini": {"grounded_research_fallback_to_feeds": False}}
+            )
+        )
+
+    def test_publish_continues_from_rss_when_grounding_is_quota_limited(self):
+        config = {
+            "gemini": {
+                "enable_google_search_grounding": True,
+                "grounded_research_fallback_to_feeds": True,
+            },
+            "publishing": {"max_regeneration_attempts": 0},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [
+            autopublisher.ResearchItem(
+                source="Trusted",
+                title="A current software engineering update",
+                url="https://trusted.example/update",
+                summary="A useful summary",
+                published="",
+                categories=["software-engineering"],
+                score=2.0,
+            )
+        ]
+        topic = {
+            "title": "A current software engineering guide",
+            "slug": "a-current-software-engineering-guide",
+            "categories": ["software-engineering"],
+            "tags": ["software"],
+            "source_urls": [research[0].url],
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A useful guide.",
+            "categories": topic["categories"],
+            "tags": topic["tags"],
+            "sources": [{"title": research[0].title, "url": research[0].url}],
+            "article_markdown": "Article body",
+        }
+
+        class GroundingQuotaClient:
+            qa_model = "test"
+
+            def require_key(self):
+                return None
+
+            def grounded_research(self, _prompt):
+                raise autopublisher.GeminiQuotaError("grounding quota")
+
+            def generate_json(self, _prompt):
+                return {}
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=GroundingQuotaClient()), \
+            patch.object(autopublisher, "choose_topic", return_value=topic) as choose_topic, \
+            patch.object(autopublisher, "normalize_article_payload", return_value=article), \
+            patch.object(autopublisher, "deterministic_qa", return_value=[]), \
+            patch.object(autopublisher, "ai_qa", return_value={"approved": True, "score": 0.9}), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/test/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        self.assertIsNone(choose_topic.call_args.args[2])
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
     def test_publish_result_marker_records_explicit_result(self):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "publish-result.json"
