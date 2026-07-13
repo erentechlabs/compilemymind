@@ -19,7 +19,7 @@ Optional repository variables override the defaults in `.autopublisher/config.js
 
 The workflow needs repository Actions permission set to **Read and write permissions** so its `GITHUB_TOKEN` can commit approved content. Do not use a personal access token for normal publishing.
 
-The publishing workflow also grants `models: read` and uses the automatic Actions token for GitHub Models. The lightweight `microsoft/phi-4-mini-instruct` model handles topic ranking and metadata enrichment; Gemini remains responsible for research, article writing, and final QA. No additional GitHub Models API key is required.
+The publishing workflow also grants `models: read` and uses the automatic Actions token for GitHub Models. The lightweight `openai/gpt-4o-mini` model handles topic ranking and metadata enrichment; Gemini remains responsible for research, article writing, and final QA. No additional GitHub Models API key is required.
 
 Direct Cloudflare Pages deployment is optional because the repository can continue using Cloudflare's Git integration. To deploy from the workflow itself, add:
 

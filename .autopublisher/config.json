@@ -30,7 +30,7 @@
   "github_models": {
     "enabled": true,
     "endpoint": "https://models.github.ai/inference/chat/completions",
-    "model": "microsoft/phi-4-mini-instruct",
+    "model": "openai/gpt-4o-mini",
     "lightweight_tasks": [
       "topic_selection",
       "metadata_enrichment"

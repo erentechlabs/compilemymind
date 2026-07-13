@@ -488,7 +488,7 @@ class GeminiClient:
             github_models.get("endpoint", "https://models.github.ai/inference/chat/completions")
         ).strip()
         self.github_models_model = str(
-            github_models.get("model", "microsoft/phi-4-mini-instruct")
+            github_models.get("model", "openai/gpt-4o-mini")
         ).strip()
         self.github_models_tasks = {
             str(task).strip()
@@ -620,7 +620,9 @@ class GeminiClient:
             task=task,
             json_mode=True,
         )
-        return parse_model_json(self._extract_chat_text(response))
+        parsed = parse_model_json(self._extract_chat_text(response))
+        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
+        return parsed
 
     def _github_models_generate_text(
         self,
@@ -630,7 +632,7 @@ class GeminiClient:
         max_output_tokens: int | None,
         task: str,
     ) -> str:
-        return self._extract_chat_text(
+        text = self._extract_chat_text(
             self._github_models_request(
                 prompt,
                 temperature=temperature,
@@ -638,6 +640,8 @@ class GeminiClient:
                 task=task,
             )
         )
+        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
+        return text
 
     def _github_models_request(
         self,
@@ -690,7 +694,6 @@ class GeminiClient:
         if status >= 400:
             raise RuntimeError(f"GitHub Models request failed: HTTP {status}: {body[:800]!r}")
         response = json.loads(body.decode("utf-8"))
-        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
         return response
 
     @staticmethod

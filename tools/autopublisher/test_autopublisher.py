@@ -56,7 +56,7 @@ class AutopublisherTests(unittest.TestCase):
             "gemini": {"model_upgrade": {"enabled": False}},
             "github_models": {
                 "enabled": True,
-                "model": "microsoft/phi-4-mini-instruct",
+                "model": "openai/gpt-4o-mini",
                 "lightweight_tasks": ["topic_selection"],
                 "max_output_tokens": 4096,
             },
@@ -85,7 +85,36 @@ class AutopublisherTests(unittest.TestCase):
             "gemini": {"model_upgrade": {"enabled": False}},
             "github_models": {
                 "enabled": True,
-                "model": "microsoft/phi-4-mini-instruct",
+                "model": "openai/gpt-4o-mini",
+                "lightweight_tasks": ["topic_selection"],
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {"GEMINI_API_KEY": "gemini-key", "GITHUB_MODELS_TOKEN": "github-token"},
+            clear=False,
+        ), patch.object(autopublisher, "http_request", side_effect=[github_response, gemini_response]):
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json("Choose a topic", task="topic_selection")
+
+        self.assertEqual(result, {"topics": []})
+
+    def test_github_models_falls_back_when_json_output_is_malformed(self):
+        github_response = (
+            200,
+            json.dumps({"choices": [{"message": {"content": "not valid json"}}]}).encode(),
+            {},
+        )
+        gemini_response = (
+            200,
+            json.dumps({"candidates": [{"content": {"parts": [{"text": '{"topics": []}'}]}}]}).encode(),
+            {},
+        )
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "openai/gpt-4o-mini",
                 "lightweight_tasks": ["topic_selection"],
             },
         }
