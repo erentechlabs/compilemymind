@@ -77,6 +77,47 @@
         "reason": "The article is technically accurate, well-structured, and provides excellent educational depth on the Ghostcommit vulnerability. It effectively balances the explanation of the attack vector with robust, actionable defensive strategies and code examples."
       },
       "path": "content/posts/ghostcommit-prompt-injection-ai-code-review-bypass/index.md"
+    },
+    {
+      "time": "2026-07-13T20:48:44.556674Z",
+      "title": "Securing the AI Supply Chain on GKE: Introducing k8s-aibom for Automated AI BOMs",
+      "slug": "securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr",
+      "categories": [
+        "cloud",
+        "guide",
+        "software-engineering"
+      ],
+      "tags": [
+        "cloud",
+        "google-cloud-blog",
+        "securing",
+        "ai",
+        "supply",
+        "chain",
+        "gke"
+      ],
+      "sources": [
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "What’s new with Google Cloud",
+          "url": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud/"
+        },
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.6,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, highly detailed, and provides excellent educational value. It includes a clear architectural diagram, a comprehensive comparison table, and fully functional, well-structured Kubernetes manifests for practical implementation. The explanation of CycloneDX ML-BOMs and the 'Shadow AI' problem is clear and aligns perfectly with the source material."
+      },
+      "path": "content/posts/securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -91,8 +132,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-12T20:57:20.990046Z",
-      "result": "qa_failed"
+      "time": "2026-07-13T20:48:44.556798Z",
+      "result": "published"
     }
   }
 }
