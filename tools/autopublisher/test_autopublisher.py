@@ -4,6 +4,7 @@ import os
 import sys
 import tempfile
 import unittest
+import xml.etree.ElementTree as ET
 from types import SimpleNamespace
 from pathlib import Path
 from unittest.mock import patch
@@ -195,6 +196,21 @@ class AutopublisherTests(unittest.TestCase):
             ),
             "Missing table; Add a comparison table\nRetry",
         )
+
+    def test_atom_link_selection_prefers_article_over_comments_endpoint(self):
+        entry = ET.fromstring(
+            '<entry xmlns="http://www.w3.org/2005/Atom">'
+            '<link rel="replies" type="application/atom+xml" href="https://example.com/feeds/1/comments/default" />'
+            '<link rel="self" type="application/atom+xml" href="https://example.com/feeds/1" />'
+            '<link rel="alternate" type="text/html" href="https://example.com/2026/07/article.html" />'
+            '</entry>'
+        )
+        self.assertEqual(
+            autopublisher.first_text(entry, "link"),
+            "https://example.com/2026/07/article.html",
+        )
+        self.assertFalse(autopublisher.is_publishable_source_url("https://example.com/feeds/1/comments/default"))
+        self.assertTrue(autopublisher.is_publishable_source_url("https://example.com/2026/07/article.html"))
 
     def test_svg_text_collision_check_rejects_overlapping_labels(self):
         with tempfile.TemporaryDirectory() as directory:

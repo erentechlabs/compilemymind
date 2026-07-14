@@ -864,12 +864,55 @@ def xml_children(element: ET.Element, local_name: str) -> list[ET.Element]:
     return [child for child in element.iter() if child.tag.split("}")[-1] == local_name]
 
 
+def is_publishable_source_url(url: str) -> bool:
+    """Reject feed, Atom API, and comment endpoints from article citations."""
+    parsed = urllib.parse.urlsplit(str(url).strip())
+    if parsed.scheme.lower() not in {"http", "https"} or not parsed.netloc:
+        return False
+    path = parsed.path.lower().rstrip("/")
+    return not (
+        "/feeds/" in path
+        or path.endswith("/comments/default")
+        or path.endswith("/feed")
+        or path.endswith("/rss")
+        or path.endswith("/atom.xml")
+        or path.endswith("/index.xml")
+        or path.endswith(".rss")
+        or path.endswith(".xml")
+    )
+
+
+def article_link(element: ET.Element) -> str:
+    links = [child for child in element if child.tag.split("}")[-1] == "link"]
+    for child in links:
+        href = str(child.attrib.get("href", "")).strip()
+        rel = str(child.attrib.get("rel", "alternate")).lower()
+        link_type = str(child.attrib.get("type", "")).lower()
+        if href and rel == "alternate" and (not link_type or "html" in link_type):
+            return href
+    for child in links:
+        href = str(child.attrib.get("href", "")).strip()
+        rel = str(child.attrib.get("rel", "")).lower()
+        link_type = str(child.attrib.get("type", "")).lower()
+        if href and rel not in {"comments", "replies", "self", "edit"} and "atom+xml" not in link_type:
+            return href
+    for child in links:
+        if "href" not in child.attrib:
+            text = "".join(child.itertext()).strip()
+            if text:
+                return text
+    return ""
+
+
 def first_text(element: ET.Element, *names: str) -> str:
     for name in names:
+        if name == "link":
+            link = article_link(element)
+            if link:
+                return link
+            continue
         for child in element:
             if child.tag.split("}")[-1] == name:
-                if name == "link" and "href" in child.attrib:
-                    return child.attrib.get("href", "")
                 return "".join(child.itertext()).strip()
     return ""
 
@@ -908,6 +951,9 @@ def fetch_feed(source: dict[str, Any], config: dict[str, Any], log: EventLog) ->
             continue
         if not urllib.parse.urlparse(link).scheme:
             link = urllib.parse.urljoin(url, link)
+        if not is_publishable_source_url(link):
+            log.log("research_item_link_rejected", source=source.get("name"), title=title, url=link)
+            continue
         score = score_research_item(title, summary, published, source, config)
         results.append(
             ResearchItem(
@@ -1022,7 +1068,7 @@ def dedupe_sources(sources: list[dict[str, Any]]) -> list[dict[str, str]]:
     output: list[dict[str, str]] = []
     for source in sources:
         url = str(source.get("url", "")).strip()
-        if not url or url in seen:
+        if not url or not is_publishable_source_url(url) or url in seen:
             continue
         seen.add(url)
         output.append({"title": str(source.get("title") or urllib.parse.urlparse(url).netloc), "url": url})

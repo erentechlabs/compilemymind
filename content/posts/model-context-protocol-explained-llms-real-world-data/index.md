@@ -180,4 +180,4 @@ The Model Context Protocol represents a major milestone in AI engineering. By re
 
 - [Claude at scale on Google Cloud: Frontier AI, built for enterprise production](https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/)
 - [Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs](https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/)
-- [Evolving how LLMs are measured for Android: the next era of Android Bench](https://android-developers.googleblog.com/feeds/8846032960796184778/comments/default)
+- [Evolving how LLMs are measured for Android: the next era of Android Bench](https://android-developers.googleblog.com/2026/07/android-bench-llm-measurement.html)
