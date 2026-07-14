@@ -187,6 +187,15 @@ class AutopublisherTests(unittest.TestCase):
             payload,
         )
 
+    def test_qa_feedback_formats_structured_model_items(self):
+        self.assertEqual(
+            autopublisher.feedback_text(
+                [{"issue": "Missing table", "required_fix": "Add a comparison table"}, "Retry"],
+                "fallback",
+            ),
+            "Missing table; Add a comparison table\nRetry",
+        )
+
     def test_svg_text_collision_check_rejects_overlapping_labels(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "overlap.svg"

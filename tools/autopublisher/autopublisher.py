@@ -1936,6 +1936,25 @@ Return JSON only:
         }
 
 
+def feedback_text(value: Any, fallback: str) -> str:
+    """Convert model QA feedback, including structured objects, into safe text."""
+    values = value if isinstance(value, list) else [value] if value else []
+    messages: list[str] = []
+    for item in values:
+        if isinstance(item, dict):
+            parts: list[str] = []
+            for key in ("issue", "reason", "description", "message", "fix", "required_fix"):
+                candidate = normalize_space(str(item.get(key, "")))
+                if candidate and candidate not in parts:
+                    parts.append(candidate)
+            text = "; ".join(parts) or json.dumps(item, ensure_ascii=False, sort_keys=True)
+        else:
+            text = normalize_space(str(item))
+        if text and text not in messages:
+            messages.append(text)
+    return "\n".join(messages) or fallback
+
+
 def svg_text_lines(label: str, max_chars: int) -> list[str]:
     label = normalize_space(str(label))
     return textwrap.wrap(label, width=max_chars, break_long_words=False)[:3] or [""]
@@ -2374,7 +2393,10 @@ def run_publish(args: argparse.Namespace) -> int:
             final_qa = qa
             log.log("article_ai_qa_passed", score=qa.get("score"), reason=qa.get("reason", ""))
             break
-        feedback = "\n".join(qa.get("required_fixes") or qa.get("issues") or ["AI QA rejected the article."])
+        feedback = feedback_text(
+            qa.get("required_fixes") or qa.get("issues"),
+            "AI QA rejected the article.",
+        )
         log.log("article_ai_qa_failed", attempt=attempt, score=qa.get("score"), feedback=feedback)
 
     if not final_article:
