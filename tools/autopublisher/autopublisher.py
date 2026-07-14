@@ -17,6 +17,7 @@ import argparse
 import base64
 import datetime as dt
 import email.utils
+import gzip
 import html
 import json
 import math
@@ -32,6 +33,7 @@ import unicodedata
 import urllib.error
 import urllib.parse
 import urllib.request
+import zlib
 import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -444,6 +446,7 @@ def http_request(
     data = None
     request_headers = {
         "User-Agent": "CompileMyMindAutopublisher/1.0 (+https://www.compilemymind.com/)",
+        "Accept-Encoding": "gzip, deflate",
     }
     if headers:
         request_headers.update(headers)
@@ -457,11 +460,12 @@ def http_request(
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 status = int(getattr(response, "status", 200))
                 response_headers = {key.lower(): value for key, value in response.headers.items()}
-                return status, response.read(), response_headers
+                return status, decode_http_body(response.read(), response_headers), response_headers
         except urllib.error.HTTPError as error:
-            body = error.read()
+            response_headers = {key.lower(): value for key, value in error.headers.items()}
+            body = decode_http_body(error.read(), response_headers)
             if error.code < 500 or attempt == retries:
-                return int(error.code), body, {key.lower(): value for key, value in error.headers.items()}
+                return int(error.code), body, response_headers
             last_error = error
         except Exception as error:
             last_error = error
@@ -471,6 +475,19 @@ def http_request(
     if last_error:
         raise last_error
     raise RuntimeError(f"Request failed: {url}")
+
+
+def decode_http_body(body: bytes, headers: dict[str, str]) -> bytes:
+    """Decode common HTTP content encodings before parsing feeds or pages."""
+    encoding = str(headers.get("content-encoding", "")).lower()
+    if "gzip" in encoding:
+        return gzip.decompress(body)
+    if "deflate" in encoding:
+        try:
+            return zlib.decompress(body)
+        except zlib.error:
+            return zlib.decompress(body, -zlib.MAX_WBITS)
+    return body
 
 
 class GeminiClient:
@@ -1521,6 +1538,47 @@ def ensure_sources_section(markdown: str, sources: list[dict[str, Any]]) -> str:
     return markdown + "\n\n" + "\n".join(source_lines).strip() + "\n"
 
 
+def _fence_character(line: str) -> str | None:
+    match = re.match(r"^\s*(`{3,}|~{3,})", line)
+    return match.group(1)[0] if match else None
+
+
+def normalize_top_level_headings(markdown: str) -> str:
+    """Convert prose H1 headings to H2 without touching fenced code."""
+    lines: list[str] = []
+    fence_character: str | None = None
+    for line in markdown.splitlines():
+        marker = _fence_character(line)
+        if marker:
+            if fence_character is None:
+                fence_character = marker
+            elif marker == fence_character:
+                fence_character = None
+            lines.append(line)
+            continue
+        if fence_character is None:
+            line = re.sub(r"^\s*#\s+(.+?)\s*$", r"## \1", line)
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def markdown_without_fenced_code(markdown: str) -> str:
+    """Return prose lines only for structural Markdown checks."""
+    lines: list[str] = []
+    fence_character: str | None = None
+    for line in markdown.splitlines():
+        marker = _fence_character(line)
+        if marker:
+            if fence_character is None:
+                fence_character = marker
+            elif marker == fence_character:
+                fence_character = None
+            continue
+        if fence_character is None:
+            lines.append(line)
+    return "\n".join(lines)
+
+
 def remove_accidental_frontmatter(markdown: str) -> str:
     frontmatter, body = split_frontmatter(markdown.strip())
 
@@ -1531,15 +1589,7 @@ def remove_accidental_frontmatter(markdown: str) -> str:
 
     # Hugo renders the page title from front matter. Convert prose H1 headings
     # to H2 without changing comments or examples inside fenced code blocks.
-    parts = re.split(r"(```.*?```|~~~.*?~~~)", markdown, flags=re.S)
-    for index in range(0, len(parts), 2):
-        parts[index] = re.sub(
-            r"(?m)^\s*#\s+(.+?)\s*$",
-            r"## \1",
-            parts[index],
-        )
-
-    return "".join(parts).strip()
+    return normalize_top_level_headings(markdown).strip()
 
 
 def normalized_url_host(url: str) -> str:
@@ -1757,16 +1807,17 @@ def markdown_format_issues(markdown: str) -> list[str]:
     issues: list[str] = []
     if not markdown.strip():
         return ["Article body is empty."]
-    if re.search(r"(?m)^\s*#\s+\S", markdown):
+    prose = markdown_without_fenced_code(markdown)
+    if re.search(r"(?m)^\s*#\s+\S", prose):
         issues.append("Article body contains a top-level H1; the Hugo template supplies the title.")
-    if re.search(r"(?m)^\s*#{2,6}\s*$", markdown):
+    if re.search(r"(?m)^\s*#{2,6}\s*$", prose):
         issues.append("Article contains an empty Markdown heading.")
     for marker, label in (("```", "backtick"), ("~~~", "tilde")):
         if len(re.findall(rf"(?m)^\s*{re.escape(marker)}", markdown)) % 2:
             issues.append(f"{label.title()} code fences are unbalanced.")
-    if re.search(r"!\[[^\]]*\]\(\s*\)", markdown):
+    if re.search(r"!\[[^\]]*\]\(\s*\)", prose):
         issues.append("Article contains an image reference with no target.")
-    if re.search(r"(?m)^\s*[-*+]\s*$", markdown):
+    if re.search(r"(?m)^\s*[-*+]\s*$", prose):
         issues.append("Article contains an empty bullet-list item.")
     return issues
 

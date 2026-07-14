@@ -1,4 +1,5 @@
 import json
+import gzip
 import os
 import sys
 import tempfile
@@ -171,6 +172,20 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(any("top-level H1" in issue for issue in issues))
         self.assertTrue(any("empty Markdown heading" in issue for issue in issues))
         self.assertTrue(any("code fences are unbalanced" in issue for issue in issues))
+
+    def test_markdown_heading_checks_ignore_fenced_code_comments(self):
+        markdown = "# Introduction\n\n```python\n# This is a code comment\nprint('hello')\n```\n\n## Details"
+        normalized = autopublisher.remove_accidental_frontmatter(markdown)
+        self.assertIn("## Introduction", normalized)
+        self.assertIn("# This is a code comment", normalized)
+        self.assertFalse(any("top-level H1" in issue for issue in autopublisher.markdown_format_issues(normalized)))
+
+    def test_http_body_decoder_handles_gzip_feeds(self):
+        payload = b"<?xml version='1.0'?><feed />"
+        self.assertEqual(
+            autopublisher.decode_http_body(gzip.compress(payload), {"content-encoding": "gzip"}),
+            payload,
+        )
 
     def test_svg_text_collision_check_rejects_overlapping_labels(self):
         with tempfile.TemporaryDirectory() as directory:
