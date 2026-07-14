@@ -1451,20 +1451,19 @@ Editorial style:
 - Explain concepts with concrete examples.
 - Avoid hype, filler, and shallow news recap.
 - Optimize for search intent naturally, with a clear meta description.
-- Include comparison tables or reference tables wherever helpful.
-- Include internal links naturally using Markdown links from the provided list.
-- Do not include a Sources section inside article_markdown; the publishing system adds it automatically.
-- Do not include external Markdown links inside article_markdown.
-- Put every external URL only in the sources array.
-- Every sources[].url must be copied exactly from the supplied research snippets.
-- Internal links to Compile My Mind articles are allowed.
+- Include at least one useful Markdown comparison or reference table when the subject supports it.
+- Include internal links naturally, using only the exact Markdown URLs from the provided internal-link list.
+- Do not create a Sources section inside article_markdown; the publishing system adds it automatically.
+- Do not place external Markdown links, HTML links, autolinks, or bare external URLs inside article_markdown.
+- Put every external citation only in the sources array.
+- Every sources[].url must be copied exactly from one of the supplied research snippets. Do not invent, shorten, normalize, or add tracking parameters to URLs.
 - Do not invent facts that are not supported by the research snippets.
-- Do not include YAML front matter or a top-level H1 in article_markdown.
+- Do not include YAML front matter or any top-level H1 in article_markdown. Start section headings at H2 (##).
 - Never refer to yourself, the prompt, or limitations of being an AI system.
 - The sources array must include at least {required_sources} URLs selected from the research snippets.
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
 - For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
-- Minimum target length: {min_words} words.
+- The article body must contain at least {min_words} words; aim for {min_words + 250} to avoid falling below the minimum after normalization.
 - Do not create a featured image, hero image, thumbnail, or image before the article title.
 - Body diagrams, charts, and data visualizations are allowed only when they materially improve understanding; reference generated filenames in the Markdown.
 
@@ -1530,80 +1529,132 @@ def remove_accidental_frontmatter(markdown: str) -> str:
     else:
         markdown = markdown.strip()
 
-    markdown = re.sub(
-        r"(?m)^\s*#\s+(.+?)\s*$",
-        r"## \1",
-        markdown,
-    )
+    # Hugo renders the page title from front matter. Convert prose H1 headings
+    # to H2 without changing comments or examples inside fenced code blocks.
+    parts = re.split(r"(```.*?```|~~~.*?~~~)", markdown, flags=re.S)
+    for index in range(0, len(parts), 2):
+        parts[index] = re.sub(
+            r"(?m)^\s*#\s+(.+?)\s*$",
+            r"## \1",
+            parts[index],
+        )
 
-    return markdown.strip()
+    return "".join(parts).strip()
+
+
+def normalized_url_host(url: str) -> str:
+    """Return a lowercase host without a leading www. for stable comparisons."""
+    host = urllib.parse.urlsplit(str(url).strip()).netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    return host
+
 
 def canonical_url(url: str) -> str:
-    """Normalize URLs before comparing trusted source links."""
-    parsed = urllib.parse.urlsplit(url.strip())
+    """Normalize a URL for trusted-source comparisons without changing stored URLs."""
+    raw = str(url).strip()
+    if not raw:
+        return ""
 
-    query_items = urllib.parse.parse_qsl(
-        parsed.query,
-        keep_blank_values=True,
-    )
+    parsed = urllib.parse.urlsplit(raw)
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return raw
 
+    query_items = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
     query_items = [
         (key, value)
         for key, value in query_items
         if not key.lower().startswith("utm_")
+        and key.lower() not in {"fbclid", "gclid", "mc_cid", "mc_eid"}
     ]
+    path = re.sub(r"/{2,}", "/", parsed.path or "/")
+    if path != "/":
+        path = path.rstrip("/")
 
-    path = parsed.path.rstrip("/") or "/"
+    host = parsed.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
 
     return urllib.parse.urlunsplit(
         (
             parsed.scheme.lower(),
-            parsed.netloc.lower(),
+            host,
             path,
-            urllib.parse.urlencode(query_items),
-            "",  
+            urllib.parse.urlencode(query_items, doseq=True),
+            "",
         )
     )
 
 
-def sanitize_external_links(
-    markdown: str,
-    trusted_urls: set[str],
-    site_base: str,
-) -> str:
-    """Remove external Markdown links that are not trusted sources."""
-    trusted = {
-        canonical_url(url)
-        for url in trusted_urls
-        if url
-    }
+def _sanitize_external_links_in_prose(markdown: str, site_base: str) -> str:
+    """Remove external links from prose while preserving labels and internal links."""
+    site_host = normalized_url_host(site_base)
 
-    site_host = urllib.parse.urlsplit(site_base).netloc.lower()
-
-    def replace_link(match: re.Match[str]) -> str:
-        image_prefix, label, url = match.groups()
+    def is_internal(url: str) -> bool:
         parsed = urllib.parse.urlsplit(url)
-
-        is_trusted = canonical_url(url) in trusted
-        is_internal = (
-            bool(site_host)
-            and parsed.netloc.lower() == site_host
+        return bool(
+            site_host
+            and normalized_url_host(url) == site_host
+            and parsed.scheme in {"http", "https"}
         )
 
-        if is_trusted or is_internal:
+    def replace_markdown_link(match: re.Match[str]) -> str:
+        image_prefix, label, url, _optional_title = match.groups()
+        if is_internal(url):
             return match.group(0)
-
+        # Remote images are not trusted article assets. Preserve readable alt text only.
         if image_prefix:
-            return f"*{label}*"
-
+            return f"*{label}*" if label.strip() else ""
         return label
 
-    return re.sub(
-        r"(!?)\[([^\]]+)\]\((https?://[^)\s]+)\)",
-        replace_link,
+    markdown = re.sub(
+        r"(!?)\[([^\]]*)\]\((https?://[^)\s]+)(\s+[\"'][^\"']*[\"'])?\)",
+        replace_markdown_link,
         markdown,
     )
-  
+
+    def replace_html_anchor(match: re.Match[str]) -> str:
+        _before_href, _quote, url, _after_href, label = match.groups()
+        if is_internal(url):
+            return match.group(0)
+        return strip_html(label)
+
+    markdown = re.sub(
+        r"(?is)<a\b([^>]*?href\s*=\s*)([\"'])(https?://[^\"']+)\2([^>]*)>(.*?)</a>",
+        replace_html_anchor,
+        markdown,
+    )
+
+    def replace_autolink(match: re.Match[str]) -> str:
+        url = match.group(1)
+        return match.group(0) if is_internal(url) else normalized_url_host(url)
+
+    markdown = re.sub(r"<(https?://[^>\s]+)>", replace_autolink, markdown)
+
+    def replace_bare_url(match: re.Match[str]) -> str:
+        matched = match.group(0)
+        url = matched.rstrip(".,;:")
+        suffix = matched[len(url):]
+        if is_internal(url):
+            return matched
+        return normalized_url_host(url) + suffix
+
+    markdown = re.sub(
+        r"(?<![\w@])(https?://[^\s)>\]\"']+)",
+        replace_bare_url,
+        markdown,
+    )
+    return markdown
+
+
+def sanitize_article_external_links(markdown: str, site_base: str) -> str:
+    """Sanitize prose links without modifying fenced code examples."""
+    parts = re.split(r"(```.*?```|~~~.*?~~~)", markdown, flags=re.S)
+    for index in range(0, len(parts), 2):
+        parts[index] = _sanitize_external_links_in_prose(parts[index], site_base)
+    return "".join(parts)
+
+
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:
     missing: list[str] = []
     for item in diagrams:
@@ -1687,35 +1738,11 @@ def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], co
     article["charts"] = [
         item for item in article.get("charts", []) if isinstance(item, dict)
     ] if isinstance(article.get("charts"), list) else []
-    markdown = remove_accidental_frontmatter(
-    str(article.get("article_markdown", ""))
-)
-  trusted_urls = {
-      str(source.get("url", "")).strip()
-      for source in article.get("sources", [])
-      if isinstance(source, dict) and source.get("url")
-  }
-  
-  site_base = str(
-      config.get("site", {}).get("base_url", "")
-  ).rstrip("/")
-  
-  markdown = sanitize_external_links(
-      markdown,
-      trusted_urls,
-      site_base,
-  )
-  
-  markdown = ensure_asset_references(
-      markdown,
-      article["diagrams"],
-      article["charts"],
-  )
-  
-  article["article_markdown"] = ensure_sources_section(
-      markdown,
-      article["sources"],
-  )
+    markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
+    site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
+    markdown = sanitize_article_external_links(markdown, site_base)
+    markdown = ensure_asset_references(markdown, article["diagrams"], article["charts"])
+    article["article_markdown"] = ensure_sources_section(markdown, article["sources"])
     return article
 
 
@@ -1767,22 +1794,23 @@ def deterministic_qa(
     if topic.get("needs_chart") and not article.get("charts") and not re.search(r"\|\s*[^|\n]+\s*\|", markdown):
         issues.append("Selected topic requested numerical comparison, but no chart or comparison table was returned.")
     trusted_urls = {
-        str(source.get("url", "")).strip()
+        canonical_url(str(source.get("url", "")).strip())
         for source in article.get("sources", []) or []
         if isinstance(source, dict) and source.get("url")
     }
     site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
-    untrusted_urls = [
-        url
-        for url in extract_links(markdown)
-        if url not in trusted_urls and not (site_base and url.startswith(site_base))
-    ]
+    site_host = normalized_url_host(site_base)
+    untrusted_urls: list[str] = []
+    for url in extract_links(markdown):
+        is_internal = bool(site_host and normalized_url_host(url) == site_host)
+        if not is_internal and canonical_url(url) not in trusted_urls:
+            untrusted_urls.append(url)
     if untrusted_urls:
-      displayed_urls = ", ".join(untrusted_urls[:5])
-      issues.append(
-       "Article contains external links that are not in its trusted "
-       f"source list: {displayed_urls}")
-      
+        displayed_urls = ", ".join(untrusted_urls[:5])
+        issues.append(
+            "Article contains external links that are not in its trusted source list: "
+            f"{displayed_urls}"
+        )
     if re.search(r"(?i)\bas an ai language model\b|\bas a language model\b|\bi (?:cannot|can't) (?:browse|access|provide|verify)\b", markdown):
         issues.append("Article contains AI self-reference.")
     similarity = max_existing_similarity(
@@ -2345,8 +2373,12 @@ def run_publish(args: argparse.Namespace) -> int:
 
 
 def extract_links(markdown: str) -> list[str]:
-    links = re.findall(r"!?\[[^\]]+\]\((https?://[^)\s]+)", markdown)
-    links.extend(re.findall(r"(?<!\()https?://[^\s)>\"]+", markdown))
+    # URLs inside code examples are not navigational article links and should
+    # not be checked against the trusted-source allowlist.
+    prose = re.sub(r"```.*?```|~~~.*?~~~", " ", markdown, flags=re.S)
+    prose = re.sub(r"`[^`\n]+`", " ", prose)
+    links = re.findall(r"!?\[[^\]]+\]\((https?://[^)\s]+)", prose)
+    links.extend(re.findall(r"(?<!\()https?://[^\s)>\"]+", prose))
     cleaned: list[str] = []
     for link in links:
         link = link.rstrip(".,;:")
