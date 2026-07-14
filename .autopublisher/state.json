@@ -118,6 +118,41 @@
         "reason": "The article is technically accurate, highly detailed, and provides excellent educational value. It includes a clear architectural diagram, a comprehensive comparison table, and fully functional, well-structured Kubernetes manifests for practical implementation. The explanation of CycloneDX ML-BOMs and the 'Shadow AI' problem is clear and aligns perfectly with the source material."
       },
       "path": "content/posts/securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr/index.md"
+    },
+    {
+      "time": "2026-07-14T18:56:31.777432Z",
+      "title": "Model Context Protocol (MCP) Explained: How to Connect LLMs to Real-World Data (With Python Tutorial)",
+      "slug": "model-context-protocol-explained-llms-real-world-data",
+      "categories": [
+        "guide",
+        "ai-engineering"
+      ],
+      "tags": [
+        "mcp",
+        "python"
+      ],
+      "sources": [
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/feeds/8846032960796184778/comments/default"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is highly technical, accurate, and well-structured. It provides an excellent explanation of the Model Context Protocol (MCP) architecture, transport layers, and primitives. The Python tutorial is practical, using the official FastMCP SDK correctly, and the security section adds valuable real-world context."
+      },
+      "path": "content/posts/model-context-protocol-explained-llms-real-world-data/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -132,7 +167,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-13T20:48:44.556798Z",
+      "time": "2026-07-14T18:56:31.777565Z",
       "result": "published"
     }
   }
