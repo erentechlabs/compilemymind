@@ -153,6 +153,41 @@
         "reason": "The article is highly technical, accurate, and well-structured. It provides an excellent explanation of the Model Context Protocol (MCP) architecture, transport layers, and primitives. The Python tutorial is practical, using the official FastMCP SDK correctly, and the security section adds valuable real-world context."
       },
       "path": "content/posts/model-context-protocol-explained-llms-real-world-data/index.md"
+    },
+    {
+      "time": "2026-07-14T19:33:51.111668Z",
+      "title": "Building AI-Defined Vehicles: Integrating Android and Google Cloud for Next-Gen Automotive Solutions",
+      "slug": "ai-defined-vehicles-android-google-cloud",
+      "categories": [
+        "guide",
+        "cloud"
+      ],
+      "tags": [
+        "ai",
+        "automotive"
+      ],
+      "sources": [
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        },
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/2026/07/android-bench-llm-measurement.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is exceptionally well-written, technically accurate, and highly detailed. It provides concrete, production-grade code examples in both Kotlin (for Android Automotive OS) and Python (for Cloud Bigtable), along with a clear architectural diagram and comparison table. It perfectly integrates the source material regarding Nexus SDV, Bigtable, and Google Cloud, while maintaining a strong educational flow and solid security/compliance context."
+      },
+      "path": "content/posts/ai-defined-vehicles-android-google-cloud/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -167,7 +202,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-14T18:56:31.777565Z",
+      "time": "2026-07-14T19:33:51.111799Z",
       "result": "published"
     }
   }
