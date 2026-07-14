@@ -1453,7 +1453,11 @@ Editorial style:
 - Optimize for search intent naturally, with a clear meta description.
 - Include comparison tables or reference tables wherever helpful.
 - Include internal links naturally using Markdown links from the provided list.
-- Add a clear "Sources" section with the reliable URLs used.
+- Do not include a Sources section inside article_markdown; the publishing system adds it automatically.
+- Do not include external Markdown links inside article_markdown.
+- Put every external URL only in the sources array.
+- Every sources[].url must be copied exactly from the supplied research snippets.
+- Internal links to Compile My Mind articles are allowed.
 - Do not invent facts that are not supported by the research snippets.
 - Do not include YAML front matter or a top-level H1 in article_markdown.
 - Never refer to yourself, the prompt, or limitations of being an AI system.
@@ -1520,12 +1524,86 @@ def ensure_sources_section(markdown: str, sources: list[dict[str, Any]]) -> str:
 
 def remove_accidental_frontmatter(markdown: str) -> str:
     frontmatter, body = split_frontmatter(markdown.strip())
+
     if frontmatter:
-        return body
-    markdown = re.sub(r"(?m)^# .+\n+", "", markdown.strip(), count=1)
+        markdown = body
+    else:
+        markdown = markdown.strip()
+
+    markdown = re.sub(
+        r"(?m)^\s*#\s+(.+?)\s*$",
+        r"## \1",
+        markdown,
+    )
+
     return markdown.strip()
 
+def canonical_url(url: str) -> str:
+    """Normalize URLs before comparing trusted source links."""
+    parsed = urllib.parse.urlsplit(url.strip())
 
+    query_items = urllib.parse.parse_qsl(
+        parsed.query,
+        keep_blank_values=True,
+    )
+
+    query_items = [
+        (key, value)
+        for key, value in query_items
+        if not key.lower().startswith("utm_")
+    ]
+
+    path = parsed.path.rstrip("/") or "/"
+
+    return urllib.parse.urlunsplit(
+        (
+            parsed.scheme.lower(),
+            parsed.netloc.lower(),
+            path,
+            urllib.parse.urlencode(query_items),
+            "",  
+        )
+    )
+
+
+def sanitize_external_links(
+    markdown: str,
+    trusted_urls: set[str],
+    site_base: str,
+) -> str:
+    """Remove external Markdown links that are not trusted sources."""
+    trusted = {
+        canonical_url(url)
+        for url in trusted_urls
+        if url
+    }
+
+    site_host = urllib.parse.urlsplit(site_base).netloc.lower()
+
+    def replace_link(match: re.Match[str]) -> str:
+        image_prefix, label, url = match.groups()
+        parsed = urllib.parse.urlsplit(url)
+
+        is_trusted = canonical_url(url) in trusted
+        is_internal = (
+            bool(site_host)
+            and parsed.netloc.lower() == site_host
+        )
+
+        if is_trusted or is_internal:
+            return match.group(0)
+
+        if image_prefix:
+            return f"*{label}*"
+
+        return label
+
+    return re.sub(
+        r"(!?)\[([^\]]+)\]\((https?://[^)\s]+)\)",
+        replace_link,
+        markdown,
+    )
+  
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:
     missing: list[str] = []
     for item in diagrams:
@@ -1609,9 +1687,35 @@ def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], co
     article["charts"] = [
         item for item in article.get("charts", []) if isinstance(item, dict)
     ] if isinstance(article.get("charts"), list) else []
-    markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
-    markdown = ensure_asset_references(markdown, article["diagrams"], article["charts"])
-    article["article_markdown"] = ensure_sources_section(markdown, article["sources"])
+    markdown = remove_accidental_frontmatter(
+    str(article.get("article_markdown", ""))
+)
+  trusted_urls = {
+      str(source.get("url", "")).strip()
+      for source in article.get("sources", [])
+      if isinstance(source, dict) and source.get("url")
+  }
+  
+  site_base = str(
+      config.get("site", {}).get("base_url", "")
+  ).rstrip("/")
+  
+  markdown = sanitize_external_links(
+      markdown,
+      trusted_urls,
+      site_base,
+  )
+  
+  markdown = ensure_asset_references(
+      markdown,
+      article["diagrams"],
+      article["charts"],
+  )
+  
+  article["article_markdown"] = ensure_sources_section(
+      markdown,
+      article["sources"],
+  )
     return article
 
 
@@ -1674,7 +1778,11 @@ def deterministic_qa(
         if url not in trusted_urls and not (site_base and url.startswith(site_base))
     ]
     if untrusted_urls:
-        issues.append("Article contains external links that are not in its trusted source list.")
+      displayed_urls = ", ".join(untrusted_urls[:5])
+      issues.append(
+       "Article contains external links that are not in its trusted "
+       f"source list: {displayed_urls}")
+      
     if re.search(r"(?i)\bas an ai language model\b|\bas a language model\b|\bi (?:cannot|can't) (?:browse|access|provide|verify)\b", markdown):
         issues.append("Article contains AI self-reference.")
     similarity = max_existing_similarity(
