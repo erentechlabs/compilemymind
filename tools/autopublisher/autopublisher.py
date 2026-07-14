@@ -1241,7 +1241,9 @@ def choose_topic(
     posts: list[Post],
     config: dict[str, Any],
     log: EventLog,
+    excluded_slugs: set[str] | None = None,
 ) -> dict[str, Any] | None:
+    excluded_slugs = excluded_slugs or set()
     result = client.generate_json(
         topic_selection_prompt(research, grounded_brief, posts, config),
         temperature=float(config.get("github_models", {}).get("topic_selection_temperature", 0.1)),
@@ -1266,6 +1268,9 @@ def choose_topic(
         categories = sanitize_categories(topic.get("categories", []), topic.get("primary_category"), config)
         topic["categories"] = categories
         topic["tags"] = sanitize_tags(topic.get("tags", []), topic)
+        if slug in excluded_slugs:
+            log.log("topic_rejected", title=title, reason="previous_generation_failed", slug=slug)
+            continue
         if slug in existing_slugs:
             log.log("topic_rejected", title=title, reason="slug_exists", slug=slug)
             continue
@@ -1302,6 +1307,7 @@ def choose_topic(
         log,
         max_similarity=max_similarity,
         max_title_similarity=max_title_similarity,
+        excluded_slugs=excluded_slugs,
     )
     if fallback:
         return fallback
@@ -1317,7 +1323,9 @@ def fallback_topic_from_research(
     *,
     max_similarity: float,
     max_title_similarity: float,
+    excluded_slugs: set[str] | None = None,
 ) -> dict[str, Any] | None:
+    excluded_slugs = excluded_slugs or set()
     existing_slugs = {post.slug for post in posts}
     target = target_category(posts, config)
     allowed = set(config.get("taxonomy", {}).get("allowed_categories", []))
@@ -1334,7 +1342,7 @@ def fallback_topic_from_research(
             primary = primary or (target if target in allowed else "technology")
             title = fallback_topic_title(item, primary)
             slug = slugify(title)
-            if slug in existing_slugs:
+            if slug in existing_slugs or slug in excluded_slugs:
                 continue
             categories = sanitize_categories([primary, *item.categories], primary, config)
             tags = sanitize_tags([primary, item.source, *tokenize(item.title)[:5]], {"title": title})
@@ -1527,6 +1535,7 @@ Editorial style:
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
 - For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
 - The article body must contain at least {min_words} words; aim for {min_words + 250} to avoid falling below the minimum after normalization.
+- Do not stop after an introduction or a short explanation. Build a complete article with a useful opening, multiple H2/H3 sections, practical details, examples or pseudocode where relevant, trade-offs, and a concise conclusion. Before returning JSON, verify that article_markdown itself—not the metadata—meets the word-count requirement.
 - Do not create a featured image, hero image, thumbnail, or image before the article title.
 - Body diagrams, charts, and data visualizations are allowed only when they materially improve understanding; reference generated filenames in the Markdown.
 
@@ -2001,6 +2010,75 @@ def feedback_text(value: Any, fallback: str) -> str:
     return "\n".join(messages) or fallback
 
 
+def generation_feedback(issues: list[str], article: dict[str, Any]) -> str:
+    """Give the next attempt actionable QA feedback and enough draft context to repair it."""
+    feedback = "\n".join(issue for issue in issues if issue)
+    draft = str(article.get("article_markdown", "")).strip()
+    if draft and feedback:
+        feedback += (
+            "\nThe previous draft was rejected. Return a complete replacement article, not an outline, "
+            "summary, or apology. Preserve useful technical detail while fixing every listed issue. "
+            "The replacement must satisfy the required word count and include a useful Markdown table "
+            "when the configuration requires one. Here is the previous draft for repair:\n"
+            f"{draft[:12000]}"
+        )
+    return feedback or "The previous draft failed quality checks. Return a complete, publishable replacement."
+
+
+def generate_approved_article(
+    client: GeminiClient,
+    topic: dict[str, Any],
+    research: list[ResearchItem],
+    posts: list[Post],
+    config: dict[str, Any],
+    log: EventLog,
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None, str]:
+    """Generate, repair, and quality-check one topic without ever publishing a rejected draft."""
+    feedback = ""
+    attempts = int(config.get("publishing", {}).get("max_regeneration_attempts", 2)) + 1
+    article_temperature = float(config.get("gemini", {}).get("article_temperature", 0.4))
+    for attempt in range(1, attempts + 1):
+        log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
+        raw_article = client.generate_json(
+            article_generation_prompt(topic, research, posts, config, feedback),
+            temperature=article_temperature,
+            task="article_generation",
+        )
+        article = normalize_article_payload(raw_article, topic, config, research)
+        enrich_article_metadata(client, article, topic, config, log)
+        issues = deterministic_qa(article, topic, posts, config)
+        if issues:
+            feedback = generation_feedback(issues, article)
+            log.log("article_deterministic_qa_failed", attempt=attempt, issues=issues)
+            continue
+        qa = ai_qa(client, article, topic, config, log)
+        if not isinstance(qa, dict):
+            qa = {
+                "approved": False,
+                "score": 0.0,
+                "issues": ["AI QA returned an invalid response shape."],
+                "required_fixes": ["Return a complete article and a valid JSON QA response."],
+            }
+        min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
+        try:
+            qa_score = float(qa.get("score", 0.0) or 0.0)
+        except (TypeError, ValueError):
+            qa_score = 0.0
+        approved_value = qa.get("approved")
+        approved = approved_value is True or str(approved_value).strip().lower() == "true"
+        approved = approved and qa_score >= min_quality_score
+        if approved:
+            log.log("article_ai_qa_passed", score=qa.get("score"), reason=qa.get("reason", ""))
+            return article, qa, ""
+        feedback = feedback_text(
+            qa.get("required_fixes") or qa.get("issues"),
+            "AI QA rejected the article.",
+        )
+        feedback = generation_feedback([feedback], article)
+        log.log("article_ai_qa_failed", attempt=attempt, score=qa.get("score"), feedback=feedback)
+    return None, None, feedback
+
+
 def svg_text_lines(label: str, max_chars: int) -> list[str]:
     label = normalize_space(str(label))
     return textwrap.wrap(label, width=max_chars, break_long_words=False)[:3] or [""]
@@ -2386,64 +2464,70 @@ def run_publish(args: argparse.Namespace) -> int:
         write_publish_result("no_topic")
         return 0
 
-    feedback = ""
-    attempts = int(config.get("publishing", {}).get("max_regeneration_attempts", 2)) + 1
     final_article: dict[str, Any] | None = None
     final_qa: dict[str, Any] | None = None
-    for attempt in range(1, attempts + 1):
-        log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
+    feedback = ""
+    excluded_slugs: set[str] = set()
+    max_topic_attempts = max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
+    for topic_attempt in range(1, max_topic_attempts + 1):
+        if topic_attempt > 1:
+            excluded_slugs.add(str(topic.get("slug", "")))
+            try:
+                topic = choose_topic(
+                    client,
+                    research,
+                    grounded_brief,
+                    posts,
+                    config,
+                    log,
+                    excluded_slugs=excluded_slugs,
+                )
+            except GeminiQuotaError as error:
+                log.log("publish_quota_limited", stage="topic_selection", attempt=topic_attempt, error=str(error))
+                state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
+                save_state(state)
+                write_publish_result("quota_limited", stage="topic_selection")
+                return 0
+            except GeminiTransientError as error:
+                log.log("publish_retryable", stage="topic_selection", attempt=topic_attempt, error=str(error))
+                record_publish_retryable(state, "topic_selection", error)
+                return 0
+            if not topic:
+                feedback = "No alternative topic passed duplicate and category checks."
+                break
+            log.log(
+                "topic_retry_selected",
+                attempt=topic_attempt,
+                title=topic.get("title"),
+                slug=topic.get("slug"),
+            )
         try:
-            raw_article = client.generate_json(
-                article_generation_prompt(topic, research, posts, config, feedback),
-                task="article_generation",
+            final_article, final_qa, feedback = generate_approved_article(
+                client,
+                topic,
+                research,
+                posts,
+                config,
+                log,
             )
         except GeminiQuotaError as error:
-            log.log("publish_quota_limited", stage="article_generation", attempt=attempt, error=str(error))
+            log.log("publish_quota_limited", stage="article_generation", attempt=topic_attempt, error=str(error))
             state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "article_generation"}
             save_state(state)
-            write_publish_result("quota_limited", stage="article_generation", attempt=attempt)
+            write_publish_result("quota_limited", stage="article_generation", attempt=topic_attempt)
             return 0
         except GeminiTransientError as error:
-            log.log("publish_retryable", stage="article_generation", attempt=attempt, error=str(error))
+            log.log("publish_retryable", stage="article_generation", attempt=topic_attempt, error=str(error))
             record_publish_retryable(state, "article_generation", error)
             return 0
-        article = normalize_article_payload(raw_article, topic, config, research)
-        enrich_article_metadata(client, article, topic, config, log)
-        issues = deterministic_qa(article, topic, posts, config)
-        if issues:
-            feedback = "\n".join(issues)
-            log.log("article_deterministic_qa_failed", attempt=attempt, issues=issues)
-            continue
-        try:
-            qa = ai_qa(client, article, topic, config, log)
-        except GeminiQuotaError as error:
-            log.log("publish_quota_limited", stage="quality_assurance", attempt=attempt, error=str(error))
-            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "quality_assurance"}
-            save_state(state)
-            write_publish_result("quota_limited", stage="quality_assurance", attempt=attempt)
-            return 0
-        except GeminiTransientError as error:
-            log.log("publish_retryable", stage="quality_assurance", attempt=attempt, error=str(error))
-            record_publish_retryable(state, "quality_assurance", error)
-            return 0
-        min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
-        try:
-            qa_score = float(qa.get("score", 0.0) or 0.0)
-        except (TypeError, ValueError):
-            qa_score = 0.0
-        approved_value = qa.get("approved")
-        approved = approved_value is True or str(approved_value).strip().lower() == "true"
-        approved = approved and qa_score >= min_quality_score
-        if approved:
-            final_article = article
-            final_qa = qa
-            log.log("article_ai_qa_passed", score=qa.get("score"), reason=qa.get("reason", ""))
+        if final_article:
             break
-        feedback = feedback_text(
-            qa.get("required_fixes") or qa.get("issues"),
-            "AI QA rejected the article.",
+        log.log(
+            "topic_generation_exhausted",
+            attempt=topic_attempt,
+            title=topic.get("title"),
+            feedback=feedback,
         )
-        log.log("article_ai_qa_failed", attempt=attempt, score=qa.get("score"), feedback=feedback)
 
     if not final_article:
         state.setdefault("failures", []).append(

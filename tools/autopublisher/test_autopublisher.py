@@ -197,6 +197,66 @@ class AutopublisherTests(unittest.TestCase):
             "Missing table; Add a comparison table\nRetry",
         )
 
+    def test_generation_feedback_preserves_rejected_draft_for_repair(self):
+        feedback = autopublisher.generation_feedback(
+            ["Article is too short: 40 words, expected at least 1400.", "Article should include a useful Markdown table."],
+            {"article_markdown": "## Existing explanation\n\nKeep this useful detail."},
+        )
+        self.assertIn("complete replacement article", feedback)
+        self.assertIn("## Existing explanation", feedback)
+
+    def test_generate_approved_article_retries_with_repair_context(self):
+        prompts = []
+
+        class ArticleClient:
+            def generate_json(self, prompt, **kwargs):
+                prompts.append((prompt, kwargs))
+                return {}
+
+        topic = {"title": "A reliable software guide", "slug": "a-reliable-software-guide"}
+        bad_article = {"article_markdown": "## Short draft"}
+        good_article = {"article_markdown": "## Complete draft"}
+        with patch.object(autopublisher, "normalize_article_payload", side_effect=[bad_article, good_article]), \
+            patch.object(autopublisher, "enrich_article_metadata"), \
+            patch.object(autopublisher, "deterministic_qa", side_effect=[["Article is too short"], []]), \
+            patch.object(autopublisher, "ai_qa", return_value={"approved": True, "score": 0.9}):
+            article, qa, feedback = autopublisher.generate_approved_article(
+                ArticleClient(),
+                topic,
+                [],
+                [],
+                {"publishing": {"max_regeneration_attempts": 1}, "gemini": {"article_temperature": 0.4}},
+                autopublisher.EventLog(),
+            )
+
+        self.assertEqual(article, good_article)
+        self.assertEqual(qa["score"], 0.9)
+        self.assertEqual(feedback, "")
+        self.assertEqual(len(prompts), 2)
+        self.assertIn("Short draft", prompts[1][0])
+        self.assertEqual(prompts[0][1]["temperature"], 0.4)
+
+    def test_choose_topic_excludes_topic_that_failed_generation(self):
+        class TopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                return {
+                    "topics": [
+                        {"title": "Failed topic", "slug": "failed-topic", "categories": ["technology"]},
+                        {"title": "Fresh topic", "slug": "fresh-topic", "categories": ["technology"]},
+                    ]
+                }
+
+        selected = autopublisher.choose_topic(
+            TopicClient(),
+            [],
+            None,
+            [],
+            {"taxonomy": {"allowed_categories": ["technology"]}},
+            autopublisher.EventLog(),
+            excluded_slugs={"failed-topic"},
+        )
+        self.assertEqual(selected["slug"], "fresh-topic")
+
     def test_atom_link_selection_prefers_article_over_comments_endpoint(self):
         entry = ET.fromstring(
             '<entry xmlns="http://www.w3.org/2005/Atom">'
