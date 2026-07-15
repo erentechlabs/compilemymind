@@ -76,7 +76,7 @@ Use the exact interface and resolver values from the host. VPN software, split D
 5. Check firewall, routing, DHCP, delegation, and server logs at the boundary indicated by the results.
 6. Document every command, timestamp, resolver, record type, and returned status.
 
-For background, see the [DNS fundamentals article](/posts/dns-explained-how-your-browser-finds-a-website/), [common network ports reference](/posts/common-network-ports-every-it-student-should-know/), and [networking topic hub](/networking/).
+For background, see the [DNS fundamentals article](/posts/dns-explained-how-your-browser-finds-a-website/) and [common network ports reference](/posts/common-network-ports-every-it-student-should-know/).
 
 ## Preserve diagnostic evidence
 
@@ -94,7 +94,7 @@ Use configuration inspection, resolver reachability, and direct record queries a
 
 ## Related guidance
 
-- [System Administration topic hub](/system-administration/) — topic hub reference.
+- [Network communication basics](/posts/network-communication-basics/) — foundational troubleshooting reference.
 
 ## Sources
 

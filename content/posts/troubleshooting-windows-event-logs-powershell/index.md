@@ -231,7 +231,7 @@ Use `Format-Table`, `Select-Object`, or `Export-Csv` to customize and analyze ou
 
 ## Further Learning
 
-Explore more system administration topics at the [System Administration topic hub](/system-administration/). For security event analysis and incident response, see [SIEM vs XDR vs SOAR: What They Do and When to Use Each](/posts/siem-vs-xdr-vs-soar/).
+For security event analysis and incident response, see [SIEM vs XDR vs SOAR: What They Do and When to Use Each](/posts/siem-vs-xdr-vs-soar/) and [Zero Trust Explained With Real-World Examples](/posts/zero-trust-explained-real-world-examples/).
 
 ## Conclusion
 

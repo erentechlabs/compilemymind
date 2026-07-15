@@ -1431,18 +1431,6 @@ def select_internal_links(posts: list[Post], topic: dict[str, Any], config: dict
         for index, (score, post) in enumerate(sorted(scored, key=lambda item: item[0], reverse=True)[:limit])
         if score > 0.03
     ]
-    hub_paths = {
-        "cybersecurity": "/cybersecurity/",
-        "networking": "/networking/",
-        "azure": "/azure/",
-        "entra-id": "/entra-id/",
-        "cloud-certifications": "/cloud-certifications/",
-        "system-administration": "/system-administration/",
-        "it-fundamentals": "/it-fundamentals/",
-    }
-    primary = next((category for category in topic.get("categories", []) or [] if category in hub_paths), "")
-    if primary in hub_paths:
-        chosen.append({"title": f"{primary.replace('-', ' ').title()} topic hub", "url": hub_paths[primary], "role": "topic hub"})
     return chosen
 
 
@@ -1465,9 +1453,6 @@ def ensure_contextual_internal_links(
         if url.startswith("/posts/") and existing_post_count < required_posts:
             additions.append(link)
             existing_post_count += 1
-            existing.add(url)
-        elif link.get("role") == "topic hub":
-            additions.append(link)
             existing.add(url)
     if not additions:
         return markdown
@@ -2987,12 +2972,8 @@ def internal_link_issues(
     issues: list[str] = []
     if len(set(post_links)) < required:
         issues.append(f"Article needs at least {required} relevant internal post links.")
-    hub_paths = {"/cybersecurity/", "/networking/", "/azure/", "/entra-id/", "/cloud-certifications/", "/system-administration/", "/it-fundamentals/"}
-    if any(category in {"cybersecurity", "networking", "azure", "entra-id", "cloud-certifications", "system-administration", "it-fundamentals"} for category in topic.get("categories", []) or []):
-        if not set(links) & hub_paths:
-            issues.append("Article is missing a contextual topic-hub link.")
     if posts is not None:
-        valid_paths = {post.url_path for post in posts} | hub_paths | {"/topics/", "/posts/"}
+        valid_paths = {post.url_path for post in posts} | {"/posts/"}
         broken = [link for link in links if link.split("#", 1)[0] not in valid_paths]
         if broken:
             issues.append("Article contains broken or non-canonical internal links: " + ", ".join(sorted(set(broken))[:5]))
@@ -3528,7 +3509,7 @@ wevtutil qe System /q:"*[System[(Level=2)]]" /f:text /c:20
 | Too much output | Missing time or count limit | Add StartTime, EndTime, and MaxEvents |
 | Hard-to-compare messages | Formatting discarded fields | Select timestamp, ID, provider, level, and message |
 
-For related background, see the [HTTP status-code reference](/posts/http-status-codes/), [network connectivity fundamentals](/posts/internet-connectivity-and-cabling/), and the [system-administration topic hub](/system-administration/)."""
+For related background, see the [HTTP status-code reference](/posts/http-status-codes/) and [network connectivity fundamentals](/posts/internet-connectivity-and-cabling/)."""
     if slug == "troubleshooting-windows-dns-powershell":
         body = """## Direct answer
 
@@ -3591,7 +3572,7 @@ Use the exact interface and resolver values from the host. VPN software, split D
 5. Check firewall, routing, DHCP, delegation, and server logs at the boundary indicated by the results.
 6. Document every command, timestamp, resolver, record type, and returned status.
 
-For background, see the [DNS fundamentals article](/posts/dns-explained-how-your-browser-finds-a-website/), [common network ports reference](/posts/common-network-ports-every-it-student-should-know/), and [networking topic hub](/networking/).
+For background, see the [DNS fundamentals article](/posts/dns-explained-how-your-browser-finds-a-website/) and [common network ports reference](/posts/common-network-ports-every-it-student-should-know/).
 
 ## Preserve diagnostic evidence
 
@@ -3679,7 +3660,7 @@ If events show liveness failures during initialization, use a startup probe or i
 5. Use startupProbe for slow initialization and readiness for traffic eligibility.
 6. Roll out a small change and watch events before making another change.
 
-For related operations guidance, see the [Kubernetes workloads article](/posts/operating-ai-ml-workloads-kubernetes/) and [system-administration hub](/system-administration/).
+For related operations guidance, see the [Kubernetes workloads article](/posts/operating-ai-ml-workloads-kubernetes/) and [Windows Event Logs troubleshooting guide](/posts/troubleshooting-windows-event-logs-powershell/).
 
 ## Preserve a measured rollout
 

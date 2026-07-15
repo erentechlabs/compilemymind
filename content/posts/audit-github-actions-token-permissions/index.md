@@ -167,7 +167,7 @@ A third-party action uses the GITHUB_TOKEN internally but does not document its 
 
 ## Conclusion
 
-Auditing and minimizing GITHUB_TOKEN permissions in GitHub Actions is a practical, ongoing process. By explicitly setting permissions, reviewing job requirements, and monitoring workflow runs, you reduce risk and align with security best practices. This approach not only protects your automation but also supports compliance and operational integrity. For broader security context, see [Cybersecurity topic hub](/cybersecurity/) and [Zero Trust Explained With Real-World Examples](/posts/zero-trust-explained-real-world-examples/).
+Auditing and minimizing GITHUB_TOKEN permissions in GitHub Actions is a practical, ongoing process. By explicitly setting permissions, reviewing job requirements, and monitoring workflow runs, you reduce risk and align with security best practices. This approach not only protects your automation but also supports compliance and operational integrity. For broader security context, see [Zero Trust Explained With Real-World Examples](/posts/zero-trust-explained-real-world-examples/) and [SIEM vs XDR vs SOAR](/posts/siem-vs-xdr-vs-soar/).
 
 ## Related guidance
 

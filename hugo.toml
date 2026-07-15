@@ -51,6 +51,11 @@ paginate = 12
   priority = 0.5
   filename = "sitemap.xml"
 
+# Keep tags for lightweight article navigation, but do not generate separate
+# category archive pages. Articles remain published under /posts/.
+[taxonomies]
+  tag = "tags"
+
 # =============================================================================
 # Site Parameters
 # =============================================================================
@@ -73,9 +78,6 @@ paginate = 12
 
   [params.tagPolicy]
     minArticlesToIndex = 3
-
-  [params.contact]
-    email = "contact@compilemymind.com"
 
   # Avatar — using existing icon from assets/
   [params.avatar]
@@ -114,11 +116,6 @@ paginate = 12
   name    = "Posts"
   pageRef = "/posts"
   weight  = 20
-
-[[menus.main]]
-  name    = "Topics"
-  pageRef = "/topics"
-  weight  = 25
 
 [[menus.main]]
   name    = "Tags"

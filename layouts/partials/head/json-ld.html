@@ -51,7 +51,7 @@
   {{- printf "<script type=\"application/ld+json\">%s</script>" ($pageSchema | jsonify) | safeHTML -}}
 {{- end -}}
 
-{{- if and .IsSection .Params.hubCategory -}}
+{{- if and .IsSection (eq .Section "posts") -}}
   {{- $collection := dict "@context" "https://schema.org" "@type" "CollectionPage" "name" .Title "description" .Description "url" .Permalink "isPartOf" (dict "@type" "WebSite" "name" site.Title "url" site.BaseURL) "publisher" $publisher -}}
   {{- printf "<script type=\"application/ld+json\">%s</script>" ($collection | jsonify) | safeHTML -}}
 {{- end -}}

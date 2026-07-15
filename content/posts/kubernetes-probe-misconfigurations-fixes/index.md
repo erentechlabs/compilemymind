@@ -87,7 +87,7 @@ If events show liveness failures during initialization, use a startup probe or i
 5. Use startupProbe for slow initialization and readiness for traffic eligibility.
 6. Roll out a small change and watch events before making another change.
 
-For related operations guidance, see the [Kubernetes workloads article](/posts/operating-ai-ml-workloads-kubernetes/) and [system-administration hub](/system-administration/).
+For related operations guidance, see the [Kubernetes workloads article](/posts/operating-ai-ml-workloads-kubernetes/) and [Windows Event Logs troubleshooting guide](/posts/troubleshooting-windows-event-logs-powershell/).
 
 ## Preserve a measured rollout
 

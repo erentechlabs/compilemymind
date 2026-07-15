@@ -1453,7 +1453,7 @@ Continue with prose.
             "See [DNS](/posts/dns-basics/) and [missing](/posts/not-published/).",
             {"categories": ["networking"]}, {"publishing": {"minimum_internal_post_links": 2}}, [post],
         )
-        self.assertTrue(any("topic-hub" in issue for issue in issues))
+        self.assertFalse(any("topic-hub" in issue for issue in issues))
         self.assertTrue(any("broken or non-canonical" in issue for issue in issues))
 
     def test_internal_link_recovery_uses_supported_secondary_category_hub(self):
@@ -1469,7 +1469,7 @@ Continue with prose.
         }
         config = {"publishing": {"prefer_internal_links": 3, "minimum_internal_post_links": 2}}
         updated = autopublisher.ensure_contextual_internal_links("## Troubleshooting\n\nCheck access.", posts, topic, config)
-        self.assertIn("/cybersecurity/", updated)
+        self.assertIn("/posts/rbac-basics/", updated)
         self.assertIn("/posts/rbac-basics/", updated)
         self.assertIn("/posts/kubernetes-basics/", updated)
         self.assertEqual(autopublisher.internal_link_issues(updated, topic, config, posts), [])

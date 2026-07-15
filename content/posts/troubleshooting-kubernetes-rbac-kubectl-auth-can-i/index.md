@@ -124,7 +124,7 @@ If denied, verify that the Role or ClusterRole includes rules for the CRD and th
 
 RBAC objects are designed to restrict access. When troubleshooting, avoid granting overly broad permissions unless necessary. Always verify the minimum required privileges and test with `kubectl auth can-i` before deploying changes. Impersonation should be tightly controlled; only allow trusted users to use the `--as` option.
 
-For more on Kubernetes security and access control, visit the [Cybersecurity topic hub](/cybersecurity/).
+For more on Kubernetes security and access control, see [SIEM vs XDR vs SOAR](/posts/siem-vs-xdr-vs-soar/) for incident and access-monitoring context.
 
 ## Checklist for Troubleshooting RBAC with kubectl auth can-i
 
