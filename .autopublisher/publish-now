@@ -1,1 +1,2 @@
 publish once for the validated autonomous publishing pipeline
+retry after deterministic offline recovery was added
