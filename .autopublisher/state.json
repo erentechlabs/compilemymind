@@ -579,11 +579,20 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T16:27:25.568095Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Probe fields such as initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and successThreshold are conf Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T16:11:24.355375Z",
+      "time": "2026-07-15T16:27:25.568198Z",
       "result": "qa_failed"
     }
   },
@@ -658,6 +667,14 @@
       "slug": "kubernetes-probe-misconfigurations-fixes",
       "reason": "qa_failed",
       "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T16:27:25.568095Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Probe fields such as initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and successThreshold are conf Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
     }
   ],
