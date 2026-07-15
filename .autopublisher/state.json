@@ -426,6 +426,68 @@
       },
       "quality_score": 0.9082,
       "path": "content/posts/audit-github-actions-token-permissions/index.md"
+    },
+    {
+      "time": "2026-07-15T15:49:58.918025Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "Get-WinEvent (Microsoft.PowerShell.Diagnostics)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-7.5"
+        },
+        {
+          "title": "Creating Get-WinEvent queries with FilterHashtable",
+          "url": "https://learn.microsoft.com/en-us/powershell/scripting/samples/creating-get-winevent-queries-with-filterhashtable?view=powershell-7.5"
+        },
+        {
+          "title": "wevtutil",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, fully supported by official Microsoft documentation sources, and aligns with stable facts about Get-WinEvent and wevtutil usage. It avoids unsafe commands, uses recommended best practices like FilterHashtable for performance, and includes clear, practical examples. The structure is logical and readable, with a helpful comparison table and scenario-based examples enhancing educational value. SEO clarity is good with relevant keywords and tags. No broken formatting or missing sources were found. The content is original and not duplicative of the cited sources, providing a well-rounded, in-depth guide suitable for system administrators.",
+        "quality": {
+          "score": 0.9466,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.8709,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.9,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8709,
+            "source_similarity": 0.5263,
+            "existing_content_similarity": 0.8709,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9466,
+      "path": "content/posts/troubleshooting-windows-event-logs-powershell/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -512,8 +574,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T15:38:55.476090Z",
-      "result": "qa_failed"
+      "time": "2026-07-15T15:49:58.918169Z",
+      "result": "published"
     }
   },
   "rejected_articles": [
