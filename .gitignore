@@ -1,4 +1,4 @@
-# Hugo build output — Netlify rebuilds this from source
+# Hugo build output - Cloudflare Pages rebuilds this from source
 public/
 .hugo_build.lock
 
