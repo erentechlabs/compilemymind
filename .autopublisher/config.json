@@ -31,9 +31,9 @@
   "github_models": {
     "enabled": true,
     "endpoint": "https://models.github.ai/inference/chat/completions",
-    "model": "openai/gpt-4o-mini",
-    "lightweight_tasks": ["topic_selection", "metadata_enrichment"],
-    "max_output_tokens": 4096,
+    "model": "openai/gpt-4.1",
+    "lightweight_tasks": ["topic_selection", "article_generation", "quality_assurance", "metadata_enrichment"],
+    "max_output_tokens": 8192,
     "topic_selection_temperature": 0.1,
     "topic_selection_max_output_tokens": 1800
   },

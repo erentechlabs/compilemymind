@@ -15,6 +15,12 @@ import autopublisher  # noqa: E402
 
 
 class AutopublisherTests(unittest.TestCase):
+    def test_production_model_fallback_covers_publication_critical_tasks(self):
+        config = autopublisher.load_config()
+        github_models = config["github_models"]
+        self.assertEqual(github_models["model"], "openai/gpt-4.1")
+        self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
+
     def setUp(self):
         self.config = {
             "publishing": {
