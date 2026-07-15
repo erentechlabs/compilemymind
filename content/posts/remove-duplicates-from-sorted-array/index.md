@@ -1,9 +1,10 @@
 ---
 title: "Remove Duplicates from a Sorted Array - The Two-Pointer Technique"
+date: "2025-08-09T00:00:00+03:00"
 description: "A clean walkthrough of the Remove Duplicates from Sorted Array problem in Java, with focus on the two-pointer pattern and in-place array manipulation."
-date: 2025-08-09T00:00:00+03:00
-tags: ["programming", "java", "algorithms", "problem-solving"]
-categories: ["technology"]
+tags: ["java"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Removing duplicates from a sorted array is one of those problems that sounds trivial until you add the constraint: do it **in-place**, without allocating another array. That constraint is what makes it interesting and what makes the **two-pointer pattern** the right tool.

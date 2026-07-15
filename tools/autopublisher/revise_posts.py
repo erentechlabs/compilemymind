@@ -172,6 +172,9 @@ def validate_revision(
     if not updated:
         return ["The revision returned an empty body."]
     issues.extend(autopublisher.markdown_format_issues(updated))
+    issues.extend(autopublisher.heading_hierarchy_issues(updated))
+    issues.extend(autopublisher.introduction_issues(updated))
+    issues.extend(autopublisher.code_block_issues(updated))
     if re.search(r"(?m)^#\s+", updated):
         issues.append("The body contains a top-level H1.")
     if updated.count("```") % 2:
@@ -280,6 +283,29 @@ def main() -> int:
                 if url not in {item["url"] for item in sources}:
                     sources.append({"title": str(source.get("title", "")).strip() or urllib.parse.urlparse(url).netloc, "url": url})
 
+        source_candidates = [
+            autopublisher.ResearchItem(
+                source=urllib.parse.urlparse(source["url"]).netloc,
+                title=source["title"],
+                url=source["url"],
+                summary=f"Source retained by the existing article: {post.title}",
+                published="",
+                categories=post.categories,
+                score=1.0,
+            )
+            for source in sources
+        ]
+        validated_sources = autopublisher.validate_research_items(source_candidates, config, log)
+        required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+        if len(validated_sources) < required_sources:
+            record_attempt(state, post.slug, "source_rejected", valid_sources=len(validated_sources))
+            log.log("revision_rejected", slug=post.slug, reason="not_enough_valid_sources", valid_sources=len(validated_sources))
+            continue
+        sources = [
+            {"title": source.title, "url": source.url, "publisher": source.source}
+            for source in validated_sources
+        ]
+
         metadata_article = {
             "title": post.title,
             "description": str(payload.get("description") or post.description),
@@ -334,6 +360,7 @@ def main() -> int:
                 "sources": sources,
             },
             config,
+            substantive=False,
         )
         asset_issues = autopublisher.content_asset_issues(config)
         if asset_issues:

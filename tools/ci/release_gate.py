@@ -29,6 +29,7 @@ ALLOWED_PATHS: dict[str, tuple[str, ...]] = {
         "content/posts/",
         ".autopublisher/state.json",
         ".autopublisher/logs/",
+        ".autopublisher/reports/",
     ),
     "revision": (
         "content/posts/",
@@ -117,6 +118,11 @@ def run_validation(mode: str) -> tuple[bool, str]:
     if build.returncode != 0:
         print(build.stderr, end="", file=sys.stderr)
         return False, "Hugo build failed"
+    rendered = run([sys.executable, str(AUTOPUBLISHER), "--mode", "rendered-audit", "--output-dir", str(ROOT / "public")])
+    print(rendered.stdout, end="")
+    if rendered.returncode != 0:
+        print(rendered.stderr, end="", file=sys.stderr)
+        return False, "rendered HTML, metadata, structured data, or sitemap audit failed"
     return True, "content audit and Hugo build passed"
 
 

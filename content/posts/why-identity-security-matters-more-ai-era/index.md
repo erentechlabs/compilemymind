@@ -1,9 +1,10 @@
 ---
 title: "Why Identity Security Matters More in the AI Era"
+date: "2026-06-15T22:33:00+03:00"
 description: "A practical cybersecurity guide explaining why identity security becomes more important as organizations adopt AI agents, automation, non-human identities, copilots, plugins, and AI-connected workflows."
-date: 2026-06-15T22:33:00+03:00
-tags: ["cybersecurity", "identity", "ai-security", "zero-trust", "iam", "non-human-identities", "access-control"]
-categories: ["guide", "cybersecurity"]
+tags: ["cybersecurity", "identity", "ai-security", "zero-trust", "iam"]
+categories: ["identity-access-management"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

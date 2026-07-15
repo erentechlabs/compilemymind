@@ -1,9 +1,10 @@
 ---
 title: "Common Network Ports Every IT Student Should Know"
+date: "2026-06-21T00:00:00+03:00"
 description: "A practical network ports guide for IT students covering TCP and UDP basics, port ranges, common web, DNS, email, remote access, Windows, monitoring, database, and troubleshooting ports."
-date: 2026-06-21T00:00:00+03:00
-tags: ["networking", "ports", "protocols", "tcp", "udp", "it-fundamentals", "sysadmin"]
-categories: ["guide", "networking"]
+tags: ["networking", "protocols", "tcp", "udp", "it-fundamentals"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

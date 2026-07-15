@@ -1,6 +1,6 @@
 ---
 title: "Compile My Mind"
-description: "Practical guides, deep dives, and cheatsheets on software engineering, networking, cloud, IT operations, hardware, and the systems that keep digital work moving."
+description: "Practical, source-checked guides for cybersecurity, identity, networking, Azure, Entra ID, infrastructure, system administration, certifications, and developer tools."
 ---
 
-Compile My Mind is a technical blog covering **software engineering**, **networking**, **cloud infrastructure**, **IT operations**, **hardware**, and **systems**. Whether you're preparing for a certification, troubleshooting a network, building software, or digging into how digital infrastructure actually works, you'll find structured, practical content here.
+Compile My Mind publishes practical technical guidance about **cybersecurity**, **identity**, **networking**, **Azure and Entra ID**, **cloud certifications**, **system administration**, **infrastructure**, and **developer tools**. Articles are automatically checked against primary sources, code validators, originality thresholds, and rendered-site quality gates before publication.

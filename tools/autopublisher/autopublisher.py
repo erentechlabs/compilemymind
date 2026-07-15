@@ -14,6 +14,7 @@ package install step.
 from __future__ import annotations
 
 import argparse
+import ast
 import base64
 import datetime as dt
 import email.utils
@@ -35,10 +36,16 @@ import urllib.parse
 import urllib.request
 import zlib
 import xml.etree.ElementTree as ET
+from html.parser import HTMLParser
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
+
+try:
+    import yaml
+except ImportError:  # Publishing rejects YAML when the configured parser is unavailable.
+    yaml = None  # type: ignore
 
 try:
     from zoneinfo import ZoneInfo
@@ -52,6 +59,8 @@ CONFIG_PATH = AUTOPUBLISHER_DIR / "config.json"
 STATE_PATH = AUTOPUBLISHER_DIR / "state.json"
 MODEL_STATE_PATH = AUTOPUBLISHER_DIR / "model-state.json"
 PUBLISH_RESULT_PATH = AUTOPUBLISHER_DIR / "publish-result.json"
+DASHBOARD_PATH = AUTOPUBLISHER_DIR / "dashboard.json"
+CONTENT_AUDIT_PATH = AUTOPUBLISHER_DIR / "reports" / "content-audit.json"
 
 STOP_WORDS = {
     "a",
@@ -178,7 +187,15 @@ def slugify(value: str, max_length: int = 82) -> str:
     value = value.lower().replace("&", " and ")
     value = re.sub(r"[^a-z0-9]+", "-", value)
     value = re.sub(r"-{2,}", "-", value).strip("-")
-    return value[:max_length].strip("-") or "untitled-post"
+    parts: list[str] = []
+    for part in value.split("-"):
+        if part and (not parts or part != parts[-1]):
+            parts.append(part)
+    value = "-".join(parts)
+    if len(value) > max_length:
+        shortened = value[: max_length + 1].rsplit("-", 1)[0]
+        value = shortened if shortened else value[:max_length].strip("-")
+    return value or "untitled-post"
 
 
 def safe_filename(value: str, default: str) -> str:
@@ -297,13 +314,17 @@ def compose_markdown(frontmatter: dict[str, Any], body: str) -> str:
         "tags",
         "categories",
         "image",
-        "author",
+        "publisher",
         "draft",
         "autonomous",
         "series",
         "series_part",
         "planned_next_parts",
         "last_reviewed",
+        "verification_date",
+        "verification_version",
+        "version_context",
+        "recheck_after",
     ]
     lines = ["---"]
     used: set[str] = set()
@@ -351,6 +372,8 @@ class ResearchItem:
     categories: list[str]
     score: float
     snippet: str = ""
+    validated: bool = False
+    validation: dict[str, Any] = field(default_factory=dict)
 
 
 def load_config() -> dict[str, Any]:
@@ -360,10 +383,30 @@ def load_config() -> dict[str, Any]:
 
 
 def load_state() -> dict[str, Any]:
-    return read_json(
+    state = read_json(
         STATE_PATH,
-        {"version": 1, "generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}},
+        {
+            "version": 2,
+            "generated_posts": [],
+            "maintenance_reviews": {},
+            "failures": [],
+            "last_runs": {},
+            "rejected_articles": [],
+        },
     )
+    if not isinstance(state, dict):
+        state = {}
+    state.setdefault("version", 2)
+    state["version"] = max(2, int(state["version"] or 2))
+    for key, default in {
+        "generated_posts": [],
+        "maintenance_reviews": {},
+        "failures": [],
+        "last_runs": {},
+        "rejected_articles": [],
+    }.items():
+        state.setdefault(key, default)
+    return state
 
 
 def load_model_state() -> dict[str, Any]:
@@ -391,6 +434,31 @@ def record_publish_retryable(state: dict[str, Any], stage: str, error: Exception
 
 def write_publish_result(result: str, **fields: Any) -> None:
     write_json(PUBLISH_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
+
+
+def record_rejection(
+    state: dict[str, Any],
+    log: EventLog,
+    *,
+    topic: dict[str, Any] | None,
+    reason: str,
+    detail: str = "",
+    attempts: int = 0,
+) -> None:
+    """Persist an internal rejection without creating a public Hugo page."""
+    payload = {
+        "time": iso_z(),
+        "title": str((topic or {}).get("title", "")),
+        "slug": str((topic or {}).get("slug", "")),
+        "reason": reason,
+        "detail": normalize_space(detail)[:4000],
+        "attempts": attempts,
+    }
+    state.setdefault("rejected_articles", []).append(payload)
+    state["rejected_articles"] = state["rejected_articles"][-200:]
+    state.setdefault("failures", []).append({"mode": "publish", **payload})
+    state["failures"] = state["failures"][-200:]
+    log.log("article_rejected", **payload)
 
 
 def load_posts(config: dict[str, Any]) -> list[Post]:
@@ -460,6 +528,7 @@ def http_request(
             with urllib.request.urlopen(request, timeout=timeout) as response:
                 status = int(getattr(response, "status", 200))
                 response_headers = {key.lower(): value for key, value in response.headers.items()}
+                response_headers["x-final-url"] = str(response.geturl())
                 return status, decode_http_body(response.read(), response_headers), response_headers
         except urllib.error.HTTPError as error:
             response_headers = {key.lower(): value for key, value in error.headers.items()}
@@ -1039,6 +1108,8 @@ def research_for_prompt(items: list[ResearchItem]) -> list[dict[str, Any]]:
                 "categories": item.categories,
                 "score": item.score,
                 "snippet": item.snippet[:1400],
+                "verified_at": item.validation.get("verified_at", ""),
+                "page_title": item.validation.get("page_title", ""),
             }
         )
     return payload
@@ -1068,9 +1139,10 @@ def dedupe_sources(sources: list[dict[str, Any]]) -> list[dict[str, str]]:
     output: list[dict[str, str]] = []
     for source in sources:
         url = str(source.get("url", "")).strip()
-        if not url or not is_publishable_source_url(url) or url in seen:
+        key = canonical_url(url)
+        if not url or not is_publishable_source_url(url) or not key or key in seen:
             continue
-        seen.add(url)
+        seen.add(key)
         output.append({"title": str(source.get("title") or urllib.parse.urlparse(url).netloc), "url": url})
     return output
 
@@ -1092,12 +1164,25 @@ def select_internal_links(posts: list[Post], topic: dict[str, Any], config: dict
         if set(topic.get("categories", []) or []) & set(post.categories):
             score += 0.1
         scored.append((score, post))
-    limit = int(config.get("publishing", {}).get("prefer_internal_links", 4))
-    return [
-        {"title": post.title, "url": post.url_path}
-        for score, post in sorted(scored, key=lambda item: item[0], reverse=True)[:limit]
+    limit = int(config.get("publishing", {}).get("prefer_internal_links", 3))
+    chosen = [
+        {"title": post.title, "url": post.url_path, "role": "foundational" if index == 0 else "supporting"}
+        for index, (score, post) in enumerate(sorted(scored, key=lambda item: item[0], reverse=True)[:limit])
         if score > 0.03
     ]
+    primary = next((category for category in topic.get("categories", []) or [] if category), "")
+    hub_paths = {
+        "cybersecurity": "/cybersecurity/",
+        "networking": "/networking/",
+        "azure": "/azure/",
+        "entra-id": "/entra-id/",
+        "cloud-certifications": "/cloud-certifications/",
+        "system-administration": "/system-administration/",
+        "it-fundamentals": "/it-fundamentals/",
+    }
+    if primary in hub_paths:
+        chosen.append({"title": f"{primary.replace('-', ' ').title()} topic hub", "url": hub_paths[primary], "role": "topic hub"})
+    return chosen
 
 
 def max_existing_similarity(candidate_text: str, posts: list[Post]) -> dict[str, Any]:
@@ -1109,6 +1194,125 @@ def max_existing_similarity(candidate_text: str, posts: list[Post]) -> dict[str,
         if score > best["score"] or title_score > best["title_score"]:
             best = {"score": score, "title_score": title_score, "post": post}
     return best
+
+
+def heading_text(markdown: str) -> str:
+    return " ".join(
+        match.group(1)
+        for match in re.finditer(r"(?m)^#{2,6}\s+(.+)$", markdown_without_fenced_code(markdown))
+    )
+
+
+def word_ngrams(value: str, size: int = 5) -> set[tuple[str, ...]]:
+    tokens = tokenize(value)
+    return {tuple(tokens[index:index + size]) for index in range(max(0, len(tokens) - size + 1))}
+
+
+def ngram_overlap(left: str, right: str, size: int = 5) -> float:
+    left_grams = word_ngrams(left, size)
+    right_grams = word_ngrams(right, size)
+    if not left_grams or not right_grams:
+        return 0.0
+    return len(left_grams & right_grams) / min(len(left_grams), len(right_grams))
+
+
+def detailed_existing_similarity(
+    *,
+    title: str,
+    slug: str,
+    search_intent: str,
+    body: str,
+    categories: list[str],
+    tags: list[str],
+    source_urls: list[str],
+    posts: list[Post],
+) -> dict[str, Any]:
+    best: dict[str, Any] = {
+        "post": None,
+        "semantic": 0.0,
+        "title": 0.0,
+        "intent": 0.0,
+        "heading": 0.0,
+        "ngram": 0.0,
+        "source_overlap": 0.0,
+        "category_overlap": 0.0,
+        "tag_overlap": 0.0,
+        "slug": 0.0,
+    }
+    candidate_intro = re.split(r"(?m)^##\s+", body, maxsplit=1)[0]
+    candidate_conclusion = body[-1200:]
+    candidate_sources = {canonical_url(url) for url in source_urls if url}
+    for post in posts:
+        post_sources = {canonical_url(url) for url in extract_links(post.body)}
+        metrics = {
+            "semantic": cosine_similarity(f"{title} {search_intent} {body[:8000]}", post.searchable_text),
+            "title": jaccard_similarity(title, post.title),
+            "intent": cosine_similarity(search_intent or title, f"{post.title} {post.description} {heading_text(post.body)}"),
+            "heading": jaccard_similarity(heading_text(body), heading_text(post.body)),
+            "ngram": max(
+                ngram_overlap(body, post.body),
+                ngram_overlap(candidate_intro, post.body[:1200]),
+                ngram_overlap(candidate_conclusion, post.body[-1200:]),
+            ),
+            "source_overlap": len(candidate_sources & post_sources) / max(1, min(len(candidate_sources), len(post_sources))),
+            "category_overlap": 1.0 if set(categories) & set(post.categories) else 0.0,
+            "tag_overlap": len(set(tags) & set(post.tags)) / max(1, min(len(set(tags)), len(set(post.tags)))),
+            "slug": jaccard_similarity(slug.replace("-", " "), post.slug.replace("-", " ")),
+        }
+        if max(metrics.values()) > max(value for key, value in best.items() if key != "post"):
+            best = {"post": post, **metrics}
+    return best
+
+
+def topic_relevance_score(topic: dict[str, Any], config: dict[str, Any]) -> dict[str, Any]:
+    """Calculate a deterministic scope score before generation starts."""
+    scope = config.get("topic_scope", {})
+    approved = set(scope.get("approved_categories", config.get("taxonomy", {}).get("allowed_categories", [])))
+    categories = set(topic.get("categories", []) or [])
+    primary = slugify(str(topic.get("primary_category", "")), max_length=50)
+    text = " ".join(
+        [
+            str(topic.get("title", "")),
+            str(topic.get("search_intent", "")),
+            str(topic.get("why_now", "")),
+            " ".join(topic.get("tags", []) or []),
+            " ".join(topic.get("source_titles", []) or []),
+            " ".join(topic.get("source_domains", []) or []),
+        ]
+    ).lower()
+    disallowed_matches = [
+        str(term)
+        for term in scope.get("disallowed_terms", [])
+        if re.search(rf"(?<!\w){re.escape(str(term).lower())}(?!\w)", text)
+    ]
+    if disallowed_matches:
+        return {
+            "score": 0.0,
+            "category_score": 0.0,
+            "keyword_score": 0.0,
+            "best_keyword_category": "",
+            "approved": False,
+            "critical_failure": "disallowed_topic",
+            "disallowed_matches": disallowed_matches,
+        }
+    keyword_scores: dict[str, float] = {}
+    for category, keywords in scope.get("category_keywords", {}).items():
+        matches = sum(1 for keyword in keywords if str(keyword).lower() in text)
+        keyword_scores[str(category)] = min(1.0, matches / 2)
+    best_keyword_category, best_keyword_score = max(keyword_scores.items(), key=lambda item: item[1], default=("", 0.0))
+    category_score = 1.0 if primary in approved or bool(categories & approved) else 0.0
+    alignment_score = 1.0 if primary == best_keyword_category and best_keyword_score else (0.65 if best_keyword_score else 0.0)
+    source_score = min(1.0, len(topic.get("source_urls", []) or []) / 2)
+    score = round(0.55 * category_score + 0.3 * best_keyword_score + 0.1 * alignment_score + 0.05 * source_score, 4)
+    return {
+        "score": score,
+        "category_score": category_score,
+        "keyword_score": round(best_keyword_score, 4),
+        "best_keyword_category": best_keyword_category,
+        "approved": bool(categories & approved or primary in approved),
+        "critical_failure": "",
+        "disallowed_matches": [],
+    }
 
 
 def topic_selection_research_payload(research: list[ResearchItem], config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -1173,24 +1377,26 @@ def topic_selection_prompt(
         ][:6],
     }
     return f"""
-You are the autonomous editor for Compile My Mind, a technical blog covering the full computer, software, and IT landscape: software engineering, current AI models and AI developer tools, programming languages and version releases (Java, C#, .NET, Python, TypeScript, JavaScript, Go, Rust, Kotlin, Swift, Objective-C, C/C++), compilers and runtimes, web development, mobile development, Apple platforms (iOS, iPadOS, macOS, SwiftUI, Xcode), Android (Android SDK, Jetpack Compose), cross-platform frameworks (React Native, Flutter, Expo), mobile architecture/testing/security, systems design, databases, data engineering, developer tools, open source, DevOps, containers, observability, operating systems, networking, IT operations, cloud services, hardware, cybersecurity, Microsoft cloud, certification, and practical systems knowledge.
+You are the autonomous editorial system for Compile My Mind. Publish only practical technical material in these approved areas: cybersecurity, identity and access management, networking, IT fundamentals, Microsoft Azure, Microsoft Entra ID, cloud certifications, system administration, practical infrastructure guides, and developer/IT tools.
 
 Choose the strongest publishable article topic for the next autonomous post.
 
 Hard requirements:
-- Match one or more existing/allowed categories.
+- Match one or more allowed categories and give a clear search intent.
+- Never choose celebrity, entertainment, politics, lifestyle, automotive, generic trend, or other out-of-scope content.
 - Prefer the underrepresented category if it can produce a genuinely useful post: {underrepresented}.
 - Avoid duplicates and near-duplicates of existing posts.
-- Prioritize current, trustworthy, high-interest topics with durable search demand.
+- Use only the supplied primary-source pages. Do not treat keyword overlap alone as evidence.
+- Prioritize a reader problem, current trustworthy documentation, and durable search demand.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
+- Use titles that answer a concrete intent, such as "How to Configure", "Troubleshooting", "A Practical Guide", "X vs. Y", or "Common Errors and Fixes". Never copy a source or announcement title.
 - Treat AI engineering, programming languages and runtimes, compilers, distributed systems, system design, databases, developer experience, observability, open source, and emerging software tools as first-class editorial areas.
 - Actively consider new language/runtime versions, AI model and API releases, Apple/iOS and Android platform changes, Swift/Kotlin releases, mobile frameworks, cloud service changes, developer tooling, certification updates, and practical implementation guides—not only security or Azure topics.
 - Include both durable technical explainers and timely release-driven articles when reliable sources support them.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Create a multi-part series only when the topic naturally benefits from it.
 - Return exactly 8 candidate topics, ranked best to worst.
-- Include backup candidates across at least 4 different categories so the automation can continue if the first idea is rejected as too similar.
-- Do not return only Azure fundamentals, IaaS basics, or certification-summary topics when similar existing Azure/certification articles already exist.
+- Include backup candidates across at least 3 approved categories so the automation can continue if the first idea is rejected.
 
 Category counts:
 {json.dumps(counts, ensure_ascii=False, indent=2)}
@@ -1214,7 +1420,7 @@ Return JSON only with this shape:
       "title": "SEO-friendly title",
       "slug": "url-slug",
       "primary_category": "allowed-category",
-      "categories": ["guide", "allowed-category"],
+      "categories": ["allowed-category"],
       "tags": ["tag-one", "tag-two"],
       "search_intent": "what readers are trying to learn",
       "why_now": "why this topic is timely or evergreen",
@@ -1259,15 +1465,20 @@ def choose_topic(
     max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
     allowed = set(config.get("taxonomy", {}).get("allowed_categories", []))
+    available_sources = {canonical_url(item.url) for item in research if item.validated or not config.get("source_validation", {}).get("trusted_domains")}
     for topic in candidates:
         title = normalize_space(str(topic.get("title", "")))
         if not title:
             continue
-        slug = slugify(str(topic.get("slug") or title))
+        slug = slugify(str(topic.get("slug") or title), int(config.get("publishing", {}).get("max_slug_length", 82)))
         topic["slug"] = slug
         categories = sanitize_categories(topic.get("categories", []), topic.get("primary_category"), config)
         topic["categories"] = categories
-        topic["tags"] = sanitize_tags(topic.get("tags", []), topic)
+        topic["tags"] = sanitize_tags(topic.get("tags", []), topic, config)
+        requested_sources = {canonical_url(str(url)) for url in topic.get("source_urls", []) or []}
+        matched_source_items = [item for item in research if canonical_url(item.url) in requested_sources]
+        topic["source_titles"] = [item.title for item in matched_source_items]
+        topic["source_domains"] = [normalized_url_host(item.url) for item in matched_source_items]
         if slug in excluded_slugs:
             log.log("topic_rejected", title=title, reason="previous_generation_failed", slug=slug)
             continue
@@ -1276,6 +1487,39 @@ def choose_topic(
             continue
         if not set(categories) & allowed:
             log.log("topic_rejected", title=title, reason="category_not_allowed", categories=categories)
+            continue
+        if available_sources and (not requested_sources or not requested_sources <= available_sources):
+            log.log("topic_rejected", title=title, reason="topic_uses_unvalidated_source")
+            continue
+        relevance = topic_relevance_score(topic, config)
+        min_relevance = float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0))
+        if not relevance["approved"] or relevance["score"] < min_relevance:
+            log.log("topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
+            continue
+        duplicate = detailed_existing_similarity(
+            title=title,
+            slug=slug,
+            search_intent=str(topic.get("search_intent", "")),
+            body="",
+            categories=categories,
+            tags=topic.get("tags", []) or [],
+            source_urls=topic.get("source_urls", []) or [],
+            posts=posts,
+        )
+        if (
+            duplicate["title"] > max_title_similarity
+            or duplicate["slug"] > max_title_similarity
+            or duplicate["intent"] > float(config.get("publishing", {}).get("max_search_intent_similarity", 1.0))
+        ):
+            similar_post = duplicate["post"]
+            log.log(
+                "topic_rejected",
+                title=title,
+                reason="duplicate_search_intent",
+                duplicate_action="cancel",
+                similar_post=similar_post.title if similar_post else "",
+                metrics={key: value for key, value in duplicate.items() if key != "post"},
+            )
             continue
         similarity = max_existing_similarity(
             f"{title}\n{topic.get('search_intent', '')}\n{' '.join(topic.get('tags', []) or [])}",
@@ -1297,6 +1541,7 @@ def choose_topic(
             title=title,
             slug=slug,
             categories=categories,
+            relevance=relevance,
             reasoning=result.get("editorial_reasoning", ""),
         )
         return topic
@@ -1341,11 +1586,11 @@ def fallback_topic_from_research(
             primary = next((category for category in item.categories if category in allowed and category != "guide"), None)
             primary = primary or (target if target in allowed else "technology")
             title = fallback_topic_title(item, primary)
-            slug = slugify(title)
+            slug = slugify(title, int(config.get("publishing", {}).get("max_slug_length", 82)))
             if slug in existing_slugs or slug in excluded_slugs:
                 continue
             categories = sanitize_categories([primary, *item.categories], primary, config)
-            tags = sanitize_tags([primary, item.source, *tokenize(item.title)[:5]], {"title": title})
+            tags = sanitize_tags([primary, item.source, *tokenize(item.title)[:5]], {"title": title, "categories": [primary]}, config)
             similarity = max_existing_similarity(f"{title}\n{item.summary}\n{' '.join(tags)}", posts)
             similar_post = similarity["post"]
             if similarity["score"] > max_similarity or similarity["title_score"] > max_title_similarity:
@@ -1371,6 +1616,10 @@ def fallback_topic_from_research(
                 "needs_chart": bool(re.search(r"(?i)\b(cost|price|benchmark|performance|percent|growth|compare|comparison)\b", item.title + " " + item.summary)),
                 "series": {"name": "", "part": None, "total_estimate": None, "planned_next_parts": []},
             }
+            relevance = topic_relevance_score(topic, config)
+            if relevance["score"] < float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0)):
+                log.log("fallback_topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
+                continue
             log.log("fallback_topic_selected", title=title, slug=slug, categories=categories, source=item.source)
             return topic
     return None
@@ -1407,23 +1656,41 @@ def sanitize_categories(values: Any, primary: Any, config: dict[str, Any]) -> li
         category = slugify(str(value), max_length=40)
         if category in allowed and category not in output:
             output.append(category)
-    if not output:
-        output = ["technology"]
-    if "guide" not in output:
+    if not output and allowed:
+        fallback = next(iter(sorted(allowed)))
+        output = [fallback]
+    # Older configurations treated guide as an editorial type. Keep that
+    # behavior only when it is explicitly configured, not for the new scope.
+    if "guide" in allowed and "guide" not in output:
         output.insert(0, "guide")
     return output[:3]
 
 
-def sanitize_tags(values: Any, topic: dict[str, Any]) -> list[str]:
+def sanitize_tags(values: Any, topic: dict[str, Any], config: dict[str, Any] | None = None) -> list[str]:
     raw_values = values if isinstance(values, list) else []
     if not raw_values:
         raw_values = tokenize(str(topic.get("title", "")))[:6]
+    taxonomy = (config or {}).get("taxonomy", {})
+    if not taxonomy and isinstance(topic.get("_taxonomy"), dict):
+        taxonomy = topic["_taxonomy"]
+    controlled = {slugify(str(value), max_length=34) for value in taxonomy.get("controlled_tags", [])}
+    aliases = {
+        slugify(str(key), max_length=34): slugify(str(value), max_length=34)
+        for key, value in taxonomy.get("tag_aliases", {}).items()
+    }
     tags: list[str] = []
     for value in raw_values:
         tag = slugify(str(value), max_length=34)
+        tag = aliases.get(tag, tag)
+        if controlled and tag not in controlled:
+            continue
         if tag and tag not in tags:
             tags.append(tag)
-    return tags[:8]
+    if not tags and controlled:
+        category_tags = [slugify(str(category), max_length=34) for category in topic.get("categories", []) or []]
+        tags = [tag for tag in category_tags if tag in controlled][:1]
+    max_tags = int(taxonomy.get("max_tags_per_article", 8))
+    return tags[:max_tags]
 
 
 def metadata_enrichment_prompt(article: dict[str, Any], topic: dict[str, Any], config: dict[str, Any]) -> str:
@@ -1492,7 +1759,7 @@ def enrich_article_metadata(
     if isinstance(payload.get("categories"), list) and payload["categories"]:
         article["categories"] = sanitize_categories(payload["categories"], None, config)
     if isinstance(payload.get("tags"), list) and payload["tags"]:
-        article["tags"] = sanitize_tags(payload["tags"], metadata_topic)
+        article["tags"] = sanitize_tags(payload["tags"], metadata_topic, config)
     log.log(
         "metadata_enriched",
         fields=[field for field in ["description", "summary", "categories", "tags"] if field in article],
@@ -1521,6 +1788,7 @@ Editorial style:
 - Practical, technically accurate, readable, and educational.
 - Explain concepts with concrete examples.
 - Avoid hype, filler, and shallow news recap.
+- Open with the reader's problem, who the guidance is for, and the direct answer or outcome. Do not use generic introductions such as "In today's rapidly evolving digital landscape", "Technology is changing faster than ever", "In the world of modern IT", "This comprehensive guide will explore", or "Whether you are a beginner or an expert".
 - Optimize for search intent naturally, with a clear meta description.
 - Include at least one useful Markdown comparison or reference table when the subject supports it.
 - Include internal links naturally, using only the exact Markdown URLs from the provided internal-link list.
@@ -1529,6 +1797,7 @@ Editorial style:
 - Put every external citation only in the sources array.
 - Every sources[].url must be copied exactly from one of the supplied research snippets. Do not invent, shorten, normalize, or add tracking parameters to URLs.
 - Do not invent facts that are not supported by the research snippets.
+- For every material product name, version, command, configuration value, exam code, pricing detail, release date, deprecation, limitation, or security recommendation, add a claim_evidence entry that identifies the source URL and any relevant version context. Use cautious, version-specific language when sources disagree.
 - Do not include YAML front matter or any top-level H1 in article_markdown. Start section headings at H2 (##).
 - Never refer to yourself, the prompt, or limitations of being an AI system.
 - The sources array must include at least {required_sources} URLs selected from the research snippets.
@@ -1553,7 +1822,7 @@ Return JSON only with this shape:
   "title": "final title",
   "slug": "final-slug",
   "description": "145-160 character SEO description",
-  "categories": ["guide", "allowed-category"],
+  "categories": ["allowed-category"],
   "tags": ["tag-one"],
   "article_markdown": "Markdown body only, no front matter, no H1.",
   "diagrams": [
@@ -1574,6 +1843,9 @@ Return JSON only with this shape:
   ],
   "sources": [
     {{"title": "Source title", "url": "https://..."}}
+  ],
+  "claim_evidence": [
+    {{"claim": "A material factual claim used in the article.", "supporting_sources": ["https://..."], "confidence": 0.0, "verified_at": "ISO-8601 timestamp", "version_context": "Product version or verification context when relevant."}}
   ],
   "series_name": "",
   "series_part": null,
@@ -1680,15 +1952,148 @@ def canonical_url(url: str) -> str:
     if host.startswith("www."):
         host = host[4:]
 
+    scheme = parsed.scheme.lower()
+    if host == "compilemymind.com":
+        scheme = "https"
+        host = "www.compilemymind.com"
+        path = path.lower()
+        if not path.endswith("/"):
+            path += "/"
+        query_items = []
+
     return urllib.parse.urlunsplit(
         (
-            parsed.scheme.lower(),
+            scheme,
             host,
             path,
             urllib.parse.urlencode(query_items, doseq=True),
             "",
         )
     )
+
+
+def domain_matches(host: str, allowed_domain: str) -> bool:
+    host = host.lower().strip(".")
+    allowed_domain = allowed_domain.lower().strip().lstrip(".")
+    return bool(host and allowed_domain and (host == allowed_domain or host.endswith(f".{allowed_domain}")))
+
+
+def is_trusted_source_url(url: str, config: dict[str, Any]) -> bool:
+    """Return whether a citation is a direct page on an approved primary domain."""
+    if not is_publishable_source_url(url):
+        return False
+    trusted_domains = config.get("source_validation", {}).get("trusted_domains", [])
+    if not trusted_domains:
+        return True  # Backwards-compatible for isolated unit tests.
+    host = normalized_url_host(url)
+    if not any(domain_matches(host, str(domain)) for domain in trusted_domains):
+        return False
+    path = urllib.parse.urlsplit(url).path.lower()
+    return not any(term.lower() in path for term in config.get("source_validation", {}).get("blocked_path_terms", []))
+
+
+def extract_html_title(document: str) -> str:
+    match = re.search(r"(?is)<title[^>]*>(.*?)</title>", document)
+    return normalize_space(strip_html(match.group(1))) if match else ""
+
+
+def source_is_time_sensitive(item: ResearchItem) -> bool:
+    text = f"{item.title} {item.summary}".lower()
+    return bool(re.search(r"\b(release|version|changelog|announcement|pricing|exam|certification|deprecated)\b", text))
+
+
+def validate_research_item(item: ResearchItem, config: dict[str, Any], log: EventLog) -> bool:
+    """Verify a candidate citation before a model can use it for publication."""
+    validation: dict[str, Any] = {"url": item.url, "verified_at": iso_z()}
+    if not is_trusted_source_url(item.url, config):
+        validation["reason"] = "untrusted_domain_or_non_article_url"
+        item.validation = validation
+        return False
+    published = parse_date(item.published)
+    if published:
+        max_age = int(config.get("source_validation", {}).get(
+            "max_release_age_days" if source_is_time_sensitive(item) else "max_age_days", 730
+        ))
+        age_days = (utc_now() - published.astimezone(dt.timezone.utc)).total_seconds() / 86400
+        if age_days > max_age:
+            validation.update({"reason": "source_is_outdated", "age_days": round(age_days, 1)})
+            item.validation = validation
+            return False
+    try:
+        status, body, headers = http_request(item.url, timeout=18, retries=1)
+    except Exception as error:
+        validation["reason"] = f"request_failed: {error}"
+        item.validation = validation
+        return False
+    if status >= 400:
+        validation.update({"reason": f"http_{status}", "status": status})
+        item.validation = validation
+        return False
+    content_type = headers.get("content-type", "").lower()
+    if content_type and not any(token in content_type for token in ("text/html", "application/xhtml", "text/plain")):
+        validation.update({"reason": "non_html_source", "content_type": content_type})
+        item.validation = validation
+        return False
+    document = body[:350000].decode("utf-8", errors="ignore")
+    page_title = extract_html_title(document)
+    page_text = strip_html(document)[:12000]
+    final_url = headers.get("x-final-url", item.url)
+    if not is_trusted_source_url(final_url, config):
+        validation.update({"reason": "redirected_to_untrusted_or_non_article_url", "final_url": final_url})
+        item.validation = validation
+        return False
+    if any(term.lower() in page_text.lower()[:2500] for term in config.get("source_validation", {}).get("blocked_page_terms", [])):
+        validation["reason"] = "login_or_access_denied_page"
+        item.validation = validation
+        return False
+    if not page_title or not page_text:
+        validation["reason"] = "missing_readable_page_title_or_text"
+        item.validation = validation
+        return False
+    title_similarity = jaccard_similarity(item.title, page_title)
+    relevance = max(
+        cosine_similarity(f"{item.title} {item.summary}", f"{page_title} {page_text[:3000]}"),
+        title_similarity,
+    )
+    validation.update(
+        {
+            "status": status,
+            "page_title": page_title[:300],
+            "title_similarity": round(title_similarity, 4),
+            "relevance": round(relevance, 4),
+        }
+    )
+    if title_similarity < float(config.get("source_validation", {}).get("min_title_similarity", 0.08)):
+        validation["reason"] = "page_title_does_not_match_feed_item"
+        item.validation = validation
+        return False
+    if relevance < float(config.get("source_validation", {}).get("min_relevance_similarity", 0.05)):
+        validation["reason"] = "page_is_not_relevant_to_feed_item"
+        item.validation = validation
+        return False
+    validation["reason"] = "validated"
+    item.validation = validation
+    item.validated = True
+    item.snippet = page_text[: int(config.get("research", {}).get("snippet_characters", 1600))]
+    return True
+
+
+def validate_research_items(items: list[ResearchItem], config: dict[str, Any], log: EventLog) -> list[ResearchItem]:
+    """Retain only unique, accessible, relevant primary-source pages."""
+    limit = int(config.get("source_validation", {}).get("max_candidates_per_run", len(items)))
+    validated: list[ResearchItem] = []
+    seen: set[str] = set()
+    for item in sorted(items, key=lambda candidate: candidate.score, reverse=True)[:limit]:
+        key = canonical_url(item.url)
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        if validate_research_item(item, config, log):
+            validated.append(item)
+        else:
+            log.log("source_validation_failed", source=item.source, url=item.url, reason=item.validation.get("reason", ""))
+    log.log("source_validation_completed", accepted=len(validated), rejected=max(0, min(len(items), limit) - len(validated)))
+    return validated
 
 
 def _sanitize_external_links_in_prose(markdown: str, site_base: str) -> str:
@@ -1807,19 +2212,23 @@ def supplement_article_sources(
     config: dict[str, Any],
 ) -> list[dict[str, str]]:
     required = int(config.get("publishing", {}).get("required_source_count", 3))
-    researched_urls = {item.url for item in research}
+    trusted_research = [
+        item for item in research
+        if item.validated or not config.get("source_validation", {}).get("trusted_domains")
+    ]
+    researched_urls = {canonical_url(item.url) for item in trusted_research}
     sources = [
         source
         for source in (article_sources or [])
         if isinstance(source, dict)
-        if str(source.get("url", "")).strip() in researched_urls
+        if canonical_url(str(source.get("url", "")).strip()) in researched_urls
     ]
     sources.extend(
         {"url": url, "title": ""}
         for url in topic.get("source_urls", []) or []
-        if str(url).strip() in researched_urls
+        if canonical_url(str(url).strip()) in researched_urls
     )
-    for item in research_items_for_topic(topic, research, limit=8):
+    for item in research_items_for_topic(topic, trusted_research, limit=8):
         sources.append({"title": item.title, "url": item.url})
         if len(dedupe_sources(sources)) >= required:
             break
@@ -1828,13 +2237,43 @@ def supplement_article_sources(
 
 def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], config: dict[str, Any], research: list[ResearchItem]) -> dict[str, Any]:
     title = normalize_space(str(article.get("title") or topic.get("title", "")))
-    slug = slugify(str(article.get("slug") or topic.get("slug") or title))
+    slug = slugify(
+        str(article.get("slug") or topic.get("slug") or title),
+        int(config.get("publishing", {}).get("max_slug_length", 82)),
+    )
     article["title"] = title
     article["slug"] = slug
     article["description"] = normalize_space(str(article.get("description", "")))[:180]
     article["categories"] = sanitize_categories(article.get("categories", topic.get("categories", [])), topic.get("primary_category"), config)
-    article["tags"] = sanitize_tags(article.get("tags", topic.get("tags", [])), topic)
+    article["tags"] = sanitize_tags(article.get("tags", topic.get("tags", [])), topic, config)
     article["sources"] = supplement_article_sources(article.get("sources", []), topic, research, config)
+    allowed_source_urls = {canonical_url(str(source.get("url", ""))) for source in article["sources"]}
+    evidence: list[dict[str, Any]] = []
+    for item in article.get("claim_evidence", []) or []:
+        if not isinstance(item, dict):
+            continue
+        claim = normalize_space(str(item.get("claim", "")))
+        raw_source_urls = item.get("supporting_sources", item.get("source_urls", [])) or []
+        source_urls = [
+            str(url).strip()
+            for url in raw_source_urls
+            if canonical_url(str(url).strip()) in allowed_source_urls
+        ]
+        if claim and source_urls:
+            try:
+                confidence = max(0.0, min(1.0, float(item.get("confidence", 0.0) or 0.0)))
+            except (TypeError, ValueError):
+                confidence = 0.0
+            evidence.append(
+                {
+                    "claim": claim[:500],
+                    "supporting_sources": source_urls[:3],
+                    "confidence": confidence,
+                    "verified_at": str(item.get("verified_at") or iso_z()),
+                    "version_context": normalize_space(str(item.get("version_context", "")))[:240],
+                }
+            )
+    article["claim_evidence"] = evidence
     article["diagrams"] = [
         item for item in article.get("diagrams", []) if isinstance(item, dict)
     ] if isinstance(article.get("diagrams"), list) else []
@@ -1877,15 +2316,309 @@ def markdown_format_issues(markdown: str) -> list[str]:
     return issues
 
 
+def heading_hierarchy_issues(markdown: str) -> list[str]:
+    levels = [len(match.group(1)) for match in re.finditer(r"(?m)^(#{2,6})\s+\S", markdown_without_fenced_code(markdown))]
+    if not levels:
+        return ["Article has no H2 sections."]
+    issues: list[str] = []
+    previous = 2
+    for level in levels:
+        if level > previous + 1:
+            issues.append(f"Heading hierarchy skips from H{previous} to H{level}.")
+        previous = level
+    return issues
+
+
+def introduction_issues(markdown: str) -> list[str]:
+    opening = re.split(r"(?m)^##\s+", markdown_without_fenced_code(markdown), maxsplit=1)[0]
+    opening = normalize_space(opening)[:900].lower()
+    banned = [
+        "in today's rapidly evolving digital landscape",
+        "technology is changing faster than ever",
+        "in the world of modern it",
+        "this comprehensive guide will explore",
+        "whether you are a beginner or an expert",
+    ]
+    return ["Introduction uses a generic AI-style opening."] if any(phrase in opening for phrase in banned) else []
+
+
+class _StrictHTMLParser(HTMLParser):
+    def error(self, message: str) -> None:  # pragma: no cover - required by old Python releases.
+        raise ValueError(message)
+
+
+def fenced_code_blocks(markdown: str) -> list[tuple[str, str, int]]:
+    pattern = re.compile(r"(?ms)^(`{3,}|~{3,})([^\n]*)\n(.*?)^\1\s*$")
+    return [(match.group(2).strip().lower(), match.group(3), match.start()) for match in pattern.finditer(markdown)]
+
+
+def validate_code_syntax(language: str, code: str) -> str | None:
+    language = language.split()[0] if language else ""
+    try:
+        if language in {"python", "py"}:
+            ast.parse(code)
+        elif language == "json":
+            json.loads(code)
+        elif language in {"yaml", "yml", "kubernetes"}:
+            if yaml is None:
+                return "YAML parser is unavailable."
+            documents = list(yaml.safe_load_all(code))
+            if language == "kubernetes":
+                for document in documents:
+                    if not isinstance(document, dict) or not document.get("apiVersion") or not document.get("kind"):
+                        return "Kubernetes manifest is missing apiVersion or kind."
+        elif language in {"xml", "svg"}:
+            ET.fromstring(code)
+        elif language in {"html", "htm"}:
+            parser = _StrictHTMLParser()
+            parser.feed(code)
+            parser.close()
+        elif language in {"bash", "sh", "shell"}:
+            bash = shutil.which("bash")
+            if not bash:
+                return "Bash syntax validator is unavailable."
+            result = subprocess.run(
+                [bash, "-n"], input=code, text=True, encoding="utf-8", errors="replace", capture_output=True, timeout=10
+            )
+            if result.returncode:
+                detail = normalize_space(result.stderr or result.stdout or "bash -n rejected the command block")
+                if "createprocesscommon" in detail.lower() and "bash" in detail.lower():
+                    return "Bash syntax validator is unavailable."
+                return detail
+        elif language in {"powershell", "pwsh", "ps1"}:
+            shell = shutil.which("pwsh") or shutil.which("powershell")
+            if not shell:
+                return "PowerShell syntax validator is unavailable."
+            parser_script = (
+                "$tokens=$null;$errors=$null;"
+                "[System.Management.Automation.Language.Parser]::ParseInput([Console]::In.ReadToEnd(),[ref]$tokens,[ref]$errors)|Out-Null;"
+                "if($errors.Count){$errors|ForEach-Object{$_.Message}|Write-Error;exit 1}"
+            )
+            result = subprocess.run(
+                [shell, "-NoProfile", "-NonInteractive", "-Command", parser_script],
+                input=code,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+                capture_output=True,
+                timeout=12,
+            )
+            if result.returncode:
+                return normalize_space(result.stderr or result.stdout or "PowerShell parser rejected the command block")
+    except (SyntaxError, ValueError, json.JSONDecodeError, ET.ParseError, OSError, UnicodeError, subprocess.SubprocessError) as error:
+        return normalize_space(str(error))
+    return None
+
+
+def code_block_issues(markdown: str) -> list[str]:
+    issues: list[str] = []
+    destructive_pattern = re.compile(
+        r"(?i)(?:\brm\s+-rf\s+/(?:\s|$)|\bformat\s+[a-z]:|\bdrop\s+database\b|\bremove-item\b[^\n]*-(?:recurse|force))"
+    )
+    credential_pattern = re.compile(
+        r"(?i)\b(api[_-]?key|access[_-]?token|password|client[_-]?secret|secret)\b['\"]?\s*[:=]\s*['\"]([^'\"]{8,})['\"]"
+    )
+    placeholder_values = {"replace-me", "your-value-here", "example-only", "changeme", "<replace-me>"}
+    for language, code, start in fenced_code_blocks(markdown):
+        if not language:
+            issues.append("A code block is missing a language identifier.")
+            continue
+        syntax_error = validate_code_syntax(language, code)
+        if syntax_error and "validator is unavailable" not in syntax_error.lower():
+            issues.append(f"Invalid {language} code block: {syntax_error}")
+        destructive = destructive_pattern.search(code)
+        if destructive:
+            warning_context = markdown[max(0, start - 500):start].lower()
+            if not re.search(r"\b(warning|danger|destructive|data loss|backup)\b", warning_context):
+                issues.append("A destructive command is missing a visible warning immediately before the code block.")
+        for credential in credential_pattern.finditer(code):
+            value = credential.group(2).strip().lower()
+            if value not in placeholder_values and not value.startswith(("your-", "example-", "<")):
+                issues.append("A code block appears to contain a realistic embedded credential or secret.")
+    return issues
+
+
+def internal_link_issues(
+    markdown: str,
+    topic: dict[str, Any],
+    config: dict[str, Any],
+    posts: list[Post] | None = None,
+) -> list[str]:
+    links = re.findall(r"!?\[[^\]]+\]\((/[^)\s]+)\)", markdown_without_fenced_code(markdown))
+    post_links = [link for link in links if link.startswith("/posts/")]
+    required = int(config.get("publishing", {}).get("minimum_internal_post_links", 0))
+    issues: list[str] = []
+    if len(set(post_links)) < required:
+        issues.append(f"Article needs at least {required} relevant internal post links.")
+    hub_paths = {"/cybersecurity/", "/networking/", "/azure/", "/entra-id/", "/cloud-certifications/", "/system-administration/", "/it-fundamentals/"}
+    if any(category in {"cybersecurity", "networking", "azure", "entra-id", "cloud-certifications", "system-administration", "it-fundamentals"} for category in topic.get("categories", []) or []):
+        if not set(links) & hub_paths:
+            issues.append("Article is missing a contextual topic-hub link.")
+    if posts is not None:
+        valid_paths = {post.url_path for post in posts} | hub_paths | {"/topics/", "/posts/"}
+        broken = [link for link in links if link.split("#", 1)[0] not in valid_paths]
+        if broken:
+            issues.append("Article contains broken or non-canonical internal links: " + ", ".join(sorted(set(broken))[:5]))
+    return issues
+
+
+def claim_evidence_issues(
+    article: dict[str, Any],
+    config: dict[str, Any],
+    research: list[ResearchItem] | None = None,
+) -> list[str]:
+    required = int(config.get("publishing", {}).get("required_claim_evidence_count", 0))
+    evidence = article.get("claim_evidence", []) or []
+    issues: list[str] = []
+    if required and len(evidence) < required:
+        issues.append(f"Article needs at least {required} source-backed material-claim entries.")
+    min_confidence = float(config.get("source_validation", {}).get("min_claim_confidence", 0.0))
+    research_by_url = {canonical_url(item.url): item for item in (research or [])}
+    min_similarity = float(config.get("source_validation", {}).get("min_claim_source_similarity", 0.0))
+    for item in evidence:
+        claim = str(item.get("claim", ""))
+        urls = item.get("supporting_sources", []) or []
+        if float(item.get("confidence", 0.0) or 0.0) < min_confidence:
+            issues.append(f"Claim evidence confidence is below {min_confidence:.2f}: {claim[:120]}")
+        if not parse_date(str(item.get("verified_at", ""))):
+            issues.append(f"Claim evidence has an invalid verification timestamp: {claim[:120]}")
+        matched_sources = [research_by_url.get(canonical_url(str(url))) for url in urls]
+        matched_sources = [source for source in matched_sources if source]
+        if research is not None and not matched_sources:
+            issues.append(f"Claim has no validated supporting source: {claim[:120]}")
+            continue
+        if matched_sources and max(
+            cosine_similarity(claim, f"{source.title} {source.snippet or source.summary}")
+            for source in matched_sources
+        ) < min_similarity:
+            issues.append(f"Claim is not directly supported by its referenced source text: {claim[:120]}")
+    return issues
+
+
+def source_similarity_issues(article: dict[str, Any], research: list[ResearchItem], config: dict[str, Any]) -> list[str]:
+    markdown = str(article.get("article_markdown", ""))
+    limit = float(config.get("publishing", {}).get("max_source_similarity", 1.0))
+    for item in research:
+        source_text = f"{item.title}\n{item.snippet or item.summary}"
+        if source_text and cosine_similarity(markdown, source_text) > limit:
+            return [f"Article is too similar to source '{item.title}'."]
+    return []
+
+
+def practical_elements(article: dict[str, Any]) -> list[str]:
+    markdown = str(article.get("article_markdown", ""))
+    lowered = markdown.lower()
+    signals = {
+        "code_or_command_example": bool(fenced_code_blocks(markdown)),
+        "troubleshooting": bool(re.search(r"(?m)^#{2,3}\s+.*troubleshoot", lowered)),
+        "comparison_or_decision_table": bool(re.search(r"(?m)^\|.+\|\s*$", markdown)),
+        "common_mistakes_or_errors": bool(re.search(r"(?m)^#{2,3}\s+.*(?:mistake|error|fix)", lowered)),
+        "security_considerations": bool(re.search(r"(?m)^#{2,3}\s+.*security", lowered)),
+        "best_practices_or_checklist": bool(re.search(r"(?m)^#{2,3}\s+.*(?:best practice|checklist)", lowered)),
+        "step_by_step": bool(re.search(r"(?m)^#{2,3}\s+.*step", lowered)),
+        "diagram_or_chart": bool(article.get("diagrams") or article.get("charts") or re.search(r"!\[[^\]]+\]\([^)]+\)", markdown)),
+        "realistic_scenario": bool(re.search(r"(?m)^#{2,3}\s+.*(?:scenario|use case)", lowered)),
+        "version_comparison": bool(re.search(r"(?m)^#{2,3}\s+.*version", lowered)),
+    }
+    return [name for name, present in signals.items() if present]
+
+
+def article_metadata_issues(article: dict[str, Any], posts: list[Post], config: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    title = normalize_space(str(article.get("title", "")))
+    description = normalize_space(str(article.get("description", "")))
+    slug = str(article.get("slug", ""))
+    if not title:
+        issues.append("SEO title is missing.")
+    if title and sum(1 for char in title if char.isupper()) / max(1, sum(1 for char in title if char.isalpha())) > 0.55:
+        issues.append("SEO title uses excessive capitalization.")
+    if any(normalize_space(post.title).lower() == title.lower() for post in posts):
+        issues.append("SEO title duplicates an existing article.")
+    if description and any(normalize_space(post.description).lower() == description.lower() for post in posts):
+        issues.append("Meta description duplicates an existing article.")
+    max_slug_length = int(config.get("publishing", {}).get("max_slug_length", 82))
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) or len(slug) > max_slug_length:
+        issues.append("Slug is not lowercase, hyphenated, complete, and within the configured limit.")
+    if slug in {post.slug for post in posts}:
+        issues.append("Slug duplicates an existing article.")
+    expected_canonical = canonical_url(f"{str(config.get('site', {}).get('base_url', '')).rstrip('/')}/posts/{slug}/")
+    if urllib.parse.urlsplit(expected_canonical).scheme != "https" or normalized_url_host(expected_canonical) != normalized_url_host(str(config.get("site", {}).get("base_url", ""))):
+        issues.append("Canonical URL is invalid.")
+    return issues
+
+
+def calculate_quality_score(
+    article: dict[str, Any],
+    topic: dict[str, Any],
+    posts: list[Post],
+    config: dict[str, Any],
+    ai_qa_result: dict[str, Any],
+    research: list[ResearchItem] | None = None,
+) -> dict[str, Any]:
+    """Make the publication threshold inspectable instead of relying on one model score."""
+    markdown = str(article.get("article_markdown", ""))
+    relevance = topic_relevance_score(topic, config)["score"]
+    source_count = len(article.get("sources", []) or [])
+    source_quality = min(1.0, source_count / max(1, int(config.get("publishing", {}).get("required_source_count", 3))))
+    evidence = len(article.get("claim_evidence", []) or [])
+    factual_confidence = min(1.0, evidence / max(1, int(config.get("publishing", {}).get("required_claim_evidence_count", 3))))
+    title_and_body = f"{article.get('title', '')} {markdown[:9000]}"
+    intent_tokens = set(tokenize(str(topic.get("search_intent", ""))))
+    intent_match = min(1.0, len(intent_tokens & set(tokenize(title_and_body))) / max(1, len(intent_tokens)))
+    practical_usefulness = min(
+        1.0,
+        len(practical_elements(article)) / max(1, int(config.get("publishing", {}).get("minimum_practical_elements", 2))),
+    )
+    readability = 1.0 if not (heading_hierarchy_issues(markdown) or introduction_issues(markdown)) else 0.45
+    internal_links = len(set(re.findall(r"!?\[[^\]]+\]\((/posts/[^)\s]+)\)", markdown)))
+    internal_linking = min(1.0, internal_links / max(1, int(config.get("publishing", {}).get("minimum_internal_post_links", 2))))
+    duplicate_risk = max_existing_similarity(title_and_body, posts)["score"]
+    originality = max(0.0, 1.0 - duplicate_risk)
+    source_similarity = max(
+        [cosine_similarity(markdown, f"{item.title} {item.snippet or item.summary}") for item in (research or [])] or [0.0]
+    )
+    metadata_complete = 1.0 if article.get("title") and len(str(article.get("description", ""))) >= 105 and article.get("categories") and article.get("tags") else 0.3
+    technical_accuracy = min(1.0, float(ai_qa_result.get("technical_accuracy", ai_qa_result.get("score", 0.0)) or 0.0))
+    version_contexts = [str(item.get("version_context", "")).strip() for item in article.get("claim_evidence", []) or []]
+    version_confidence = sum(1 for value in version_contexts if value) / max(1, len(version_contexts))
+    components = {
+        "topic_relevance": relevance,
+        "originality": originality,
+        "source_quality": source_quality,
+        "claim_support": factual_confidence,
+        "factual_confidence": factual_confidence,
+        "technical_accuracy": technical_accuracy,
+        "search_intent_match": intent_match,
+        "practical_usefulness": practical_usefulness,
+        "readability": readability,
+        "internal_linking": internal_linking,
+        "duplicate_topic_risk": max(0.0, 1.0 - duplicate_risk),
+        "source_similarity": max(0.0, 1.0 - source_similarity),
+        "existing_content_similarity": max(0.0, 1.0 - duplicate_risk),
+        "outdated_information_risk": source_quality,
+        "metadata_completeness": metadata_complete,
+        "structured_data_validity": 1.0,
+        "code_validity": 1.0 if not code_block_issues(markdown) else 0.0,
+        "version_confidence": version_confidence,
+    }
+    score = round(sum(components.values()) / len(components), 4)
+    return {"score": score, "components": {key: round(value, 4) for key, value in components.items()}}
+
+
 def deterministic_qa(
     article: dict[str, Any],
     topic: dict[str, Any],
     posts: list[Post],
     config: dict[str, Any],
+    research: list[ResearchItem] | None = None,
 ) -> list[str]:
     issues: list[str] = []
     markdown = str(article.get("article_markdown", ""))
+    issues.extend(article_metadata_issues(article, posts, config))
     issues.extend(markdown_format_issues(markdown))
+    issues.extend(heading_hierarchy_issues(markdown))
+    issues.extend(introduction_issues(markdown))
+    issues.extend(code_block_issues(markdown))
     min_words = int(config.get("publishing", {}).get("min_words", 1400))
     if word_count(markdown) < min_words:
         issues.append(f"Article is too short: {word_count(markdown)} words, expected at least {min_words}.")
@@ -1895,6 +2628,19 @@ def deterministic_qa(
         issues.append("Article should include at least one useful Markdown table.")
     if len(article.get("sources", []) or []) < int(config.get("publishing", {}).get("required_source_count", 3)):
         issues.append("Article does not include enough reliable sources.")
+    if config.get("source_validation", {}).get("trusted_domains"):
+        unvalidated_sources = [
+            str(source.get("url", ""))
+            for source in article.get("sources", []) or []
+            if not is_trusted_source_url(str(source.get("url", "")), config)
+        ]
+        if unvalidated_sources:
+            issues.append("Article contains an untrusted or non-canonical source URL.")
+    issues.extend(claim_evidence_issues(article, config, research))
+    elements = practical_elements(article)
+    minimum_elements = int(config.get("publishing", {}).get("minimum_practical_elements", 0))
+    if len(elements) < minimum_elements:
+        issues.append(f"Article provides {len(elements)} practical elements; at least {minimum_elements} are required.")
     if topic.get("needs_diagram") and not article.get("diagrams"):
         issues.append("Selected topic requested a diagram, but no diagram spec was returned.")
     if topic.get("needs_chart") and not article.get("charts") and not re.search(r"\|\s*[^|\n]+\s*\|", markdown):
@@ -1919,6 +2665,7 @@ def deterministic_qa(
         )
     if re.search(r"(?i)\bas an ai language model\b|\bas a language model\b|\bi (?:cannot|can't) (?:browse|access|provide|verify)\b", markdown):
         issues.append("Article contains AI self-reference.")
+    issues.extend(internal_link_issues(markdown, topic, config, posts))
     similarity = max_existing_similarity(
         f"{article.get('title', '')}\n{article.get('description', '')}\n{markdown[:8000]}",
         posts,
@@ -1931,6 +2678,27 @@ def deterministic_qa(
     if similarity["title_score"] > max_title_similarity:
         post = similarity["post"]
         issues.append(f"Title is too similar to existing post '{post.title if post else ''}' ({similarity['title_score']:.2f}).")
+    if research:
+        issues.extend(source_similarity_issues(article, research, config))
+        max_source_title_similarity = float(config.get("publishing", {}).get("max_source_title_similarity", 1.0))
+        if any(jaccard_similarity(str(article.get("title", "")), item.title) > max_source_title_similarity for item in research):
+            issues.append("Article title is too similar to a source title.")
+    duplicate = detailed_existing_similarity(
+        title=str(article.get("title", "")),
+        slug=str(article.get("slug", "")),
+        search_intent=str(topic.get("search_intent", "")),
+        body=markdown,
+        categories=article.get("categories", []) or [],
+        tags=article.get("tags", []) or [],
+        source_urls=[str(source.get("url", "")) for source in article.get("sources", []) or []],
+        posts=posts,
+    )
+    if duplicate["heading"] > float(config.get("publishing", {}).get("max_heading_similarity", 1.0)):
+        issues.append("Article heading sequence is too similar to existing content.")
+    if duplicate["ngram"] > float(config.get("publishing", {}).get("max_ngram_overlap", 1.0)):
+        issues.append("Article exact n-gram overlap with existing content is too high.")
+    if duplicate["intent"] > float(config.get("publishing", {}).get("max_search_intent_similarity", 1.0)):
+        issues.append("Article answers the same search intent as existing content.")
     return issues
 
 
@@ -1940,12 +2708,14 @@ def ai_qa(
     topic: dict[str, Any],
     config: dict[str, Any],
     log: EventLog,
+    research: list[ResearchItem] | None = None,
 ) -> dict[str, Any]:
     prompt = f"""
 You are the final quality gate for Compile My Mind.
 
 Review the article for:
 - technical accuracy based only on cited/source material and broadly stable facts,
+- direct support for every material claim, including versions, commands, certifications, pricing, deprecations, and security guidance,
 - originality and non-duplication,
 - depth and educational value,
 - SEO clarity,
@@ -1959,12 +2729,18 @@ Topic:
 {json.dumps(topic, ensure_ascii=False, indent=2)}
 
 Article payload:
-{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "diagrams", "charts", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
+{json.dumps({k: article.get(k) for k in ["title", "description", "categories", "tags", "sources", "claim_evidence", "diagrams", "charts", "article_markdown"]}, ensure_ascii=False, indent=2)[:24000]}
+
+Validated primary-source excerpts:
+{json.dumps(research_for_prompt(research or []), ensure_ascii=False, indent=2)[:16000]}
 
 Return JSON only:
 {{
   "approved": true,
   "score": 0.0,
+  "technical_accuracy": 0.0,
+  "factual_confidence": 0.0,
+  "unsupported_claims": [],
   "issues": [],
   "required_fixes": [],
   "reason": "short explanation"
@@ -2046,12 +2822,12 @@ def generate_approved_article(
         )
         article = normalize_article_payload(raw_article, topic, config, research)
         enrich_article_metadata(client, article, topic, config, log)
-        issues = deterministic_qa(article, topic, posts, config)
+        issues = deterministic_qa(article, topic, posts, config, research)
         if issues:
             feedback = generation_feedback(issues, article)
             log.log("article_deterministic_qa_failed", attempt=attempt, issues=issues)
             continue
-        qa = ai_qa(client, article, topic, config, log)
+        qa = ai_qa(client, article, topic, config, log, research)
         if not isinstance(qa, dict):
             qa = {
                 "approved": False,
@@ -2059,23 +2835,27 @@ def generate_approved_article(
                 "issues": ["AI QA returned an invalid response shape."],
                 "required_fixes": ["Return a complete article and a valid JSON QA response."],
             }
-        min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.78))
+        min_quality_score = float(config.get("publishing", {}).get("quality_min_score", 0.0))
+        min_ai_score = float(config.get("publishing", {}).get("ai_qa_min_score", min_quality_score or 0.78))
         try:
             qa_score = float(qa.get("score", 0.0) or 0.0)
         except (TypeError, ValueError):
             qa_score = 0.0
         approved_value = qa.get("approved")
         approved = approved_value is True or str(approved_value).strip().lower() == "true"
-        approved = approved and qa_score >= min_quality_score
+        approved = approved and not (qa.get("unsupported_claims") or [])
+        quality = calculate_quality_score(article, topic, posts, config, qa, research)
+        qa["quality"] = quality
+        approved = approved and qa_score >= min_ai_score and quality["score"] >= min_quality_score
         if approved:
-            log.log("article_ai_qa_passed", score=qa.get("score"), reason=qa.get("reason", ""))
+            log.log("article_ai_qa_passed", score=qa.get("score"), quality_score=quality["score"], reason=qa.get("reason", ""))
             return article, qa, ""
         feedback = feedback_text(
             qa.get("required_fixes") or qa.get("issues"),
             "AI QA rejected the article.",
         )
         feedback = generation_feedback([feedback], article)
-        log.log("article_ai_qa_failed", attempt=attempt, score=qa.get("score"), feedback=feedback)
+        log.log("article_ai_qa_failed", attempt=attempt, score=qa.get("score"), quality_score=quality["score"], feedback=feedback)
     return None, None, feedback
 
 
@@ -2324,15 +3104,35 @@ def write_article_bundle(
             raise ValueError("Generated chart failed its text-collision check: " + "; ".join(chart_issues))
 
     now = local_now(config)
+    volatility_text = f"{article.get('title', '')} {' '.join(article.get('categories', []) or [])} {article.get('article_markdown', '')[:1500]}".lower()
+    intervals = config.get("revalidation_intervals", {})
+    if re.search(r"\b(price|pricing|cost)\b", volatility_text):
+        recheck_days = int(intervals.get("pricing_days", 7))
+    elif re.search(r"\b(release|version|current)\b", volatility_text):
+        recheck_days = int(intervals.get("release_days", 14))
+    elif "cloud-certifications" in article.get("categories", []):
+        recheck_days = int(intervals.get("certification_days", 21))
+    elif any(category in article.get("categories", []) for category in ("azure", "entra-id")):
+        recheck_days = int(intervals.get("cloud_configuration_days", 35))
+    elif "networking" in article.get("categories", []) and re.search(r"\b(rfc|protocol|tcp|udp|dns)\b", volatility_text):
+        recheck_days = int(intervals.get("stable_protocol_days", 150))
+    else:
+        recheck_days = int(intervals.get("default_days", 60))
     frontmatter: dict[str, Any] = {
         "title": article["title"],
         "date": now.replace(microsecond=0).isoformat(),
+        "lastmod": now.replace(microsecond=0).isoformat(),
         "description": article["description"],
         "tags": article["tags"],
         "categories": article["categories"],
-        "author": config.get("site", {}).get("author", "Eren"),
+        "publisher": config.get("site", {}).get("publisher_name", config.get("site", {}).get("name", "Compile My Mind")),
         "draft": False,
         "autonomous": True,
+        "last_reviewed": now.date().isoformat(),
+        "verification_date": iso_z(now),
+        "verification_version": 1,
+        "version_context": normalize_space(str(article.get("version_context", "Documentation current at verification time")))[:240],
+        "recheck_after": (now + dt.timedelta(days=recheck_days)).date().isoformat(),
     }
     if article.get("summary"):
         frontmatter["summary"] = normalize_space(str(article["summary"]))[:320]
@@ -2407,14 +3207,27 @@ def run_publish(args: argparse.Namespace) -> int:
         log.log("publish_skipped", reason="no_research_items")
         write_publish_result("skipped", reason="no_research_items")
         return 0
-    enrich_research_snippets(research, config, log)
+    if config.get("source_validation"):
+        research = validate_research_items(research, config, log)
+    else:
+        # Preserve the original lightweight behavior for isolated test and
+        # legacy configurations; production always carries source_validation.
+        enrich_research_snippets(research, config, log)
+    required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+    if len(research) < required_sources:
+        log.log("publish_skipped", reason="not_enough_valid_sources", valid_sources=len(research))
+        write_publish_result("skipped", reason="not_enough_valid_sources", valid_sources=len(research))
+        return 0
 
     grounded_brief: dict[str, Any] | None = None
     if config.get("gemini", {}).get("enable_google_search_grounding", True):
         try:
             grounded_prompt = (
                 "Find current high-interest, trustworthy technical article opportunities for Compile My Mind. "
-                "Focus on software engineering, AI engineering, programming languages, systems design, developer tools, open source, databases, networking, cybersecurity, Microsoft cloud, certification, hardware, and cloud infrastructure. "
+                "Only consider cybersecurity, identity and access management, networking, IT fundamentals, "
+                "Microsoft Azure, Microsoft Entra ID, cloud certifications, system administration, practical "
+                "infrastructure, and developer or IT tools. Exclude consumer hardware launches, mobile products, "
+                "unrelated AI announcements, entertainment, politics, automotive, and lifestyle topics. "
                 "Return concise findings with citations."
             )
             grounded_brief = client.grounded_research(grounded_prompt)
@@ -2530,9 +3343,7 @@ def run_publish(args: argparse.Namespace) -> int:
         )
 
     if not final_article:
-        state.setdefault("failures", []).append(
-            {"time": iso_z(), "mode": "publish", "topic": topic.get("title"), "reason": "qa_failed", "feedback": feedback}
-        )
+        record_rejection(state, log, topic=topic, reason="qa_failed", detail=feedback, attempts=max_topic_attempts)
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "qa_failed"}
         save_state(state)
         log.log("publish_rejected_all_drafts", title=topic.get("title"), feedback=feedback)
@@ -2544,12 +3355,16 @@ def run_publish(args: argparse.Namespace) -> int:
     except ValueError as error:
         failed_post_dir = ROOT / config["site"].get("content_dir", "content/posts") / str(final_article.get("slug", ""))
         shutil.rmtree(failed_post_dir, ignore_errors=True)
+        record_rejection(state, log, topic=topic, reason="asset_validation_failed", detail=str(error))
+        save_state(state)
         log.log("publish_rejected", reason="asset_validation_failed", error=str(error))
         write_publish_result("rejected", reason="asset_validation_failed", error=str(error))
         return 0
     if not args.dry_run and not run_hugo_build(log):
         if index_path.parent.exists():
             shutil.rmtree(index_path.parent)
+        record_rejection(state, log, topic=topic, reason="build_failed", detail=str(index_path.relative_to(ROOT)))
+        save_state(state)
         write_publish_result("rejected", reason="build_failed", path=str(index_path.relative_to(ROOT)))
         return 1
 
@@ -2562,6 +3377,7 @@ def run_publish(args: argparse.Namespace) -> int:
             "tags": final_article["tags"],
             "sources": final_article.get("sources", []),
             "qa": final_qa,
+            "quality_score": (final_qa or {}).get("quality", {}).get("score"),
             "path": str(index_path.relative_to(ROOT)),
         }
     )
@@ -2609,13 +3425,15 @@ def select_posts_for_maintenance(posts: list[Post], state: dict[str, Any], confi
     now = utc_now()
 
     def priority(post: Post) -> tuple[int, float, str]:
+        recheck_after = parse_date(str(post.frontmatter.get("recheck_after", "")))
+        explicitly_due = bool(recheck_after and recheck_after <= now)
         reviewed_raw = reviews.get(post.slug, {}).get("time")
         reviewed = parse_date(reviewed_raw)
         if reviewed:
             age = (now - reviewed.astimezone(dt.timezone.utc)).total_seconds() / 86400
         else:
             age = 9999
-        stale_bonus = 0 if age >= review_after_days else 1
+        stale_bonus = 0 if explicitly_due or age >= review_after_days else 1
         post_date = parse_date(post.date) or dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc)
         return (stale_bonus, -age, post_date.isoformat())
 
@@ -2634,6 +3452,9 @@ Rules:
 - Do not add unsupported claims.
 - Keep the Markdown body only; do not include YAML front matter.
 - Preserve useful diagrams, charts, and image references unless they are wrong.
+- Use only directly relevant official or primary sources.
+- Return at least the configured source count and a claim_evidence record for each material technical claim.
+- Every claim_evidence record must include claim, supporting_sources, confidence, verified_at, and version_context.
 
 Article metadata:
 {json.dumps({k: post.frontmatter.get(k) for k in ["title", "description", "tags", "categories", "date"]}, ensure_ascii=False, indent=2)}
@@ -2655,12 +3476,21 @@ Return JSON only:
   "description": "",
   "tags": [],
   "categories": [],
-  "sources": []
+  "sources": [],
+  "claim_evidence": [],
+  "version_context": ""
 }}
 """.strip()
 
 
-def update_post_file(post: Post, payload: dict[str, Any], config: dict[str, Any]) -> None:
+def update_post_file(
+    post: Post,
+    payload: dict[str, Any],
+    config: dict[str, Any],
+    *,
+    clear_noindex: bool = False,
+    substantive: bool = True,
+) -> None:
     frontmatter = dict(post.frontmatter)
     body = remove_accidental_frontmatter(str(payload.get("updated_markdown", "")).strip())
     sources = payload.get("sources", []) or []
@@ -2671,12 +3501,221 @@ def update_post_file(post: Post, payload: dict[str, Any], config: dict[str, Any]
     if payload.get("summary"):
         frontmatter["summary"] = normalize_space(str(payload["summary"]))[:320]
     if payload.get("tags"):
-        frontmatter["tags"] = sanitize_tags(payload["tags"], {"title": post.title})
+        frontmatter["tags"] = sanitize_tags(payload["tags"], {"title": post.title, "categories": post.categories}, config)
     if payload.get("categories"):
         frontmatter["categories"] = sanitize_categories(payload["categories"], None, config)
-    frontmatter["lastmod"] = local_now(config).replace(microsecond=0).isoformat()
-    frontmatter["last_reviewed"] = local_now(config).date().isoformat()
+    if substantive:
+        frontmatter["lastmod"] = local_now(config).replace(microsecond=0).isoformat()
+        frontmatter["last_reviewed"] = local_now(config).date().isoformat()
+        frontmatter["verification_date"] = iso_z()
+        frontmatter["verification_version"] = int(frontmatter.get("verification_version", 0) or 0) + 1
+        frontmatter["version_context"] = normalize_space(str(payload.get("version_context", "Documentation current at verification time")))[:240]
+        frontmatter["recheck_after"] = (local_now(config) + dt.timedelta(days=int(config.get("revalidation_intervals", {}).get("default_days", 60)))).date().isoformat()
+    if clear_noindex:
+        frontmatter.pop("noindex", None)
+        frontmatter.pop("audit_status", None)
     post.path.write_text(compose_markdown(frontmatter, body), encoding="utf-8")
+
+
+def inferred_category(post: Post, config: dict[str, Any]) -> str:
+    """Classify legacy content into the controlled, site-wide category set."""
+    scope = config.get("topic_scope", {})
+    approved = list(scope.get("approved_categories", config.get("taxonomy", {}).get("allowed_categories", [])))
+    aliases = {
+        slugify(str(key), max_length=50): slugify(str(value), max_length=50)
+        for key, value in config.get("taxonomy", {}).get("aliases", {}).items()
+    }
+    text = f"{post.title} {post.description} {' '.join(post.tags)} {' '.join(post.categories)}".lower()
+    explicit_rules = [
+        ("cloud-certifications", r"\b(?:certification|study guide|cheat\s*sheet|exam|az-\d+|sc-\d+|ms-\d+|comptia)\b"),
+        ("entra-id", r"\b(?:microsoft entra|entra id|azure ad|conditional access|service principal)\b"),
+        ("azure", r"\b(?:microsoft azure|azure chaos|azure virtual|azure kubernetes|azure monitor)\b"),
+        ("identity-access-management", r"\b(?:identity security|authentication|authorization|mfa|passwordless|passkeys?|iam|rbac)\b"),
+        ("cybersecurity", r"\b(?:cybersecurity|vulnerability|heartbleed|zero trust|siem|xdr|soar|threat|prompt injection|security flaw|secur(?:e|ing) (?:the )?\w*\s*supply chain)\b"),
+        ("networking", r"\b(?:network|networking|dns|tcp|udp|routing|switching|firewall|vpn|cabling|ip basics|internet protocol|http status)\b"),
+        ("system-administration", r"\b(?:system administration|sysadmin|windows server|active directory|powershell|linux server)\b"),
+        ("developer-it-tools", r"\b(?:developer|programming|java|python|c#|spring|jdbc|jpa|hibernate|leetcode|algorithm|github|docker|kubernetes|terraform|ci/cd|api|model context protocol)\b"),
+        ("it-fundamentals", r"\b(?:it fundamentals|hardware|motherboard|cpu|gpu|computer basics|operating system)\b"),
+    ]
+    for category, pattern in explicit_rules:
+        if category in approved and re.search(pattern, text):
+            return category
+    scores: dict[str, int] = {category: 0 for category in approved}
+    for category in post.categories:
+        normalized = aliases.get(slugify(category, max_length=50), slugify(category, max_length=50))
+        if normalized in scores:
+            scores[normalized] += 2
+    for category, keywords in scope.get("category_keywords", {}).items():
+        if category not in scores:
+            continue
+        scores[category] += sum(1 for keyword in keywords if str(keyword).lower() in text)
+    if not scores:
+        return "it-fundamentals"
+    return max(approved, key=lambda category: (scores.get(category, 0), category))
+
+
+def normalize_site_taxonomy(config: dict[str, Any], *, dry_run: bool, log: EventLog) -> int:
+    """Apply controlled categories/tags and publisher identity without altering article prose or dates."""
+    changed = 0
+    for post in load_posts(config):
+        frontmatter = dict(post.frontmatter)
+        category = inferred_category(post, config)
+        normalized_categories = [category]
+        normalized_tags = sanitize_tags(
+            post.tags,
+            {"title": post.title, "categories": normalized_categories},
+            config,
+        )
+        if not normalized_tags:
+            category_tag = {
+                "identity-access-management": "identity",
+                "cloud-certifications": "cloud-certifications",
+                "practical-infrastructure-guides": "infrastructure",
+            }.get(category, category)
+            normalized_tags = sanitize_tags([category_tag], {"title": post.title, "categories": normalized_categories}, config)
+        desired = {
+            "categories": normalized_categories,
+            "tags": normalized_tags,
+            "publisher": config.get("site", {}).get("publisher_name", "Compile My Mind"),
+        }
+        before = {key: frontmatter.get(key) for key in desired}
+        has_personal_author = "author" in frontmatter
+        if before == desired and not has_personal_author:
+            continue
+        frontmatter.update(desired)
+        frontmatter.pop("author", None)
+        changed += 1
+        if not dry_run:
+            post.path.write_text(compose_markdown(frontmatter, post.body), encoding="utf-8")
+    log.log("taxonomy_normalized", changed=changed, dry_run=dry_run)
+    return changed
+
+
+def post_metadata_issues(posts: list[Post], config: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    titles: set[str] = set()
+    descriptions: set[str] = set()
+    canonicals: set[str] = set()
+    allowed_categories = set(config.get("taxonomy", {}).get("allowed_categories", []))
+    controlled_tags = set(config.get("taxonomy", {}).get("controlled_tags", []))
+    for post in posts:
+        normalized_title = normalize_space(post.title).lower()
+        if normalized_title in titles:
+            issues.append(f"Duplicate SEO title: {post.title}")
+        titles.add(normalized_title)
+        normalized_description = normalize_space(post.description).lower()
+        if not normalized_description:
+            issues.append(f"Missing meta description in {post.path.relative_to(ROOT)}")
+        elif normalized_description in descriptions:
+            issues.append(f"Duplicate meta description in {post.path.relative_to(ROOT)}")
+        descriptions.add(normalized_description)
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", post.slug):
+            issues.append(f"Invalid or unstable slug in {post.path.relative_to(ROOT)}")
+        canonical = canonical_url(f"{str(config.get('site', {}).get('base_url', '')).rstrip('/')}{post.url_path}")
+        if canonical in canonicals:
+            issues.append(f"Duplicate canonical URL: {canonical}")
+        canonicals.add(canonical)
+        if post.frontmatter.get("author"):
+            issues.append(f"Personal author metadata remains in {post.path.relative_to(ROOT)}")
+        if post.frontmatter.get("publisher") != config.get("site", {}).get("publisher_name", "Compile My Mind"):
+            issues.append(f"Publisher metadata is missing in {post.path.relative_to(ROOT)}")
+        if not parse_date(post.date):
+            issues.append(f"Invalid publication date in {post.path.relative_to(ROOT)}")
+        lastmod = parse_date(str(post.frontmatter.get("lastmod", "")))
+        date = parse_date(post.date)
+        if lastmod and date and lastmod < date:
+            issues.append(f"Updated date precedes publication date in {post.path.relative_to(ROOT)}")
+        if allowed_categories and not set(post.categories) <= allowed_categories:
+            issues.append(f"Uncontrolled category in {post.path.relative_to(ROOT)}")
+        if controlled_tags and (not post.tags or not set(post.tags) <= controlled_tags):
+            issues.append(f"Uncontrolled tag metadata in {post.path.relative_to(ROOT)}")
+    return issues
+
+
+def existing_content_audit(config: dict[str, Any], *, apply_noindex: bool, log: EventLog) -> dict[str, Any]:
+    """Create a fail-safe inventory and noindex high-risk legacy content pending substantive repair."""
+    posts = load_posts(config)
+    entries: list[dict[str, Any]] = []
+    high_risk_pattern = re.compile(r"(?i)\b(cpu|gpu|motherboard|ryzen|rtx|core ultra|benchmark|gemini\s*3|pricing|price)\b")
+    for post in posts:
+        markdown = post.body
+        sources = extract_links(markdown)
+        scope_result = topic_relevance_score(
+            {
+                "title": post.title,
+                "search_intent": post.description,
+                "primary_category": post.categories[0] if post.categories else "",
+                "categories": post.categories,
+                "tags": post.tags,
+            },
+            config,
+        )
+        numeric_claims = len(re.findall(r"(?<!\w)(?:\d+(?:\.\d+)?%|\$\d+|\d+\s*(?:w|watts|fps|gb|tb|ghz|mhz))\b", markdown, flags=re.I))
+        code_issues = code_block_issues(markdown)
+        link_issues = internal_link_issues(markdown, {"categories": post.categories}, {"publishing": {}}, posts)
+        intro_issues = introduction_issues(markdown)
+        issues: list[str] = []
+        out_of_scope = scope_result.get("critical_failure") == "disallowed_topic"
+        if out_of_scope:
+            issues.append("out_of_scope_topic:" + ",".join(scope_result.get("disallowed_matches", [])[:5]))
+        required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+        if len(sources) < required_sources:
+            issues.append(f"fewer_than_{required_sources}_external_sources")
+        if not post.frontmatter.get("verification_date"):
+            issues.append("missing_technical_verification_date")
+        if numeric_claims:
+            issues.append(f"numeric_claims:{numeric_claims}")
+        issues.extend(f"code:{issue}" for issue in code_issues)
+        issues.extend(f"internal_link:{issue}" for issue in link_issues)
+        issues.extend(f"introduction:{issue}" for issue in intro_issues)
+        outdated_model_identifier = bool(re.search(r"(?i)\b(?:gemini\s*3|gpt-4(?:\.0)?|text-davinci|azure ad graph)\b", f"{post.title} {post.slug}"))
+        if outdated_model_identifier:
+            issues.append("potentially_outdated_model_or_api_identifier")
+        high_risk = out_of_scope or bool(code_issues) or outdated_model_identifier or bool(high_risk_pattern.search(f"{post.title} {post.slug}")) and numeric_claims > 0
+        high_risk = high_risk or (numeric_claims >= 5 and len(sources) < required_sources)
+        action = "noindex_pending_repair" if high_risk else ("revalidate" if issues else "none")
+        if apply_noindex and high_risk and not post.frontmatter.get("noindex"):
+            frontmatter = dict(post.frontmatter)
+            frontmatter["noindex"] = True
+            frontmatter["audit_status"] = "pending-automated-repair"
+            post.path.write_text(compose_markdown(frontmatter, post.body), encoding="utf-8")
+        entries.append(
+            {
+                "slug": post.slug,
+                "title": post.title,
+                "risk": "high" if high_risk else ("medium" if issues else "low"),
+                "action": action,
+                "issues": issues,
+                "source_count": len(sources),
+                "numeric_claim_count": numeric_claims,
+                "noindex": bool(post.frontmatter.get("noindex") or (apply_noindex and high_risk)),
+            }
+        )
+    report = {
+        "generated_at": iso_z(),
+        "articles_checked": len(entries),
+        "summary": {
+            "high_risk": sum(entry["risk"] == "high" for entry in entries),
+            "medium_risk": sum(entry["risk"] == "medium" for entry in entries),
+            "low_risk": sum(entry["risk"] == "low" for entry in entries),
+            "noindexed": sum(entry["noindex"] for entry in entries),
+            "unresolved": sum(bool(entry["issues"]) for entry in entries),
+        },
+        "corrected_articles": [],
+        "noindexed_articles": [entry["slug"] for entry in entries if entry["noindex"]],
+        "unpublished_articles": [],
+        "rejected_repair_attempts": [],
+        "remaining_unresolved": [entry["slug"] for entry in entries if entry["issues"]],
+        "articles": entries,
+    }
+    write_json(CONTENT_AUDIT_PATH, report)
+    log.log(
+        "existing_content_audit_completed",
+        articles=len(entries),
+        noindexed=len(report["noindexed_articles"]),
+        unresolved=len(report["remaining_unresolved"]),
+    )
+    return report
 
 
 def run_maintain(args: argparse.Namespace) -> int:
@@ -2685,6 +3724,9 @@ def run_maintain(args: argparse.Namespace) -> int:
     log = EventLog()
     client = GeminiClient(config, log)
     client.require_key()
+    taxonomy_changed = 0
+    if config.get("taxonomy", {}).get("controlled_tags"):
+        taxonomy_changed = normalize_site_taxonomy(config, dry_run=args.dry_run, log=log)
     posts = load_posts(config)
     limit = args.max_articles or int(config.get("maintenance", {}).get("max_articles_per_run", 1))
     selected = select_posts_for_maintenance(posts, state, config, limit)
@@ -2739,7 +3781,7 @@ def run_maintain(args: argparse.Namespace) -> int:
         grounded_urls = {
             str(source.get("url", "")).strip()
             for source in grounded.get("citations", []) or []
-            if isinstance(source, dict) and source.get("url")
+            if isinstance(source, dict) and source.get("url") and is_trusted_source_url(str(source.get("url", "")).strip(), config)
         }
         existing_urls = set(extract_links(post.body))
         allowed_urls = existing_urls | grounded_urls
@@ -2766,10 +3808,86 @@ def run_maintain(args: argparse.Namespace) -> int:
             log.log("maintenance_update_rejected", slug=post.slug, reason="update_changed_article_too_much")
             exit_code = 1
             continue
+        source_candidates: list[ResearchItem] = []
+        grounded_by_url = {
+            canonical_url(str(source.get("url", ""))): source
+            for source in grounded.get("citations", []) or []
+            if isinstance(source, dict) and source.get("url")
+        }
+        for source in payload.get("sources", []) or []:
+            url = str(source.get("url", "")).strip()
+            grounded_source = grounded_by_url.get(canonical_url(url), {})
+            source_candidates.append(
+                ResearchItem(
+                    source=normalized_url_host(url),
+                    title=normalize_space(str(source.get("title") or grounded_source.get("title") or post.title)),
+                    url=url,
+                    summary=normalize_space(str(source.get("summary") or grounded_source.get("snippet") or grounded.get("text", "")))[:1800],
+                    published=str(source.get("published", "")),
+                    categories=post.categories,
+                    score=1.0,
+                )
+            )
+        validated_sources = validate_research_items(source_candidates, config, log)
+        required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+        if len(validated_sources) < required_sources:
+            log.log(
+                "maintenance_update_rejected",
+                slug=post.slug,
+                reason="not_enough_valid_sources",
+                valid_sources=len(validated_sources),
+            )
+            exit_code = 1
+            continue
+        candidate_article = {
+            "title": post.title,
+            "slug": post.slug,
+            "description": normalize_space(str(payload.get("description") or post.description)),
+            "summary": normalize_space(str(payload.get("summary") or post.description)),
+            "categories": sanitize_categories(payload.get("categories") or post.categories, None, config),
+            "tags": sanitize_tags(payload.get("tags") or post.tags, {"title": post.title, "categories": post.categories}, config),
+            "sources": [
+                {"title": source.title, "url": source.url, "publisher": source.source}
+                for source in validated_sources
+            ],
+            "claim_evidence": payload.get("claim_evidence", []) or [],
+            "article_markdown": updated,
+            "diagrams": [],
+            "charts": [],
+        }
+        topic = {
+            "title": post.title,
+            "slug": post.slug,
+            "primary_category": candidate_article["categories"][0] if candidate_article["categories"] else "",
+            "categories": candidate_article["categories"],
+            "tags": candidate_article["tags"],
+            "search_intent": post.title,
+            "source_urls": [source.url for source in validated_sources],
+            "source_titles": [source.title for source in validated_sources],
+            "source_domains": [normalized_url_host(source.url) for source in validated_sources],
+        }
+        other_posts = [candidate for candidate in posts if candidate.slug != post.slug]
+        validation_issues = deterministic_qa(candidate_article, topic, other_posts, config, validated_sources)
+        if validation_issues:
+            log.log("maintenance_update_rejected", slug=post.slug, reason="deterministic_qa_failed", issues=validation_issues[:30])
+            exit_code = 1
+            continue
+        qa = ai_qa(client, candidate_article, topic, config, log, validated_sources)
+        quality = calculate_quality_score(candidate_article, topic, other_posts, config, qa, validated_sources)
+        qa_score = float(qa.get("score", 0.0) or 0.0)
+        approved = qa.get("approved") is True or str(qa.get("approved", "")).strip().lower() == "true"
+        approved = approved and not (qa.get("unsupported_claims") or [])
+        approved = approved and qa_score >= float(config.get("publishing", {}).get("ai_qa_min_score", 0.8))
+        approved = approved and quality["score"] >= float(config.get("publishing", {}).get("quality_min_score", 0.82))
+        if not approved:
+            log.log("maintenance_update_rejected", slug=post.slug, reason="ai_or_quality_gate_failed", score=qa_score, quality=quality)
+            exit_code = 1
+            continue
+        payload["sources"] = candidate_article["sources"]
         if args.dry_run:
             log.log("maintenance_dry_run_update_ready", slug=post.slug, reason=payload.get("reason", ""))
         else:
-            update_post_file(post, payload, config)
+            update_post_file(post, payload, config, clear_noindex=True)
             log.log("maintenance_post_updated", slug=post.slug, reason=payload.get("reason", ""))
         state.setdefault("maintenance_reviews", {})[post.slug] = {
             "time": iso_z(),
@@ -2778,7 +3896,7 @@ def run_maintain(args: argparse.Namespace) -> int:
             "broken_links": broken,
         }
     result = "quota_limited" if quota_limited else ("completed_with_errors" if exit_code else "completed")
-    state["last_runs"]["maintain"] = {"time": iso_z(), "result": result}
+    state["last_runs"]["maintain"] = {"time": iso_z(), "result": result, "taxonomy_changes": taxonomy_changed}
     save_state(state)
     if not args.dry_run and exit_code == 0 and selected:
         if not run_hugo_build(log):
@@ -2800,17 +3918,216 @@ def run_audit(_args: argparse.Namespace) -> int:
     )
     duplicate_slugs = [slug for slug, count in Counter(post.slug for post in posts).items() if count > 1]
     asset_issues = content_asset_issues(config)
-    if duplicate_slugs or asset_issues:
-        log.log("audit_failed", duplicate_slugs=duplicate_slugs, asset_issues=asset_issues[:50], issue_count=len(asset_issues))
+    metadata_issues = post_metadata_issues(posts, config)
+    if duplicate_slugs or asset_issues or metadata_issues:
+        log.log(
+            "audit_failed",
+            duplicate_slugs=duplicate_slugs,
+            asset_issues=asset_issues[:50],
+            metadata_issues=metadata_issues[:50],
+            issue_count=len(asset_issues) + len(metadata_issues),
+        )
         return 1
+    return 0
+
+
+def read_log_events() -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    for path in sorted((AUTOPUBLISHER_DIR / "logs").glob("*.jsonl")):
+        try:
+            for line in path.read_text(encoding="utf-8").splitlines():
+                payload = json.loads(line)
+                if isinstance(payload, dict):
+                    events.append(payload)
+        except Exception:
+            continue
+    return events
+
+
+def monitoring_dashboard(state: dict[str, Any], posts: list[Post]) -> dict[str, Any]:
+    today = utc_now().date().isoformat()
+    events = [event for event in read_log_events() if str(event.get("time", "")).startswith(today)]
+    event_counts = Counter(str(event.get("event", "unknown")) for event in events)
+    published_today = [entry for entry in state.get("generated_posts", []) if str(entry.get("time", "")).startswith(today)]
+    rejected_today = [entry for entry in state.get("rejected_articles", []) if str(entry.get("time", "")).startswith(today)]
+    quality_scores = [
+        float(entry["quality_score"])
+        for entry in state.get("generated_posts", [])
+        if entry.get("quality_score") is not None
+    ]
+    return {
+        "generated_at": iso_z(),
+        "articles_generated_today": len([event for event in events if event.get("event") == "article_generation_started"]),
+        "articles_published_today": len(published_today),
+        "articles_rejected_today": len(rejected_today),
+        "failed_validation_checks": event_counts["article_deterministic_qa_failed"] + event_counts["article_ai_qa_failed"],
+        "source_validation_failures": event_counts["source_validation_failed"],
+        "similarity_failures": sum(1 for event in events if "similar" in str(event.get("reason", ""))),
+        "broken_links": event_counts["maintenance_update_rejected"],
+        "outdated_articles": len([review for review in state.get("maintenance_reviews", {}).values() if review.get("action") == "update"]),
+        "publishing_errors": event_counts["publish_retryable"] + event_counts["hugo_build_failed"],
+        "sitemap_errors": event_counts["sitemap_validation_failed"],
+        "metadata_errors": event_counts["metadata_validation_failed"],
+        "average_quality_score": round(sum(quality_scores) / len(quality_scores), 4) if quality_scores else None,
+        "topic_distribution": Counter(category for post in posts for category in post.categories),
+        "articles_per_category": Counter(category for post in posts for category in post.categories),
+        "event_counts": event_counts,
+    }
+
+
+def run_report(_args: argparse.Namespace) -> int:
+    config = load_config()
+    state = load_state()
+    dashboard = monitoring_dashboard(state, load_posts(config))
+    write_json(DASHBOARD_PATH, dashboard)
+    print(json.dumps(dashboard, indent=2, ensure_ascii=False, default=dict))
+    return 0
+
+
+def run_taxonomy(args: argparse.Namespace) -> int:
+    config = load_config()
+    log = EventLog()
+    normalize_site_taxonomy(config, dry_run=args.dry_run, log=log)
+    return 0
+
+
+def jsonld_types(value: Any) -> set[str]:
+    types: set[str] = set()
+    if isinstance(value, dict):
+        schema_type = value.get("@type")
+        if isinstance(schema_type, str):
+            types.add(schema_type)
+        elif isinstance(schema_type, list):
+            types.update(str(item) for item in schema_type)
+        for child in value.values():
+            types.update(jsonld_types(child))
+    elif isinstance(value, list):
+        for child in value:
+            types.update(jsonld_types(child))
+    return types
+
+
+def rendered_site_issues(output_dir: Path, config: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    base_url = str(config.get("site", {}).get("base_url", ""))
+    expected_host = normalized_url_host(base_url)
+    sitemap_path = output_dir / "sitemap.xml"
+    sitemap_urls: list[str] = []
+    if not sitemap_path.exists():
+        issues.append("Rendered sitemap.xml is missing.")
+    else:
+        try:
+            root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))
+            sitemap_urls = [normalize_space("".join(element.itertext())) for element in root.iter() if element.tag.split("}")[-1] == "loc"]
+        except (ET.ParseError, OSError) as error:
+            issues.append(f"Rendered sitemap.xml is invalid: {error}")
+    if len(sitemap_urls) != len(set(canonical_url(url) for url in sitemap_urls)):
+        issues.append("Sitemap contains duplicate canonical URLs.")
+    for url in sitemap_urls:
+        parsed = urllib.parse.urlsplit(url)
+        if parsed.scheme != "https" or normalized_url_host(url) != expected_host or parsed.query or parsed.fragment:
+            issues.append(f"Sitemap contains a non-canonical URL: {url}")
+
+    seen_canonicals: set[str] = set()
+    found_types: set[str] = set()
+    for path in sorted(output_dir.rglob("*.html")):
+        document = path.read_text(encoding="utf-8", errors="ignore")
+        relative = path.relative_to(output_dir)
+        if str(relative).lower() in {"404.html", "yandex_8865729cd882d7e9.html"}:
+            continue
+        if re.search(r'<meta\b[^>]*\bhttp-equiv=(?:["\']?refresh["\']?)', document, flags=re.I):
+            continue
+
+        def attribute_value(pattern: str) -> str:
+            match = re.search(pattern, document, flags=re.I)
+            if not match:
+                return ""
+            return next((value for value in match.groups() if value is not None), "")
+
+        canonical_raw = attribute_value(
+            r'<link\b(?=[^>]*\brel=(?:"canonical"|\'canonical\'|canonical)(?:\s|>))[^>]*\bhref=(?:"([^"]+)"|\'([^\']+)\'|([^\s>]+))'
+        )
+        canonical = canonical_url(html.unescape(canonical_raw)) if canonical_raw else ""
+        if not canonical:
+            issues.append(f"Missing canonical link: {path.relative_to(output_dir)}")
+        elif canonical in seen_canonicals:
+            issues.append(f"Duplicate rendered canonical: {canonical}")
+        else:
+            seen_canonicals.add(canonical)
+        if canonical:
+            parsed = urllib.parse.urlsplit(canonical)
+            if parsed.scheme != "https" or normalized_url_host(canonical) != expected_host or parsed.query or parsed.fragment or parsed.path != parsed.path.lower():
+                issues.append(f"Invalid rendered canonical: {canonical}")
+        h1_count = len(re.findall(r"<h1(?:\s|>)", document, flags=re.I))
+        if h1_count != 1:
+            issues.append(f"Expected exactly one H1 in {path.relative_to(output_dir)}, found {h1_count}.")
+        required_meta = [
+            (r'<meta\b[^>]*\bname=(?:"description"|\'description\'|description)(?:\s|>)', "description"),
+            (r'<meta\b[^>]*\bproperty=(?:"og:title"|\'og:title\'|og:title)(?:\s|>)', "Open Graph title"),
+            (r'<meta\b[^>]*\bname=(?:"twitter:card"|\'twitter:card\'|twitter:card)(?:\s|>)', "Twitter card"),
+            (r'<meta\b[^>]*\bname=(?:"robots"|\'robots\'|robots)(?:\s|>)', "robots directive"),
+        ]
+        for pattern, label in required_meta:
+            if not re.search(pattern, document, flags=re.I):
+                issues.append(f"Missing {label}: {path.relative_to(output_dir)}")
+        robots = attribute_value(
+            r'<meta\b(?=[^>]*\bname=(?:"robots"|\'robots\'|robots)(?:\s|>))[^>]*\bcontent=(?:"([^"]+)"|\'([^\']+)\'|([^\s>]+))'
+        ).lower()
+        if "noindex" in robots and canonical in {canonical_url(url) for url in sitemap_urls}:
+            issues.append(f"Noindex page appears in sitemap: {canonical}")
+        for payload in re.findall(
+            r'<script\b[^>]*\btype=(?:"application/ld\+json"|\'application/ld\+json\'|application/ld\+json)[^>]*>(.*?)</script>',
+            document,
+            flags=re.I | re.S,
+        ):
+            try:
+                structured = json.loads(html.unescape(payload))
+            except json.JSONDecodeError as error:
+                issues.append(f"Invalid JSON-LD in {path.relative_to(output_dir)}: {error}")
+                continue
+            types = jsonld_types(structured)
+            found_types.update(types)
+            if "Person" in types:
+                issues.append(f"Forbidden Person schema in {path.relative_to(output_dir)}")
+            if "BlogPosting" in types:
+                publisher = structured.get("publisher", {}) if isinstance(structured, dict) else {}
+                author = structured.get("author", {}) if isinstance(structured, dict) else {}
+                if publisher.get("@type") != "Organization" or author.get("@type") != "Organization":
+                    issues.append(f"BlogPosting lacks Organization publisher/author in {path.relative_to(output_dir)}")
+    for required_type in {"Organization", "WebSite", "BreadcrumbList", "BlogPosting", "CollectionPage", "ContactPage"}:
+        if required_type not in found_types:
+            issues.append(f"Required structured-data type was not rendered: {required_type}")
+    return issues
+
+
+def run_rendered_audit(args: argparse.Namespace) -> int:
+    output_dir = Path(args.output_dir or ROOT / "public")
+    issues = rendered_site_issues(output_dir, load_config())
+    write_json(AUTOPUBLISHER_DIR / "reports" / "rendered-site-audit.json", {"time": iso_z(), "issues": issues})
+    if issues:
+        for issue in issues:
+            print(f"rendered_audit: {issue}", file=sys.stderr)
+        return 1
+    print("rendered_audit: PASS")
+    return 0
+
+
+def run_existing_audit(args: argparse.Namespace) -> int:
+    config = load_config()
+    existing_content_audit(config, apply_noindex=not args.dry_run, log=EventLog())
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Autonomous publishing engine for Compile My Mind.")
-    parser.add_argument("--mode", choices=["publish", "maintain", "audit"], required=True)
+    parser.add_argument(
+        "--mode",
+        choices=["publish", "maintain", "audit", "report", "taxonomy", "existing-audit", "rendered-audit"],
+        required=True,
+    )
     parser.add_argument("--dry-run", action="store_true", help="Run decisions without writing article updates.")
     parser.add_argument("--max-articles", type=int, default=None, help="Maximum articles to review in maintenance mode.")
+    parser.add_argument("--output-dir", default=None, help="Rendered Hugo output directory for rendered-audit mode.")
     return parser
 
 
@@ -2823,6 +4140,14 @@ def main(argv: list[str] | None = None) -> int:
         return run_maintain(args)
     if args.mode == "audit":
         return run_audit(args)
+    if args.mode == "report":
+        return run_report(args)
+    if args.mode == "taxonomy":
+        return run_taxonomy(args)
+    if args.mode == "existing-audit":
+        return run_existing_audit(args)
+    if args.mode == "rendered-audit":
+        return run_rendered_audit(args)
     parser.error(f"Unknown mode: {args.mode}")
     return 2
 

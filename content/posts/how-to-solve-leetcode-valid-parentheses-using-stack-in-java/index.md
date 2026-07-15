@@ -1,9 +1,10 @@
 ---
 title: "Solving LeetCode's Valid Parentheses Problem with a Stack in Java"
+date: "2025-08-06T00:00:00+03:00"
 description: "A beginner-friendly walkthrough of the Valid Parentheses problem - using the stack data structure to implement a clean, O(n) solution in Java."
-date: 2025-08-06T00:00:00+03:00
-tags: ["programming", "java", "algorithms", "problem-solving"]
-categories: ["technology"]
+tags: ["java"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Some LeetCode problems feel like busy work. The Valid Parentheses problem is not one of them. It's a clean, well-defined problem that teaches a genuinely useful pattern - the **stack** - and produces code that's actually elegant when you get it right.

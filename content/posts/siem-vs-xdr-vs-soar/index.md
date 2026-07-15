@@ -1,9 +1,10 @@
 ---
 title: "SIEM vs XDR vs SOAR: What They Do and When to Use Each"
+date: "2026-06-14T09:31:00+03:00"
 description: "A practical cybersecurity guide explaining SIEM, XDR, and SOAR: how they differ, where they overlap, how SOC teams use them, and when to choose each approach."
-date: 2026-06-14T09:31:00+03:00
-tags: ["cybersecurity", "siem", "xdr", "soar", "soc", "incident-response", "security-operations"]
-categories: ["guide", "cybersecurity"]
+tags: ["cybersecurity", "siem", "xdr", "soar", "incident-response"]
+categories: ["cybersecurity"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: "AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide"
-date: 2026-04-22T23:00:00+03:00
+date: "2026-04-22T23:00:00+03:00"
 description: "A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI - everything you need to pass the Azure Fundamentals exam."
-tags: ["azure", "cloud", "certification", "az-900", "microsoft", "cheatsheet"]
-categories: ["guide", "certification"]
+tags: ["azure", "cloud", "az-900", "study-guide"]
+categories: ["cloud-certifications"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

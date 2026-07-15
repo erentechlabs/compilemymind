@@ -11,16 +11,16 @@
 
 ## 🎯 Overview
 
-Welcome to the source code repository for **Compile My Mind**, my personal technical blog and knowledge repository. 
+Welcome to the source code repository for **Compile My Mind**, an autonomous technical publishing and knowledge website.
 
 This repository houses the Markdown content, Hugo templates, and configuration that generate the live website. It is built for fast performance and a clean reading experience, focusing on practical technical topics across software, infrastructure, operations, and systems.
 
 ### Key Topics Covered:
-- **Software Engineering** - Programming, architecture, APIs, and developer tooling.
-- **Networking & IT** - Protocols, infrastructure, administration, and operations.
-- **Cloud & Systems** - Microsoft cloud, deployment models, automation, and reliability.
-- **Hardware & PC Building** - Components, troubleshooting, and practical build guidance.
-- **Security Fundamentals** - Identity, risk, and defensive concepts as part of broader IT.
+- **Cybersecurity and Identity** - Defensive controls, IAM, authentication, and Microsoft Entra ID.
+- **Networking and IT Fundamentals** - Protocols, infrastructure, troubleshooting, and core concepts.
+- **Azure and Cloud Certifications** - Microsoft cloud administration and version-aware exam guidance.
+- **System Administration** - Windows, Linux, PowerShell, monitoring, backup, and operational practices.
+- **Developer and IT Tools** - Git, GitHub, containers, automation, and infrastructure tooling.
 
 ---
 
@@ -65,16 +65,13 @@ compilemymind/
 
 ---
 
-## 📝 Author
+## Publisher
 
-**Eren**
-A technical writer and engineer exploring software, IT infrastructure, cloud, hardware, and systems.
-
-*   **Website:** [compilemymind.com](https://www.compilemymind.com/)
+Articles use the site-level publisher identity **Compile My Mind**. The automated system does not create individual author profiles, personal biographies, or claims of manual review.
 
 ---
 
 ## 📜 License
 
 The code and templates in this project are open-source and available under the [MIT License](LICENSE).
-*(Note: The actual blog content and articles in the `content/` directory are my personal intellectual property and are not freely distributable without permission).*
+The website content remains subject to the repository and site licensing terms.

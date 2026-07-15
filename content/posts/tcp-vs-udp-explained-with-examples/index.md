@@ -1,9 +1,10 @@
 ---
 title: "TCP vs UDP Explained With Examples"
+date: "2026-06-14T11:20:00+03:00"
 description: "A practical networking guide explaining TCP and UDP, how they differ, when each one is used, real-world examples, security considerations, troubleshooting commands, and decision tables."
-date: 2026-06-14T11:20:00+03:00
-tags: ["networking", "protocols", "tcp", "udp", "transport-layer", "it-fundamentals", "cybersecurity"]
-categories: ["guide", "networking"]
+tags: ["networking", "protocols", "tcp", "udp", "it-fundamentals"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

@@ -1,9 +1,10 @@
 ---
 title: "Network Communication Basics: Ethernet, MAC Addressing, and How Local Networks Work"
+date: "2025-11-27T00:00:00+03:00"
 description: "A clear, technical introduction to how local networks actually communicate - covering Ethernet frames, MAC addresses, ARP, switches, and hierarchical network design."
-date: 2025-11-27T00:00:00+03:00
-tags: ["networking", "protocols", "it-fundamentals", "sysadmin"]
-categories: ["technology"]
+tags: ["networking", "protocols", "it-fundamentals"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 ---
 
 Networks are everywhere, but most people - including many IT professionals - treat them as black boxes. You plug in a cable, data travels, things work. But when things *don't* work, or when you're trying to understand how an attacker moves laterally inside a network, the black box has to open.

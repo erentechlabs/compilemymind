@@ -2,9 +2,9 @@
 title: "Securing the AI Supply Chain on GKE: Introducing k8s-aibom for Automated AI BOMs"
 date: "2026-07-13T23:48:43+03:00"
 description: "Learn how to secure your AI supply chain on GKE using k8s-aibom. Discover how to automatically generate CycloneDX ML-BOMs for shadow AI runtimes without privileged agents."
-tags: ["cloud", "google-cloud-blog", "securing", "ai", "supply", "chain", "gke"]
-categories: ["cloud", "guide", "software-engineering"]
-author: "Eren"
+tags: ["cloud", "ai-security"]
+categories: ["cybersecurity"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

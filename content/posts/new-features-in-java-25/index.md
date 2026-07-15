@@ -1,9 +1,10 @@
 ---
 title: "What's New in Java 25 (JDK 25)"
+date: "2025-10-24T00:00:00+03:00"
 description: "A developer-friendly tour of the most important changes in Java 25 (LTS): language improvements, concurrency, performance work, JFR tooling, AOT ergonomics, GC updates, and more."
-date: 2025-10-24T00:00:00+03:00
-tags: ["programming", "java", "jdk", "tech-trends"]
-categories: ["technology"]
+tags: ["java"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Java 25 (JDK 25) is here - and it's an LTS release. That means most vendors will support it for years, and many teams will plan upgrades from JDK 17 or 21 directly to 25. In this post, I'll walk through the highlights that matter in real projects: language changes, concurrency improvements (Project Loom), runtime and GC work, observability via JFR, security/crypto, and AOT ergonomics.

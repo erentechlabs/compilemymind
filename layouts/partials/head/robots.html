@@ -1,6 +1,8 @@
 {{- /* Robots meta tag for SEO */ -}}
 {{- $robots := slice -}}
-{{- if .Params.noindex -}}
+{{- $minTagArticles := site.Params.tagPolicy.minArticlesToIndex | default 3 -}}
+{{- $thinTag := and (eq .Kind "term") (eq .Type "tags") (lt (len .Pages) $minTagArticles) -}}
+{{- if or .Params.noindex $thinTag -}}
   {{- $robots = $robots | append "noindex" -}}
 {{- end -}}
 {{- if .Params.nofollow -}}
@@ -14,5 +16,7 @@
 {{- end -}}
 {{- if eq (len $robots) 0 -}}
   {{- $robots = $robots | append "index" "follow" -}}
+{{- else if and (in $robots "noindex") (not (in $robots "nofollow")) -}}
+  {{- $robots = $robots | append "follow" -}}
 {{- end -}}
 <meta name="robots" content="{{ delimit $robots ", " }}">

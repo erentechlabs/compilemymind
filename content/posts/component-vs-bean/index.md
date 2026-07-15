@@ -1,9 +1,10 @@
 ---
 title: "@Component vs @Bean in Spring: When to Use Each"
+date: "2025-07-31T00:00:00+03:00"
 description: "A clear explanation of the difference between @Component and @Bean in Spring - with practical examples and guidelines for choosing the right approach."
-date: 2025-07-31T00:00:00+03:00
-tags: ["programming", "java", "spring-boot", "software-development"]
-categories: ["technology"]
+tags: ["java", "spring-boot", "developer-it-tools"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Spring's dependency injection is powerful, but it gives you more than one way to register a bean with the container. Two of the most common approaches are `@Component` and `@Bean`. They accomplish similar goals but work differently and belong in different situations.

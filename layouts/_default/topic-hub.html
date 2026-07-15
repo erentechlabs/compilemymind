@@ -1,0 +1,47 @@
+{{ define "main" }}
+  {{ $category := .Params.hubCategory }}
+  {{ $allPosts := where site.RegularPages "Section" "posts" }}
+  {{ $posts := where $allPosts "Params.categories" "intersect" (slice $category) }}
+  <div class="home-container topic-hub">
+    <header class="list-header">
+      <h1 class="list-title"><span class="list-title-line2">{{ .Title | upper }}</span></h1>
+      {{ with .Description }}<p class="list-description">{{ . }}</p>{{ end }}
+    </header>
+
+    <section class="post-content-main" aria-labelledby="hub-overview">
+      <h2 id="hub-overview">What this topic covers</h2>
+      {{ .Content }}
+    </section>
+
+    {{ if gt (len $posts) 0 }}
+      <section class="posts-section" aria-labelledby="foundational-guides">
+        <h2 id="foundational-guides" class="posts-title">Foundational guides</h2>
+        <div class="posts-list">
+          {{ range first 3 (sort $posts "Date" "asc") }}
+            {{ partial "post-card.html" (dict "page" . "limit" 3) }}
+          {{ end }}
+        </div>
+      </section>
+
+      <section class="posts-section" aria-labelledby="recent-guides">
+        <h2 id="recent-guides" class="posts-title">Recent articles</h2>
+        <div class="posts-list">
+          {{ range first 8 (sort $posts "Date" "desc") }}
+            {{ partial "post-card.html" (dict "page" . "limit" 3) }}
+          {{ end }}
+        </div>
+      </section>
+    {{ else }}
+      <p>No article currently meets this hub's publication and category gates. Browse the <a href="{{ "/topics/" | relURL }}">technical topic index</a> while the autonomous publisher evaluates future coverage.</p>
+    {{ end }}
+
+    {{ with .Params.relatedHubs }}
+      <nav class="post-content-main" aria-labelledby="related-hubs">
+        <h2 id="related-hubs">Related topic hubs</h2>
+        <ul>
+          {{ range . }}<li><a href="{{ .url }}">{{ .title }}</a></li>{{ end }}
+        </ul>
+      </nav>
+    {{ end }}
+  </div>
+{{ end }}

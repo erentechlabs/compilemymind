@@ -1,9 +1,10 @@
 ---
 title: "Zero Trust Explained With Real-World Examples"
+date: "2026-06-13T22:30:00+03:00"
 description: "A practical guide to Zero Trust security, covering verify explicitly, least privilege, assume breach, real-world access scenarios, architecture pillars, implementation steps, and common mistakes."
-date: 2026-06-13T22:30:00+03:00
-tags: ["cybersecurity", "zero-trust", "identity", "network-security", "cloud-security", "security-architecture"]
-categories: ["guide", "cybersecurity"]
+tags: ["cybersecurity", "zero-trust", "identity", "network-security", "azure-security"]
+categories: ["cybersecurity"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

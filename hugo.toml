@@ -58,8 +58,8 @@ paginate = 12
   enableIntegrity = false
   relatedPostsCount = 4
 
-  description = "Practical guides, deep dives, and cheatsheets on software engineering, networking, cloud, IT operations, hardware, and the systems that keep digital work moving."
-  author = "Eren"
+  description = "Practical, source-checked guides for cybersecurity, identity, networking, Azure, Entra ID, infrastructure, system administration, certifications, and developer tools."
+  publisher = "Compile My Mind"
   heroTitleLine1 = "COMPILE MY MIND"
   heroTitleLine2 = "Software · IT · Cloud"
   custom404Message = "Page not found - this link is outside the current build."
@@ -71,11 +71,11 @@ paginate = 12
   [params.favicons]
     version = "20260531-purple-network-icon"
 
-  # Social Links (add yours below)
-  [params.social]
-    # github   = "https://github.com/yourusername"
-    # linkedin = "https://www.linkedin.com/in/yourprofile"
-    # twitter  = "yourusername"
+  [params.tagPolicy]
+    minArticlesToIndex = 3
+
+  [params.contact]
+    email = "contact@compilemymind.com"
 
   # Avatar — using existing icon from assets/
   [params.avatar]
@@ -124,3 +124,8 @@ paginate = 12
   name    = "Tags"
   pageRef = "/tags"
   weight  = 30
+
+[[menus.main]]
+  name    = "About the Site"
+  pageRef = "/about-the-site"
+  weight  = 40

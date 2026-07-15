@@ -1,9 +1,12 @@
 ---
 title: "RTX 4070 Ti Super vs RX 7900 XT: The Ultimate $800 GPU Showdown"
+date: "2025-11-18T00:00:00+03:00"
 description: "A comprehensive comparison of NVIDIA RTX 4070 Ti Super and AMD RX 7900 XT graphics cards covering gaming performance, ray tracing, power efficiency, and value in the $800 price segment."
-date: 2025-11-18T00:00:00+03:00
-tags: ["hardware", "gpu", "pc-building", "tech-review", "tech-comparison"]
-categories: ["technology"]
+tags: ["hardware", "it-fundamentals"]
+categories: ["it-fundamentals"]
+publisher: "Compile My Mind"
+audit_status: "pending-automated-repair"
+noindex: true
 ---
 
 The $700–900 GPU segment is one of the most competitive in the market, and two heavyweights are battling for supremacy: NVIDIA's RTX 4070 Ti Super and AMD's RX 7900 XT. Both cards promise excellent 1440p and 4K gaming performance, but they take different approaches to get there.

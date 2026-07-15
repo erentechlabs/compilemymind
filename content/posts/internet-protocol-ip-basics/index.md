@@ -1,9 +1,10 @@
 ---
 title: "Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT"
+date: "2025-11-27T00:00:00+03:00"
 description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT - foundational knowledge for anyone working in networking or systems administration."
-date: 2025-11-27T00:00:00+03:00
-tags: ["networking", "protocols", "sysadmin", "it-fundamentals"]
-categories: ["technology"]
+tags: ["networking", "protocols", "it-fundamentals"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 ---
 
 Every device on the internet speaks one language at the network layer: **IP**. Whether a packet travels from your browser to a web server around the world, or bounces between two VMs inside a private data center, the Internet Protocol is what makes routing possible. It's also, by no coincidence, one of the most exploited protocol layers in cybersecurity - from IP spoofing to DHCP starvation attacks.

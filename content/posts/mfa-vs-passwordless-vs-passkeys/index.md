@@ -1,9 +1,10 @@
 ---
 title: "MFA vs Passwordless vs Passkeys: What Is the Difference?"
+date: "2026-06-13T23:05:00+03:00"
 description: "A practical cybersecurity guide explaining the difference between MFA, passwordless authentication, and passkeys, with real-world examples, comparison tables, phishing-resistance notes, and enterprise rollout guidance."
-date: 2026-06-13T23:05:00+03:00
-tags: ["cybersecurity", "identity", "mfa", "passwordless", "passkeys", "authentication", "security"]
-categories: ["guide", "cybersecurity"]
+tags: ["cybersecurity", "identity", "mfa", "passkeys", "authentication"]
+categories: ["identity-access-management"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

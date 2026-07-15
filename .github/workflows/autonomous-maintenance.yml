@@ -37,6 +37,14 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install publishing validators
+        run: python -m pip install --requirement tools/autopublisher/requirements.txt
+
+      - name: Run deterministic publishing tests
+        run: |
+          python -m unittest discover -s tools/autopublisher -p "test_*.py"
+          python -m unittest discover -s tools/ci -p "test_*.py"
+
       - name: Install Hugo Extended
         shell: bash
         run: |
@@ -48,6 +56,9 @@ jobs:
           chmod +x "$RUNNER_TEMP/hugo/hugo"
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/hugo/hugo" version
+
+      - name: Audit existing content and isolate high-risk pages
+        run: python tools/autopublisher/autopublisher.py --mode existing-audit
 
       - name: Review links and stale facts
         run: python tools/autopublisher/autopublisher.py --mode maintain
@@ -73,12 +84,12 @@ jobs:
             echo "Maintenance was quota-limited; no state-only deployment commit will be created."
             exit 0
           fi
-          if git diff --quiet -- content/posts .autopublisher/state.json; then
+          if git diff --quiet -- content/posts .autopublisher/state.json .autopublisher/reports/content-audit.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No maintenance changes were required."
             exit 0
           fi
-          git add content/posts .autopublisher/state.json
+          git add content/posts .autopublisher/state.json .autopublisher/reports/content-audit.json
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -91,11 +102,18 @@ jobs:
         if: steps.commit.outputs.changed == 'true'
         run: echo "Maintenance was pushed. Cloudflare Pages Git integration will deploy the new commit."
 
+      - name: Build autonomous monitoring report
+        if: always()
+        run: python tools/autopublisher/autopublisher.py --mode report
+
       - name: Upload maintenance logs
         if: always()
         uses: actions/upload-artifact@v7
         with:
           name: autonomous-maintenance-${{ github.run_id }}
-          path: .autopublisher/logs/
+          path: |
+            .autopublisher/logs/
+            .autopublisher/dashboard.json
+            .autopublisher/reports/content-audit.json
           if-no-files-found: ignore
           retention-days: 30

@@ -1,9 +1,10 @@
 ---
 title: "C# vs Java: A Practical Comparison for 2025"
+date: "2025-03-28T00:00:00+03:00"
 description: "A detailed, honest comparison of Java and C# - two of the most widely used languages in enterprise software development - covering performance, ecosystem, tooling, and real-world use cases."
-date: 2025-03-28T00:00:00+03:00
-tags: ["programming", "java", "c-sharp", "software-development", "tech-comparison"]
-categories: ["technology"]
+tags: ["java", "developer-it-tools", "it-fundamentals"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Java and C# are often described as rivals - born from similar philosophical roots, shaped by massive corporate investments, and used in largely overlapping problem spaces. Both are statically typed, object-oriented, garbage-collected, and designed for building serious software at scale. Both run on virtual machines. Both have enormous ecosystems.

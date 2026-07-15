@@ -1,10 +1,10 @@
 {
   "site": {
     "name": "Compile My Mind",
+    "publisher_name": "Compile My Mind",
     "base_url": "https://www.compilemymind.com/",
     "timezone": "Europe/Istanbul",
     "content_dir": "content/posts",
-    "author": "Eren",
     "language": "en"
   },
   "gemini": {
@@ -12,13 +12,13 @@
     "qa_model": "gemini-3.5-flash",
     "grounded_research_model": "gemini-3.5-flash",
     "image_model": "gemini-3.1-flash-image",
-    "temperature": 0.55,
-    "qa_temperature": 0.15,
+    "temperature": 0.45,
+    "article_temperature": 0.35,
+    "qa_temperature": 0.1,
     "max_output_tokens": 32768,
     "enable_google_search_grounding": true,
     "grounded_research_fallback_to_feeds": true,
     "enable_image_generation": false,
-    "article_temperature": 0.4,
     "model_upgrade": {
       "enabled": true,
       "family": "flash",
@@ -32,33 +32,67 @@
     "enabled": true,
     "endpoint": "https://models.github.ai/inference/chat/completions",
     "model": "openai/gpt-4o-mini",
-    "lightweight_tasks": [
-      "topic_selection",
-      "metadata_enrichment"
-    ],
+    "lightweight_tasks": ["topic_selection", "metadata_enrichment"],
     "max_output_tokens": 4096,
     "topic_selection_temperature": 0.1,
     "topic_selection_max_output_tokens": 2400
   },
   "publishing": {
     "min_words": 1400,
-    "max_similarity": 0.42,
-    "max_title_similarity": 0.55,
-    "max_regeneration_attempts": 4,
-    "max_topic_attempts": 2,
-    "quality_min_score": 0.78,
-    "require_featured_image": false,
+    "max_similarity": 0.34,
+    "max_title_similarity": 0.48,
+    "max_source_similarity": 0.3,
+    "max_source_title_similarity": 0.7,
+    "max_previous_draft_similarity": 0.9,
+    "max_heading_similarity": 0.7,
+    "max_ngram_overlap": 0.28,
+    "max_search_intent_similarity": 0.72,
+    "max_slug_length": 72,
+    "max_regeneration_attempts": 3,
+    "max_topic_attempts": 3,
+    "quality_min_score": 0.82,
+    "ai_qa_min_score": 0.8,
+    "topic_relevance_min_score": 0.78,
     "required_source_count": 3,
+    "minimum_official_sources": 1,
+    "required_claim_evidence_count": 3,
     "require_table": true,
-    "prefer_internal_links": 4,
+    "prefer_internal_links": 3,
+    "minimum_internal_post_links": 2,
+    "minimum_practical_elements": 2,
     "max_new_posts_per_run": 1
   },
+  "source_validation": {
+    "max_candidates_per_run": 18,
+    "min_title_similarity": 0.08,
+    "min_relevance_similarity": 0.05,
+    "min_claim_source_similarity": 0.12,
+    "min_claim_confidence": 0.8,
+    "max_age_days": 730,
+    "max_release_age_days": 365,
+    "blocked_path_terms": ["/search", "/tag/", "/tags/", "/category/", "/categories/", "/advertis", "/sponsor"],
+    "blocked_page_terms": ["access denied", "sign in to continue", "log in to continue", "enable javascript to continue"],
+    "trusted_domains": [
+      "learn.microsoft.com", "docs.microsoft.com", "microsoft.com", "azure.microsoft.com", "techcommunity.microsoft.com",
+      "aws.amazon.com", "cloud.google.com", "kubernetes.io", "github.com", "docs.github.com", "developer.mozilla.org",
+      "ietf.org", "nvlpubs.nist.gov", "nist.gov", "owasp.org", "cisa.gov", "docker.com", "opentelemetry.io",
+      "cloudflare.com", "python.org", "nodejs.org", "go.dev", "rust-lang.org", "oracle.com"
+    ]
+  },
   "maintenance": {
-    "max_articles_per_run": 1,
+    "max_articles_per_run": 2,
     "review_after_days": 45,
     "link_timeout_seconds": 12,
     "treat_403_as_broken": false,
     "update_similarity_floor": 0.55
+  },
+  "revalidation_intervals": {
+    "pricing_days": 7,
+    "release_days": 14,
+    "certification_days": 21,
+    "cloud_configuration_days": 35,
+    "default_days": 60,
+    "stable_protocol_days": 150
   },
   "revision": {
     "enabled": true,
@@ -66,392 +100,89 @@
     "min_paragraphs": 5,
     "min_preserved_length_ratio": 0.72
   },
-  "taxonomy": {
-    "balance_categories": [
-      "software-engineering",
-      "networking",
-      "cybersecurity",
-      "microsoft-cloud",
-      "certification",
-      "hardware",
-      "cloud",
-      "ai-engineering",
-      "programming-languages",
-      "systems-design",
-      "developer-tools",
-      "open-source",
-      "databases",
-      "devops",
-      "containers",
-      "observability",
-      "web-development",
-      "mobile-development",
-      "data-engineering",
-      "operating-systems",
-      "ai-tools",
-      "technology"
+  "topic_scope": {
+    "approved_categories": [
+      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
+      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
     ],
-    "generic_categories": [
-      "guide",
-      "technology"
+    "disallowed_terms": [
+      "celebrity", "entertainment", "politics", "election", "automotive", "car review", "lifestyle", "recipe", "travel",
+      "fashion", "gaming news", "movie", "television", "music release", "smartphone launch", "mobile device announcement",
+      "consumer cpu benchmark", "consumer gpu benchmark", "pc buying guide", "unrelated ai announcement"
     ],
-    "allowed_categories": [
-      "guide",
-      "technology",
-      "software-engineering",
-      "networking",
-      "cybersecurity",
-      "microsoft-cloud",
-      "certification",
-      "hardware",
-      "cloud",
-      "ai-engineering",
-      "programming-languages",
-      "systems-design",
-      "developer-tools",
-      "open-source",
-      "databases",
-      "devops",
-      "containers",
-      "observability",
-      "web-development",
-      "mobile-development",
-      "data-engineering",
-      "operating-systems",
-      "ai-tools"
-    ]
+    "category_keywords": {
+      "cybersecurity": ["security", "vulnerability", "threat", "zero trust", "siem", "xdr", "owasp", "nist", "incident response"],
+      "identity-access-management": ["identity", "iam", "authentication", "authorization", "mfa", "passkey", "rbac", "conditional access"],
+      "networking": ["network", "dns", "tcp", "udp", "routing", "switching", "firewall", "vpn", "protocol"],
+      "it-fundamentals": ["it fundamentals", "operating system", "hardware", "internet", "computer basics", "comptia"],
+      "azure": ["azure", "azure virtual", "azure kubernetes", "azure monitor", "azure security"],
+      "entra-id": ["entra", "azure ad", "conditional access", "identity governance", "service principal"],
+      "cloud-certifications": ["certification", "exam", "az-", "sc-", "ms-", "comptia", "study guide"],
+      "system-administration": ["system administration", "sysadmin", "windows server", "linux", "powershell", "active directory", "server"],
+      "practical-infrastructure-guides": ["infrastructure", "configuration", "troubleshooting", "deployment", "monitoring", "backup", "availability"],
+      "developer-it-tools": ["developer tools", "git", "github", "docker", "kubernetes", "terraform", "ci/cd", "api", "command line"]
+    }
   },
-  "seasonal_focus": {
-    "1": ["new year certification plans", "cloud cost optimization", "security planning"],
-    "2": ["identity security", "developer productivity", "home lab upgrades"],
-    "3": ["exam refreshes", "spring hardware buying", "network troubleshooting"],
-    "4": ["cloud governance", "software architecture", "cybersecurity fundamentals"],
-    "5": ["Microsoft Build announcements", "developer tooling", "AI in software engineering"],
-    "6": ["mid-year security posture", "network fundamentals", "certification study guides", "Apple WWDC and mobile platform releases"],
-    "7": ["summer hardware buying", "mid-year cloud updates", "back-to-school IT preparation"],
-    "8": ["student IT fundamentals", "home lab networking", "developer interview practice"],
-    "9": ["fall certification planning", "Java releases", "cloud migration", "iPhone and Android platform releases"],
-    "10": ["Cybersecurity Awareness Month", "identity protection", "secure architecture"],
-    "11": ["Black Friday hardware value", "year-end cloud releases", "developer tooling trends"],
-    "12": ["year-end retrospectives", "next-year technology planning", "security hardening"]
+  "taxonomy": {
+    "allowed_categories": [
+      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
+      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
+    ],
+    "balance_categories": [
+      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
+      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
+    ],
+    "max_tags_per_article": 5,
+    "min_articles_to_index_tag": 3,
+    "aliases": {
+      "security": "cybersecurity", "microsoft-cloud": "azure", "certification": "cloud-certifications",
+      "sysadmin": "system-administration", "entra": "entra-id", "azure-ad": "entra-id",
+      "software-development": "developer-it-tools", "software-engineering": "developer-it-tools", "technology": "it-fundamentals",
+      "guide": "practical-infrastructure-guides", "certification": "cloud-certifications", "cloud": "practical-infrastructure-guides",
+      "hardware": "it-fundamentals", "ai-engineering": "developer-it-tools"
+    },
+    "controlled_tags": [
+      "cybersecurity", "zero-trust", "vulnerability-management", "incident-response", "siem", "xdr", "soar", "owasp", "nist",
+      "identity", "iam", "authentication", "authorization", "mfa", "passkeys", "conditional-access", "rbac", "identity-governance",
+      "networking", "dns", "tcp", "udp", "tls", "vpn", "firewall", "routing", "network-security", "protocols",
+      "it-fundamentals", "hardware", "operating-systems", "windows-server", "linux", "troubleshooting", "comptia",
+      "azure", "azure-virtual-machines", "azure-kubernetes-service", "azure-monitor", "azure-security", "cloud", "cloud-architecture",
+      "entra-id", "microsoft-365", "service-principals", "identity-governance",
+      "cloud-certifications", "az-900", "sc-900", "ms-900", "exam-preparation", "study-guide",
+      "system-administration", "powershell", "active-directory", "configuration-management", "backup-recovery",
+      "infrastructure", "availability", "monitoring", "observability", "best-practices", "checklist",
+      "developer-it-tools", "github", "git", "docker", "kubernetes", "terraform", "ci-cd", "api", "command-line", "automation",
+      "java", "python", "spring-boot", "databases", "api-design", "software-security", "prompt-injection", "ai-security", "mcp"
+    ],
+    "tag_aliases": {
+      "passwordless": "passkeys", "authentication-methods": "authentication", "microsoft": "azure", "cloud-security": "azure-security",
+      "security-architecture": "zero-trust", "software-development": "developer-it-tools", "tech-comparison": "it-fundamentals",
+      "tech-review": "it-fundamentals", "pc-building": "hardware", "motherboards": "hardware", "cpu": "hardware", "gpu": "hardware",
+      "ai": "ai-security", "ai-agents": "ai-security", "google-cloud-blog": "cloud", "tech-plus": "comptia",
+      "career": "exam-preparation", "cheatsheet": "study-guide", "c-sharp": "developer-it-tools", "web": "developer-it-tools"
+    }
   },
   "research": {
     "items_per_source": 6,
-    "max_items_for_model": 36,
-    "snippet_characters": 1400,
+    "max_items_for_model": 18,
+    "snippet_characters": 1600,
+    "topic_selection_max_items": 12,
+    "topic_selection_max_existing_posts": 36,
     "trusted_sources": [
-      {
-        "name": "Microsoft Azure Blog",
-        "url": "https://azure.microsoft.com/en-us/blog/feed/",
-        "categories": ["microsoft-cloud", "cloud"],
-        "weight": 1.15
-      },
-      {
-        "name": "Microsoft DevBlogs Java",
-        "url": "https://devblogs.microsoft.com/java/feed/",
-        "categories": ["software-engineering"],
-        "weight": 1.1
-      },
-      {
-        "name": "Microsoft DevBlogs .NET",
-        "url": "https://devblogs.microsoft.com/dotnet/feed/",
-        "categories": ["software-engineering"],
-        "weight": 1.05
-      },
-      {
-        "name": "Python Insider",
-        "url": "https://blog.python.org/feeds/posts/default",
-        "categories": ["programming-languages", "software-engineering", "open-source"],
-        "weight": 1.15
-      },
-      {
-        "name": "Inside Java",
-        "url": "https://inside.java/feed.xml",
-        "categories": ["programming-languages", "software-engineering"],
-        "weight": 1.15
-      },
-      {
-        "name": "TypeScript Team Blog",
-        "url": "https://devblogs.microsoft.com/typescript/feed/",
-        "categories": ["programming-languages", "web-development", "developer-tools"],
-        "weight": 1.1
-      },
-      {
-        "name": "GitHub Blog",
-        "url": "https://github.blog/feed/",
-        "categories": ["software-engineering", "cloud"],
-        "weight": 1.05
-      },
-      {
-        "name": "GitHub Changelog",
-        "url": "https://github.blog/changelog/feed/",
-        "categories": ["developer-tools", "software-engineering"],
-        "weight": 1.1
-      },
-      {
-        "name": "Go Blog",
-        "url": "https://go.dev/blog/feed.atom",
-        "categories": ["programming-languages", "software-engineering"],
-        "weight": 1.15
-      },
-      {
-        "name": "Rust Blog",
-        "url": "https://blog.rust-lang.org/feed.xml",
-        "categories": ["programming-languages", "software-engineering"],
-        "weight": 1.15
-      },
-      {
-        "name": "Kotlin Blog",
-        "url": "https://blog.jetbrains.com/kotlin/feed/",
-        "categories": ["programming-languages", "mobile-development", "software-engineering"],
-        "weight": 1.05
-      },
-      {
-        "name": "Node.js Blog",
-        "url": "https://nodejs.org/en/feed/blog.xml",
-        "categories": ["programming-languages", "web-development", "developer-tools"],
-        "weight": 1.05
-      },
-      {
-        "name": "Apple Developer News",
-        "url": "https://developer.apple.com/news/rss/news.rss",
-        "categories": ["mobile-development", "software-engineering", "hardware"],
-        "weight": 1.15
-      },
-      {
-        "name": "Android Developers Blog",
-        "url": "https://android-developers.googleblog.com/feeds/posts/default",
-        "categories": ["mobile-development", "software-engineering", "developer-tools"],
-        "weight": 1.15
-      },
-      {
-        "name": "Swift.org Blog",
-        "url": "https://www.swift.org/atom.xml",
-        "categories": ["mobile-development", "programming-languages", "software-engineering"],
-        "weight": 1.1
-      },
-      {
-        "name": "React Native Blog",
-        "url": "https://reactnative.dev/blog/rss.xml",
-        "categories": ["mobile-development", "web-development", "developer-tools"],
-        "weight": 1.05
-      },
-      {
-        "name": "Flutter Blog",
-        "url": "https://blog.flutter.dev/feed",
-        "categories": ["mobile-development", "software-engineering", "developer-tools"],
-        "weight": 1.05
-      },
-      {
-        "name": "Kubernetes Blog",
-        "url": "https://kubernetes.io/feed.xml",
-        "categories": ["systems-design", "cloud", "developer-tools"],
-        "weight": 1.1
-      },
-      {
-        "name": "CNCF Blog",
-        "url": "https://www.cncf.io/blog/feed/",
-        "categories": ["systems-design", "cloud", "open-source"],
-        "weight": 1.0
-      },
-      {
-        "name": "Docker Blog",
-        "url": "https://www.docker.com/blog/feed/",
-        "categories": ["developer-tools", "systems-design", "cloud"],
-        "weight": 1.0
-      },
-      {
-        "name": "OpenTelemetry Blog",
-        "url": "https://opentelemetry.io/blog/index.xml",
-        "categories": ["observability", "devops", "systems-design"],
-        "weight": 1.05
-      },
-      {
-        "name": "PostgreSQL News",
-        "url": "https://www.postgresql.org/news.rss",
-        "categories": ["databases", "data-engineering", "software-engineering"],
-        "weight": 1.1
-      },
-      {
-        "name": "Hugging Face Blog",
-        "url": "https://huggingface.co/blog/feed.xml",
-        "categories": ["ai-engineering", "open-source", "software-engineering"],
-        "weight": 1.05
-      },
-      {
-        "name": "OpenAI News",
-        "url": "https://openai.com/news/rss.xml",
-        "categories": ["ai-engineering", "ai-tools", "developer-tools"],
-        "weight": 1.1
-      },
-      {
-        "name": "Google AI Blog",
-        "url": "https://blog.google/technology/ai/rss/",
-        "categories": ["ai-engineering", "ai-tools", "software-engineering"],
-        "weight": 1.1
-      },
-      {
-        "name": "Google DeepMind Blog",
-        "url": "https://deepmind.google/blog/rss.xml",
-        "categories": ["ai-engineering", "ai-tools"],
-        "weight": 1.05
-      },
-      {
-        "name": "NVIDIA Developer Blog",
-        "url": "https://developer.nvidia.com/blog/feed/",
-        "categories": ["ai-engineering", "hardware", "developer-tools"],
-        "weight": 1.05
-      },
-      {
-        "name": "Google Cloud Blog",
-        "url": "https://cloudblog.withgoogle.com/rss/",
-        "categories": ["cloud", "software-engineering"],
-        "weight": 1.05
-      },
-      {
-        "name": "AWS News Blog",
-        "url": "https://aws.amazon.com/blogs/aws/feed/",
-        "categories": ["cloud"],
-        "weight": 1.0
-      },
-      {
-        "name": "NIST Cybersecurity Insights",
-        "url": "https://www.nist.gov/blogs/cybersecurity-insights/rss.xml",
-        "categories": ["cybersecurity"],
-        "weight": 1.2
-      },
-      {
-        "name": "Krebs on Security",
-        "url": "https://krebsonsecurity.com/feed/",
-        "categories": ["cybersecurity"],
-        "weight": 1.05
-      },
-      {
-        "name": "BleepingComputer",
-        "url": "https://www.bleepingcomputer.com/feed/",
-        "categories": ["cybersecurity", "technology"],
-        "weight": 0.95
-      },
-      {
-        "name": "The Hacker News",
-        "url": "https://feeds.feedburner.com/TheHackersNews",
-        "categories": ["cybersecurity"],
-        "weight": 0.9
-      },
-      {
-        "name": "Cloudflare Blog",
-        "url": "https://blog.cloudflare.com/rss/",
-        "categories": ["networking", "cybersecurity", "cloud"],
-        "weight": 1.05
-      },
-      {
-        "name": "APNIC Blog",
-        "url": "https://blog.apnic.net/feed/",
-        "categories": ["networking"],
-        "weight": 1.0
-      },
-      {
-        "name": "Tom's Hardware",
-        "url": "https://www.tomshardware.com/feeds/all",
-        "categories": ["hardware"],
-        "weight": 0.9
-      },
-      {
-        "name": "Phoronix",
-        "url": "https://www.phoronix.com/rss.php",
-        "categories": ["hardware", "software-engineering"],
-        "weight": 0.85
-      }
+      {"name": "Microsoft Azure Blog", "url": "https://azure.microsoft.com/en-us/blog/feed/", "categories": ["azure", "practical-infrastructure-guides"], "weight": 1.2},
+      {"name": "Microsoft Security Blog", "url": "https://www.microsoft.com/en-us/security/blog/feed/", "categories": ["cybersecurity", "identity-access-management"], "weight": 1.25},
+      {"name": "Microsoft Tech Community", "url": "https://techcommunity.microsoft.com/plugins/custom/microsoft/o365/custom-blog-rss?board.id=AzureActiveDirectory", "categories": ["entra-id", "identity-access-management"], "weight": 1.2},
+      {"name": "AWS News Blog", "url": "https://aws.amazon.com/blogs/aws/feed/", "categories": ["practical-infrastructure-guides"], "weight": 1.05},
+      {"name": "Google Cloud Blog", "url": "https://cloudblog.withgoogle.com/rss/", "categories": ["practical-infrastructure-guides"], "weight": 1.05},
+      {"name": "Kubernetes Blog", "url": "https://kubernetes.io/feed.xml", "categories": ["developer-it-tools", "practical-infrastructure-guides"], "weight": 1.15},
+      {"name": "GitHub Changelog", "url": "https://github.blog/changelog/feed/", "categories": ["developer-it-tools"], "weight": 1.15},
+      {"name": "Cloudflare Blog", "url": "https://blog.cloudflare.com/rss/", "categories": ["networking", "cybersecurity"], "weight": 1.1},
+      {"name": "NIST Cybersecurity Insights", "url": "https://www.nist.gov/blogs/cybersecurity-insights/rss.xml", "categories": ["cybersecurity"], "weight": 1.25},
+      {"name": "CISA Advisories", "url": "https://www.cisa.gov/cybersecurity-advisories/all.xml", "categories": ["cybersecurity"], "weight": 1.25},
+      {"name": "IETF News", "url": "https://www.ietf.org/feeds/ietf.xml", "categories": ["networking", "it-fundamentals"], "weight": 1.2},
+      {"name": "OWASP News", "url": "https://owasp.org/feed.xml", "categories": ["cybersecurity"], "weight": 1.2},
+      {"name": "Mozilla Hacks", "url": "https://hacks.mozilla.org/feed/", "categories": ["developer-it-tools", "cybersecurity"], "weight": 1.05}
     ],
-    "high_interest_terms": [
-      "security",
-      "identity",
-      "AI",
-      "cloud",
-      "Azure",
-      "Microsoft",
-      "Java",
-      "Spring",
-      "network",
-      "DNS",
-      "zero trust",
-      "vulnerability",
-      "certification",
-      "GPU",
-      "CPU",
-      "performance",
-      "cost",
-      "migration",
-      "passkeys",
-      "Java version releases",
-      "JVM",
-      "C#",
-      ".NET",
-      "Python",
-      "Python version releases",
-      "TypeScript",
-      "JavaScript",
-      "Node.js",
-      "Kubernetes",
-      "developer tools",
-      "AI engineering",
-      "LLM applications",
-      "AI agents",
-      "AI model releases",
-      "Gemini",
-      "GPT",
-      "open source models",
-      "AI APIs",
-      "AI developer tools",
-      "RAG",
-      "model evaluation",
-      "inference",
-      "MLOps",
-      "programming languages",
-      "Go",
-      "Rust",
-      "Kotlin",
-      "Swift",
-      "SwiftUI",
-      "Objective-C",
-      "iOS",
-      "iPadOS",
-      "macOS development",
-      "Apple platforms",
-      "Xcode",
-      "Android",
-      "Android SDK",
-      "Jetpack Compose",
-      "mobile development",
-      "mobile app architecture",
-      "mobile app testing",
-      "mobile app security",
-      "React Native",
-      "Flutter",
-      "Expo",
-      "compilers",
-      "runtimes",
-      "distributed systems",
-      "system design",
-      "databases",
-      "PostgreSQL",
-      "observability",
-      "OpenTelemetry",
-      "DevOps",
-      "CI/CD",
-      "containers",
-      "Docker",
-      "Kubernetes operators",
-      "web development",
-      "frontend engineering",
-      "backend engineering",
-      "data engineering",
-      "operating systems",
-      "Linux",
-      "Windows Server",
-      "open source",
-      "developer experience",
-      "software architecture"
-    ]
+    "high_interest_terms": ["security", "identity", "azure", "entra", "network", "dns", "certificate", "exam", "system administration", "infrastructure", "kubernetes", "github", "documentation", "vulnerability", "configuration", "troubleshooting"]
   }
 }

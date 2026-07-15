@@ -623,6 +623,263 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(state["last_runs"]["maintain"]["result"], "quota_limited")
         save_state.assert_called_once_with(state)
 
+    def test_topic_relevance_accepts_approved_cluster_and_rejects_disallowed_topic(self):
+        config = {
+            "topic_scope": {
+                "approved_categories": ["azure", "cybersecurity"],
+                "disallowed_terms": ["celebrity", "smartphone launch"],
+                "category_keywords": {
+                    "azure": ["azure", "virtual network"],
+                    "cybersecurity": ["security", "vulnerability"],
+                },
+            }
+        }
+        approved = autopublisher.topic_relevance_score(
+            {
+                "title": "Configure an Azure virtual network securely",
+                "primary_category": "azure",
+                "categories": ["azure"],
+                "source_urls": ["https://learn.microsoft.com/a", "https://learn.microsoft.com/b"],
+            },
+            config,
+        )
+        rejected = autopublisher.topic_relevance_score(
+            {"title": "Celebrity smartphone launch", "primary_category": "azure", "categories": ["azure"]},
+            config,
+        )
+        self.assertGreaterEqual(approved["score"], 0.78)
+        self.assertTrue(approved["approved"])
+        self.assertEqual(rejected["critical_failure"], "disallowed_topic")
+        self.assertEqual(rejected["score"], 0.0)
+
+    def test_slug_normalization_deduplicates_words_and_preserves_complete_words(self):
+        slug = autopublisher.slugify("Azure Azure Conditional Access Configuration Requirements", max_length=34)
+        self.assertEqual(slug, "azure-conditional-access")
+        self.assertNotIn("azure-azure", slug)
+
+    def test_source_validation_requires_accessible_relevant_primary_page(self):
+        item = autopublisher.ResearchItem(
+            source="Microsoft Learn",
+            title="Conditional Access report-only mode",
+            url="https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-conditional-access-report-only",
+            summary="Microsoft Entra Conditional Access supports report-only policies.",
+            published="2026-01-01T00:00:00Z",
+            categories=["entra-id"],
+            score=1.0,
+        )
+        config = {
+            "source_validation": {
+                "trusted_domains": ["learn.microsoft.com"],
+                "min_title_similarity": 0.05,
+                "min_relevance_similarity": 0.05,
+                "max_age_days": 1000,
+                "max_release_age_days": 1000,
+                "blocked_path_terms": ["/search"],
+                "blocked_page_terms": ["access denied"],
+            }
+        }
+        page = b"<html><head><title>Conditional Access report-only mode</title></head><body>Microsoft Entra Conditional Access report-only policies let administrators evaluate policy effects.</body></html>"
+        headers = {"content-type": "text/html", "x-final-url": item.url}
+        with patch.object(autopublisher, "http_request", return_value=(200, page, headers)):
+            self.assertTrue(autopublisher.validate_research_item(item, config, autopublisher.EventLog()))
+        self.assertTrue(item.validated)
+        self.assertEqual(item.validation["reason"], "validated")
+
+    def test_source_validation_rejects_search_page_and_duplicate_url(self):
+        config = {
+            "source_validation": {
+                "trusted_domains": ["learn.microsoft.com"],
+                "blocked_path_terms": ["/search"],
+                "max_candidates_per_run": 10,
+            }
+        }
+        search = autopublisher.ResearchItem("Microsoft", "Azure search", "https://learn.microsoft.com/search/?terms=azure", "", "", ["azure"], 2.0)
+        duplicate = autopublisher.ResearchItem("Microsoft", "Azure", "https://learn.microsoft.com/en-us/azure/guide", "", "", ["azure"], 1.0)
+        duplicate_two = autopublisher.ResearchItem("Microsoft", "Azure copy", "https://learn.microsoft.com/en-us/azure/guide?utm_source=test", "", "", ["azure"], 0.5)
+        with patch.object(autopublisher, "validate_research_item", side_effect=lambda item, *_: item is not search):
+            accepted = autopublisher.validate_research_items([search, duplicate, duplicate_two], config, autopublisher.EventLog())
+        self.assertEqual([item.title for item in accepted], ["Azure"])
+
+    def test_claim_evidence_must_match_validated_source_text(self):
+        source = autopublisher.ResearchItem(
+            "Microsoft Learn",
+            "Conditional Access report-only mode",
+            "https://learn.microsoft.com/entra/report-only",
+            "Evaluate a Conditional Access policy in report-only mode without enforcing it.",
+            "2026-01-01T00:00:00Z",
+            ["entra-id"],
+            1.0,
+            snippet="Microsoft Entra Conditional Access report-only mode evaluates policy results without enforcement.",
+            validated=True,
+        )
+        config = {"publishing": {"required_claim_evidence_count": 1}, "source_validation": {"min_claim_confidence": 0.75, "min_claim_source_similarity": 0.05}}
+        supported = {"claim_evidence": [{"claim": "Conditional Access has report-only mode", "supporting_sources": [source.url], "confidence": 0.97, "verified_at": "2026-07-15T00:00:00Z"}]}
+        unsupported = {"claim_evidence": [{"claim": "Azure includes an unrelated hardware warranty", "supporting_sources": [source.url], "confidence": 0.97, "verified_at": "2026-07-15T00:00:00Z"}]}
+        self.assertEqual(autopublisher.claim_evidence_issues(supported, config, [source]), [])
+        self.assertTrue(any("not directly supported" in issue for issue in autopublisher.claim_evidence_issues(unsupported, config, [source])))
+
+    def test_code_validation_rejects_syntax_secrets_and_unwarned_destructive_commands(self):
+        markdown = """## Example\n\n```python\nif True print('broken')\n```\n\n```json\n{\"password\": \"realistic-secret-value\"}\n```\n\n```bash\nrm -rf /\n```\n"""
+        issues = autopublisher.code_block_issues(markdown)
+        self.assertTrue(any("Invalid python" in issue for issue in issues))
+        self.assertTrue(any("embedded credential" in issue for issue in issues))
+        self.assertTrue(any("destructive command" in issue for issue in issues))
+
+    def test_valid_code_and_kubernetes_manifest_pass(self):
+        markdown = """## Examples\n\n```python\nprint(\"safe\")\n```\n\n```json\n{\"enabled\": true}\n```\n\n```kubernetes\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example\n```\n"""
+        self.assertEqual(autopublisher.code_block_issues(markdown), [])
+
+    def test_heading_hierarchy_and_generic_intro_are_rejected(self):
+        markdown = "In today's rapidly evolving digital landscape, networking matters.\n\n## Start\n\n#### Skipped"
+        self.assertTrue(autopublisher.introduction_issues(markdown))
+        self.assertTrue(any("skips" in issue for issue in autopublisher.heading_hierarchy_issues(markdown)))
+
+    def test_detailed_duplicate_detection_compares_intent_headings_and_sources(self):
+        post = autopublisher.Post(
+            Path("existing.md"), "configure-entra-mfa", "How to Configure Entra MFA", "Configure MFA for administrators.",
+            "2026-01-01", ["entra-id"], ["entra-id"],
+            "## Requirements\n\nUse Conditional Access.\n\n## Configuration\n\nCreate a policy.\n\n## Troubleshooting\n\nCheck sign-in logs.",
+            {},
+        )
+        result = autopublisher.detailed_existing_similarity(
+            title="Configure Microsoft Entra MFA", slug="configure-microsoft-entra-mfa",
+            search_intent="how to configure entra mfa", body=post.body,
+            categories=["entra-id"], tags=["entra-id"], source_urls=[], posts=[post],
+        )
+        self.assertGreater(result["heading"], 0.9)
+        self.assertGreater(result["intent"], 0.7)
+
+    def test_internal_links_reject_missing_and_noncanonical_targets(self):
+        post = autopublisher.Post(Path("dns.md"), "dns-basics", "DNS basics", "DNS", "2026-01-01", ["dns"], ["networking"], "body", {})
+        issues = autopublisher.internal_link_issues(
+            "See [DNS](/posts/dns-basics/) and [missing](/posts/not-published/).",
+            {"categories": ["networking"]}, {"publishing": {"minimum_internal_post_links": 2}}, [post],
+        )
+        self.assertTrue(any("topic-hub" in issue for issue in issues))
+        self.assertTrue(any("broken or non-canonical" in issue for issue in issues))
+
+    def _write_rendered_fixture(self, root: Path, *, person: bool = False, noindex: bool = False) -> None:
+        url = "https://www.compilemymind.com/"
+        (root / "sitemap.xml").write_text(f'<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>{url}</loc></url></urlset>', encoding="utf-8")
+        schemas = [
+            {"@context": "https://schema.org", "@type": "Organization", "name": "Compile My Mind"},
+            {"@context": "https://schema.org", "@type": "WebSite", "name": "Compile My Mind"},
+            {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": []},
+            {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Home"},
+            {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact"},
+            {"@context": "https://schema.org", "@type": "BlogPosting", "author": {"@type": "Organization"}, "publisher": {"@type": "Organization"}},
+        ]
+        if person:
+            schemas.append({"@context": "https://schema.org", "@type": "Person", "name": "Fake Author"})
+        scripts = "".join(f'<script type="application/ld+json">{json.dumps(item)}</script>' for item in schemas)
+        robots = "noindex, follow" if noindex else "index, follow"
+        document = f'''<!doctype html><html><head><link rel="canonical" href="{url}"><meta name="description" content="Test"><meta property="og:title" content="Test"><meta name="twitter:card" content="summary"><meta name="robots" content="{robots}">{scripts}</head><body><h1>Test</h1></body></html>'''
+        (root / "index.html").write_text(document, encoding="utf-8")
+
+    def test_rendered_audit_accepts_valid_organization_schema_and_sitemap(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_rendered_fixture(root)
+            issues = autopublisher.rendered_site_issues(root, {"site": {"base_url": "https://www.compilemymind.com/"}})
+        self.assertEqual(issues, [])
+
+    def test_rendered_audit_rejects_person_schema_and_noindex_sitemap_entry(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_rendered_fixture(root, person=True, noindex=True)
+            issues = autopublisher.rendered_site_issues(root, {"site": {"base_url": "https://www.compilemymind.com/"}})
+        self.assertTrue(any("Forbidden Person" in issue for issue in issues))
+        self.assertTrue(any("Noindex page appears in sitemap" in issue for issue in issues))
+
+    def test_tag_aliases_and_limits_enforce_controlled_vocabulary(self):
+        config = {
+            "taxonomy": {
+                "controlled_tags": ["entra-id", "cybersecurity", "networking"],
+                "tag_aliases": {"azure-ad": "entra-id", "cyber-security": "cybersecurity"},
+                "max_tags_per_article": 2,
+            }
+        }
+        tags = autopublisher.sanitize_tags(
+            ["Azure AD", "azure-ad", "Cyber Security", "networking", "random-new-tag"],
+            {"title": "Entra identity security", "categories": ["entra-id"]},
+            config,
+        )
+        self.assertEqual(tags, ["entra-id", "cybersecurity"])
+
+    def test_canonical_normalization_removes_tracking_and_normalizes_host(self):
+        self.assertEqual(
+            autopublisher.canonical_url("http://compilemymind.com/Posts/DNS/?utm_source=test#section"),
+            "https://www.compilemymind.com/posts/dns/",
+        )
+
+    def test_formatting_only_revision_preserves_visible_modified_and_verification_dates(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "index.md"
+            frontmatter = {
+                "title": "DNS",
+                "date": "2026-01-01T00:00:00+00:00",
+                "lastmod": "2026-02-01T00:00:00+00:00",
+                "verification_date": "2026-02-01T00:00:00Z",
+                "verification_version": 2,
+                "categories": ["networking"],
+                "tags": ["networking"],
+            }
+            path.write_text(autopublisher.compose_markdown(frontmatter, "## Existing\n\nBody"), encoding="utf-8")
+            post = autopublisher.Post(path, "dns", "DNS", "Description", frontmatter["date"], ["networking"], ["networking"], "## Existing\n\nBody", frontmatter)
+            autopublisher.update_post_file(
+                post,
+                {"updated_markdown": "## Existing\n\nMore readable body."},
+                {"site": {"timezone": "UTC"}, "revalidation_intervals": {"default_days": 60}},
+                substantive=False,
+            )
+            updated, _body = autopublisher.split_frontmatter(path.read_text(encoding="utf-8"))
+        self.assertEqual(updated["lastmod"], frontmatter["lastmod"])
+        self.assertEqual(updated["verification_date"], frontmatter["verification_date"])
+        self.assertEqual(int(updated["verification_version"]), 2)
+
+    def test_failed_hugo_build_rolls_back_bundle_and_records_rejection(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            bundle = root / "content" / "posts" / "safe-topic"
+            index_path = bundle / "index.md"
+            config = {
+                "gemini": {"enable_google_search_grounding": False},
+                "publishing": {"required_source_count": 1, "max_topic_attempts": 1},
+                "site": {"content_dir": "content/posts"},
+            }
+            state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}, "rejected_articles": []}
+            research = [autopublisher.ResearchItem("Official", "Safe source", "https://trusted.example/safe", "Safe", "", ["cybersecurity"], 1.0)]
+            topic = {"title": "Safe topic", "slug": "safe-topic", "categories": ["cybersecurity"]}
+            article = {"title": "Safe topic", "slug": "safe-topic", "categories": ["cybersecurity"], "tags": ["cybersecurity"]}
+
+            class Client:
+                def require_key(self):
+                    return None
+
+            def write_bundle(*_args, **_kwargs):
+                bundle.mkdir(parents=True)
+                index_path.write_text("generated", encoding="utf-8")
+                return index_path
+
+            with patch.object(autopublisher, "ROOT", root), \
+                patch.object(autopublisher, "load_config", return_value=config), \
+                patch.object(autopublisher, "load_state", return_value=state), \
+                patch.object(autopublisher, "load_posts", return_value=[]), \
+                patch.object(autopublisher, "collect_research", return_value=research), \
+                patch.object(autopublisher, "enrich_research_snippets"), \
+                patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+                patch.object(autopublisher, "choose_topic", return_value=topic), \
+                patch.object(autopublisher, "generate_approved_article", return_value=(article, {"approved": True}, "")), \
+                patch.object(autopublisher, "write_article_bundle", side_effect=write_bundle), \
+                patch.object(autopublisher, "run_hugo_build", return_value=False), \
+                patch.object(autopublisher, "save_state"), \
+                patch.object(autopublisher, "write_publish_result"):
+                result = autopublisher.run_publish(SimpleNamespace(dry_run=False))
+
+            self.assertEqual(result, 1)
+            self.assertFalse(bundle.exists())
+            self.assertEqual(state["rejected_articles"][-1]["reason"], "build_failed")
+
 
 if __name__ == "__main__":
     unittest.main()

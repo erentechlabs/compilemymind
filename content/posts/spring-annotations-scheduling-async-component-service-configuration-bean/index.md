@@ -1,9 +1,10 @@
 ---
 title: "Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean"
+date: "2025-07-15T00:00:00+03:00"
 description: "A practical guide to the most important Spring Framework annotations - what they do, when to use them, and how they fit together in a real application."
-date: 2025-07-15T00:00:00+03:00
-tags: ["programming", "java", "spring-boot", "software-development"]
-categories: ["technology"]
+tags: ["java", "spring-boot", "developer-it-tools"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 Spring's annotation model can feel overwhelming at first. There are annotations for everything: creating beans, scheduling tasks, running things asynchronously, declaring configuration. Understanding what each one does - and more importantly, *when* each one is appropriate - is the difference between fighting the framework and working with it.

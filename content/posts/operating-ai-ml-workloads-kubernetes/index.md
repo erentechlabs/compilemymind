@@ -3,9 +3,9 @@ title: "Operating AI/ML Workloads on Kubernetes: A Headlamp Plugin for Kubeflow"
 date: "2026-07-14T22:44:13+03:00"
 description: "Discover how to manage and debug AI/ML workloads on Kubernetes with the Headlamp plugin for Kubeflow, enhancing visibility and operational efficiency."
 summary: "This article explores the Headlamp plugin for Kubeflow, detailing its benefits for managing AI/ML workloads on Kubernetes and providing a step-by-step setup guide."
-tags: ["kubernetes", "ai"]
-categories: ["guide", "cloud"]
-author: "Eren"
+tags: ["kubernetes", "ai-security"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

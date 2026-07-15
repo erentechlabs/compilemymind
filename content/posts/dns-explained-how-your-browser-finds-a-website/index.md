@@ -1,9 +1,10 @@
 ---
 title: "DNS Explained: How Your Browser Finds a Website"
+date: "2026-06-19T00:00:00+03:00"
 description: "A practical networking guide explaining DNS resolution, recursive resolvers, root and TLD servers, authoritative nameservers, DNS records, caching, TTLs, security basics, and troubleshooting commands."
-date: 2026-06-19T00:00:00+03:00
-tags: ["networking", "dns", "protocols", "web", "it-fundamentals", "sysadmin"]
-categories: ["guide", "networking"]
+tags: ["networking", "dns", "protocols", "developer-it-tools", "it-fundamentals"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

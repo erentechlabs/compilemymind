@@ -1,9 +1,10 @@
 ---
 title: "Spring Boot Layered Architecture: Controller, Service, and Repository"
+date: "2025-06-15T00:00:00+03:00"
 description: "How Spring Boot's three-layer architecture organizes code into controllers, services, and repositories - and why separation of concerns makes applications easier to build, test, and maintain."
-date: 2025-06-15T00:00:00+03:00
-tags: ["programming", "java", "spring-boot", "software-development", "architecture"]
-categories: ["technology"]
+tags: ["java", "spring-boot", "developer-it-tools"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 ---
 
 One of the first questions you face when building a Spring Boot application is how to organize your code. You could put everything in one class. You could organize by feature. You could follow some informal convention that made sense to you at the time. But Spring Boot has a well-established pattern that most serious projects follow: **three-layer architecture**, separating the code into Controller, Service, and Repository layers.

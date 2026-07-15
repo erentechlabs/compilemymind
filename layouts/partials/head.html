@@ -34,11 +34,7 @@
   <meta name="keywords" content="{{ delimit .Params.tags ", " }}">
 {{ end }}
 
-{{ if .Params.author }}
-  <meta name="author" content="{{ .Params.author }}">
-{{ else if site.Params.author }}
-  <meta name="author" content="{{ site.Params.author }}">
-{{ end }}
+<meta name="author" content="{{ site.Params.publisher | default site.Title }}">
 
 
 <link rel="canonical" href="{{ .Permalink }}">

@@ -1,9 +1,12 @@
 ---
 title: "Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling"
+date: "2025-11-19T00:00:00+03:00"
 description: "Google's Gemini 3 brings deep reasoning, stronger code capabilities, new agent features and Antigravity - a developer platform for autonomous tooling."
-date: 2025-11-19T00:00:00+03:00
-tags: ["ai", "google", "developer-tools", "tech-trends"]
-categories: ["technology"]
+tags: ["ai-security"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
+audit_status: "pending-automated-repair"
+noindex: true
 ---
 
 The AI arms race is accelerating, and Google is stepping up with Gemini 3 - a new multimodal model designed to reason, code, and generate interactive outputs at a new level. In this post I summarize what Google announced, how the new capabilities differ from previous releases, and what developers and everyday users should expect from Gemini 3, Gemini 3 Pro, Gemini Agent, Gemini 3 Deep Think, and Antigravity.

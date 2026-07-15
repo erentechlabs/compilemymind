@@ -3,11 +3,13 @@ title: "Building AI-Defined Vehicles: Integrating Android and Google Cloud for N
 date: "2026-07-14T22:33:50+03:00"
 description: "Explore how to integrate Android Automotive OS with Google Cloud to create AI-defined vehicles that enhance automotive solutions."
 summary: "This article discusses the integration of Android Automotive OS and Google Cloud to develop AI-defined vehicles, focusing on architecture, data flow, and agentic mobility."
-tags: ["ai", "automotive"]
-categories: ["guide", "cloud"]
-author: "Eren"
+tags: ["ai-security"]
+categories: ["practical-infrastructure-guides"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
+audit_status: "pending-automated-repair"
+noindex: true
 ---
 
 ## The Evolution from Software-Defined to AI-Defined Vehicles

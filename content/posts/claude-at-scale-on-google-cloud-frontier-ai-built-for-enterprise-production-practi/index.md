@@ -3,9 +3,9 @@ title: "Claude at scale on Google Cloud: Frontier AI, built for enterprise produ
 date: "2026-07-15T06:35:16+03:00"
 description: "Learn how to deploy Anthropic's Claude at scale on Google Cloud Vertex AI with best practices for architecture, security, and compliance."
 summary: "This guide provides practical insights on deploying Claude, Anthropic's frontier AI, at scale on Google Cloud, focusing on architecture, security, and operational best practices."
-tags: ["claude", "google-cloud-blog"]
-categories: ["guide", "cloud"]
-author: "Eren"
+tags: ["cloud"]
+categories: ["practical-infrastructure-guides"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

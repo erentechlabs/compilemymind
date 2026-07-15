@@ -1,79 +1,68 @@
-{{ if .IsPage }}
-{{ $authorName := cond (ne (.Params.author | default "") "") .Params.author (cond (ne (site.Params.author | default "") "") site.Params.author site.Title) }}
-{{ $authorSameAs := slice }}
-{{ if site.Params.social.github }}{{ $authorSameAs = $authorSameAs | append site.Params.social.github }}{{ end }}
-{{ if site.Params.social.gitlab }}{{ $authorSameAs = $authorSameAs | append site.Params.social.gitlab }}{{ end }}
-{{ if site.Params.social.linkedin }}{{ $authorSameAs = $authorSameAs | append site.Params.social.linkedin }}{{ end }}
-{{ if site.Params.social.twitter }}{{ $authorSameAs = $authorSameAs | append (printf "https://twitter.com/%s" (strings.TrimPrefix "@" site.Params.social.twitter)) }}{{ end }}
-{{ $author := dict "@type" "Person" "name" $authorName }}
-{{ if $authorSameAs }}{{ $author = merge $author (dict "sameAs" $authorSameAs) }}{{ end }}
-{{ if site.Params.social.email }}
-  {{ $author = merge $author (dict "email" site.Params.social.email) }}
-{{ end }}
-{{ $publisher := dict "@type" "Organization" "name" site.Title "url" site.BaseURL }}
-{{ if and site.Params.avatar site.Params.avatar.home.assetPath }}
-  {{ $publisher = merge $publisher (dict "logo" (dict "@type" "ImageObject" "url" (site.Params.avatar.home.assetPath | absURL))) }}
-{{ end }}
-{{ $blogPosting := dict
-  "@context" "https://schema.org"
-  "@type" (cond (eq .Section "posts") "BlogPosting" "WebPage")
-  "headline" .Title
-  "description" (cond (ne .Description "") .Description (.Summary | plainify | truncate 160))
-  "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
-  "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
-  "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
-  "url" .Permalink
-  "inLanguage" .Language.Locale
-  "wordCount" .WordCount
-  "timeRequired" (printf "PT%dM" .ReadingTime)
-  "author" $author
-  "publisher" $publisher
-}}
-{{ $resolvedImage := partial "post-image-resolve.html" . }}
-{{ if $resolvedImage.imageResource }}
-  {{ $blogPosting = merge $blogPosting (dict "image" $resolvedImage.imageResource.Permalink) }}
-{{ else if $resolvedImage.image }}
-  {{ $blogPosting = merge $blogPosting (dict "image" ($resolvedImage.image | absURL)) }}
-{{ else if site.Params.defaultImage }}
-  {{ $blogPosting = merge $blogPosting (dict "image" (site.Params.defaultImage | absURL)) }}
-{{ else if and site.Params.avatar site.Params.avatar.home.assetPath }}
-  {{ $blogPosting = merge $blogPosting (dict "image" (site.Params.avatar.home.assetPath | absURL)) }}
-{{ end }}
-{{ if .Params.tags }}
-  {{ $blogPosting = merge $blogPosting (dict "keywords" .Params.tags) }}
-{{ end }}
-{{ printf "<script type=\"application/ld+json\">%s</script>" ($blogPosting | jsonify) | safeHTML }}
-{{ end }}
+{{- $publisherName := site.Params.publisher | default site.Title -}}
+{{- $publisher := dict "@type" "Organization" "name" $publisherName "url" site.BaseURL -}}
+{{- if and site.Params.avatar site.Params.avatar.home.assetPath -}}
+  {{- $publisher = merge $publisher (dict "logo" (dict "@type" "ImageObject" "url" (site.Params.avatar.home.assetPath | absURL))) -}}
+{{- end -}}
 
-{{ if and (or .IsPage .IsSection) (not .IsHome) }}
-  {{ $sectionPage := site.GetPage (printf "/%s" .Section) }}
-  {{ $hasSectionCrumb := and .Section $sectionPage (ne $sectionPage.Permalink .Permalink) }}
-  {{ $breadcrumbItems := slice (dict "@type" "ListItem" "position" 1 "name" (i18n "home" | default "Home") "item" site.Home.Permalink) }}
-  {{ if $hasSectionCrumb }}
-    {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" 2 "name" $sectionPage.Title "item" $sectionPage.Permalink) }}
-  {{ end }}
-  {{ $breadcrumbItems = $breadcrumbItems | append (dict "@type" "ListItem" "position" (add (len $breadcrumbItems) 1) "name" .Title "item" .Permalink) }}
-{{ printf "<script type=\"application/ld+json\">%s</script>" (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $breadcrumbItems | jsonify) | safeHTML }}
-{{ end }}
-
-{{ if .IsHome }}
-  {{ $webSite := dict
+{{- if .IsHome -}}
+  {{- $organization := merge (dict "@context" "https://schema.org") $publisher -}}
+  {{- $webSite := dict
     "@context" "https://schema.org"
     "@type" "WebSite"
     "name" site.Title
     "alternateName" (slice "Compile My Mind" "CompileMyMind")
     "url" site.BaseURL
     "description" site.Params.description
-  }}
-  {{ if site.Params.social }}
-    {{ $webSite = merge $webSite (dict "author" (dict "@type" "Person" "name" (cond (ne (site.Params.author | default "") "") site.Params.author site.Title))) }}
-    {{ if site.Params.social.email }}
-      {{ $webSite = merge $webSite (dict "author" (merge ($webSite.author) (dict "email" site.Params.social.email))) }}
-    {{ end }}
-  {{ end }}
-  {{ if and site.Params.avatar site.Params.avatar.home.assetPath }}
-    {{ $webSite = merge $webSite (dict "publisher" (dict "@type" "Organization" "name" site.Title "logo" (dict "@type" "ImageObject" "url" (site.Params.avatar.home.assetPath | absURL)))) }}
-  {{ end }}
-  {{ $webSite = merge $webSite (dict "potentialAction" (dict "@type" "SearchAction" "target" (dict "@type" "EntryPoint" "urlTemplate" (printf "%s?q={search_term_string}" site.BaseURL)) "query-input" "required name=search_term_string")) }}
-{{ printf "<script type=\"application/ld+json\">%s</script>" ($webSite | jsonify) | safeHTML }}
-{{ end }}
+    "publisher" $publisher
+    "potentialAction" (dict "@type" "SearchAction" "target" (dict "@type" "EntryPoint" "urlTemplate" (printf "%s?q={search_term_string}" site.BaseURL)) "query-input" "required name=search_term_string")
+  -}}
+  {{- printf "<script type=\"application/ld+json\">%s</script>" ($organization | jsonify) | safeHTML -}}
+  {{- printf "<script type=\"application/ld+json\">%s</script>" ($webSite | jsonify) | safeHTML -}}
+{{- end -}}
+
+{{- if .IsPage -}}
+  {{- $schemaType := .Params.schemaType | default (cond (eq .Section "posts") "BlogPosting" "WebPage") -}}
+  {{- $pageSchema := dict
+    "@context" "https://schema.org"
+    "@type" $schemaType
+    "headline" .Title
+    "description" (cond (ne .Description "") .Description (.Summary | plainify | truncate 160))
+    "datePublished" (.Date.Format "2006-01-02T15:04:05Z07:00")
+    "dateModified" (.Lastmod.Format "2006-01-02T15:04:05Z07:00")
+    "mainEntityOfPage" (dict "@type" "WebPage" "@id" .Permalink)
+    "url" .Permalink
+    "inLanguage" .Language.Locale
+    "publisher" $publisher
+  -}}
+  {{- if eq .Section "posts" -}}
+    {{- $pageSchema = merge $pageSchema (dict "author" $publisher "wordCount" .WordCount "timeRequired" (printf "PT%dM" .ReadingTime)) -}}
+  {{- end -}}
+  {{- $resolvedImage := partial "post-image-resolve.html" . -}}
+  {{- if $resolvedImage.imageResource -}}
+    {{- $pageSchema = merge $pageSchema (dict "image" $resolvedImage.imageResource.Permalink) -}}
+  {{- else if $resolvedImage.image -}}
+    {{- $pageSchema = merge $pageSchema (dict "image" ($resolvedImage.image | absURL)) -}}
+  {{- else if site.Params.defaultImage -}}
+    {{- $pageSchema = merge $pageSchema (dict "image" (site.Params.defaultImage | absURL)) -}}
+  {{- end -}}
+  {{- with .Params.tags -}}
+    {{- $pageSchema = merge $pageSchema (dict "keywords" .) -}}
+  {{- end -}}
+  {{- printf "<script type=\"application/ld+json\">%s</script>" ($pageSchema | jsonify) | safeHTML -}}
+{{- end -}}
+
+{{- if and .IsSection .Params.hubCategory -}}
+  {{- $collection := dict "@context" "https://schema.org" "@type" "CollectionPage" "name" .Title "description" .Description "url" .Permalink "isPartOf" (dict "@type" "WebSite" "name" site.Title "url" site.BaseURL) "publisher" $publisher -}}
+  {{- printf "<script type=\"application/ld+json\">%s</script>" ($collection | jsonify) | safeHTML -}}
+{{- end -}}
+
+{{- if and (or .IsPage .IsSection) (not .IsHome) -}}
+  {{- $sectionPage := site.GetPage (printf "/%s" .Section) -}}
+  {{- $hasSectionCrumb := and .Section $sectionPage (ne $sectionPage.Permalink .Permalink) -}}
+  {{- $items := slice (dict "@type" "ListItem" "position" 1 "name" (i18n "home" | default "Home") "item" site.Home.Permalink) -}}
+  {{- if $hasSectionCrumb -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" 2 "name" $sectionPage.Title "item" $sectionPage.Permalink) -}}
+  {{- end -}}
+  {{- $items = $items | append (dict "@type" "ListItem" "position" (add (len $items) 1) "name" .Title "item" .Permalink) -}}
+  {{- printf "<script type=\"application/ld+json\">%s</script>" (dict "@context" "https://schema.org" "@type" "BreadcrumbList" "itemListElement" $items | jsonify) | safeHTML -}}
+{{- end -}}

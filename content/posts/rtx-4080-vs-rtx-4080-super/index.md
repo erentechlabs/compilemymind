@@ -1,9 +1,12 @@
 ---
 title: "RTX 4080 vs RTX 4080 Super: Is the Super Worth the Upgrade?"
+date: "2025-11-18T00:00:00+03:00"
 description: "A comprehensive comparison of NVIDIA RTX 4080 and RTX 4080 Super graphics cards covering specifications, gaming performance, ray tracing, power efficiency, and value to help you choose the right GPU."
-date: 2025-11-18T00:00:00+03:00
-tags: ["hardware", "gpu", "pc-building", "tech-review", "tech-comparison"]
-categories: ["technology"]
+tags: ["hardware", "it-fundamentals"]
+categories: ["it-fundamentals"]
+publisher: "Compile My Mind"
+audit_status: "pending-automated-repair"
+noindex: true
 ---
 
 NVIDIA's RTX 40-series lineup received a mid-generation refresh with the "Super" variants, and the RTX 4080 Super is one of the most interesting updates. Positioned as a replacement for the original RTX 4080, it promises better performance at a lower price point. But is it worth upgrading if you already own an RTX 4080? And which one should you buy if you're building a new system?

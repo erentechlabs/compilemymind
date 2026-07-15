@@ -3,9 +3,9 @@ title: "Postgres with pgvector vs. Specialized Vector Databases: The Real Cost a
 date: "2026-07-15T11:38:50+03:00"
 description: "Explore the trade-offs between using Postgres with pgvector and specialized vector databases, focusing on cost, performance, and operational complexity."
 summary: "This article analyzes the pros and cons of using Postgres with pgvector versus specialized vector databases, helping teams make informed architectural decisions."
-tags: ["postgres", "vector-databases"]
-categories: ["guide", "databases"]
-author: "Eren"
+tags: ["infrastructure"]
+categories: ["practical-infrastructure-guides"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

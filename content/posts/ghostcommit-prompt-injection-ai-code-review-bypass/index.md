@@ -2,9 +2,9 @@
 title: "How Ghostcommit Prompt Injections Bypass AI Code Review Agents"
 date: "2026-07-12T22:37:24+03:00"
 description: "Learn how the Ghostcommit vulnerability uses hidden prompt injections in images to bypass AI code reviewers, steal repository secrets, and how to defend your SDLC."
-tags: ["ai-agents", "prompt-injection", "code-review", "cybersecurity", "software-security"]
-categories: ["software-engineering", "guide", "cybersecurity"]
-author: "Eren"
+tags: ["ai-security", "prompt-injection", "cybersecurity", "software-security"]
+categories: ["cybersecurity"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

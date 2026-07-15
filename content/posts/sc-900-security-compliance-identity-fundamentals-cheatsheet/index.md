@@ -1,9 +1,10 @@
 ---
 title: "SC-900 Cheatsheet: Microsoft Security, Compliance, and Identity Fundamentals Study Guide"
+date: "2026-06-03T00:30:00+03:00"
 description: "A detailed SC-900 study guide covering Microsoft security, compliance, identity, Entra, Defender, Sentinel, Purview, Zero Trust, shared responsibility, DLP, governance, and exam-ready scenario patterns."
-date: 2026-06-03T00:30:00+03:00
-tags: ["microsoft", "security", "compliance", "identity", "entra", "azure", "certification", "sc-900", "cheatsheet"]
-categories: ["guide", "certification"]
+tags: ["azure", "identity", "sc-900", "study-guide"]
+categories: ["cloud-certifications"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

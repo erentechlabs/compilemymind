@@ -2,13 +2,13 @@
 title: "Proving Application Resilience on Azure: A Practical Guide to Chaos Studio"
 date: "2026-07-12T22:15:07+03:00"
 description: "Learn how to use Azure Chaos Studio to test, validate, and prove application resilience against infrastructure, network, and service-level failures."
-tags: ["azure", "chaos-engineering", "chaos-studio", "resilience", "cloud-architecture"]
-categories: ["microsoft-cloud", "guide"]
-author: "Eren"
+tags: ["azure", "cloud-architecture"]
+categories: ["azure"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 series: "Azure Resilient Architecture"
-series_part: 1
+series_part: "1"
 planned_next_parts: ["Designing Resilient Multi-Region Azure Architectures"]
 ---
 

@@ -1,0 +1,20 @@
+{{- $destination := .Destination -}}
+{{- $resource := .Page.Resources.GetMatch $destination -}}
+{{- $alt := .Text | plainify -}}
+{{- if and $resource (ne $resource.MediaType.SubType "svg") -}}
+  {{- $small := $resource.Resize "480x webp q82" -}}
+  {{- $medium := $resource.Resize "800x webp q82" -}}
+  {{- $large := $resource.Resize "1200x webp q82" -}}
+  <figure>
+    <picture>
+      <source type="image/webp" srcset="{{ $small.RelPermalink }} 480w, {{ $medium.RelPermalink }} 800w, {{ $large.RelPermalink }} 1200w" sizes="(max-width: 760px) 100vw, 760px">
+      <img src="{{ $resource.RelPermalink }}" alt="{{ $alt }}" width="{{ $resource.Width }}" height="{{ $resource.Height }}" loading="lazy" decoding="async">
+    </picture>
+    {{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
+{{- else -}}
+  <figure>
+    <img src="{{ if $resource }}{{ $resource.RelPermalink }}{{ else }}{{ $destination | safeURL }}{{ end }}" alt="{{ $alt }}" loading="lazy" decoding="async">
+    {{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
+{{- end -}}

@@ -1,9 +1,10 @@
 ---
 title: "JPA vs Hibernate vs JDBC: What Is the Difference?"
+date: "2026-06-25T00:00:00+03:00"
 description: "A practical Java persistence guide explaining JDBC, JPA, and Hibernate, how they relate, when to use each, common Spring Boot patterns, tradeoffs, examples, and beginner mistakes."
-date: 2026-06-25T00:00:00+03:00
-tags: ["programming", "java", "spring-boot", "jpa", "hibernate", "jdbc", "databases", "software-development"]
-categories: ["guide", "software-engineering"]
+tags: ["java", "spring-boot", "databases", "developer-it-tools"]
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

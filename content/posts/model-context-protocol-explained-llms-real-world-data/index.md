@@ -4,8 +4,8 @@ date: "2026-07-14T21:56:31+03:00"
 description: "Explore how the Model Context Protocol (MCP) connects LLMs to real-world data with a comprehensive Python tutorial."
 summary: "This guide explains the Model Context Protocol (MCP) and provides a step-by-step tutorial for building an MCP server in Python to connect LLMs with real-world data."
 tags: ["mcp", "python"]
-categories: ["guide", "ai-engineering"]
-author: "Eren"
+categories: ["developer-it-tools"]
+publisher: "Compile My Mind"
 draft: false
 autonomous: true
 ---

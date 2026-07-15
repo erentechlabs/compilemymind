@@ -1,9 +1,10 @@
 ---
 title: "Understanding HTTP Status Codes: What They Mean and How to Use Them"
+date: "2025-11-23T00:00:00+03:00"
 description: "A practical guide to HTTP status codes - what they mean, when to use them, and why getting them right matters for API design and security."
-date: 2025-11-23T00:00:00+03:00
-tags: ["web", "networking", "api-design", "protocols"]
-categories: ["technology"]
+tags: ["developer-it-tools", "networking", "api-design", "protocols"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 ---
 
 HTTP status codes are the server's vocabulary for telling clients what happened. Three digits. Completely standardized. And yet, they're routinely misused in ways that break API clients, confuse security tools, and inadvertently leak information about your infrastructure.

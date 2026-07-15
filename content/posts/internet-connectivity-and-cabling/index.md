@@ -1,9 +1,10 @@
 ---
 title: "Understanding Internet Connectivity and Network Cabling: A Complete Guide"
+date: "2025-11-27T00:00:00+03:00"
 description: "How ISPs deliver internet, what connection types actually mean, and the physical cabling infrastructure that underlies every modern network."
-date: 2025-11-27T00:00:00+03:00
-tags: ["networking", "it-fundamentals", "sysadmin", "infrastructure"]
-categories: ["technology"]
+tags: ["networking", "it-fundamentals", "infrastructure"]
+categories: ["networking"]
+publisher: "Compile My Mind"
 ---
 
 Before a single packet reaches your application, it has to traverse an enormous amount of physical and logical infrastructure. Understanding that infrastructure - from the cable plugged into your wall to the backbone routers of your ISP - isn't just interesting trivia. It shapes how you design networks, troubleshoot outages, and think about availability and reliability in a security context.

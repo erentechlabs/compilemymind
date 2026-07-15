@@ -1,9 +1,12 @@
 ---
 title: "AMD Ryzen 7 9700X vs Intel Core Ultra 7 265KF: The Ultimate CPU Showdown"
+date: "2025-11-18T00:00:00+03:00"
 description: "A comprehensive comparison of AMD Ryzen 7 9700X and Intel Core Ultra 7 265KF covering specifications, performance benchmarks, gaming FPS, power efficiency, and value for different workloads."
-date: 2025-11-18T00:00:00+03:00
-tags: ["hardware", "cpu", "pc-building", "tech-review", "tech-comparison"]
-categories: ["technology"]
+tags: ["hardware", "it-fundamentals"]
+categories: ["it-fundamentals"]
+publisher: "Compile My Mind"
+audit_status: "pending-automated-repair"
+noindex: true
 ---
 
 The battle between AMD and Intel continues to heat up in 2025, with both companies pushing the boundaries of desktop CPU performance. Today, we're putting two compelling mid-to-high-end processors head-to-head: AMD's Ryzen 7 9700X from the Zen 5 architecture and Intel's Core Ultra 7 265KF from the Arrow Lake generation.

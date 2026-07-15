@@ -1,9 +1,10 @@
 ---
 title: "MS-900 Microsoft 365 Fundamentals Study Guide: Cloud, Apps, Security, Licensing, and Support"
+date: "2026-05-31T00:00:00+03:00"
 description: "A detailed Microsoft 365 Fundamentals guide covering cloud concepts, Microsoft 365 apps and services, security and compliance, identity, Purview, pricing, licensing, support, and the final MS-900 domain map."
-date: 2026-05-31T00:00:00+03:00
-tags: ["microsoft-365", "cloud", "certification", "ms-900", "microsoft", "security", "licensing"]
-categories: ["guide", "certification"]
+tags: ["microsoft-365", "cloud", "ms-900", "azure"]
+categories: ["cloud-certifications"]
+publisher: "Compile My Mind"
 draft: false
 ---
 

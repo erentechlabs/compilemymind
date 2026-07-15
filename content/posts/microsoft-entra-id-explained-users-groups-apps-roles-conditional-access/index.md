@@ -1,9 +1,10 @@
 ---
 title: "Microsoft Entra ID Explained: Users, Groups, Apps, Roles, and Conditional Access"
+date: "2026-06-20T00:00:00+03:00"
 description: "A practical guide to Microsoft Entra ID covering tenants, users, groups, app registrations, service principals, roles, permissions, Conditional Access policies, licensing notes, examples, and common mistakes."
-date: 2026-06-20T00:00:00+03:00
-tags: ["microsoft", "entra", "identity", "azure", "microsoft-365", "conditional-access", "iam", "cloud", "security"]
-categories: ["guide", "microsoft-cloud"]
+tags: ["azure", "identity", "microsoft-365", "conditional-access", "iam"]
+categories: ["entra-id"]
+publisher: "Compile My Mind"
 draft: false
 ---
 
