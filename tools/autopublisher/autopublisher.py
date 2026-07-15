@@ -583,6 +583,11 @@ class GeminiClient:
         self.github_models_model = str(
             github_models.get("model", "openai/gpt-4o-mini")
         ).strip()
+        self.github_models_models = [self.github_models_model] + [
+            str(candidate).strip()
+            for candidate in github_models.get("fallback_models", []) or []
+            if str(candidate).strip() and str(candidate).strip() != self.github_models_model
+        ]
         self.github_models_tasks = {
             str(task).strip()
             for task in github_models.get("lightweight_tasks", ["topic_selection"])
@@ -629,20 +634,22 @@ class GeminiClient:
     ) -> dict[str, Any]:
         self.require_key()
         if self._use_lightweight_model(task):
-            try:
-                return self._github_models_generate_json(
-                    prompt,
-                    temperature=temperature,
-                    max_output_tokens=max_output_tokens,
-                    task=task or "",
-                )
-            except Exception as error:
-                self.log.log(
-                    "lightweight_model_fallback",
-                    task=task or "unknown",
-                    model=self.github_models_model,
-                    error=str(error),
-                )
+            for github_model in self.github_models_models:
+                try:
+                    return self._github_models_generate_json(
+                        prompt,
+                        temperature=temperature,
+                        max_output_tokens=max_output_tokens,
+                        task=task or "",
+                        github_model=github_model,
+                    )
+                except Exception as error:
+                    self.log.log(
+                        "lightweight_model_fallback",
+                        task=task or "unknown",
+                        model=github_model,
+                        error=str(error),
+                    )
         selected_model = model or self.text_model
         config = {
             "temperature": temperature
@@ -671,20 +678,22 @@ class GeminiClient:
     ) -> str:
         self.require_key()
         if self._use_lightweight_model(task):
-            try:
-                return self._github_models_generate_text(
-                    prompt,
-                    temperature=temperature,
-                    max_output_tokens=max_output_tokens,
-                    task=task or "",
-                )
-            except Exception as error:
-                self.log.log(
-                    "lightweight_model_fallback",
-                    task=task or "unknown",
-                    model=self.github_models_model,
-                    error=str(error),
-                )
+            for github_model in self.github_models_models:
+                try:
+                    return self._github_models_generate_text(
+                        prompt,
+                        temperature=temperature,
+                        max_output_tokens=max_output_tokens,
+                        task=task or "",
+                        github_model=github_model,
+                    )
+                except Exception as error:
+                    self.log.log(
+                        "lightweight_model_fallback",
+                        task=task or "unknown",
+                        model=github_model,
+                        error=str(error),
+                    )
         selected_model = model or self.text_model
         config = {
             "temperature": temperature
@@ -710,6 +719,7 @@ class GeminiClient:
         temperature: float | None,
         max_output_tokens: int | None,
         task: str,
+        github_model: str,
     ) -> dict[str, Any]:
         response = self._github_models_request(
             prompt,
@@ -717,9 +727,10 @@ class GeminiClient:
             max_output_tokens=max_output_tokens,
             task=task,
             json_mode=True,
+            github_model=github_model,
         )
         parsed = parse_model_json(self._extract_chat_text(response))
-        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
+        self.log.log("lightweight_model_used", task=task, model=github_model)
         return parsed
 
     def _github_models_generate_text(
@@ -729,6 +740,7 @@ class GeminiClient:
         temperature: float | None,
         max_output_tokens: int | None,
         task: str,
+        github_model: str,
     ) -> str:
         text = self._extract_chat_text(
             self._github_models_request(
@@ -736,9 +748,10 @@ class GeminiClient:
                 temperature=temperature,
                 max_output_tokens=max_output_tokens,
                 task=task,
+                github_model=github_model,
             )
         )
-        self.log.log("lightweight_model_used", task=task, model=self.github_models_model)
+        self.log.log("lightweight_model_used", task=task, model=github_model)
         return text
 
     def _github_models_request(
@@ -748,10 +761,11 @@ class GeminiClient:
         temperature: float | None,
         max_output_tokens: int | None,
         task: str,
+        github_model: str,
         json_mode: bool = False,
     ) -> dict[str, Any]:
         payload = {
-            "model": self.github_models_model,
+            "model": github_model,
             "messages": [
                 {
                     "role": "system",
@@ -783,7 +797,7 @@ class GeminiClient:
         )
         if status == 429:
             raise GitHubModelsQuotaError(
-                f"GitHub Models quota exceeded for {self.github_models_model}: HTTP {status}: {body[:800]!r}"
+                f"GitHub Models quota exceeded for {github_model}: HTTP {status}: {body[:800]!r}"
             )
         if status in {500, 502, 503, 504}:
             raise GitHubModelsTransientError(
