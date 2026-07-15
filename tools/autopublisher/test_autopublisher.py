@@ -21,6 +21,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(github_models["model"], "openai/gpt-4.1")
         self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
         self.assertGreaterEqual(github_models["max_output_tokens"], 12000)
+        self.assertTrue(config["publishing"]["prefer_evergreen_after_quota"])
 
     def setUp(self):
         self.config = {

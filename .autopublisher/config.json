@@ -54,6 +54,7 @@
     "max_stalled_repair_attempts": 2,
     "max_topic_attempts": 2,
     "max_evergreen_topic_attempts": 3,
+    "prefer_evergreen_after_quota": true,
     "quality_min_score": 0.82,
     "ai_qa_min_score": 0.8,
     "topic_relevance_min_score": 0.78,

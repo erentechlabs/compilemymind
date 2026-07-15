@@ -3611,8 +3611,13 @@ def run_publish(args: argparse.Namespace) -> int:
         write_publish_result("skipped", reason="not_enough_valid_sources", valid_sources=len(research))
         return 0
 
+    previous_publish_result = str(state.get("last_runs", {}).get("publish", {}).get("result", ""))
+    prioritize_evergreen = bool(
+        config.get("publishing", {}).get("prefer_evergreen_after_quota", True)
+        and previous_publish_result == "quota_limited"
+    )
     grounded_brief: dict[str, Any] | None = None
-    if config.get("gemini", {}).get("enable_google_search_grounding", True):
+    if not prioritize_evergreen and config.get("gemini", {}).get("enable_google_search_grounding", True):
         try:
             grounded_prompt = (
                 "Find current high-interest, trustworthy technical article opportunities for Compile My Mind. "
@@ -3668,18 +3673,22 @@ def run_publish(args: argparse.Namespace) -> int:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))
 
-    try:
-        topic = choose_topic(client, research, grounded_brief, posts, config, log)
-    except GeminiQuotaError as error:
-        log.log("publish_quota_limited", stage="topic_selection", error=str(error))
-        state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
-        save_state(state)
-        write_publish_result("quota_limited", stage="topic_selection")
-        return 0
-    except GeminiTransientError as error:
-        log.log("publish_retryable", stage="topic_selection", error=str(error))
-        record_publish_retryable(state, "topic_selection", error)
-        return 0
+    topic = choose_evergreen_topic(posts, config, log) if prioritize_evergreen else None
+    if topic:
+        log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
+    else:
+        try:
+            topic = choose_topic(client, research, grounded_brief, posts, config, log)
+        except GeminiQuotaError as error:
+            log.log("publish_quota_limited", stage="topic_selection", error=str(error))
+            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
+            save_state(state)
+            write_publish_result("quota_limited", stage="topic_selection")
+            return 0
+        except GeminiTransientError as error:
+            log.log("publish_retryable", stage="topic_selection", error=str(error))
+            record_publish_retryable(state, "topic_selection", error)
+            return 0
     if not topic:
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "no_topic"}
         save_state(state)
@@ -3690,7 +3699,7 @@ def run_publish(args: argparse.Namespace) -> int:
     final_qa: dict[str, Any] | None = None
     feedback = ""
     excluded_slugs: set[str] = set()
-    max_topic_attempts = max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
+    max_topic_attempts = 1 if prioritize_evergreen else max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
     for topic_attempt in range(1, max_topic_attempts + 1):
         if topic_attempt > 1:
             excluded_slugs.add(str(topic.get("slug", "")))
@@ -3765,6 +3774,9 @@ def run_publish(args: argparse.Namespace) -> int:
             title=topic.get("title"),
             feedback=feedback,
         )
+
+    if not final_article:
+        excluded_slugs.add(str(topic.get("slug", "")))
 
     evergreen_attempts = max(0, int(config.get("publishing", {}).get("max_evergreen_topic_attempts", 0)))
     for evergreen_attempt in range(1, evergreen_attempts + 1):
