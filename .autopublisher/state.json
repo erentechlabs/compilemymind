@@ -223,6 +223,45 @@
         "reason": "The article is exceptionally well-written, highly detailed, and technically accurate. It perfectly bridges high-level MLOps concepts with low-level Kubernetes primitives. The step-by-step guide, YAML manifests, comparison table, and architectural diagram are highly educational and directly address the search intent."
       },
       "path": "content/posts/operating-ai-ml-workloads-kubernetes/index.md"
+    },
+    {
+      "time": "2026-07-15T03:35:17.189068Z",
+      "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production: Practical Cloud Architecture Guide",
+      "slug": "claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi",
+      "categories": [
+        "guide",
+        "cloud"
+      ],
+      "tags": [
+        "claude",
+        "google-cloud-blog"
+      ],
+      "sources": [
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Google named a Leader in the 2026 IDC MarketScape for Worldwide Foundation Model Software",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-named-a-leader-in-idc-marketscape/"
+        },
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is exceptionally well-written, highly technical, and structurally sound. It provides deep educational value with concrete code examples (Python SDK and GKE YAML), a clear comparison table, and a robust architectural diagram. It perfectly integrates the source materials and maintains a professional, production-ready tone."
+      },
+      "path": "content/posts/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -237,7 +276,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-14T19:44:14.104970Z",
+      "time": "2026-07-15T03:35:17.189191Z",
       "result": "published"
     }
   }
