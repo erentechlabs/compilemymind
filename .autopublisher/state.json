@@ -262,6 +262,49 @@
         "reason": "The article is exceptionally well-written, highly technical, and structurally sound. It provides deep educational value with concrete code examples (Python SDK and GKE YAML), a clear comparison table, and a robust architectural diagram. It perfectly integrates the source materials and maintains a professional, production-ready tone."
       },
       "path": "content/posts/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi/index.md"
+    },
+    {
+      "time": "2026-07-15T08:38:51.417027Z",
+      "title": "Postgres with pgvector vs. Specialized Vector Databases: The Real Cost and Performance Tradeoffs",
+      "slug": "postgres-pgvector-vs-specialized-vector-databases",
+      "categories": [
+        "guide",
+        "databases"
+      ],
+      "tags": [
+        "postgres",
+        "vector-databases"
+      ],
+      "sources": [
+        {
+          "title": "Announcing etcd v3.7.0",
+          "url": "https://kubernetes.io/blog/2026/07/08/announcing-etcd-3.7/"
+        },
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Operating AI/ML Workloads on Kubernetes: A Headlamp Plugin for Kubeflow",
+          "url": "https://kubernetes.io/blog/2026/07/13/introducing-headlamp-plugin-for-kubeflow/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/2026/07/android-bench-llm-measurement.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.4,
+        "issues": [
+          "The source 'Evolving how LLMs are measured for Android: the next era of Android Bench' is listed in the sources array but is not referenced or integrated anywhere within the article text."
+        ],
+        "required_fixes": [
+          "Integrate a brief mention of the Android Bench LLM measurement source (for example, when discussing client-side embedding generation or resource constraints on mobile devices) or remove it from the sources list to maintain strict citation hygiene."
+        ],
+        "reason": "The article is technically excellent, providing highly accurate mathematical breakdowns of HNSW memory consumption, clear SQL examples for pgvector, and a well-structured comparison of architectural tradeoffs. The diagrams and charts are correctly referenced and integrated. The only minor issue is one unused source in the bibliography."
+      },
+      "path": "content/posts/postgres-pgvector-vs-specialized-vector-databases/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -276,7 +319,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T03:35:17.189191Z",
+      "time": "2026-07-15T08:38:51.417156Z",
       "result": "published"
     }
   }
