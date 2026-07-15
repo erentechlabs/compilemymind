@@ -53,6 +53,24 @@ class AutopublisherTests(unittest.TestCase):
             source_urls = {source["url"] for source in topic.get("seed_sources", [])}
             self.assertGreaterEqual(len(source_urls), required, topic.get("slug"))
 
+    def test_offline_evergreen_recovery_passes_quality_gates(self):
+        config = autopublisher.load_config()
+        topic = dict(next(item for item in config["research"]["evergreen_topics"] if item["slug"] == "troubleshooting-windows-event-logs-powershell"))
+        topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
+        sources = [
+            autopublisher.ResearchItem(
+                "Microsoft", item["title"], item["url"], item["title"], "",
+                ["system-administration"], 2.0, item["title"], True,
+            )
+            for item in topic["seed_sources"]
+        ]
+        article, qa, feedback = autopublisher.deterministic_evergreen_fallback(
+            topic, sources, autopublisher.load_posts(config), config, autopublisher.EventLog()
+        )
+        self.assertTrue(article, feedback)
+        self.assertTrue(qa["approved"])
+        self.assertGreaterEqual(qa["quality"]["score"], config["publishing"]["quality_min_score"])
+
     def test_evergreen_first_publish_path_skips_paid_discovery_calls(self):
         config = {
             "gemini": {"enable_google_search_grounding": True},
@@ -130,6 +148,12 @@ class AutopublisherTests(unittest.TestCase):
             autopublisher.slugify("DNS & HTTP: A Practical Guide"),
             "dns-and-http-a-practical-guide",
         )
+
+    def test_hugo_shortcode_delimiters_are_escaped_only_in_prose(self):
+        markdown = """## Example\n\nUse {{< notice >}} in prose.\n\n```yaml\nvalue: {{ .Values.port }}\n```\n"""
+        normalized = autopublisher.remove_accidental_frontmatter(markdown)
+        self.assertIn("&#123;&#123;&lt; notice >}}", normalized)
+        self.assertIn("value: {{ .Values.port }}", normalized)
 
     def test_safe_filename_preserves_the_file_extension(self):
         self.assertEqual(
