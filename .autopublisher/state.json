@@ -488,6 +488,70 @@
       },
       "quality_score": 0.9466,
       "path": "content/posts/troubleshooting-windows-event-logs-powershell/index.md"
+    },
+    {
+      "time": "2026-07-15T16:31:39.637701Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "categories": [
+        "developer-it-tools",
+        "system-administration"
+      ],
+      "tags": [
+        "kubernetes",
+        "troubleshooting",
+        "configuration-management",
+        "developer-it-tools"
+      ],
+      "sources": [
+        {
+          "title": "Configure Liveness, Readiness and Startup Probes",
+          "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+        },
+        {
+          "title": "Liveness, Readiness, and Startup Probes",
+          "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/"
+        },
+        {
+          "title": "Pod v1 API reference: Probe",
+          "url": "https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Official-source offline recovery article.",
+        "quality": {
+          "score": 0.9277,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.8138,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9091,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8138,
+            "source_similarity": 0.4434,
+            "existing_content_similarity": 0.8138,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9277,
+      "path": "content/posts/kubernetes-probe-misconfigurations-fixes/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -592,8 +656,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T16:27:25.568198Z",
-      "result": "qa_failed"
+      "time": "2026-07-15T16:31:39.637854Z",
+      "result": "published"
     }
   },
   "rejected_articles": [
