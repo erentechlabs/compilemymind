@@ -124,8 +124,3 @@ paginate = 12
   name    = "Tags"
   pageRef = "/tags"
   weight  = 30
-
-[[menus.main]]
-  name    = "About the Site"
-  pageRef = "/about-the-site"
-  weight  = 40
