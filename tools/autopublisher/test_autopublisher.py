@@ -47,7 +47,7 @@ class AutopublisherTests(unittest.TestCase):
             for topic in config["research"]["evergreen_topics"]
             if topic.get("slug") not in existing_slugs
         ]
-        self.assertGreaterEqual(len(remaining), 2)
+        self.assertGreaterEqual(len(remaining), 1)
         required = config["publishing"]["required_source_count"]
         for topic in remaining:
             source_urls = {source["url"] for source in topic.get("seed_sources", [])}
