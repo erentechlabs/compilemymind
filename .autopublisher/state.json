@@ -351,13 +351,21 @@
       "reason": "qa_failed",
       "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:50:16.937930Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:44:13.145110Z",
-      "result": "quota_limited",
-      "stage": "article_generation"
+      "time": "2026-07-15T14:50:16.938045Z",
+      "result": "qa_failed"
     }
   },
   "rejected_articles": [
@@ -392,6 +400,14 @@
       "reason": "qa_failed",
       "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:50:16.937930Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ]
 }
