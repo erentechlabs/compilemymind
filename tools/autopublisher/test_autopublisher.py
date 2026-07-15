@@ -20,6 +20,7 @@ class AutopublisherTests(unittest.TestCase):
         github_models = config["github_models"]
         self.assertEqual(github_models["model"], "openai/gpt-4.1")
         self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
+        self.assertGreaterEqual(github_models["max_output_tokens"], 12000)
 
     def setUp(self):
         self.config = {

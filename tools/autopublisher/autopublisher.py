@@ -2031,6 +2031,7 @@ def article_generation_prompt(
     source_items = research_items_for_topic(topic, research, limit=8, config=config)
     internal_links = select_internal_links(posts, topic, config)
     min_words = int(config.get("publishing", {}).get("min_words", 1400))
+    target_words = max(min_words + 350, int(config.get("publishing", {}).get("target_words", min_words + 500)))
     required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
     return f"""
 You are writing for Compile My Mind. Create a comprehensive, original Hugo blog article as structured JSON.
@@ -2058,8 +2059,10 @@ Editorial style:
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
 - For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
 - Shell code blocks must contain executable examples, not command-syntax notation. Never use angle-bracket metavariables such as <verb> or <resource> inside Bash; use safe examples or clearly named shell variables such as $VERB and $RESOURCE.
-- The article body must contain at least {min_words} words; aim for {min_words + 250} to avoid falling below the minimum after normalization.
-- Do not stop after an introduction or a short explanation. Build a complete article with a useful opening, multiple H2/H3 sections, practical details, examples or pseudocode where relevant, trade-offs, and a concise conclusion. Before returning JSON, verify that article_markdown itself—not the metadata—meets the word-count requirement.
+- The article body must contain at least {min_words} words; target about {target_words} words so JSON metadata and normalization cannot leave it short.
+- Do not stop after an introduction or a short explanation. Build a complete article with a useful opening, multiple topic-specific H2/H3 sections, practical details, examples or pseudocode where relevant, trade-offs, and an actionable conclusion.
+- Allocate most of the word budget to original practical guidance: a diagnostic or implementation workflow, at least three realistic scenarios or failure modes, expected outputs, a decision or reference table, common mistakes, security considerations, and a final checklist when they fit the topic. Do not mirror the documentation page's section order.
+- Before returning JSON, count the words in article_markdown itself—not the metadata—and expand undersized sections with useful original examples until it exceeds {min_words} words.
 - Do not create a featured image, hero image, thumbnail, or image before the article title.
 - Body diagrams, charts, and data visualizations are allowed only when they materially improve understanding; reference generated filenames in the Markdown.
 
