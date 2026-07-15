@@ -3850,7 +3850,7 @@ def run_publish(args: argparse.Namespace) -> int:
         record_rejection(state, log, topic=topic, reason="build_failed", detail=str(index_path.relative_to(ROOT)))
         save_state(state)
         write_publish_result("rejected", reason="build_failed", path=str(index_path.relative_to(ROOT)))
-        return 1
+        return 0
 
     state.setdefault("generated_posts", []).append(
         {

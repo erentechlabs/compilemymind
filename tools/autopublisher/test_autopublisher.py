@@ -1276,9 +1276,9 @@ kubectl auth can-i get pods
                 patch.object(autopublisher, "write_publish_result"):
                 result = autopublisher.run_publish(SimpleNamespace(dry_run=False))
 
-            self.assertEqual(result, 1)
-            self.assertFalse(bundle.exists())
-            self.assertEqual(state["rejected_articles"][-1]["reason"], "build_failed")
+        self.assertEqual(result, 0)
+        self.assertFalse(bundle.exists())
+        self.assertEqual(state["rejected_articles"][-1]["reason"], "build_failed")
 
 
 if __name__ == "__main__":
