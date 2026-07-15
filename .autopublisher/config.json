@@ -51,6 +51,7 @@
     "max_regeneration_attempts": 3,
     "max_stalled_repair_attempts": 2,
     "max_topic_attempts": 5,
+    "max_evergreen_topic_attempts": 2,
     "quality_min_score": 0.82,
     "ai_qa_min_score": 0.8,
     "topic_relevance_min_score": 0.78,
@@ -176,6 +177,53 @@
     "topic_source_min_similarity": 0.16,
     "topic_source_min_token_overlap": 2,
     "topic_source_max_items": 6,
+    "evergreen_topics": [
+      {
+        "title": "Troubleshooting DNS on Windows with PowerShell",
+        "slug": "troubleshooting-windows-dns-powershell",
+        "primary_category": "system-administration",
+        "categories": ["system-administration", "networking"],
+        "tags": ["powershell", "dns", "troubleshooting", "networking"],
+        "search_intent": "Diagnose Windows DNS and network configuration problems with safe PowerShell commands.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Resolve-DnsName (DnsClient)", "url": "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps"},
+          {"title": "Test-NetConnection (NetTCPIP)", "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=windowsserver2025-ps"},
+          {"title": "Get-NetIPConfiguration (NetTCPIP)", "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netipconfiguration?view=windowsserver2025-ps"}
+        ]
+      },
+      {
+        "title": "How to Audit GitHub Actions Token Permissions",
+        "slug": "audit-github-actions-token-permissions",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools", "cybersecurity"],
+        "tags": ["github", "ci-cd", "cybersecurity", "automation"],
+        "search_intent": "Audit and minimize GITHUB_TOKEN permissions in GitHub Actions workflows.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Authenticate with GITHUB_TOKEN", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"},
+          {"title": "Secure use reference", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
+          {"title": "Workflow syntax permissions", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"}
+        ]
+      },
+      {
+        "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+        "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools", "cybersecurity"],
+        "tags": ["kubernetes", "rbac", "troubleshooting", "cybersecurity"],
+        "search_intent": "Diagnose Kubernetes authorization failures using RBAC inspection and kubectl auth can-i.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Using RBAC Authorization", "url": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"},
+          {"title": "Authorization", "url": "https://kubernetes.io/docs/reference/access-authn-authz/authorization/"},
+          {"title": "kubectl auth can-i", "url": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/"}
+        ]
+      }
+    ],
     "trusted_sources": [
       {"name": "Microsoft Azure Blog", "url": "https://azure.microsoft.com/en-us/blog/feed/", "categories": ["azure", "practical-infrastructure-guides"], "weight": 1.2},
       {"name": "Microsoft Security Blog", "url": "https://www.microsoft.com/en-us/security/blog/feed/", "categories": ["cybersecurity", "identity-access-management"], "weight": 1.25},

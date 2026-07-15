@@ -304,6 +304,59 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(len(scoped), 3)
         self.assertTrue(all(item.validated for item in scoped))
 
+    def test_collect_topic_research_validates_configured_evergreen_sources(self):
+        topic = {
+            "title": "Audit workflow token permissions",
+            "categories": ["developer-it-tools"],
+            "source_urls": [
+                "https://docs.github.com/actions/token-one",
+                "https://docs.github.com/actions/token-two",
+                "https://docs.github.com/actions/token-three",
+            ],
+            "seed_sources": [
+                {"title": "Token one", "url": "https://docs.github.com/actions/token-one"},
+                {"title": "Token two", "url": "https://docs.github.com/actions/token-two"},
+                {"title": "Token three", "url": "https://docs.github.com/actions/token-three"},
+            ],
+        }
+
+        def validate(items, _config, _log):
+            for item in items:
+                item.validated = True
+                item.snippet = f"{topic['title']} {item.title}"
+            return items
+
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {"required_source_count": 3},
+            "research": {"topic_source_min_similarity": 0.1, "topic_source_max_items": 6},
+        }
+        with patch.object(autopublisher, "validate_research_items", side_effect=validate):
+            scoped = autopublisher.collect_topic_research(
+                SimpleNamespace(), topic, [], config, autopublisher.EventLog()
+            )
+        self.assertEqual([item.url for item in scoped], topic["source_urls"])
+
+    def test_choose_evergreen_topic_skips_existing_slug(self):
+        existing = SimpleNamespace(
+            slug="existing-evergreen",
+            title="Existing evergreen",
+            searchable_text="Existing evergreen",
+        )
+        config = {
+            "publishing": {"topic_relevance_min_score": 0.0, "max_similarity": 1.0, "max_title_similarity": 1.0},
+            "topic_scope": {"approved_categories": ["developer-it-tools"], "category_keywords": {}},
+            "taxonomy": {"allowed_categories": ["developer-it-tools"], "controlled_tags": ["github"]},
+            "research": {
+                "evergreen_topics": [
+                    {"title": "Existing evergreen", "slug": "existing-evergreen", "categories": ["developer-it-tools"]},
+                    {"title": "Fresh evergreen", "slug": "fresh-evergreen", "categories": ["developer-it-tools"], "tags": ["github"]},
+                ]
+            },
+        }
+        selected = autopublisher.choose_evergreen_topic([existing], config, autopublisher.EventLog())
+        self.assertEqual(selected["slug"], "fresh-evergreen")
+
     def test_generate_approved_article_retries_with_repair_context(self):
         prompts = []
 
@@ -806,6 +859,58 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertEqual(generate.call_count, 1)
         self.assertEqual(generate.call_args.args[1], second_topic)
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
+    def test_publish_uses_evergreen_recovery_after_dynamic_topics_fail(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {
+                "required_source_count": 1,
+                "max_topic_attempts": 1,
+                "max_evergreen_topic_attempts": 1,
+            },
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [autopublisher.ResearchItem("Official", "Source", "https://trusted.example/one", "One", "", ["technology"], 1.0)]
+        dynamic_topic = {"title": "Dynamic topic", "slug": "dynamic-topic", "categories": ["technology"]}
+        evergreen_topic = {"title": "Evergreen topic", "slug": "evergreen-topic", "categories": ["technology"]}
+        article = {
+            "title": "Evergreen topic",
+            "slug": "evergreen-topic",
+            "description": "Evergreen description",
+            "categories": ["technology"],
+            "tags": ["technology"],
+            "sources": [],
+            "article_markdown": "## Evergreen\n\nComplete article.",
+        }
+
+        class Client:
+            def require_key(self):
+                return None
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_topic", return_value=dynamic_topic), \
+            patch.object(autopublisher, "choose_evergreen_topic", return_value=evergreen_topic), \
+            patch.object(autopublisher, "collect_topic_research", return_value=research), \
+            patch.object(
+                autopublisher,
+                "generate_approved_article",
+                side_effect=[(None, None, "dynamic failed"), (article, {"approved": True}, "")],
+            ) as generate, \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/evergreen-topic/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(generate.call_count, 2)
+        self.assertEqual(generate.call_args.args[1], evergreen_topic)
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
     def test_publish_result_marker_records_explicit_result(self):

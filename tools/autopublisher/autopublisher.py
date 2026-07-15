@@ -1239,6 +1239,32 @@ def collect_topic_research(
     """Build and validate a coherent source bundle for one article topic."""
     required = int(config.get("publishing", {}).get("required_source_count", 1))
     limit = int(config.get("research", {}).get("topic_source_max_items", 6))
+    existing_urls = {canonical_url(item.url) for item in research}
+    seed_candidates = [
+        ResearchItem(
+            source="Configured evergreen official source",
+            title=normalize_space(str(source.get("title", ""))),
+            url=str(source.get("url", "")).strip(),
+            summary=f"Official documentation selected for {topic.get('title', '')}.",
+            published="",
+            categories=list(topic.get("categories", []) or []),
+            score=3.0,
+        )
+        for source in topic.get("seed_sources", []) or []
+        if isinstance(source, dict)
+        and source.get("title")
+        and source.get("url")
+        and canonical_url(str(source.get("url", ""))) not in existing_urls
+    ]
+    if seed_candidates:
+        validated_seeds = validate_research_items(seed_candidates, config, log)
+        research = merge_research_items(research, validated_seeds)
+        log.log(
+            "evergreen_sources_validated",
+            title=topic.get("title"),
+            candidates=len(seed_candidates),
+            validated=len(validated_seeds),
+        )
     scoped = research_items_for_topic(topic, research, limit=limit, config=config)
     if len(scoped) < required and config.get("gemini", {}).get("enable_google_search_grounding", True):
         prompt = (
@@ -1763,6 +1789,61 @@ def fallback_topic_from_research(
                 continue
             log.log("fallback_topic_selected", title=title, slug=slug, categories=categories, source=item.source)
             return topic
+    return None
+
+
+def choose_evergreen_topic(
+    posts: list[Post],
+    config: dict[str, Any],
+    log: EventLog,
+    *,
+    excluded_slugs: set[str] | None = None,
+) -> dict[str, Any] | None:
+    """Select a pre-scoped evergreen topic only after dynamic topics fail."""
+    excluded_slugs = excluded_slugs or set()
+    existing_slugs = {post.slug for post in posts}
+    max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
+    max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
+    for configured in config.get("research", {}).get("evergreen_topics", []) or []:
+        if not isinstance(configured, dict):
+            continue
+        topic = dict(configured)
+        title = normalize_space(str(topic.get("title", "")))
+        if not title:
+            continue
+        slug = slugify(str(topic.get("slug") or title), int(config.get("publishing", {}).get("max_slug_length", 82)))
+        if slug in existing_slugs or slug in excluded_slugs:
+            continue
+        topic["slug"] = slug
+        topic["categories"] = sanitize_categories(topic.get("categories", []), topic.get("primary_category"), config)
+        topic["tags"] = sanitize_tags(topic.get("tags", []), topic, config)
+        topic["source_urls"] = [
+            str(source.get("url", "")).strip()
+            for source in topic.get("seed_sources", []) or []
+            if isinstance(source, dict) and source.get("url")
+        ]
+        relevance = topic_relevance_score(topic, config)
+        if not relevance.get("approved") or relevance.get("score", 0.0) < float(
+            config.get("publishing", {}).get("topic_relevance_min_score", 0.0)
+        ):
+            log.log("evergreen_topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
+            continue
+        similarity = max_existing_similarity(
+            f"{title}\n{topic.get('search_intent', '')}\n{' '.join(topic.get('tags', []) or [])}", posts
+        )
+        if similarity["score"] > max_similarity or similarity["title_score"] > max_title_similarity:
+            similar_post = similarity.get("post")
+            log.log(
+                "evergreen_topic_rejected",
+                title=title,
+                reason="too_similar",
+                similarity=round(float(similarity["score"]), 4),
+                similar_post=similar_post.title if similar_post else "",
+            )
+            continue
+        log.log("evergreen_topic_selected", title=title, slug=slug, categories=topic["categories"])
+        return topic
+    log.log("no_evergreen_topic_selected")
     return None
 
 
@@ -3549,8 +3630,56 @@ def run_publish(args: argparse.Namespace) -> int:
             feedback=feedback,
         )
 
+    evergreen_attempts = max(0, int(config.get("publishing", {}).get("max_evergreen_topic_attempts", 0)))
+    for evergreen_attempt in range(1, evergreen_attempts + 1):
+        if final_article:
+            break
+        evergreen_topic = choose_evergreen_topic(posts, config, log, excluded_slugs=excluded_slugs)
+        if not evergreen_topic:
+            break
+        topic = evergreen_topic
+        excluded_slugs.add(str(topic.get("slug", "")))
+        log.log(
+            "evergreen_recovery_started",
+            attempt=evergreen_attempt,
+            title=topic.get("title"),
+            slug=topic.get("slug"),
+        )
+        try:
+            topic_research = collect_topic_research(client, topic, research, config, log)
+            required_topic_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+            if len(topic_research) < required_topic_sources:
+                feedback = (
+                    f"Only {len(topic_research)} directly relevant validated sources were available for the evergreen topic; "
+                    f"at least {required_topic_sources} are required."
+                )
+                log.log("evergreen_recovery_failed", attempt=evergreen_attempt, title=topic.get("title"), feedback=feedback)
+                continue
+            final_article, final_qa, feedback = generate_approved_article(
+                client, topic, topic_research, posts, config, log
+            )
+        except GeminiQuotaError as error:
+            log.log("publish_quota_limited", stage="evergreen_article_generation", attempt=evergreen_attempt, error=str(error))
+            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "evergreen_article_generation"}
+            save_state(state)
+            write_publish_result("quota_limited", stage="evergreen_article_generation", attempt=evergreen_attempt)
+            return 0
+        except GeminiTransientError as error:
+            log.log("publish_retryable", stage="evergreen_article_generation", attempt=evergreen_attempt, error=str(error))
+            record_publish_retryable(state, "evergreen_article_generation", error)
+            return 0
+        if not final_article:
+            log.log("evergreen_recovery_failed", attempt=evergreen_attempt, title=topic.get("title"), feedback=feedback)
+
     if not final_article:
-        record_rejection(state, log, topic=topic, reason="qa_failed", detail=feedback, attempts=max_topic_attempts)
+        record_rejection(
+            state,
+            log,
+            topic=topic,
+            reason="qa_failed",
+            detail=feedback,
+            attempts=max_topic_attempts + evergreen_attempts,
+        )
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "qa_failed"}
         save_state(state)
         log.log("publish_rejected_all_drafts", title=topic.get("title"), feedback=feedback)
