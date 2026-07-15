@@ -90,7 +90,14 @@ jobs:
           approved=$(python -c 'import json; from pathlib import Path; print(str(json.loads(Path(".autopublisher/release-gate-result.json").read_text(encoding="utf-8")).get("approved", False)).lower())')
           if test "$approved" != "true"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No approved publication; nothing will be committed."
+            if ! git diff --quiet -- .autopublisher/state.json; then
+              git add .autopublisher/state.json
+              git commit -m "chore(automation): record rejected publish diagnostics [skip ci]"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+              echo "Rejected publication diagnostics were persisted; no public content was committed."
+            else
+              echo "No approved publication and no new diagnostics to persist."
+            fi
             exit 0
           fi
           if git diff --quiet -- content/posts .autopublisher/state.json; then
