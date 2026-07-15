@@ -5035,7 +5035,17 @@ def rendered_site_issues(output_dir: Path, config: dict[str, Any]) -> list[str]:
 
     seen_canonicals: set[str] = set()
     found_types: set[str] = set()
-    for path in sorted(output_dir.rglob("*.html")):
+    rendered_html = sorted(output_dir.rglob("*.html"))
+    # ContactPage is optional.  Require it only when the site actually
+    # renders a contact route; removing the optional contact page must not
+    # make the release gate fail while still protecting any future contact
+    # page from shipping without its matching structured data.
+    contact_page_rendered = any(
+        path.relative_to(output_dir).as_posix().lower() in {"contact.html", "contact/index.html"}
+        or path.relative_to(output_dir).as_posix().lower().startswith("contact/")
+        for path in rendered_html
+    )
+    for path in rendered_html:
         document = path.read_text(encoding="utf-8", errors="ignore")
         relative = path.relative_to(output_dir)
         if str(relative).lower() in {"404.html", "yandex_8865729cd882d7e9.html"}:
@@ -5099,7 +5109,10 @@ def rendered_site_issues(output_dir: Path, config: dict[str, Any]) -> list[str]:
                 author = structured.get("author", {}) if isinstance(structured, dict) else {}
                 if publisher.get("@type") != "Organization" or author.get("@type") != "Organization":
                     issues.append(f"BlogPosting lacks Organization publisher/author in {path.relative_to(output_dir)}")
-    for required_type in {"Organization", "WebSite", "BreadcrumbList", "BlogPosting", "CollectionPage", "ContactPage"}:
+    required_types = {"Organization", "WebSite", "BreadcrumbList", "BlogPosting", "CollectionPage"}
+    if contact_page_rendered:
+        required_types.add("ContactPage")
+    for required_type in required_types:
         if required_type not in found_types:
             issues.append(f"Required structured-data type was not rendered: {required_type}")
     return issues

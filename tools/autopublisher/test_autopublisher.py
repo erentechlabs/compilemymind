@@ -1474,7 +1474,7 @@ Continue with prose.
         self.assertIn("/posts/kubernetes-basics/", updated)
         self.assertEqual(autopublisher.internal_link_issues(updated, topic, config, posts), [])
 
-    def _write_rendered_fixture(self, root: Path, *, person: bool = False, noindex: bool = False) -> None:
+    def _write_rendered_fixture(self, root: Path, *, person: bool = False, noindex: bool = False, contact: bool = True) -> None:
         url = "https://www.compilemymind.com/"
         (root / "sitemap.xml").write_text(f'<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>{url}</loc></url></urlset>', encoding="utf-8")
         schemas = [
@@ -1482,9 +1482,10 @@ Continue with prose.
             {"@context": "https://schema.org", "@type": "WebSite", "name": "Compile My Mind"},
             {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": []},
             {"@context": "https://schema.org", "@type": "CollectionPage", "name": "Home"},
-            {"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact"},
             {"@context": "https://schema.org", "@type": "BlogPosting", "author": {"@type": "Organization"}, "publisher": {"@type": "Organization"}},
         ]
+        if contact:
+            schemas.append({"@context": "https://schema.org", "@type": "ContactPage", "name": "Contact"})
         if person:
             schemas.append({"@context": "https://schema.org", "@type": "Person", "name": "Fake Author"})
         scripts = "".join(f'<script type="application/ld+json">{json.dumps(item)}</script>' for item in schemas)
@@ -1496,6 +1497,13 @@ Continue with prose.
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self._write_rendered_fixture(root)
+            issues = autopublisher.rendered_site_issues(root, {"site": {"base_url": "https://www.compilemymind.com/"}})
+        self.assertEqual(issues, [])
+
+    def test_rendered_audit_allows_optional_contact_page_to_be_absent(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self._write_rendered_fixture(root, contact=False)
             issues = autopublisher.rendered_site_issues(root, {"site": {"base_url": "https://www.compilemymind.com/"}})
         self.assertEqual(issues, [])
 
