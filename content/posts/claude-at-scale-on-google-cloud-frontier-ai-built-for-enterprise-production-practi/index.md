@@ -191,8 +191,6 @@ By leveraging Vertex AI, organizations can consolidate their billing, security a
 
 As enterprises move beyond simple chat interfaces, they are building complex, agentic workflows where Claude acts as a central reasoning engine. These agents interact with databases, execute code, and orchestrate multi-step business processes. In these scenarios, the model's ability to handle long contexts and perform complex tool-calling is critical.
 
-For instance, in the automotive and manufacturing sectors, agentic systems are being deployed to manage connected fleets and software-defined vehicles. These architectures rely on low-latency connections between edge devices and cloud-based reasoning models. To explore how Google Cloud supports these advanced, edge-to-cloud AI ecosystems, read our detailed analysis on [Building AI-Defined Vehicles: Integrating Android and Google Cloud for Next-Gen Automotive Solutions](/posts/ai-defined-vehicles-android-google-cloud/).
-
 Furthermore, Google's leadership in this space is well-documented. The company was named a Leader in the 2026 IDC MarketScape for Worldwide Foundation Model Software, reflecting its commitment to delivering secure, production-grade systems that developers can deploy at scale. This recognition highlights the strength of combining frontier models like Claude with Google's robust enterprise infrastructure.
 
 ## Best Practices for Production Deployments

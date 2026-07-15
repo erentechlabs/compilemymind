@@ -1,31 +1,20 @@
 {
-  "generated_at": "2026-07-15T11:08:13.815990Z",
-  "articles_checked": 40,
+  "generated_at": "2026-07-15T19:37:16.086843Z",
+  "articles_checked": 38,
   "summary": {
-    "high_risk": 7,
+    "high_risk": 0,
     "medium_risk": 33,
-    "low_risk": 0,
-    "noindexed": 7,
-    "unresolved": 40
+    "low_risk": 5,
+    "noindexed": 0,
+    "unresolved": 33
   },
   "corrected_articles": [],
-  "noindexed_articles": [
-    "ai-defined-vehicles-android-google-cloud",
-    "amd-ryzen-7-9700x-vs-intel-core-ultra-7-265kf",
-    "b850m-force-vs-b850m-d3hp-motherboard-comparison",
-    "google-gemini-3-launch",
-    "rtx-4070-ti-super-vs-rx-7900-xt",
-    "rtx-4080-vs-rtx-4080-super",
-    "ryzen-9-9900x-vs-core-ultra-9-285k"
-  ],
+  "noindexed_articles": [],
   "unpublished_articles": [],
   "rejected_repair_attempts": [],
   "remaining_unresolved": [
-    "ai-defined-vehicles-android-google-cloud",
-    "amd-ryzen-7-9700x-vs-intel-core-ultra-7-265kf",
     "az-900-cheatsheet",
     "azure-chaos-studio-application-resilience-guide",
-    "b850m-force-vs-b850m-d3hp-motherboard-comparison",
     "claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi",
     "common-network-ports-every-it-student-should-know",
     "component-vs-bean",
@@ -33,7 +22,6 @@
     "csharp-vs-java",
     "dns-explained-how-your-browser-finds-a-website",
     "ghostcommit-prompt-injection-ai-code-review-bypass",
-    "google-gemini-3-launch",
     "heartbleed-vulnerability-analysis",
     "how-to-solve-leetcode-valid-parentheses-using-stack-in-java",
     "http-status-codes",
@@ -49,9 +37,6 @@
     "operating-ai-ml-workloads-kubernetes",
     "postgres-pgvector-vs-specialized-vector-databases",
     "remove-duplicates-from-sorted-array",
-    "rtx-4070-ti-super-vs-rx-7900-xt",
-    "rtx-4080-vs-rtx-4080-super",
-    "ryzen-9-9900x-vs-core-ultra-9-285k",
     "sc-900-security-compliance-identity-fundamentals-cheatsheet",
     "securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr",
     "siem-vs-xdr-vs-soar",
@@ -64,32 +49,14 @@
   ],
   "articles": [
     {
-      "slug": "ai-defined-vehicles-android-google-cloud",
-      "title": "Building AI-Defined Vehicles: Integrating Android and Google Cloud for Next-Gen Automotive Solutions",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "out_of_scope_topic:automotive",
-        "missing_technical_verification_date"
-      ],
+      "slug": "audit-github-actions-token-permissions",
+      "title": "How to Audit GitHub Actions Token Permissions",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 3,
       "numeric_claim_count": 0,
-      "noindex": true
-    },
-    {
-      "slug": "amd-ryzen-7-9700x-vs-intel-core-ultra-7-265kf",
-      "title": "AMD Ryzen 7 9700X vs Intel Core Ultra 7 265KF: The Ultimate CPU Showdown",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "numeric_claims:79",
-        "internal_link:Article is missing a contextual topic-hub link."
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 79,
-      "noindex": true
+      "noindex": false
     },
     {
       "slug": "az-900-cheatsheet",
@@ -98,8 +65,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 2,
       "numeric_claim_count": 0,
@@ -111,27 +77,11 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
-    },
-    {
-      "slug": "b850m-force-vs-b850m-d3hp-motherboard-comparison",
-      "title": "B850M FORCE vs B850M D3HP: Which Intel B850 Motherboard Should You Buy?",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "numeric_claims:24",
-        "internal_link:Article is missing a contextual topic-hub link."
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 24,
-      "noindex": true
     },
     {
       "slug": "claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi",
@@ -152,8 +102,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 2,
       "numeric_claim_count": 0,
@@ -180,8 +129,7 @@
       "issues": [
         "fewer_than_3_external_sources",
         "missing_technical_verification_date",
-        "numeric_claims:4",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "numeric_claims:4"
       ],
       "source_count": 1,
       "numeric_claim_count": 4,
@@ -207,8 +155,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
       "numeric_claim_count": 0,
@@ -220,26 +167,11 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
-    },
-    {
-      "slug": "google-gemini-3-launch",
-      "title": "Google Gemini 3: A Leap Forward in Multimodal Reasoning and Developer Tooling",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "potentially_outdated_model_or_api_identifier"
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 0,
-      "noindex": true
     },
     {
       "slug": "heartbleed-vulnerability-analysis",
@@ -248,8 +180,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
       "numeric_claim_count": 0,
@@ -275,8 +206,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
       "numeric_claim_count": 0,
@@ -290,8 +220,7 @@
       "issues": [
         "fewer_than_3_external_sources",
         "missing_technical_verification_date",
-        "numeric_claims:1",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "numeric_claims:1"
       ],
       "source_count": 0,
       "numeric_claim_count": 1,
@@ -304,8 +233,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
       "numeric_claim_count": 0,
@@ -320,6 +248,16 @@
         "missing_technical_verification_date"
       ],
       "source_count": 5,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
     },
@@ -341,8 +279,7 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 6,
       "numeric_claim_count": 0,
@@ -366,8 +303,7 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 17,
       "numeric_claim_count": 0,
@@ -380,8 +316,7 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
       "numeric_claim_count": 0,
@@ -439,58 +374,12 @@
       "noindex": false
     },
     {
-      "slug": "rtx-4070-ti-super-vs-rx-7900-xt",
-      "title": "RTX 4070 Ti Super vs RX 7900 XT: The Ultimate $800 GPU Showdown",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "numeric_claims:141",
-        "internal_link:Article is missing a contextual topic-hub link."
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 141,
-      "noindex": true
-    },
-    {
-      "slug": "rtx-4080-vs-rtx-4080-super",
-      "title": "RTX 4080 vs RTX 4080 Super: Is the Super Worth the Upgrade?",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "numeric_claims:121",
-        "internal_link:Article is missing a contextual topic-hub link."
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 121,
-      "noindex": true
-    },
-    {
-      "slug": "ryzen-9-9900x-vs-core-ultra-9-285k",
-      "title": "AMD Ryzen 9 9900X vs Intel Core Ultra 9 285K: The Ultimate Flagship CPU Battle",
-      "risk": "high",
-      "action": "noindex_pending_repair",
-      "issues": [
-        "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "numeric_claims:86",
-        "internal_link:Article is missing a contextual topic-hub link."
-      ],
-      "source_count": 0,
-      "numeric_claim_count": 86,
-      "noindex": true
-    },
-    {
       "slug": "sc-900-security-compliance-identity-fundamentals-cheatsheet",
       "title": "SC-900 Cheatsheet: Microsoft Security, Compliance, and Identity Fundamentals Study Guide",
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 15,
       "numeric_claim_count": 0,
@@ -502,8 +391,7 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 3,
       "numeric_claim_count": 0,
@@ -515,8 +403,7 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 7,
       "numeric_claim_count": 0,
@@ -555,10 +442,39 @@
       "action": "revalidate",
       "issues": [
         "fewer_than_3_external_sources",
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 0,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshooting-windows-dns-powershell",
+      "title": "Windows DNS Diagnostics with PowerShell: A Safe Troubleshooting Workflow",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
     },
@@ -593,8 +509,7 @@
       "risk": "medium",
       "action": "revalidate",
       "issues": [
-        "missing_technical_verification_date",
-        "internal_link:Article is missing a contextual topic-hub link."
+        "missing_technical_verification_date"
       ],
       "source_count": 7,
       "numeric_claim_count": 0,
