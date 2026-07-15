@@ -48,10 +48,77 @@ class AutopublisherTests(unittest.TestCase):
             if topic.get("slug") not in existing_slugs
         ]
         self.assertIsInstance(remaining, list)
+        self.assertGreaterEqual(len(remaining), 3)
+        self.assertGreaterEqual(len([topic for topic in remaining if topic.get("offline_fallback")]), 3)
         required = config["publishing"]["required_source_count"]
         for topic in remaining:
             source_urls = {source["url"] for source in topic.get("seed_sources", [])}
             self.assertGreaterEqual(len(source_urls), required, topic.get("slug"))
+
+    def test_configured_offline_evergreen_fallbacks_pass_quality_gates(self):
+        config = autopublisher.load_config()
+        posts = autopublisher.load_posts(config)
+        for configured in config["research"]["evergreen_topics"]:
+            if not configured.get("offline_fallback"):
+                continue
+            topic = dict(configured)
+            topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
+            sources = [
+                autopublisher.ResearchItem(
+                    "Official", item["title"], item["url"],
+                    f"{item['title']} official documentation for {topic['title']}.", "",
+                    topic["categories"], 2.0, item["title"], True,
+                )
+                for item in topic["seed_sources"]
+            ]
+            article, qa, feedback = autopublisher.deterministic_evergreen_fallback(
+                topic, sources, posts, config, autopublisher.EventLog()
+            )
+            self.assertTrue(article, f"{topic['slug']}: {feedback}")
+            self.assertTrue(qa["approved"])
+            self.assertGreaterEqual(qa["quality"]["score"], config["publishing"]["quality_min_score"])
+
+    def test_publish_uses_configured_offline_fallback_without_model_generation(self):
+        config = autopublisher.load_config()
+        posts = autopublisher.load_posts(config)
+        topic = dict(next(
+            item for item in config["research"]["evergreen_topics"]
+            if item.get("slug") == "troubleshoot-microsoft-entra-sign-in-errors"
+        ))
+        topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
+        sources = [
+            autopublisher.ResearchItem(
+                "Official", item["title"], item["url"],
+                f"{item['title']} official documentation for {topic['title']}.", "",
+                topic["categories"], 2.0, item["title"], True,
+            )
+            for item in topic["seed_sources"]
+        ]
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+
+        class NoModelClient:
+            def require_key(self):
+                return None
+
+            def generate_json(self, *_args, **_kwargs):
+                raise AssertionError("configured offline fallback must not call a model")
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=posts), \
+            patch.object(autopublisher, "collect_research", return_value=sources), \
+            patch.object(autopublisher, "validate_research_items", return_value=sources), \
+            patch.object(autopublisher, "GeminiClient", return_value=NoModelClient()), \
+            patch.object(autopublisher, "choose_evergreen_topic", return_value=topic), \
+            patch.object(autopublisher, "collect_topic_research", return_value=sources), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/troubleshoot-microsoft-entra-sign-in-errors/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+        self.assertEqual(state["generated_posts"][-1]["slug"], topic["slug"])
 
     def test_offline_evergreen_recovery_passes_quality_gates(self):
         config = autopublisher.load_config()
@@ -594,6 +661,65 @@ class AutopublisherTests(unittest.TestCase):
             TopicClient(), sources, None, [], config, autopublisher.EventLog()
         )
         self.assertEqual(selected["slug"], "troubleshooting-dns-commands")
+
+    def test_choose_topic_rejects_selected_sources_that_do_not_match_the_topic(self):
+        relevant_sources = [
+            autopublisher.ResearchItem(
+                "Official", title, f"https://example.com/relevant-{index}",
+                "Serverless cloud function security and public exposure guidance.", "",
+                ["cybersecurity"], 2.0, validated=True,
+            )
+            for index, title in enumerate([
+                "Serverless cloud functions authentication guidance",
+                "Serverless cloud functions public ingress guidance",
+                "Serverless cloud functions security monitoring guidance",
+            ], start=1)
+        ]
+        unrelated_sources = [
+            autopublisher.ResearchItem(
+                "Official", title, f"https://example.com/unrelated-{index}",
+                summary, "", ["cybersecurity"], 2.0, validated=True,
+            )
+            for index, (title, summary) in enumerate([
+                ("BigQuery enterprise features", "BigQuery analytics platform announcement."),
+                ("IDC cloud market report", "Cloud market analyst report."),
+            ], start=1)
+        ]
+        sources = [*relevant_sources, *unrelated_sources]
+
+        class TopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                return {"topics": [
+                    {
+                        "title": "Securing Serverless Cloud Functions from Public Exposure",
+                        "slug": "polluted-serverless-source-bundle",
+                        "primary_category": "cybersecurity",
+                        "categories": ["cybersecurity"],
+                        "tags": ["cybersecurity"],
+                        "search_intent": "Secure serverless cloud functions from public exposure",
+                        "source_urls": [relevant_sources[0].url, *[item.url for item in unrelated_sources]],
+                    },
+                    {
+                        "title": "Securing Serverless Cloud Function Endpoints",
+                        "slug": "secure-serverless-cloud-function-endpoints",
+                        "primary_category": "cybersecurity",
+                        "categories": ["cybersecurity"],
+                        "tags": ["cybersecurity"],
+                        "search_intent": "Secure serverless cloud functions from public exposure",
+                        "source_urls": [item.url for item in relevant_sources],
+                    },
+                ]}
+
+        config = {
+            "publishing": {"required_source_count": 3, "topic_relevance_min_score": 0.0},
+            "cost_control": {"require_source_qualified_topic": True},
+            "source_validation": {"trusted_domains": ["example.com"]},
+            "research": {"topic_source_min_similarity": 0.16, "topic_source_min_token_overlap": 2},
+            "topic_scope": {"approved_categories": ["cybersecurity"], "category_keywords": {"cybersecurity": ["security"]}},
+            "taxonomy": {"allowed_categories": ["cybersecurity"], "controlled_tags": ["cybersecurity"]},
+        }
+        selected = autopublisher.choose_topic(TopicClient(), sources, None, [], config, autopublisher.EventLog())
+        self.assertEqual(selected["slug"], "secure-serverless-cloud-function-endpoints")
 
     def test_generate_approved_article_retries_with_repair_context(self):
         prompts = []

@@ -272,6 +272,105 @@
           {"title": "Authorization", "url": "https://kubernetes.io/docs/reference/access-authn-authz/authorization/"},
           {"title": "kubectl auth can-i", "url": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/"}
         ]
+      },
+      {
+        "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+        "slug": "troubleshoot-microsoft-entra-sign-in-errors",
+        "primary_category": "entra-id",
+        "categories": ["entra-id", "identity-access-management"],
+        "tags": ["entra-id", "identity", "authentication", "conditional-access", "troubleshooting"],
+        "search_intent": "Diagnose Microsoft Entra sign-in failures using sign-in logs and Sign-in Diagnostics before changing Conditional Access or authentication settings.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "What are Microsoft Entra sign-in logs?", "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins"},
+          {"title": "Use sign-in diagnostics", "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-use-sign-in-diagnostics"},
+          {"title": "Sign-in log activity details", "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details"}
+        ],
+        "offline_fallback": {
+          "description": "A safe Microsoft Entra sign-in troubleshooting workflow that uses sign-in logs and Sign-in Diagnostics to isolate the failure before changing authentication or access policies.",
+          "overview": "Microsoft Entra sign-in troubleshooting should begin with the affected sign-in record and its diagnostic details. This isolates whether the failure is associated with the account, application, device, network, authentication method, or an access policy before an administrator changes Conditional Access or user settings.",
+          "preparation": "Ask the affected user for the approximate time, application, device, network location, and the exact error shown. Confirm the administrator is authorized to view the relevant tenant data and use an appropriately scoped account. Preserve the original sign-in details before testing with another user or another device.",
+          "steps": [
+            {"title": "Find the matching sign-in", "body": "Filter the sign-in records by the user, application, and the smallest time window that contains the failure. Confirm that the record matches the reported attempt rather than a background token refresh or a different application.", "source_guidance": "Use the sign-in-log overview to confirm which records and fields are relevant."},
+            {"title": "Read the diagnostic result before editing policy", "body": "Open the diagnostic information for the selected record and note the result, failure code, and any policy or authentication context shown. Keep the record identifier with the ticket so the same event can be reviewed after a controlled test.", "source_guidance": "Use Sign-in Diagnostics for the supported diagnostic workflow and interpretation."},
+            {"title": "Validate the affected condition with a narrow test", "body": "Test only the suspected boundary, such as the application assignment, authentication method, device state, or named network condition. Use a non-production test account when policy allows, and do not disable a broad protection merely to prove that a sign-in can succeed.", "source_guidance": "Use the activity-detail reference to check the exact fields reported for the sign-in."}
+          ],
+          "symptoms": [
+            {"symptom": "One user cannot access one application", "likely_cause": "User, application, or assignment-specific condition", "next_check": "Compare the selected sign-in record with a successful user in the same application."},
+            {"symptom": "Sign-in fails only from one device or network", "likely_cause": "Device posture, client, or network condition", "next_check": "Confirm the recorded client and location context before changing policy."},
+            {"symptom": "A policy-related error appears", "likely_cause": "A requirement was not satisfied", "next_check": "Review the sign-in diagnostic details and make one approved, narrow test."}
+          ],
+          "checklist": ["Capture the exact time, user, application, device, and user-facing error.", "Locate the matching sign-in record and preserve its identifier.", "Review diagnostic and activity details before changing an authentication or access policy.", "Test one suspected condition with an approved, reversible change.", "Record the result and remove any temporary exception at its agreed expiry time."],
+          "related_slugs": ["microsoft-entra-id-explained-users-groups-apps-roles-conditional-access", "mfa-vs-passwordless-vs-passkeys"],
+          "version_context": "Microsoft Entra monitoring and health documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot Windows Scheduled Tasks with PowerShell",
+        "slug": "troubleshoot-windows-scheduled-tasks-powershell",
+        "primary_category": "system-administration",
+        "categories": ["system-administration"],
+        "tags": ["powershell", "windows-server", "troubleshooting", "system-administration", "automation"],
+        "search_intent": "Diagnose Windows scheduled task failures with read-only PowerShell and schtasks queries before changing task credentials, triggers, or actions.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Get-ScheduledTask (ScheduledTasks)", "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtask?view=windowsserver2025-ps"},
+          {"title": "Get-ScheduledTaskInfo (ScheduledTasks)", "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtaskinfo?view=windowsserver2025-ps"},
+          {"title": "schtasks", "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"}
+        ],
+        "offline_fallback": {
+          "description": "A read-only Windows Scheduled Tasks troubleshooting workflow using PowerShell and schtasks to inspect task definitions, state, and recent execution results safely.",
+          "overview": "A scheduled task failure is easiest to diagnose by separating the task definition, its current state, and the result of its most recent run. Read the existing configuration and history first so an administrator does not overwrite the evidence by changing the trigger, action, credentials, or working directory too early.",
+          "preparation": "Identify the task name, host, expected schedule, last known successful run, and the account or service context approved to inspect it. Gather the task path if the environment has folders with duplicate display names. Do not run, disable, export secrets from, or re-register the task while collecting the first evidence set.",
+          "steps": [
+            {"title": "Inspect the task definition", "body": "Use a read-only task query to confirm the task path, action, trigger, principal, and settings that are actually registered on the target host. Compare the live definition with the approved configuration rather than relying on a local copy of a script.", "source_guidance": "Use the Get-ScheduledTask reference for the supported task-definition query."},
+            {"title": "Check state and last run information", "body": "Read the task information associated with the same registered task and record the current state, last run time, and last task result shown by the system. Correlate the timestamp with application and system evidence before deciding that the scheduler itself is the failing component.", "source_guidance": "Use the Get-ScheduledTaskInfo reference for the task-information fields."},
+            {"title": "Use a command-line view only when needed", "body": "In a recovery console or an existing command-line workflow, use the documented schtasks query view to compare the task's registered state. Keep the query read-only and avoid changing run-as credentials or trigger settings until the evidence identifies the specific boundary.", "source_guidance": "Use the schtasks reference for its documented query and administrative behavior."}
+          ],
+          "symptoms": [
+            {"symptom": "Task is present but never runs", "likely_cause": "Trigger, conditions, or scheduler state", "next_check": "Compare the registered trigger and state with the expected schedule."},
+            {"symptom": "Task runs but the action fails", "likely_cause": "Action path, working context, dependency, or permissions", "next_check": "Correlate the last run result with the application and system logs."},
+            {"symptom": "Task works manually but not on schedule", "likely_cause": "Trigger or execution context differs", "next_check": "Compare the scheduled context with the approved manual test context."}
+          ],
+          "checklist": ["Record the host, task path, expected schedule, and last known good run.", "Inspect the registered task definition before changing it.", "Capture current state and last-run information from the same task.", "Correlate the time of failure with application and Windows event evidence.", "Make one approved, reversible change and verify the next scheduled execution."],
+          "related_slugs": ["troubleshooting-windows-event-logs-powershell", "troubleshooting-windows-dns-powershell"],
+          "version_context": "Windows Server and PowerShell ScheduledTasks documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot Windows Firewall Rules with PowerShell",
+        "slug": "troubleshoot-windows-firewall-rules-powershell",
+        "primary_category": "system-administration",
+        "categories": ["system-administration", "networking"],
+        "tags": ["powershell", "windows-server", "firewall", "network-security", "troubleshooting"],
+        "search_intent": "Diagnose Windows Firewall rule and profile problems with read-only PowerShell queries before changing a rule or opening a port.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Get-NetFirewallRule (NetSecurity)", "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallrule?view=windowsserver2025-ps"},
+          {"title": "Get-NetFirewallProfile (NetSecurity)", "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallprofile?view=windowsserver2025-ps"},
+          {"title": "Get-NetFirewallPortFilter (NetSecurity)", "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallportfilter?view=windowsserver2025-ps"}
+        ],
+        "offline_fallback": {
+          "description": "A read-only PowerShell workflow for diagnosing Windows Firewall profile, rule, and port-filter problems before modifying a rule or exposing a service.",
+          "overview": "Windows Firewall troubleshooting should distinguish the active profile, the rule that may apply, and the port or protocol being tested. Inspect those boundaries with read-only queries before creating an exception, disabling a profile, or assuming that the application is listening on the expected address.",
+          "preparation": "Record the host, active network connection, application or service, direction of the traffic, protocol, port, remote endpoint, and the time of the failure. Confirm the investigation is authorized and avoid disabling a firewall profile as a diagnostic shortcut. Preserve the observed state so a later change can be compared with the original configuration.",
+          "steps": [
+            {"title": "Identify the active firewall profile", "body": "Inspect the configured firewall profiles on the affected host and note the profile that applies to the network connection in use. Keep the result with the incident record before comparing rules or testing the service again.", "source_guidance": "Use the Get-NetFirewallProfile reference for supported profile inspection."},
+            {"title": "Find the relevant rule without changing it", "body": "Query the existing firewall rules and narrow the result by the known application, display name, direction, or enabled state. Confirm that a rule is associated with the expected profile before interpreting its presence as evidence that the traffic is allowed.", "source_guidance": "Use the Get-NetFirewallRule reference for supported rule inspection."},
+            {"title": "Check the port and protocol boundary", "body": "Inspect the port-filter information for the candidate rule and compare it with the actual protocol and port used by the affected service. Correlate this with a separate connectivity or service-level test rather than opening a broad range of ports.", "source_guidance": "Use the Get-NetFirewallPortFilter reference for the documented port-filter view."}
+          ],
+          "symptoms": [
+            {"symptom": "Service is reachable on one network but not another", "likely_cause": "Different active profile or network path", "next_check": "Compare the active profile and rule applicability on both paths."},
+            {"symptom": "A rule exists but the connection still fails", "likely_cause": "Direction, profile, port, protocol, or service mismatch", "next_check": "Inspect the rule and port filter, then test the service separately."},
+            {"symptom": "Opening a port appears to fix the issue", "likely_cause": "The original boundary is not yet understood", "next_check": "Revert the broad test and identify the smallest approved rule change."}
+          ],
+          "checklist": ["Record the service, traffic direction, protocol, port, and active network context.", "Inspect active firewall profiles before changing a rule.", "Query the candidate rule and verify its enabled state and profile scope.", "Compare the rule's port-filter information with the service actually being tested.", "Apply and document only the narrowest approved, reversible remediation."],
+          "related_slugs": ["troubleshooting-windows-dns-powershell", "common-network-ports-every-it-student-should-know"],
+          "version_context": "Windows Server NetSecurity PowerShell documentation checked at publication time."
+        }
       }
     ],
     "trusted_sources": [
