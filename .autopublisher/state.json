@@ -355,9 +355,9 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:26:32.054580Z",
+      "time": "2026-07-15T14:44:13.145110Z",
       "result": "quota_limited",
-      "stage": "topic_selection"
+      "stage": "article_generation"
     }
   },
   "rejected_articles": [
