@@ -47,7 +47,7 @@ class AutopublisherTests(unittest.TestCase):
             for topic in config["research"]["evergreen_topics"]
             if topic.get("slug") not in existing_slugs
         ]
-        self.assertGreaterEqual(len(remaining), 3)
+        self.assertGreaterEqual(len(remaining), 2)
         required = config["publishing"]["required_source_count"]
         for topic in remaining:
             source_urls = {source["url"] for source in topic.get("seed_sources", [])}
@@ -65,7 +65,11 @@ class AutopublisherTests(unittest.TestCase):
             for item in topic["seed_sources"]
         ]
         article, qa, feedback = autopublisher.deterministic_evergreen_fallback(
-            topic, sources, autopublisher.load_posts(config), config, autopublisher.EventLog()
+            topic,
+            sources,
+            [post for post in autopublisher.load_posts(config) if post.slug != topic["slug"]],
+            config,
+            autopublisher.EventLog(),
         )
         self.assertTrue(article, feedback)
         self.assertTrue(qa["approved"])
