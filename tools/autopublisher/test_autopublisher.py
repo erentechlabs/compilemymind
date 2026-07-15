@@ -1088,6 +1088,19 @@ class AutopublisherTests(unittest.TestCase):
         markdown = """## Examples\n\n```python\nprint(\"safe\")\n```\n\n```json\n{\"enabled\": true}\n```\n\n```kubernetes\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example\n```\n"""
         self.assertEqual(autopublisher.code_block_issues(markdown), [])
 
+    def test_invalid_nested_yaml_fence_becomes_repair_feedback(self):
+        markdown = """## Workflow permissions
+
+```yaml
+permissions:
+  contents: read
+```text
+This nested fence is not valid YAML.
+```
+"""
+        issues = autopublisher.code_block_issues(markdown)
+        self.assertTrue(any("Invalid yaml code block" in issue for issue in issues))
+
     def test_shell_metavariables_are_normalized_before_syntax_validation(self):
         markdown = """## Check access
 

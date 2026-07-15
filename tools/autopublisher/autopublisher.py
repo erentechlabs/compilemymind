@@ -47,6 +47,13 @@ try:
 except ImportError:  # Publishing rejects YAML when the configured parser is unavailable.
     yaml = None  # type: ignore
 
+
+class _UnavailableYamlParseError(Exception):
+    """Placeholder used only when PyYAML is not installed."""
+
+
+YamlParseError = yaml.YAMLError if yaml is not None else _UnavailableYamlParseError
+
 try:
     from zoneinfo import ZoneInfo
 except Exception:  # pragma: no cover - Python 3.9+ in Actions has zoneinfo.
@@ -2757,7 +2764,16 @@ def validate_code_syntax(language: str, code: str) -> str | None:
             )
             if result.returncode:
                 return normalize_space(result.stderr or result.stdout or "PowerShell parser rejected the command block")
-    except (SyntaxError, ValueError, json.JSONDecodeError, ET.ParseError, OSError, UnicodeError, subprocess.SubprocessError) as error:
+    except (
+        SyntaxError,
+        ValueError,
+        json.JSONDecodeError,
+        ET.ParseError,
+        YamlParseError,
+        OSError,
+        UnicodeError,
+        subprocess.SubprocessError,
+    ) as error:
         return normalize_space(str(error))
     return None
 
