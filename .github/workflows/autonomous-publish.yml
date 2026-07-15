@@ -1,13 +1,6 @@
 name: Autonomous publishing
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - ".autopublisher/config.json"
-      - ".github/workflows/autonomous-publish.yml"
-      - "tools/autopublisher/**"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:

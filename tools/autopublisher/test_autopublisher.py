@@ -23,6 +23,92 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
         self.assertGreaterEqual(github_models["max_output_tokens"], 12000)
         self.assertTrue(config["publishing"]["prefer_evergreen_after_quota"])
+        self.assertTrue(config["publishing"]["prefer_source_qualified_evergreen_first"])
+        self.assertEqual(config["publishing"]["max_topic_attempts"], 1)
+        self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
+        self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 1)
+
+    def test_publisher_code_pushes_run_tests_without_triggering_paid_publication(self):
+        publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
+        trigger_block = publisher_workflow.split("concurrency:", 1)[0]
+        deploy_workflow = (autopublisher.ROOT / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
+        self.assertNotIn("  push:", trigger_block)
+        self.assertIn("schedule:", trigger_block)
+        self.assertIn("workflow_dispatch:", trigger_block)
+        self.assertIn("python -m unittest discover -s tools/autopublisher", deploy_workflow)
+
+    def test_production_has_three_source_qualified_evergreen_fallbacks(self):
+        config = autopublisher.load_config()
+        existing_slugs = {post.slug for post in autopublisher.load_posts(config)}
+        remaining = [
+            topic
+            for topic in config["research"]["evergreen_topics"]
+            if topic.get("slug") not in existing_slugs
+        ]
+        self.assertGreaterEqual(len(remaining), 3)
+        required = config["publishing"]["required_source_count"]
+        for topic in remaining:
+            source_urls = {source["url"] for source in topic.get("seed_sources", [])}
+            self.assertGreaterEqual(len(source_urls), required, topic.get("slug"))
+
+    def test_evergreen_first_publish_path_skips_paid_discovery_calls(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": True},
+            "publishing": {
+                "required_source_count": 3,
+                "prefer_source_qualified_evergreen_first": True,
+                "max_topic_attempts": 1,
+                "max_evergreen_topic_attempts": 0,
+            },
+            "cost_control": {"max_topic_selection_calls_per_run": 1},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        sources = [
+            autopublisher.ResearchItem(
+                "Official", f"Source {index}", f"https://example.com/{index}",
+                "Official troubleshooting documentation", "", ["system-administration"], 2.0,
+            )
+            for index in range(3)
+        ]
+        topic = {
+            "title": "Troubleshooting Windows Event Logs with PowerShell",
+            "slug": "troubleshooting-windows-event-logs-powershell",
+            "categories": ["system-administration"],
+            "tags": ["powershell"],
+        }
+        article = {
+            **topic,
+            "description": "Troubleshoot Windows Event Logs safely.",
+            "sources": [{"title": item.title, "url": item.url} for item in sources],
+            "article_markdown": "## Steps\n\nValidated guidance.",
+        }
+
+        class NoDiscoveryClient:
+            def require_key(self):
+                return None
+
+            def grounded_research(self, _prompt):
+                raise AssertionError("paid discovery must not run before a source-qualified evergreen topic")
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=sources), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=NoDiscoveryClient()), \
+            patch.object(autopublisher, "choose_evergreen_topic", return_value=topic), \
+            patch.object(autopublisher, "choose_topic") as choose_topic, \
+            patch.object(autopublisher, "collect_topic_research", return_value=sources), \
+            patch.object(autopublisher, "generate_approved_article", return_value=(article, {"approved": True}, "")), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/test/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        choose_topic.assert_not_called()
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
     def setUp(self):
         self.config = {
@@ -347,10 +433,16 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual([item.url for item in scoped], topic["source_urls"])
 
     def test_choose_evergreen_topic_skips_existing_slug(self):
-        existing = SimpleNamespace(
+        existing = autopublisher.Post(
+            path=Path("existing/index.md"),
             slug="existing-evergreen",
             title="Existing evergreen",
-            searchable_text="Existing evergreen",
+            description="Existing evergreen article",
+            date="2026-01-01",
+            tags=["github"],
+            categories=["developer-it-tools"],
+            body="## Existing\n\nExisting evergreen content.",
+            frontmatter={},
         )
         config = {
             "publishing": {"topic_relevance_min_score": 0.0, "max_similarity": 1.0, "max_title_similarity": 1.0},
@@ -365,6 +457,93 @@ class AutopublisherTests(unittest.TestCase):
         }
         selected = autopublisher.choose_evergreen_topic([existing], config, autopublisher.EventLog())
         self.assertEqual(selected["slug"], "fresh-evergreen")
+
+    def test_evergreen_supporting_intent_is_not_rejected_by_category_overlap(self):
+        existing = autopublisher.Post(
+            Path("dns/index.md"),
+            "dns-explained-how-your-browser-finds-a-website",
+            "DNS Explained: How Your Browser Finds a Website",
+            "A foundational explanation of recursive DNS resolution.",
+            "2026-01-01",
+            ["dns", "networking"],
+            ["networking"],
+            "## How DNS works\n\nBrowsers resolve names through recursive DNS.",
+            {},
+        )
+        config = {
+            "publishing": {
+                "topic_relevance_min_score": 0.0,
+                "max_title_similarity": 0.48,
+                "max_search_intent_similarity": 0.72,
+            },
+            "topic_scope": {
+                "approved_categories": ["system-administration", "networking"],
+                "category_keywords": {"networking": ["dns", "network"], "system-administration": ["powershell"]},
+            },
+            "taxonomy": {
+                "allowed_categories": ["system-administration", "networking"],
+                "controlled_tags": ["powershell", "dns", "troubleshooting", "networking"],
+            },
+            "research": {
+                "evergreen_topics": [{
+                    "title": "Troubleshooting DNS on Windows with PowerShell",
+                    "slug": "troubleshooting-windows-dns-powershell",
+                    "primary_category": "system-administration",
+                    "categories": ["system-administration", "networking"],
+                    "tags": ["powershell", "dns", "troubleshooting", "networking"],
+                    "search_intent": "Diagnose Windows DNS and network configuration problems with safe PowerShell commands.",
+                    "seed_sources": [
+                        {"title": "Resolve-DnsName", "url": "https://learn.microsoft.com/resolve-dnsname"},
+                        {"title": "Test-NetConnection", "url": "https://learn.microsoft.com/test-netconnection"},
+                        {"title": "Get-NetIPConfiguration", "url": "https://learn.microsoft.com/get-netipconfiguration"},
+                    ],
+                }],
+            },
+        }
+        selected = autopublisher.choose_evergreen_topic([existing], config, autopublisher.EventLog())
+        self.assertEqual(selected["slug"], "troubleshooting-windows-dns-powershell")
+
+    def test_choose_topic_skips_candidate_without_prevalidated_source_bundle(self):
+        sources = [
+            autopublisher.ResearchItem(
+                "Official", f"DNS command {index}", f"https://example.com/dns-{index}",
+                "DNS troubleshooting command documentation", "", ["networking"], 2.0, validated=True,
+            )
+            for index in range(1, 3)
+        ]
+
+        class TopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                return {"topics": [
+                    {
+                        "title": "Source-poor DNS topic",
+                        "slug": "source-poor-dns-topic",
+                        "primary_category": "networking",
+                        "categories": ["networking"],
+                        "search_intent": "Troubleshoot DNS",
+                        "source_urls": [sources[0].url],
+                    },
+                    {
+                        "title": "Troubleshooting DNS Commands",
+                        "slug": "troubleshooting-dns-commands",
+                        "primary_category": "networking",
+                        "categories": ["networking"],
+                        "search_intent": "Troubleshoot DNS with documented commands",
+                        "source_urls": [source.url for source in sources],
+                    },
+                ]}
+
+        config = {
+            "publishing": {"required_source_count": 2, "topic_relevance_min_score": 0.0},
+            "cost_control": {"require_source_qualified_topic": True},
+            "source_validation": {"trusted_domains": ["example.com"]},
+            "topic_scope": {"approved_categories": ["networking"], "category_keywords": {"networking": ["dns"]}},
+            "taxonomy": {"allowed_categories": ["networking"], "controlled_tags": ["dns"]},
+        }
+        selected = autopublisher.choose_topic(
+            TopicClient(), sources, None, [], config, autopublisher.EventLog()
+        )
+        self.assertEqual(selected["slug"], "troubleshooting-dns-commands")
 
     def test_generate_approved_article_retries_with_repair_context(self):
         prompts = []
@@ -693,6 +872,66 @@ class AutopublisherTests(unittest.TestCase):
             client = autopublisher.GeminiClient({"gemini": {}}, autopublisher.EventLog())
             with self.assertRaises(autopublisher.GeminiQuotaError):
                 client.grounded_research("test")
+
+    def test_depleted_billing_opens_persistent_grounding_circuit(self):
+        state = {"provider_cooldowns": {}}
+        error = autopublisher.GeminiQuotaError(
+            "Your prepayment credits are depleted. Please manage your project and billing."
+        )
+        with patch.object(autopublisher, "save_state") as save_state:
+            opened = autopublisher.open_provider_circuit(
+                state,
+                "gemini_grounded_research",
+                error,
+                {"cost_control": {"gemini_billing_cooldown_hours": 168}},
+            )
+        self.assertTrue(opened)
+        self.assertTrue(autopublisher.provider_circuit_open(state, "gemini_grounded_research"))
+        self.assertEqual(
+            state["provider_cooldowns"]["gemini_grounded_research"]["reason"],
+            "billing_credit_depleted",
+        )
+        save_state.assert_called_once_with(state)
+
+    def test_temporary_rate_limit_does_not_open_billing_circuit(self):
+        state = {"provider_cooldowns": {}}
+        with patch.object(autopublisher, "save_state") as save_state:
+            opened = autopublisher.open_provider_circuit(
+                state,
+                "gemini_grounded_research",
+                autopublisher.GeminiQuotaError("HTTP 429 rate limit"),
+                {},
+            )
+        self.assertFalse(opened)
+        self.assertFalse(state["provider_cooldowns"])
+        save_state.assert_not_called()
+
+    def test_topic_research_skips_grounding_while_billing_circuit_is_open(self):
+        class NoCallClient:
+            def grounded_research(self, _prompt):
+                raise AssertionError("grounding must not be called while the circuit is open")
+
+        state = {
+            "provider_cooldowns": {
+                "gemini_grounded_research": {
+                    "until": autopublisher.iso_z(autopublisher.utc_now() + autopublisher.dt.timedelta(hours=1))
+                }
+            }
+        }
+        config = {
+            "gemini": {"enable_google_search_grounding": True},
+            "publishing": {"required_source_count": 3},
+            "research": {"topic_source_max_items": 6},
+        }
+        scoped = autopublisher.collect_topic_research(
+            NoCallClient(),
+            {"title": "DNS troubleshooting", "categories": ["networking"]},
+            [],
+            config,
+            autopublisher.EventLog(),
+            state=state,
+        )
+        self.assertEqual(scoped, [])
 
     def test_generate_content_503_raises_transient_error(self):
         with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}), \

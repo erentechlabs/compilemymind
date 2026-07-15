@@ -399,6 +399,7 @@ def load_state() -> dict[str, Any]:
             "failures": [],
             "last_runs": {},
             "rejected_articles": [],
+            "provider_cooldowns": {},
         },
     )
     if not isinstance(state, dict):
@@ -411,6 +412,7 @@ def load_state() -> dict[str, Any]:
         "failures": [],
         "last_runs": {},
         "rejected_articles": [],
+        "provider_cooldowns": {},
     }.items():
         state.setdefault(key, default)
     return state
@@ -426,6 +428,53 @@ def grounded_research_fallback_enabled(config: dict[str, Any]) -> bool:
     if isinstance(value, str):
         return value.strip().lower() not in {"0", "false", "no", "off"}
     return bool(value)
+
+
+def is_permanent_billing_quota(error: Exception | str) -> bool:
+    """Distinguish depleted billing credit from a temporary rate limit."""
+    message = str(error).lower()
+    return any(
+        marker in message
+        for marker in (
+            "prepayment credits are depleted",
+            "prepaid credits are depleted",
+            "billing account",
+            "manage your project and billing",
+        )
+    )
+
+
+def provider_circuit_open(state: dict[str, Any] | None, provider: str) -> bool:
+    if not state:
+        return False
+    cooldown = (state.get("provider_cooldowns", {}) or {}).get(provider, {}) or {}
+    until = str(cooldown.get("until", "")).strip()
+    if not until:
+        return False
+    try:
+        expires = dt.datetime.fromisoformat(until.replace("Z", "+00:00"))
+    except ValueError:
+        return False
+    return expires > utc_now()
+
+
+def open_provider_circuit(
+    state: dict[str, Any] | None,
+    provider: str,
+    error: Exception | str,
+    config: dict[str, Any],
+) -> bool:
+    """Persist a cooldown for non-transient provider billing failures."""
+    if state is None or not is_permanent_billing_quota(error):
+        return False
+    hours = max(1, int(config.get("cost_control", {}).get("gemini_billing_cooldown_hours", 168)))
+    state.setdefault("provider_cooldowns", {})[provider] = {
+        "opened_at": iso_z(),
+        "until": iso_z(utc_now() + dt.timedelta(hours=hours)),
+        "reason": "billing_credit_depleted",
+    }
+    save_state(state)
+    return True
 
 
 def save_state(state: dict[str, Any]) -> None:
@@ -1256,6 +1305,7 @@ def collect_topic_research(
     research: list[ResearchItem],
     config: dict[str, Any],
     log: "EventLog",
+    state: dict[str, Any] | None = None,
 ) -> list[ResearchItem]:
     """Build and validate a coherent source bundle for one article topic."""
     required = int(config.get("publishing", {}).get("required_source_count", 1))
@@ -1287,7 +1337,15 @@ def collect_topic_research(
             validated=len(validated_seeds),
         )
     scoped = research_items_for_topic(topic, research, limit=limit, config=config)
-    if len(scoped) < required and config.get("gemini", {}).get("enable_google_search_grounding", True):
+    grounding_enabled = config.get("gemini", {}).get("enable_google_search_grounding", True)
+    grounding_available = grounding_enabled and not provider_circuit_open(state, "gemini_grounded_research")
+    if len(scoped) < required and grounding_enabled and not grounding_available:
+        log.log(
+            "topic_grounded_research_skipped",
+            title=topic.get("title"),
+            reason="provider_circuit_open",
+        )
+    if len(scoped) < required and grounding_available:
         prompt = (
             "Find current official or primary technical documentation that directly supports this article topic: "
             f"{topic.get('title', '')}. Reader intent: {topic.get('search_intent', '')}. "
@@ -1308,7 +1366,10 @@ def collect_topic_research(
                 validated_count=len(validated),
             )
         except GeminiQuotaError as error:
+            opened = open_provider_circuit(state, "gemini_grounded_research", error, config)
             log.log("topic_grounded_research_quota_limited", title=topic.get("title"), error=str(error))
+            if opened:
+                log.log("provider_circuit_opened", provider="gemini_grounded_research", reason="billing_credit_depleted")
         except GeminiTransientError as error:
             log.log("topic_grounded_research_retryable", title=topic.get("title"), error=str(error))
         except Exception as error:
@@ -1585,6 +1646,7 @@ def topic_selection_prompt(
     existing_posts = topic_selection_existing_posts(posts, config)
     month = str(local_now(config).month)
     seasonal = config.get("seasonal_focus", {}).get(month, [])
+    required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
     grounded = {
         "text": normalize_space(str((grounded_brief or {}).get("text", "")))[:600],
         "citations": [
@@ -1607,6 +1669,7 @@ Hard requirements:
 - Prefer the underrepresented category if it can produce a genuinely useful post: {underrepresented}.
 - Avoid duplicates and near-duplicates of existing posts.
 - Use only the supplied primary-source pages. Do not treat keyword overlap alone as evidence.
+- Every candidate must include at least {required_sources} distinct, directly relevant source_urls from the supplied research items. A topic with fewer sources is not a candidate.
 - Prioritize a reader problem, current trustworthy documentation, and durable search demand.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
 - Use titles that answer a concrete intent, such as "How to Configure", "Troubleshooting", "A Practical Guide", "X vs. Y", or "Common Errors and Fixes". Never copy a source or announcement title.
@@ -1686,6 +1749,8 @@ def choose_topic(
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
     allowed = set(config.get("taxonomy", {}).get("allowed_categories", []))
     available_sources = {canonical_url(item.url) for item in research if item.validated or not config.get("source_validation", {}).get("trusted_domains")}
+    required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+    require_source_qualified = bool(config.get("cost_control", {}).get("require_source_qualified_topic", False))
     for topic in candidates:
         title = normalize_space(str(topic.get("title", "")))
         if not title:
@@ -1695,7 +1760,11 @@ def choose_topic(
         categories = sanitize_categories(topic.get("categories", []), topic.get("primary_category"), config)
         topic["categories"] = categories
         topic["tags"] = sanitize_tags(topic.get("tags", []), topic, config)
-        requested_sources = {canonical_url(str(url)) for url in topic.get("source_urls", []) or []}
+        requested_sources = {
+            canonical_url(str(url))
+            for url in topic.get("source_urls", []) or []
+            if canonical_url(str(url))
+        }
         matched_source_items = [item for item in research if canonical_url(item.url) in requested_sources]
         topic["source_titles"] = [item.title for item in matched_source_items]
         topic["source_domains"] = [normalized_url_host(item.url) for item in matched_source_items]
@@ -1710,6 +1779,15 @@ def choose_topic(
             continue
         if available_sources and (not requested_sources or not requested_sources <= available_sources):
             log.log("topic_rejected", title=title, reason="topic_uses_unvalidated_source")
+            continue
+        if require_source_qualified and len({canonical_url(item.url) for item in matched_source_items}) < required_sources:
+            log.log(
+                "topic_rejected",
+                title=title,
+                reason="insufficient_prevalidated_sources",
+                source_count=len({canonical_url(item.url) for item in matched_source_items}),
+                required=required_sources,
+            )
             continue
         relevance = topic_relevance_score(topic, config)
         min_relevance = float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0))
@@ -1765,15 +1843,17 @@ def choose_topic(
             reasoning=result.get("editorial_reasoning", ""),
         )
         return topic
-    fallback = fallback_topic_from_research(
-        research,
-        posts,
-        config,
-        log,
-        max_similarity=max_similarity,
-        max_title_similarity=max_title_similarity,
-        excluded_slugs=excluded_slugs,
-    )
+    fallback = None
+    if not require_source_qualified:
+        fallback = fallback_topic_from_research(
+            research,
+            posts,
+            config,
+            log,
+            max_similarity=max_similarity,
+            max_title_similarity=max_title_similarity,
+            excluded_slugs=excluded_slugs,
+        )
     if fallback:
         return fallback
     log.log("no_topic_selected", candidate_count=len(candidates))
@@ -1881,16 +1961,27 @@ def choose_evergreen_topic(
         ):
             log.log("evergreen_topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
             continue
-        similarity = max_existing_similarity(
-            f"{title}\n{topic.get('search_intent', '')}\n{' '.join(topic.get('tags', []) or [])}", posts
+        duplicate = detailed_existing_similarity(
+            title=title,
+            slug=slug,
+            search_intent=str(topic.get("search_intent", "")),
+            body="",
+            categories=topic.get("categories", []) or [],
+            tags=topic.get("tags", []) or [],
+            source_urls=topic.get("source_urls", []) or [],
+            posts=posts,
         )
-        if similarity["score"] > max_similarity or similarity["title_score"] > max_title_similarity:
-            similar_post = similarity.get("post")
+        if (
+            duplicate["title"] > max_title_similarity
+            or duplicate["slug"] > max_title_similarity
+            or duplicate["intent"] > float(config.get("publishing", {}).get("max_search_intent_similarity", 1.0))
+        ):
+            similar_post = duplicate.get("post")
             log.log(
                 "evergreen_topic_rejected",
                 title=title,
-                reason="too_similar",
-                similarity=round(float(similarity["score"]), 4),
+                reason="duplicate_search_intent",
+                metrics={key: value for key, value in duplicate.items() if key != "post"},
                 similar_post=similar_post.title if similar_post else "",
             )
             continue
@@ -3669,11 +3760,21 @@ def run_publish(args: argparse.Namespace) -> int:
 
     previous_publish_result = str(state.get("last_runs", {}).get("publish", {}).get("result", ""))
     prioritize_evergreen = bool(
-        config.get("publishing", {}).get("prefer_evergreen_after_quota", True)
-        and previous_publish_result in {"quota_limited", "qa_failed"}
+        config.get("publishing", {}).get("prefer_source_qualified_evergreen_first", False)
+        or (
+            config.get("publishing", {}).get("prefer_evergreen_after_quota", True)
+            and previous_publish_result in {"quota_limited", "qa_failed"}
+        )
     )
     grounded_brief: dict[str, Any] | None = None
-    if not prioritize_evergreen and config.get("gemini", {}).get("enable_google_search_grounding", True):
+    grounding_circuit_open = provider_circuit_open(state, "gemini_grounded_research")
+    if not prioritize_evergreen and grounding_circuit_open:
+        log.log("grounded_research_skipped", stage="grounded_research", reason="provider_circuit_open")
+    if (
+        not prioritize_evergreen
+        and not grounding_circuit_open
+        and config.get("gemini", {}).get("enable_google_search_grounding", True)
+    ):
         try:
             grounded_prompt = (
                 "Find current high-interest, trustworthy technical article opportunities for Compile My Mind. "
@@ -3703,6 +3804,9 @@ def run_publish(args: argparse.Namespace) -> int:
                     total_research_sources=len(research),
                 )
         except GeminiQuotaError as error:
+            opened = open_provider_circuit(state, "gemini_grounded_research", error, config)
+            if opened:
+                log.log("provider_circuit_opened", provider="gemini_grounded_research", reason="billing_credit_depleted")
             if grounded_research_fallback_enabled(config):
                 grounded_brief = None
                 log.log(
@@ -3755,7 +3859,15 @@ def run_publish(args: argparse.Namespace) -> int:
     final_qa: dict[str, Any] | None = None
     feedback = ""
     excluded_slugs: set[str] = set()
-    max_topic_attempts = 1 if prioritize_evergreen else max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
+    configured_topic_attempts = max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
+    topic_call_budget = max(
+        1,
+        int(config.get("cost_control", {}).get("max_topic_selection_calls_per_run", configured_topic_attempts)),
+    )
+    max_topic_attempts = 1 if prioritize_evergreen else min(
+        topic_call_budget,
+        configured_topic_attempts,
+    )
     for topic_attempt in range(1, max_topic_attempts + 1):
         if topic_attempt > 1:
             excluded_slugs.add(str(topic.get("slug", "")))
@@ -3789,7 +3901,7 @@ def run_publish(args: argparse.Namespace) -> int:
                 slug=topic.get("slug"),
             )
         try:
-            topic_research = collect_topic_research(client, topic, research, config, log)
+            topic_research = collect_topic_research(client, topic, research, config, log, state=state)
             required_topic_sources = int(config.get("publishing", {}).get("required_source_count", 1))
             if len(topic_research) < required_topic_sources:
                 feedback = (
@@ -3850,7 +3962,7 @@ def run_publish(args: argparse.Namespace) -> int:
             slug=topic.get("slug"),
         )
         try:
-            topic_research = collect_topic_research(client, topic, research, config, log)
+            topic_research = collect_topic_research(client, topic, research, config, log, state=state)
             required_topic_sources = int(config.get("publishing", {}).get("required_source_count", 1))
             if len(topic_research) < required_topic_sources:
                 feedback = (

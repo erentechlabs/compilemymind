@@ -53,8 +53,9 @@
     "max_slug_length": 72,
     "max_regeneration_attempts": 3,
     "max_stalled_repair_attempts": 2,
-    "max_topic_attempts": 2,
+    "max_topic_attempts": 1,
     "max_evergreen_topic_attempts": 3,
+    "prefer_source_qualified_evergreen_first": true,
     "prefer_evergreen_after_quota": true,
     "quality_min_score": 0.82,
     "ai_qa_min_score": 0.8,
@@ -67,6 +68,11 @@
     "minimum_internal_post_links": 2,
     "minimum_practical_elements": 2,
     "max_new_posts_per_run": 1
+  },
+  "cost_control": {
+    "max_topic_selection_calls_per_run": 1,
+    "require_source_qualified_topic": true,
+    "gemini_billing_cooldown_hours": 168
   },
   "source_validation": {
     "max_document_bytes": 1500000,
@@ -211,6 +217,42 @@
           {"title": "Authenticate with GITHUB_TOKEN", "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"},
           {"title": "Secure use reference", "url": "https://docs.github.com/en/actions/reference/security/secure-use"},
           {"title": "Workflow syntax permissions", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"}
+        ]
+      },
+      {
+        "title": "Troubleshooting Windows Event Logs with PowerShell",
+        "slug": "troubleshooting-windows-event-logs-powershell",
+        "primary_category": "system-administration",
+        "categories": ["system-administration"],
+        "tags": ["powershell", "windows-server", "troubleshooting", "system-administration"],
+        "search_intent": "Query and filter Windows Event Logs efficiently with safe PowerShell and command-line examples.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "generation_constraints": [
+          "Prefer read-only Get-WinEvent and wevtutil query examples. Do not include commands that clear or delete event logs unless the command is omitted and the risk is explained."
+        ],
+        "seed_sources": [
+          {"title": "Get-WinEvent (Microsoft.PowerShell.Diagnostics)", "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-7.5"},
+          {"title": "Creating Get-WinEvent queries with FilterHashtable", "url": "https://learn.microsoft.com/en-us/powershell/scripting/samples/creating-get-winevent-queries-with-filterhashtable?view=powershell-7.5"},
+          {"title": "wevtutil", "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil"}
+        ]
+      },
+      {
+        "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+        "slug": "kubernetes-probe-misconfigurations-fixes",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools", "system-administration"],
+        "tags": ["kubernetes", "troubleshooting", "configuration-management", "developer-it-tools"],
+        "search_intent": "Diagnose and correct liveness, readiness, and startup probe settings that cause restarts or unavailable workloads.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "generation_constraints": [
+          "Use version-neutral probe fields from current Kubernetes documentation and explain the operational difference between liveness, readiness, and startup probes."
+        ],
+        "seed_sources": [
+          {"title": "Configure Liveness, Readiness and Startup Probes", "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"},
+          {"title": "Liveness, Readiness, and Startup Probes", "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/"},
+          {"title": "Pod v1 API reference: Probe", "url": "https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe"}
         ]
       },
       {
