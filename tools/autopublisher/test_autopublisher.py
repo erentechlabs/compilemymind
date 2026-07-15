@@ -75,6 +75,26 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(qa["approved"])
         self.assertGreaterEqual(qa["quality"]["score"], config["publishing"]["quality_min_score"])
 
+    def test_dns_and_kubernetes_offline_recovery_pass_quality_gates(self):
+        config = autopublisher.load_config()
+        posts = autopublisher.load_posts(config)
+        for slug in ("troubleshooting-windows-dns-powershell", "kubernetes-probe-misconfigurations-fixes"):
+            topic = dict(next(item for item in config["research"]["evergreen_topics"] if item["slug"] == slug))
+            topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
+            sources = [
+                autopublisher.ResearchItem(
+                    "Official", item["title"], item["url"],
+                    f"{item['title']} official documentation covers configuration and troubleshooting.", "",
+                    topic["categories"], 2.0, item["title"], True,
+                )
+                for item in topic["seed_sources"]
+            ]
+            article, qa, feedback = autopublisher.deterministic_evergreen_fallback(
+                topic, sources, [post for post in posts if post.slug != slug], config, autopublisher.EventLog()
+            )
+            self.assertTrue(article, f"{slug}: {feedback}")
+            self.assertTrue(qa["approved"])
+
     def test_evergreen_first_publish_path_skips_paid_discovery_calls(self):
         config = {
             "gemini": {"enable_google_search_grounding": True},

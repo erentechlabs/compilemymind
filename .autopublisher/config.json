@@ -51,7 +51,7 @@
     "max_ngram_overlap": 0.28,
     "max_search_intent_similarity": 0.72,
     "max_slug_length": 72,
-    "max_regeneration_attempts": 3,
+    "max_regeneration_attempts": 1,
     "max_stalled_repair_attempts": 2,
     "max_topic_attempts": 1,
     "max_evergreen_topic_attempts": 3,
