@@ -397,7 +397,7 @@ class AutopublisherTests(unittest.TestCase):
                 return {"article_markdown": "## Draft\n\nUnsupported material claim."}
 
         issue = "Claim is not directly supported by its referenced source text: unsupported material claim"
-        with patch.object(autopublisher, "normalize_article_payload", side_effect=lambda article, *_args: article), \
+        with patch.object(autopublisher, "normalize_article_payload", side_effect=lambda article, *_args, **_kwargs: article), \
             patch.object(autopublisher, "enrich_article_metadata"), \
             patch.object(autopublisher, "deterministic_qa", return_value=[issue]):
             article, qa, feedback = autopublisher.generate_approved_article(
@@ -1013,6 +1013,17 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(item.validated)
         self.assertEqual(item.validation["reason"], "validated")
 
+    def test_primary_page_text_prefers_main_documentation_content(self):
+        document = """
+        <html><body><nav>Navigation products pricing unrelated filler</nav>
+        <main><h1>Using RBAC Authorization</h1><p>Roles and ClusterRoles define permissions. RoleBindings and ClusterRoleBindings grant those permissions to subjects.</p>
+        <p>This documentation body contains enough directly relevant technical explanation for source-backed claims.</p></main>
+        <footer>Footer links</footer></body></html>
+        """
+        text = autopublisher.extract_primary_page_text(document)
+        self.assertIn("Roles and ClusterRoles", text)
+        self.assertNotIn("Navigation products", text)
+
     def test_source_validation_rejects_search_page_and_duplicate_url(self):
         config = {
             "source_validation": {
@@ -1057,6 +1068,18 @@ class AutopublisherTests(unittest.TestCase):
         markdown = """## Examples\n\n```python\nprint(\"safe\")\n```\n\n```json\n{\"enabled\": true}\n```\n\n```kubernetes\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example\n```\n"""
         self.assertEqual(autopublisher.code_block_issues(markdown), [])
 
+    def test_shell_metavariables_are_normalized_before_syntax_validation(self):
+        markdown = """## Check access
+
+```bash
+kubectl auth can-i <verb> <resource> --namespace <namespace>
+```
+"""
+        normalized = autopublisher.normalize_shell_placeholders(markdown)
+        self.assertIn("${VERB} ${RESOURCE}", normalized)
+        self.assertIn("${NAMESPACE}", normalized)
+        self.assertEqual(autopublisher.code_block_issues(normalized), [])
+
     def test_heading_hierarchy_and_generic_intro_are_rejected(self):
         markdown = "In today's rapidly evolving digital landscape, networking matters.\n\n## Start\n\n#### Skipped"
         self.assertTrue(autopublisher.introduction_issues(markdown))
@@ -1085,6 +1108,24 @@ class AutopublisherTests(unittest.TestCase):
         )
         self.assertTrue(any("topic-hub" in issue for issue in issues))
         self.assertTrue(any("broken or non-canonical" in issue for issue in issues))
+
+    def test_internal_link_recovery_uses_supported_secondary_category_hub(self):
+        posts = [
+            autopublisher.Post(Path("rbac.md"), "rbac-basics", "RBAC basics", "RBAC", "2026-01-01", ["rbac"], ["cybersecurity"], "body", {}),
+            autopublisher.Post(Path("kubernetes.md"), "kubernetes-basics", "Kubernetes basics", "Kubernetes", "2026-01-01", ["kubernetes"], ["developer-it-tools"], "body", {}),
+        ]
+        topic = {
+            "title": "Troubleshooting Kubernetes RBAC",
+            "search_intent": "Diagnose Kubernetes authorization",
+            "categories": ["developer-it-tools", "cybersecurity"],
+            "tags": ["kubernetes", "rbac"],
+        }
+        config = {"publishing": {"prefer_internal_links": 3, "minimum_internal_post_links": 2}}
+        updated = autopublisher.ensure_contextual_internal_links("## Troubleshooting\n\nCheck access.", posts, topic, config)
+        self.assertIn("/cybersecurity/", updated)
+        self.assertIn("/posts/rbac-basics/", updated)
+        self.assertIn("/posts/kubernetes-basics/", updated)
+        self.assertEqual(autopublisher.internal_link_issues(updated, topic, config, posts), [])
 
     def _write_rendered_fixture(self, root: Path, *, person: bool = False, noindex: bool = False) -> None:
         url = "https://www.compilemymind.com/"

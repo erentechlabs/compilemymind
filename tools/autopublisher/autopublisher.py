@@ -1337,7 +1337,6 @@ def select_internal_links(posts: list[Post], topic: dict[str, Any], config: dict
         for index, (score, post) in enumerate(sorted(scored, key=lambda item: item[0], reverse=True)[:limit])
         if score > 0.03
     ]
-    primary = next((category for category in topic.get("categories", []) or [] if category), "")
     hub_paths = {
         "cybersecurity": "/cybersecurity/",
         "networking": "/networking/",
@@ -1347,9 +1346,42 @@ def select_internal_links(posts: list[Post], topic: dict[str, Any], config: dict
         "system-administration": "/system-administration/",
         "it-fundamentals": "/it-fundamentals/",
     }
+    primary = next((category for category in topic.get("categories", []) or [] if category in hub_paths), "")
     if primary in hub_paths:
         chosen.append({"title": f"{primary.replace('-', ' ').title()} topic hub", "url": hub_paths[primary], "role": "topic hub"})
     return chosen
+
+
+def ensure_contextual_internal_links(
+    markdown: str,
+    posts: list[Post],
+    topic: dict[str, Any],
+    config: dict[str, Any],
+) -> str:
+    """Deterministically add missing links selected for this reader intent."""
+    available = select_internal_links(posts, topic, config)
+    existing = set(re.findall(r"!?\[[^\]]+\]\((/[^)\s]+)\)", markdown_without_fenced_code(markdown)))
+    required_posts = int(config.get("publishing", {}).get("minimum_internal_post_links", 0))
+    existing_post_count = len({url for url in existing if url.startswith("/posts/")})
+    additions: list[dict[str, str]] = []
+    for link in available:
+        url = str(link.get("url", ""))
+        if not url or url in existing:
+            continue
+        if url.startswith("/posts/") and existing_post_count < required_posts:
+            additions.append(link)
+            existing_post_count += 1
+            existing.add(url)
+        elif link.get("role") == "topic hub":
+            additions.append(link)
+            existing.add(url)
+    if not additions:
+        return markdown
+    related = "## Related guidance\n\n" + "\n".join(
+        f"- [{link['title']}]({link['url']}) — {str(link.get('role', 'related')).replace('_', ' ')} reference."
+        for link in additions
+    )
+    return markdown.rstrip() + "\n\n" + related + "\n"
 
 
 def max_existing_similarity(candidate_text: str, posts: list[Post]) -> dict[str, Any]:
@@ -2025,6 +2057,7 @@ Editorial style:
 - The sources array must include at least {required_sources} URLs selected from the research snippets.
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
 - For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
+- Shell code blocks must contain executable examples, not command-syntax notation. Never use angle-bracket metavariables such as <verb> or <resource> inside Bash; use safe examples or clearly named shell variables such as $VERB and $RESOURCE.
 - The article body must contain at least {min_words} words; aim for {min_words + 250} to avoid falling below the minimum after normalization.
 - Do not stop after an introduction or a short explanation. Build a complete article with a useful opening, multiple H2/H3 sections, practical details, examples or pseudocode where relevant, trade-offs, and a concise conclusion. Before returning JSON, verify that article_markdown itself—not the metadata—meets the word-count requirement.
 - Do not create a featured image, hero image, thumbnail, or image before the article title.
@@ -2219,6 +2252,27 @@ def extract_html_title(document: str) -> str:
     return normalize_space(strip_html(match.group(1))) if match else ""
 
 
+def extract_primary_page_text(document: str) -> str:
+    """Prefer documentation body text over headers, navigation, and footers."""
+    for tag in ("main", "article"):
+        candidates = [
+            strip_html(match)
+            for match in re.findall(rf"(?is)<{tag}\b[^>]*>(.*?)</{tag}>", document)
+        ]
+        candidates = [text for text in candidates if len(text) >= 200]
+        if candidates:
+            return max(candidates, key=len)
+    role_main = re.search(
+        r"(?is)<(?P<tag>[a-z0-9]+)\b[^>]*\brole\s*=\s*['\"]main['\"][^>]*>(?P<body>.*?)</(?P=tag)>",
+        document,
+    )
+    if role_main:
+        text = strip_html(role_main.group("body"))
+        if text:
+            return text
+    return strip_html(document)
+
+
 def source_is_time_sensitive(item: ResearchItem) -> bool:
     text = f"{item.title} {item.summary}".lower()
     return bool(re.search(r"\b(release|version|changelog|announcement|pricing|exam|certification|deprecated)\b", text))
@@ -2258,7 +2312,7 @@ def validate_research_item(item: ResearchItem, config: dict[str, Any], log: Even
         return False
     document = body[:350000].decode("utf-8", errors="ignore")
     page_title = extract_html_title(document)
-    page_text = strip_html(document)[:12000]
+    page_text = extract_primary_page_text(document)[:12000]
     final_url = headers.get("x-final-url", item.url)
     if not is_trusted_source_url(final_url, config):
         validation.update({"reason": "redirected_to_untrusted_or_non_article_url", "final_url": final_url})
@@ -2387,6 +2441,25 @@ def sanitize_article_external_links(markdown: str, site_base: str) -> str:
     return "".join(parts)
 
 
+def normalize_shell_placeholders(markdown: str) -> str:
+    """Convert documentation metavariables into valid, explicit shell variables."""
+    def replace_block(match: re.Match[str]) -> str:
+        fence, language, code, closing = match.groups()
+
+        def replace_placeholder(value: re.Match[str]) -> str:
+            variable = re.sub(r"[^A-Za-z0-9]+", "_", value.group(1)).strip("_").upper()
+            return "${" + variable + "}"
+
+        code = re.sub(r"<([A-Za-z][A-Za-z0-9_-]*)>", replace_placeholder, code)
+        return f"{fence}{language}\n{code}{closing}"
+
+    return re.sub(
+        r"(?ms)^(```|~~~)(bash|sh|shell)\s*\n(.*?)(^\1\s*$)",
+        replace_block,
+        markdown,
+    )
+
+
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:
     missing: list[str] = []
     for item in diagrams:
@@ -2457,7 +2530,13 @@ def supplement_article_sources(
     return dedupe_sources(sources)
 
 
-def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], config: dict[str, Any], research: list[ResearchItem]) -> dict[str, Any]:
+def normalize_article_payload(
+    article: dict[str, Any],
+    topic: dict[str, Any],
+    config: dict[str, Any],
+    research: list[ResearchItem],
+    posts: list[Post] | None = None,
+) -> dict[str, Any]:
     title = normalize_space(str(article.get("title") or topic.get("title", "")))
     slug = slugify(
         str(article.get("slug") or topic.get("slug") or title),
@@ -2507,6 +2586,9 @@ def normalize_article_payload(article: dict[str, Any], topic: dict[str, Any], co
     markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
     site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
     markdown = sanitize_article_external_links(markdown, site_base)
+    markdown = normalize_shell_placeholders(markdown)
+    if posts is not None:
+        markdown = ensure_contextual_internal_links(markdown, posts, topic, config)
     markdown = ensure_asset_references(markdown, article["diagrams"], article["charts"])
     article["article_markdown"] = ensure_sources_section(markdown, article["sources"])
     return article
@@ -3059,7 +3141,7 @@ def generate_approved_article(
             temperature=article_temperature,
             task="article_generation",
         )
-        article = normalize_article_payload(raw_article, topic, config, research)
+        article = normalize_article_payload(raw_article, topic, config, research, posts=posts)
         enrich_article_metadata(client, article, topic, config, log)
         issues = deterministic_qa(article, topic, posts, config, research)
         if issues:

@@ -167,7 +167,7 @@
   "research": {
     "items_per_source": 6,
     "max_items_for_model": 18,
-    "snippet_characters": 1600,
+    "snippet_characters": 2800,
     "topic_selection_max_items": 10,
     "topic_selection_max_existing_posts": 20,
     "topic_selection_summary_characters": 160,
