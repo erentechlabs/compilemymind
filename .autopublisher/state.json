@@ -342,11 +342,20 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:23:49.098969Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:17:14.862866Z",
+      "time": "2026-07-15T14:23:49.099030Z",
       "result": "qa_failed"
     }
   },
@@ -373,6 +382,14 @@
       "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
       "reason": "qa_failed",
       "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:23:49.098969Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
     }
   ]
