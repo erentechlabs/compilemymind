@@ -2512,8 +2512,34 @@ def normalize_shell_placeholders(markdown: str) -> str:
 
 def normalize_code_fence_languages(markdown: str) -> str:
     """Label unlabeled fenced examples so syntax and accessibility checks can run."""
-    def replace_block(match: re.Match[str]) -> str:
-        fence, code, closing = match.groups()
+    lines = markdown.splitlines()
+    normalized: list[str] = []
+    active_fence: tuple[str, int] | None = None
+    for index, line in enumerate(lines):
+        match = re.match(r"^(\s*)(`{3,}|~{3,})(.*)$", line)
+        if not match:
+            normalized.append(line)
+            continue
+        indent, fence, info = match.groups()
+        if active_fence:
+            character, minimum_length = active_fence
+            if fence[0] == character and len(fence) >= minimum_length and not info.strip():
+                active_fence = None
+            normalized.append(line)
+            continue
+        active_fence = (fence[0], len(fence))
+        if info.strip():
+            normalized.append(line)
+            continue
+        closing_index = next(
+            (
+                candidate
+                for candidate in range(index + 1, len(lines))
+                if re.match(rf"^\s*{re.escape(fence[0])}{{{len(fence)},}}\s*$", lines[candidate])
+            ),
+            len(lines),
+        )
+        code = "\n".join(lines[index + 1:closing_index])
         stripped = code.lstrip()
         if re.match(r"(?s)^[\[{]", stripped):
             language = "json"
@@ -2523,9 +2549,9 @@ def normalize_code_fence_languages(markdown: str) -> str:
             language = "bash"
         else:
             language = "text"
-        return f"{fence}{language}\n{code}{closing}"
-
-    return re.sub(r"(?ms)^(```|~~~)\s*\n(.*?)(^\1\s*$)", replace_block, markdown)
+        normalized.append(f"{indent}{fence}{language}")
+    result = "\n".join(normalized)
+    return result + ("\n" if markdown.endswith("\n") else "")
 
 
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:

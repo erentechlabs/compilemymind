@@ -52,7 +52,7 @@ kubectl auth can-i '*' '*'
 
 # Check if you can get logs from pods
 kubectl auth can-i get pods --subresource=log
-```bash
+```
 Impersonation is useful for troubleshooting permissions for other users or service accounts. To use `--as`, the caller must be allowed to impersonate the target subject.
 
 ## Common RBAC Failure Modes and Diagnostic Workflow
@@ -82,7 +82,7 @@ If the output is `no`, check RoleBindings in the `ci` namespace:
 
 ```bash
 kubectl get rolebindings -n ci
-```bash
+```
 Look for a binding that grants `create` on `pods` to the service account. If missing, create a Role and RoleBinding:
 
 ```bash
@@ -98,7 +98,7 @@ A user attempts to list secrets across all namespaces but receives a 403 error. 
 
 ```bash
 kubectl auth can-i list secrets --all-namespaces --as=alice
-```bash
+```
 If denied, check for a ClusterRoleBinding assigning the necessary ClusterRole to the user. If not present, update accordingly.
 
 ### Example: Application Fails to Access Custom Resource

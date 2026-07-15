@@ -1125,6 +1125,19 @@ kubectl auth can-i get pods
         self.assertIn("```bash", normalized)
         self.assertEqual(autopublisher.code_block_issues(normalized), [])
 
+    def test_fence_language_normalizer_preserves_closing_fence(self):
+        markdown = """## Check access
+
+```bash
+kubectl auth can-i get pods
+```
+
+Continue with prose.
+"""
+        normalized = autopublisher.normalize_code_fence_languages(markdown)
+        self.assertEqual(normalized.count("```bash"), 1)
+        self.assertIn("kubectl auth can-i get pods\n```\n\nContinue", normalized)
+
     def test_heading_hierarchy_and_generic_intro_are_rejected(self):
         markdown = "In today's rapidly evolving digital landscape, networking matters.\n\n## Start\n\n#### Skipped"
         self.assertTrue(autopublisher.introduction_issues(markdown))
