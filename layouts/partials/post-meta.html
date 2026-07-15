@@ -9,12 +9,6 @@
       <span class="meta-separator">&bull;</span>
       <time datetime="{{ . }}" class="post-verification-date">Technically verified {{ time.AsTime . | time.Format ":date_long" }}</time>
     {{ end }}
-    {{ with .Params.categories }}
-      <span class="meta-separator">&bull;</span>
-      <a href="{{ "/categories/" | relLangURL }}{{ index . 0 | urlize }}" class="post-category">{{ index . 0 | humanize }}</a>
-    {{ end }}
-    <span class="meta-separator">&bull;</span>
-    <span class="post-publisher">Published by {{ site.Params.publisher | default site.Title }}</span>
     {{ if .WordCount }}
       <span class="meta-separator">&bull;</span>
       <span class="post-word-count">{{ .WordCount }} {{ i18n "wordCount" }}</span>
