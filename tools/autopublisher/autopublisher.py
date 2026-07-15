@@ -2254,6 +2254,31 @@ def extract_html_title(document: str) -> str:
 
 def extract_primary_page_text(document: str) -> str:
     """Prefer documentation body text over headers, navigation, and footers."""
+    content_classes = (
+        "td-content",
+        "theme-doc-markdown",
+        "markdown-body",
+        "article-content",
+        "post-content",
+    )
+    for class_name in content_classes:
+        opening = re.search(
+            rf"(?is)<[a-z0-9]+\b[^>]*\bclass\s*=\s*(?:[\"'][^\"']*\b{re.escape(class_name)}\b[^\"']*[\"']|[^\s>]*\b{re.escape(class_name)}\b[^\s>]*)[^>]*>",
+            document,
+        )
+        if not opening:
+            continue
+        end_markers = [
+            re.search(r"(?is)<div\b[^>]*\bid\s*=\s*(?:[\"']?pre-footer[\"']?)[^>]*>", document[opening.end():]),
+            re.search(r"(?is)<footer\b", document[opening.end():]),
+            re.search(r"(?is)</main\s*>", document[opening.end():]),
+            re.search(r"(?is)</article\s*>", document[opening.end():]),
+        ]
+        offsets = [marker.start() for marker in end_markers if marker]
+        body = document[opening.end():opening.end() + min(offsets)] if offsets else document[opening.end():]
+        text = strip_html(body)
+        if len(text) >= 100:
+            return text
     for tag in ("main", "article"):
         candidates = [
             strip_html(match)
@@ -2310,7 +2335,8 @@ def validate_research_item(item: ResearchItem, config: dict[str, Any], log: Even
         validation.update({"reason": "non_html_source", "content_type": content_type})
         item.validation = validation
         return False
-    document = body[:350000].decode("utf-8", errors="ignore")
+    max_document_bytes = int(config.get("source_validation", {}).get("max_document_bytes", 1500000))
+    document = body[:max_document_bytes].decode("utf-8", errors="ignore")
     page_title = extract_html_title(document)
     page_text = extract_primary_page_text(document)[:12000]
     final_url = headers.get("x-final-url", item.url)

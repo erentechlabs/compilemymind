@@ -1024,6 +1024,18 @@ class AutopublisherTests(unittest.TestCase):
         self.assertIn("Roles and ClusterRoles", text)
         self.assertNotIn("Navigation products", text)
 
+    def test_primary_page_text_prefers_unquoted_documentation_content_class(self):
+        document = """
+        <html><body><main><nav>Large documentation navigation unrelated to the claim.</nav>
+        <div class=td-content><h1>Authorization</h1><p>Authentication happens before authorization.</p>
+        <p>Admission control happens after authorization has completed, when the authorization decision allows the request.</p></div>
+        <div id=pre-footer><p>Feedback and unrelated page chrome.</p></div></main></body></html>
+        """
+        text = autopublisher.extract_primary_page_text(document)
+        self.assertIn("Admission control happens after authorization", text)
+        self.assertNotIn("Large documentation navigation", text)
+        self.assertNotIn("Feedback and unrelated", text)
+
     def test_source_validation_rejects_search_page_and_duplicate_url(self):
         config = {
             "source_validation": {

@@ -65,6 +65,7 @@
     "max_new_posts_per_run": 1
   },
   "source_validation": {
+    "max_document_bytes": 1500000,
     "max_candidates_per_run": 18,
     "min_title_similarity": 0.08,
     "min_relevance_similarity": 0.05,
