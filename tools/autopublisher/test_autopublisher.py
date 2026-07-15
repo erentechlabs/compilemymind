@@ -1099,6 +1099,17 @@ kubectl auth can-i <verb> <resource> --namespace <namespace>
         self.assertIn("${NAMESPACE}", normalized)
         self.assertEqual(autopublisher.code_block_issues(normalized), [])
 
+    def test_unlabeled_command_fence_is_labeled_and_validated(self):
+        markdown = """## Check access
+
+```
+kubectl auth can-i get pods
+```
+"""
+        normalized = autopublisher.normalize_code_fence_languages(markdown)
+        self.assertIn("```bash", normalized)
+        self.assertEqual(autopublisher.code_block_issues(normalized), [])
+
     def test_heading_hierarchy_and_generic_intro_are_rejected(self):
         markdown = "In today's rapidly evolving digital landscape, networking matters.\n\n## Start\n\n#### Skipped"
         self.assertTrue(autopublisher.introduction_issues(markdown))

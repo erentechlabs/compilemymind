@@ -2489,6 +2489,24 @@ def normalize_shell_placeholders(markdown: str) -> str:
     )
 
 
+def normalize_code_fence_languages(markdown: str) -> str:
+    """Label unlabeled fenced examples so syntax and accessibility checks can run."""
+    def replace_block(match: re.Match[str]) -> str:
+        fence, code, closing = match.groups()
+        stripped = code.lstrip()
+        if re.match(r"(?s)^[\[{]", stripped):
+            language = "json"
+        elif re.search(r"(?m)^(?:apiVersion|kind|metadata):", code):
+            language = "yaml"
+        elif re.search(r"(?m)^\s*(?:kubectl|git|az|aws|gcloud|docker|curl|export|echo)\b", code):
+            language = "bash"
+        else:
+            language = "text"
+        return f"{fence}{language}\n{code}{closing}"
+
+    return re.sub(r"(?ms)^(```|~~~)\s*\n(.*?)(^\1\s*$)", replace_block, markdown)
+
+
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:
     missing: list[str] = []
     for item in diagrams:
@@ -2615,6 +2633,7 @@ def normalize_article_payload(
     markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
     site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
     markdown = sanitize_article_external_links(markdown, site_base)
+    markdown = normalize_code_fence_languages(markdown)
     markdown = normalize_shell_placeholders(markdown)
     if posts is not None:
         markdown = ensure_contextual_internal_links(markdown, posts, topic, config)
@@ -2831,9 +2850,15 @@ def claim_evidence_issues(
 def source_similarity_issues(article: dict[str, Any], research: list[ResearchItem], config: dict[str, Any]) -> list[str]:
     markdown = str(article.get("article_markdown", ""))
     limit = float(config.get("publishing", {}).get("max_source_similarity", 1.0))
+    ngram_limit = float(config.get("publishing", {}).get("max_source_ngram_overlap", 0.12))
+    narrative = markdown_without_fenced_code(markdown)
     for item in research:
         source_text = f"{item.title}\n{item.snippet or item.summary}"
-        if source_text and cosine_similarity(markdown, source_text) > limit:
+        if (
+            source_text
+            and cosine_similarity(narrative, source_text) > limit
+            and ngram_overlap(narrative, source_text) > ngram_limit
+        ):
             return [f"Article is too similar to source '{item.title}'."]
     return []
 

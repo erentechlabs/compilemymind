@@ -38,11 +38,12 @@
     "topic_selection_max_output_tokens": 1800
   },
   "publishing": {
-    "min_words": 1400,
-    "target_words": 1900,
+    "min_words": 1000,
+    "target_words": 1600,
     "max_similarity": 0.34,
     "max_title_similarity": 0.48,
     "max_source_similarity": 0.3,
+    "max_source_ngram_overlap": 0.12,
     "max_source_title_similarity": 0.7,
     "max_previous_draft_similarity": 0.9,
     "max_heading_similarity": 0.7,
