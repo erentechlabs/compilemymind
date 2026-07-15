@@ -552,6 +552,70 @@
       },
       "quality_score": 0.9277,
       "path": "content/posts/kubernetes-probe-misconfigurations-fixes/index.md"
+    },
+    {
+      "time": "2026-07-15T17:08:45.006673Z",
+      "title": "Windows DNS Diagnostics with PowerShell: A Safe Troubleshooting Workflow",
+      "slug": "troubleshooting-windows-dns-powershell",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "powershell",
+        "dns",
+        "troubleshooting",
+        "networking"
+      ],
+      "sources": [
+        {
+          "title": "Resolve-DnsName (DnsClient)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Test-NetConnection (NetTCPIP)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetIPConfiguration (NetTCPIP)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netipconfiguration?view=windowsserver2025-ps"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Official-source offline recovery article.",
+        "quality": {
+          "score": 0.9364,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.8276,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.6667,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8276,
+            "source_similarity": 0.801,
+            "existing_content_similarity": 0.8276,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9364,
+      "path": "content/posts/troubleshooting-windows-dns-powershell/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -656,7 +720,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T16:31:39.637854Z",
+      "time": "2026-07-15T17:08:45.006799Z",
       "result": "published"
     }
   },
