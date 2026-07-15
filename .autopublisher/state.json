@@ -366,6 +366,66 @@
       },
       "quality_score": 0.9161,
       "path": "content/posts/troubleshooting-kubernetes-rbac-kubectl-auth-can-i/index.md"
+    },
+    {
+      "time": "2026-07-15T15:01:17.776701Z",
+      "title": "How to Audit GitHub Actions Token Permissions",
+      "slug": "audit-github-actions-token-permissions",
+      "categories": [
+        "cybersecurity"
+      ],
+      "tags": [
+        "github"
+      ],
+      "sources": [
+        {
+          "title": "Authenticate with GITHUB_TOKEN",
+          "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"
+        },
+        {
+          "title": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "title": "Workflow syntax permissions",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, well-supported by official GitHub documentation, and provides clear, actionable guidance for auditing and minimizing GITHUB_TOKEN permissions. All material claims are directly backed by cited sources, including workflow syntax, security best practices, and permission settings. The structure is readable, original, and non-duplicative, with practical examples and a reference table. No broken formatting or missing sources were found. The article offers depth and educational value suitable for its intended audience.",
+        "quality": {
+          "score": 0.9082,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.7091,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.8571,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7091,
+            "source_similarity": 0.3637,
+            "existing_content_similarity": 0.7091,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9082,
+      "path": "content/posts/audit-github-actions-token-permissions/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -425,7 +485,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:57:15.491314Z",
+      "time": "2026-07-15T15:01:17.776882Z",
       "result": "published"
     }
   },
