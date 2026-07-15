@@ -221,6 +221,89 @@ class AutopublisherTests(unittest.TestCase):
         self.assertIn("complete replacement article", feedback)
         self.assertIn("## Existing explanation", feedback)
 
+    def test_generation_feedback_discards_contaminated_draft(self):
+        feedback = autopublisher.generation_feedback(
+            ["Claim is not directly supported by its referenced source text: unrelated claim"],
+            {"article_markdown": "## Contaminated\n\nAn unrelated Headlamp claim."},
+        )
+        self.assertIn("Discard the previous draft completely", feedback)
+        self.assertNotIn("unrelated Headlamp claim", feedback)
+
+    def test_topic_research_does_not_pad_with_unrelated_feed_items(self):
+        topic = {
+            "title": "Building a custom metrics exporter for Kubernetes",
+            "search_intent": "Create and test a Kubernetes metrics exporter for Prometheus",
+            "categories": ["developer-it-tools"],
+            "tags": ["kubernetes", "monitoring"],
+            "source_urls": ["https://kubernetes.io/blog/custom-metrics-exporter"],
+        }
+        selected = autopublisher.ResearchItem(
+            "Kubernetes Blog", "Building a custom metrics exporter for Kubernetes",
+            "https://kubernetes.io/blog/custom-metrics-exporter", "Exporter implementation details", "",
+            ["developer-it-tools"], 2.0,
+        )
+        related = autopublisher.ResearchItem(
+            "Kubernetes Docs", "Kubernetes custom metrics API and Prometheus adapters",
+            "https://kubernetes.io/docs/custom-metrics", "Configure a custom metrics API for Prometheus", "",
+            ["developer-it-tools"], 1.5,
+        )
+        unrelated = autopublisher.ResearchItem(
+            "Kubernetes Blog", "Kubernetes Dashboard migration to Headlamp",
+            "https://kubernetes.io/blog/headlamp", "Use Headlamp as a desktop cluster dashboard", "",
+            ["developer-it-tools"], 2.2,
+        )
+        scoped = autopublisher.research_items_for_topic(
+            topic,
+            [selected, unrelated, related],
+            limit=6,
+            config={"research": {"topic_source_min_similarity": 0.16}},
+        )
+        self.assertIn(selected, scoped)
+        self.assertIn(related, scoped)
+        self.assertNotIn(unrelated, scoped)
+
+    def test_collect_topic_research_validates_focused_grounded_sources(self):
+        topic = {
+            "title": "Configure Kubernetes custom metrics for Prometheus",
+            "search_intent": "Configure a Kubernetes metrics adapter",
+            "categories": ["developer-it-tools"],
+            "tags": ["kubernetes", "monitoring"],
+            "source_urls": ["https://kubernetes.io/docs/custom-metrics"],
+        }
+        initial = autopublisher.ResearchItem(
+            "Kubernetes Docs", "Kubernetes custom metrics",
+            "https://kubernetes.io/docs/custom-metrics", "Custom metrics API", "",
+            ["developer-it-tools"], 2.0, validated=True,
+        )
+
+        class GroundedClient:
+            def grounded_research(self, _prompt):
+                return {
+                    "text": "Focused documentation",
+                    "citations": [
+                        {"title": "Prometheus Adapter configuration", "url": "https://github.com/kubernetes-sigs/prometheus-adapter"},
+                        {"title": "Kubernetes metrics APIs", "url": "https://kubernetes.io/docs/tasks/debug/metrics-resource-metrics-pipeline/"},
+                    ],
+                }
+
+        def validate(items, _config, _log):
+            for item in items:
+                item.validated = True
+                item.snippet = f"{topic['title']} {item.title} configuration guidance"
+            return items
+
+        config = {
+            "gemini": {"enable_google_search_grounding": True},
+            "publishing": {"required_source_count": 3},
+            "research": {"topic_source_min_similarity": 0.1, "topic_source_max_items": 6},
+        }
+        with patch.object(autopublisher, "validate_research_items", side_effect=validate):
+            scoped = autopublisher.collect_topic_research(
+                GroundedClient(), topic, [initial], config, autopublisher.EventLog()
+            )
+        self.assertEqual(len(scoped), 3)
+        self.assertTrue(all(item.validated for item in scoped))
+
     def test_generate_approved_article_retries_with_repair_context(self):
         prompts = []
 
@@ -251,6 +334,34 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(len(prompts), 2)
         self.assertIn("Short draft", prompts[1][0])
         self.assertEqual(prompts[0][1]["temperature"], 0.4)
+
+    def test_generate_approved_article_abandons_repeated_unsupported_claims(self):
+        prompts = []
+
+        class ArticleClient:
+            def generate_json(self, prompt, **_kwargs):
+                prompts.append(prompt)
+                return {"article_markdown": "## Draft\n\nUnsupported material claim."}
+
+        issue = "Claim is not directly supported by its referenced source text: unsupported material claim"
+        with patch.object(autopublisher, "normalize_article_payload", side_effect=lambda article, *_args: article), \
+            patch.object(autopublisher, "enrich_article_metadata"), \
+            patch.object(autopublisher, "deterministic_qa", return_value=[issue]):
+            article, qa, feedback = autopublisher.generate_approved_article(
+                ArticleClient(),
+                {"title": "Scoped topic", "slug": "scoped-topic"},
+                [],
+                [],
+                {
+                    "publishing": {"max_regeneration_attempts": 3, "max_stalled_repair_attempts": 2},
+                    "gemini": {"article_temperature": 0.3},
+                },
+                autopublisher.EventLog(),
+            )
+        self.assertIsNone(article)
+        self.assertIsNone(qa)
+        self.assertEqual(len(prompts), 2)
+        self.assertIn("Discard the previous draft completely", feedback)
 
     def test_choose_topic_excludes_topic_that_failed_generation(self):
         class TopicClient:
@@ -650,6 +761,52 @@ class AutopublisherTests(unittest.TestCase):
             write_result.call_args_list[-1].kwargs,
             {"stage": "article_generation", "error": "model unavailable"},
         )
+
+    def test_publish_continues_with_fresh_topic_when_sources_are_insufficient(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {"required_source_count": 2, "max_topic_attempts": 2},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [
+            autopublisher.ResearchItem("Official", "Source one", "https://trusted.example/one", "One", "", ["technology"], 1.0),
+            autopublisher.ResearchItem("Official", "Source two", "https://trusted.example/two", "Two", "", ["technology"], 0.9),
+        ]
+        first_topic = {"title": "Source-poor topic", "slug": "source-poor", "categories": ["technology"]}
+        second_topic = {"title": "Supported topic", "slug": "supported-topic", "categories": ["technology"]}
+        article = {
+            "title": "Supported topic",
+            "slug": "supported-topic",
+            "description": "Supported description",
+            "categories": ["technology"],
+            "tags": ["technology"],
+            "sources": [],
+            "article_markdown": "## Supported\n\nComplete article.",
+        }
+
+        class Client:
+            def require_key(self):
+                return None
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_topic", side_effect=[first_topic, second_topic]), \
+            patch.object(autopublisher, "collect_topic_research", side_effect=[[], research]), \
+            patch.object(autopublisher, "generate_approved_article", return_value=(article, {"approved": True}, "")) as generate, \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/supported-topic/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(generate.call_count, 1)
+        self.assertEqual(generate.call_args.args[1], second_topic)
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
     def test_publish_result_marker_records_explicit_result(self):
         with tempfile.TemporaryDirectory() as directory:

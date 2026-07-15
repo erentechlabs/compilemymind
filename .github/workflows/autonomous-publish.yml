@@ -1,6 +1,13 @@
 name: Autonomous publishing
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".autopublisher/config.json"
+      - ".github/workflows/autonomous-publish.yml"
+      - "tools/autopublisher/**"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
@@ -16,7 +23,7 @@ permissions:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     env:
       GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       GITHUB_MODELS_TOKEN: ${{ github.token }}

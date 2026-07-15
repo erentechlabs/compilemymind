@@ -31,12 +31,13 @@ Optional direct Cloudflare Pages deployment still uses `CLOUDFLARE_API_TOKEN`, `
 2. Fetch each candidate, verify accessibility, canonical destination, readable title, freshness, trusted domain, and direct subject relevance.
 3. Score the topic against the approved technical clusters and reject disallowed subjects before generation.
 4. Compare title, slug, search intent, headings, body, n-grams, sources, category, and tags with existing content.
-5. Generate an original article with claim-to-source evidence and at least two useful practical elements.
-6. Validate source-backed claims, code and commands, hierarchy, introduction, metadata, controlled taxonomy, internal links, similarity, and quality score.
-7. Run a separate AI accuracy and originality review using the validated source excerpts.
-8. Repair the failed section and repeat validation up to the configured retry limit.
-9. Build Hugo, audit rendered metadata/JSON-LD/canonicals/sitemap, and publish automatically only when every critical gate passes.
-10. Record failures and continue with another candidate when repair is exhausted.
+5. Build a topic-specific source bundle. If the feed does not contain enough directly relevant pages, run a focused grounded search and validate each returned citation before generation.
+6. Generate an original article with claim-to-source evidence and at least two useful practical elements.
+7. Validate source-backed claims, code and commands, hierarchy, introduction, metadata, controlled taxonomy, internal links, similarity, and quality score.
+8. Run a separate AI accuracy and originality review using only the topic-specific validated excerpts.
+9. Repair the failed section and repeat validation up to the configured retry limit.
+10. Build Hugo, audit rendered metadata/JSON-LD/canonicals/sitemap, and publish automatically only when every critical gate passes.
+11. Record failures and continue with another candidate when repair is exhausted.
 
 Approved clusters are cybersecurity, identity and access management, networking, IT fundamentals, Azure, Entra ID, cloud certifications, system administration, practical infrastructure, and developer/IT tools. Celebrity, entertainment, political, automotive, lifestyle, random trend, consumer launch, and unrelated AI topics are explicitly blocked.
 
@@ -50,7 +51,9 @@ Every claim-evidence record stores the claim, supporting source URLs, confidence
 
 ## Recovery, state, and monitoring
 
-Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code/metadata/links, and rerun scoring. When retries are exhausted, the candidate is recorded in `.autopublisher/state.json`, any public bundle is removed, and no sitemap entry is created.
+Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code/metadata/links, and rerun scoring. Unsupported or source-similar drafts are regenerated from a clean slate instead of being pasted into the next prompt. A repeatedly stalled repair is abandoned early so the run can try another topic. The current configuration can attempt five distinct topics, while every individual draft remains subject to the same fail-closed validation gates. When all attempts are exhausted, the candidate is recorded in `.autopublisher/state.json`, any public bundle is removed, and no sitemap entry is created.
+
+`release_gate: no publication; result=rejected` means that no candidate passed the required evidence and quality checks. The release gate must not convert that result into a publication. Recovery happens upstream by collecting focused sources, regenerating the article, and moving to fresh topics.
 
 - Runtime JSONL: `.autopublisher/logs/`
 - Durable scheduler/rejection state: `.autopublisher/state.json`

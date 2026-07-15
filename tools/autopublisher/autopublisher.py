@@ -1120,23 +1120,159 @@ def research_for_prompt(items: list[ResearchItem]) -> list[dict[str, Any]]:
     return payload
 
 
-def research_items_for_topic(topic: dict[str, Any], research: list[ResearchItem], *, limit: int = 8) -> list[ResearchItem]:
-    selected_urls = set(topic.get("source_urls", []) or [])
-    source_items = [item for item in research if item.url in selected_urls]
+def research_item_topic_similarity(topic: dict[str, Any], item: ResearchItem) -> float:
+    topic_text = " ".join(
+        [
+            str(topic.get("title", "")),
+            str(topic.get("search_intent", "")),
+            " ".join(topic.get("tags", []) or []),
+            " ".join(topic.get("categories", []) or []),
+        ]
+    )
+    return cosine_similarity(topic_text, f"{item.title} {item.summary}")
+
+
+def research_items_for_topic(
+    topic: dict[str, Any],
+    research: list[ResearchItem],
+    *,
+    limit: int = 8,
+    config: dict[str, Any] | None = None,
+) -> list[ResearchItem]:
+    """Return only sources that are directly relevant to the selected topic.
+
+    Earlier behavior padded every topic to eight sources even when the remaining
+    feed items covered unrelated products. That contaminated article drafts and
+    made repair attempts repeat unsupported claims from neighboring feed items.
+    """
+    selected_urls = {canonical_url(str(url)) for url in topic.get("source_urls", []) or []}
+    source_items = [item for item in research if canonical_url(item.url) in selected_urls]
     if len(source_items) >= limit:
         return source_items[:limit]
-    topic_tokens = set(tokenize(str(topic.get("title", "")) + " " + " ".join(topic.get("tags", []) or [])))
+    minimum = float((config or {}).get("research", {}).get("topic_source_min_similarity", 0.16))
+    minimum_overlap = int((config or {}).get("research", {}).get("topic_source_min_token_overlap", 2))
+    scoped_selection_enabled = bool(config and "research" in config)
+    topic_categories = set(topic.get("categories", []) or [])
+    topic_tokens = set(
+        tokenize(
+            " ".join(
+                [
+                    str(topic.get("title", "")),
+                    str(topic.get("search_intent", "")),
+                    " ".join(topic.get("tags", []) or []),
+                ]
+            )
+        )
+    )
     ranked = sorted(
         research,
-        key=lambda item: len(topic_tokens & set(tokenize(item.title + " " + item.summary))) + item.score,
+        key=lambda item: (research_item_topic_similarity(topic, item), item.score),
         reverse=True,
     )
     for item in ranked:
-        if item not in source_items:
-            source_items.append(item)
+        if item in source_items:
+            continue
+        similarity = research_item_topic_similarity(topic, item)
+        category_overlap = bool(topic_categories & set(item.categories))
+        shared_tokens = topic_tokens & set(tokenize(f"{item.title} {item.summary}"))
+        if scoped_selection_enabled and topic_tokens and (
+            len(shared_tokens) < minimum_overlap
+            or (similarity < minimum and not (category_overlap and similarity >= minimum * 0.75))
+        ):
+            continue
+        source_items.append(item)
         if len(source_items) >= limit:
             break
     return source_items
+
+
+def grounded_brief_research_items(
+    brief: dict[str, Any] | None,
+    topic: dict[str, Any],
+    *,
+    source: str = "Gemini grounded research",
+) -> list[ResearchItem]:
+    """Convert grounded citations into normal candidates for URL validation."""
+    categories = list(topic.get("categories", []) or [])
+    items: list[ResearchItem] = []
+    for citation in (brief or {}).get("citations", []) or []:
+        if not isinstance(citation, dict):
+            continue
+        title = normalize_space(str(citation.get("title", "")))
+        url = str(citation.get("url", "")).strip()
+        if not title or not url or not is_publishable_source_url(url):
+            continue
+        items.append(
+            ResearchItem(
+                source=source,
+                title=title,
+                url=url,
+                summary=f"Direct source collected for {topic.get('title', title)}.",
+                published="",
+                categories=categories,
+                score=2.5,
+            )
+        )
+    return items
+
+
+def merge_research_items(*groups: list[ResearchItem]) -> list[ResearchItem]:
+    merged: list[ResearchItem] = []
+    seen: set[str] = set()
+    for group in groups:
+        for item in group:
+            key = canonical_url(item.url)
+            if not key or key in seen:
+                continue
+            seen.add(key)
+            merged.append(item)
+    return merged
+
+
+def collect_topic_research(
+    client: "GeminiClient",
+    topic: dict[str, Any],
+    research: list[ResearchItem],
+    config: dict[str, Any],
+    log: "EventLog",
+) -> list[ResearchItem]:
+    """Build and validate a coherent source bundle for one article topic."""
+    required = int(config.get("publishing", {}).get("required_source_count", 1))
+    limit = int(config.get("research", {}).get("topic_source_max_items", 6))
+    scoped = research_items_for_topic(topic, research, limit=limit, config=config)
+    if len(scoped) < required and config.get("gemini", {}).get("enable_google_search_grounding", True):
+        prompt = (
+            "Find current official or primary technical documentation that directly supports this article topic: "
+            f"{topic.get('title', '')}. Reader intent: {topic.get('search_intent', '')}. "
+            "Return directly relevant sources for concrete claims, commands, configuration, version context, and security guidance. "
+            "Prefer official vendor documentation, standards, government publications, release notes, and official repositories. "
+            "Do not return search-result pages, category pages, promotional landing pages, or sources about adjacent products."
+        )
+        try:
+            brief = client.grounded_research(prompt)
+            candidates = grounded_brief_research_items(brief, topic)
+            validated = validate_research_items(candidates, config, log) if candidates else []
+            research = merge_research_items(research, validated)
+            scoped = research_items_for_topic(topic, research, limit=limit, config=config)
+            log.log(
+                "topic_grounded_research_completed",
+                title=topic.get("title"),
+                citation_count=len(candidates),
+                validated_count=len(validated),
+            )
+        except GeminiQuotaError as error:
+            log.log("topic_grounded_research_quota_limited", title=topic.get("title"), error=str(error))
+        except GeminiTransientError as error:
+            log.log("topic_grounded_research_retryable", title=topic.get("title"), error=str(error))
+        except Exception as error:
+            log.log("topic_grounded_research_failed", title=topic.get("title"), error=str(error))
+    log.log(
+        "topic_sources_selected",
+        title=topic.get("title"),
+        count=len(scoped),
+        urls=[item.url for item in scoped],
+    )
+    return scoped
 
 
 def dedupe_sources(sources: list[dict[str, Any]]) -> list[dict[str, str]]:
@@ -1779,7 +1915,7 @@ def article_generation_prompt(
     config: dict[str, Any],
     feedback: str = "",
 ) -> str:
-    source_items = research_items_for_topic(topic, research, limit=8)
+    source_items = research_items_for_topic(topic, research, limit=8, config=config)
     internal_links = select_internal_links(posts, topic, config)
     min_words = int(config.get("publishing", {}).get("min_words", 1400))
     required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
@@ -2233,7 +2369,7 @@ def supplement_article_sources(
         for url in topic.get("source_urls", []) or []
         if canonical_url(str(url).strip()) in researched_urls
     )
-    for item in research_items_for_topic(topic, trusted_research, limit=8):
+    for item in research_items_for_topic(topic, trusted_research, limit=8, config=config):
         sources.append({"title": item.title, "url": item.url})
         if len(dedupe_sources(sources)) >= required:
             break
@@ -2795,7 +2931,22 @@ def generation_feedback(issues: list[str], article: dict[str, Any]) -> str:
     """Give the next attempt actionable QA feedback and enough draft context to repair it."""
     feedback = "\n".join(issue for issue in issues if issue)
     draft = str(article.get("article_markdown", "")).strip()
-    if draft and feedback:
+    clean_slate_required = any(
+        marker in feedback.lower()
+        for marker in (
+            "not directly supported",
+            "too similar",
+            "untrusted",
+            "no validated supporting source",
+            "external links that are not",
+        )
+    )
+    if clean_slate_required:
+        feedback += (
+            "\nDiscard the previous draft completely. Write from a clean slate using only the supplied "
+            "topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft."
+        )
+    elif draft and feedback:
         feedback += (
             "\nThe previous draft was rejected. Return a complete replacement article, not an outline, "
             "summary, or apology. Preserve useful technical detail while fixing every listed issue. "
@@ -2817,6 +2968,8 @@ def generate_approved_article(
     """Generate, repair, and quality-check one topic without ever publishing a rejected draft."""
     feedback = ""
     attempts = int(config.get("publishing", {}).get("max_regeneration_attempts", 2)) + 1
+    maximum_stalled_attempts = max(2, int(config.get("publishing", {}).get("max_stalled_repair_attempts", 2)))
+    blocking_counts: Counter[str] = Counter()
     article_temperature = float(config.get("gemini", {}).get("article_temperature", 0.4))
     for attempt in range(1, attempts + 1):
         log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
@@ -2831,6 +2984,23 @@ def generate_approved_article(
         if issues:
             feedback = generation_feedback(issues, article)
             log.log("article_deterministic_qa_failed", attempt=attempt, issues=issues)
+            issue_text = "\n".join(issues).lower()
+            blocking_kinds = {
+                kind
+                for kind, marker in (
+                    ("unsupported_claim", "not directly supported"),
+                    ("source_similarity", "too similar to source"),
+                    ("existing_similarity", "too similar to existing"),
+                    ("incomplete_article", "article is too short"),
+                    ("invalid_source", "untrusted"),
+                )
+                if marker in issue_text
+            }
+            blocking_counts.update(blocking_kinds)
+            stalled = sorted(kind for kind in blocking_kinds if blocking_counts[kind] >= maximum_stalled_attempts)
+            if stalled and attempt < attempts:
+                log.log("article_repair_stalled", attempt=attempt, title=topic.get("title"), failure_kinds=stalled)
+                break
             continue
         qa = ai_qa(client, article, topic, config, log, research)
         if not isinstance(qa, dict):
@@ -3237,6 +3407,23 @@ def run_publish(args: argparse.Namespace) -> int:
             )
             grounded_brief = client.grounded_research(grounded_prompt)
             log.log("grounded_research_completed", citation_count=len(grounded_brief.get("citations", [])))
+            discovery_candidates = grounded_brief_research_items(
+                grounded_brief,
+                {
+                    "title": "Compile My Mind approved technical topic discovery",
+                    "categories": [],
+                },
+                source="Gemini grounded topic discovery",
+            )
+            if discovery_candidates:
+                validated_discovery = validate_research_items(discovery_candidates, config, log)
+                research = merge_research_items(research, validated_discovery)
+                log.log(
+                    "grounded_discovery_sources_merged",
+                    candidates=len(discovery_candidates),
+                    validated=len(validated_discovery),
+                    total_research_sources=len(research),
+                )
         except GeminiQuotaError as error:
             if grounded_research_fallback_enabled(config):
                 grounded_brief = None
@@ -3320,10 +3507,25 @@ def run_publish(args: argparse.Namespace) -> int:
                 slug=topic.get("slug"),
             )
         try:
+            topic_research = collect_topic_research(client, topic, research, config, log)
+            required_topic_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+            if len(topic_research) < required_topic_sources:
+                feedback = (
+                    f"Only {len(topic_research)} directly relevant validated sources were available; "
+                    f"at least {required_topic_sources} are required."
+                )
+                log.log(
+                    "topic_generation_exhausted",
+                    attempt=topic_attempt,
+                    title=topic.get("title"),
+                    stage="topic_source_collection",
+                    feedback=feedback,
+                )
+                continue
             final_article, final_qa, feedback = generate_approved_article(
                 client,
                 topic,
-                research,
+                topic_research,
                 posts,
                 config,
                 log,
