@@ -32,7 +32,9 @@ class AutopublisherTests(unittest.TestCase):
         publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
         trigger_block = publisher_workflow.split("concurrency:", 1)[0]
         deploy_workflow = (autopublisher.ROOT / ".github/workflows/deploy.yml").read_text(encoding="utf-8")
-        self.assertNotIn("  push:", trigger_block)
+        self.assertIn("  push:", trigger_block)
+        self.assertIn('".autopublisher/publish-now"', trigger_block)
+        self.assertNotIn('"tools/autopublisher/**"', trigger_block)
         self.assertIn("schedule:", trigger_block)
         self.assertIn("workflow_dispatch:", trigger_block)
         self.assertIn("python -m unittest discover -s tools/autopublisher", deploy_workflow)

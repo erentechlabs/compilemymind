@@ -1,6 +1,14 @@
 name: Autonomous publishing
 
 on:
+  # A deliberate publish trigger is limited to this sentinel path. Ordinary
+  # code/configuration pushes remain test-and-deploy only, preventing paid
+  # duplicate attempts while still allowing an automated run when requested.
+  push:
+    branches:
+      - main
+    paths:
+      - ".autopublisher/publish-now"
   schedule:
     - cron: "17 */6 * * *"
   workflow_dispatch:
