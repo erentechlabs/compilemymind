@@ -305,6 +305,67 @@
         "reason": "The article is technically excellent, providing highly accurate mathematical breakdowns of HNSW memory consumption, clear SQL examples for pgvector, and a well-structured comparison of architectural tradeoffs. The diagrams and charts are correctly referenced and integrated. The only minor issue is one unused source in the bibliography."
       },
       "path": "content/posts/postgres-pgvector-vs-specialized-vector-databases/index.md"
+    },
+    {
+      "time": "2026-07-15T14:57:15.491175Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "categories": [
+        "developer-it-tools"
+      ],
+      "tags": [
+        "rbac",
+        "kubernetes"
+      ],
+      "sources": [
+        {
+          "title": "Using RBAC Authorization",
+          "url": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+        },
+        {
+          "title": "Authorization",
+          "url": "https://kubernetes.io/docs/reference/access-authn-authz/authorization/"
+        },
+        {
+          "title": "kubectl auth can-i",
+          "url": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, directly supported by official Kubernetes documentation for all material claims, and avoids unsupported statements. It provides original, non-duplicative content with practical troubleshooting steps, clear structure, and relevant examples. Formatting is correct, and sources are properly cited. The guidance on impersonation is precise and adheres to the requested constraint. No factual, structural, or educational issues found.",
+        "quality": {
+          "score": 0.9161,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.7498,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.8889,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7498,
+            "source_similarity": 0.3858,
+            "existing_content_similarity": 0.7498,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9161,
+      "path": "content/posts/troubleshooting-kubernetes-rbac-kubectl-auth-can-i/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -364,8 +425,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:50:16.938045Z",
-      "result": "qa_failed"
+      "time": "2026-07-15T14:57:15.491314Z",
+      "result": "published"
     }
   },
   "rejected_articles": [
