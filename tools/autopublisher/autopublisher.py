@@ -646,7 +646,12 @@ class GeminiClient:
         }
         response = self._generate_content(selected_model, prompt, config)
         text = self._extract_text(response)
-        return parse_model_json(text)
+        try:
+            return parse_model_json(text)
+        except ValueError as error:
+            raise GeminiTransientError(
+                f"{selected_model} returned invalid or truncated JSON; the task will be retried safely: {error}"
+            ) from error
 
     def generate_text(
         self,
@@ -1347,7 +1352,7 @@ def topic_selection_existing_posts(posts: list[Post], config: dict[str, Any]) ->
             "title": post.title,
             "slug": post.slug,
             "categories": post.categories,
-            "tags": post.tags[:6],
+            "tags": post.tags[:4],
             "description": normalize_space(post.description)[:description_chars],
         }
         for post in posts[-limit:]
@@ -1366,7 +1371,7 @@ def topic_selection_prompt(
     month = str(local_now(config).month)
     seasonal = config.get("seasonal_focus", {}).get(month, [])
     grounded = {
-        "text": normalize_space(str((grounded_brief or {}).get("text", "")))[:1400],
+        "text": normalize_space(str((grounded_brief or {}).get("text", "")))[:600],
         "citations": [
             {
                 "title": str(citation.get("title", ""))[:160],
@@ -1374,7 +1379,7 @@ def topic_selection_prompt(
             }
             for citation in ((grounded_brief or {}).get("citations", []) or [])
             if isinstance(citation, dict) and citation.get("url")
-        ][:6],
+        ][:4],
     }
     return f"""
 You are the autonomous editorial system for Compile My Mind. Publish only practical technical material in these approved areas: cybersecurity, identity and access management, networking, IT fundamentals, Microsoft Azure, Microsoft Entra ID, cloud certifications, system administration, practical infrastructure guides, and developer/IT tools.
@@ -1390,28 +1395,24 @@ Hard requirements:
 - Prioritize a reader problem, current trustworthy documentation, and durable search demand.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
 - Use titles that answer a concrete intent, such as "How to Configure", "Troubleshooting", "A Practical Guide", "X vs. Y", or "Common Errors and Fixes". Never copy a source or announcement title.
-- Treat AI engineering, programming languages and runtimes, compilers, distributed systems, system design, databases, developer experience, observability, open source, and emerging software tools as first-class editorial areas.
-- Actively consider new language/runtime versions, AI model and API releases, Apple/iOS and Android platform changes, Swift/Kotlin releases, mobile frameworks, cloud service changes, developer tooling, certification updates, and practical implementation guides—not only security or Azure topics.
-- Include both durable technical explainers and timely release-driven articles when reliable sources support them.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
-- Create a multi-part series only when the topic naturally benefits from it.
-- Return exactly 8 candidate topics, ranked best to worst.
-- Include backup candidates across at least 3 approved categories so the automation can continue if the first idea is rejected.
+- Return exactly 4 concise candidate topics, ranked best to worst.
+- Include backup candidates across at least 2 approved categories so processing can continue after a rejection.
 
 Category counts:
-{json.dumps(counts, ensure_ascii=False, indent=2)}
+{json.dumps(counts, ensure_ascii=False, separators=(",", ":"))}
 
 Allowed categories:
 {json.dumps(config.get("taxonomy", {}).get("allowed_categories", []), ensure_ascii=False)}
 
 Existing posts:
-{json.dumps(existing_posts, ensure_ascii=False, indent=2)}
+{json.dumps(existing_posts, ensure_ascii=False, separators=(",", ":"))}
 
 Research feed items:
-{json.dumps(topic_selection_research_payload(research, config), ensure_ascii=False, indent=2)}
+{json.dumps(topic_selection_research_payload(research, config), ensure_ascii=False, separators=(",", ":"))}
 
 Optional Gemini grounded research brief:
-{json.dumps(grounded, ensure_ascii=False, indent=2)}
+{json.dumps(grounded, ensure_ascii=False, separators=(",", ":"))}
 
 Return JSON only with this shape:
 {{
@@ -1426,13 +1427,7 @@ Return JSON only with this shape:
       "why_now": "why this topic is timely or evergreen",
       "source_urls": ["https://..."],
       "needs_diagram": true,
-      "needs_chart": false,
-      "series": {{
-        "name": "",
-        "part": null,
-        "total_estimate": null,
-        "planned_next_parts": []
-      }}
+      "needs_chart": false
     }}
   ],
   "editorial_reasoning": "short reasoning"
@@ -1450,12 +1445,22 @@ def choose_topic(
     excluded_slugs: set[str] | None = None,
 ) -> dict[str, Any] | None:
     excluded_slugs = excluded_slugs or set()
-    result = client.generate_json(
-        topic_selection_prompt(research, grounded_brief, posts, config),
-        temperature=float(config.get("github_models", {}).get("topic_selection_temperature", 0.1)),
-        max_output_tokens=int(config.get("github_models", {}).get("topic_selection_max_output_tokens", 2400)),
-        task="topic_selection",
-    )
+    prompt = topic_selection_prompt(research, grounded_brief, posts, config)
+    max_prompt_characters = int(config.get("research", {}).get("topic_selection_max_prompt_characters", 18000))
+    if len(prompt) > max_prompt_characters:
+        log.log("topic_selection_prompt_rejected", characters=len(prompt), maximum=max_prompt_characters)
+        result: dict[str, Any] = {}
+    else:
+        try:
+            result = client.generate_json(
+                prompt,
+                temperature=float(config.get("github_models", {}).get("topic_selection_temperature", 0.1)),
+                max_output_tokens=int(config.get("github_models", {}).get("topic_selection_max_output_tokens", 1800)),
+                task="topic_selection",
+            )
+        except (ValueError, GeminiTransientError) as error:
+            log.log("topic_selection_model_invalid", error=str(error))
+            result = {}
     candidates = result.get("topics") or []
     if isinstance(result.get("topic"), dict):
         candidates.insert(0, result["topic"])

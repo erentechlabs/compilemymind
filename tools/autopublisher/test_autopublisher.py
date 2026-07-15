@@ -130,6 +130,22 @@ class AutopublisherTests(unittest.TestCase):
 
         self.assertEqual(result, {"topics": []})
 
+    def test_invalid_gemini_json_is_classified_as_retryable(self):
+        malformed_response = (
+            200,
+            json.dumps({"candidates": [{"content": {"parts": [{"text": '{"topics": [{"title": "cut off"'}]}}]}).encode(),
+            {},
+        )
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {"enabled": False},
+        }
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "gemini-key"}, clear=False), \
+            patch.object(autopublisher, "http_request", return_value=malformed_response):
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiTransientError):
+                client.generate_json("Choose a topic", task="topic_selection")
+
     def test_metadata_enrichment_uses_lightweight_task(self):
         calls = []
 
@@ -355,7 +371,57 @@ class AutopublisherTests(unittest.TestCase):
             },
         }
         prompt = autopublisher.topic_selection_prompt(research, None, posts, config)
-        self.assertLess(len(prompt), 24000)
+        self.assertLess(len(prompt), 18000)
+        self.assertIn("exactly 4 concise candidate topics", prompt)
+        self.assertNotIn("exactly 8 candidate topics", prompt)
+        self.assertNotIn("Apple/iOS and Android platform changes", prompt)
+
+    def test_topic_selection_model_failure_uses_deterministic_research_fallback(self):
+        class InvalidTopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                raise autopublisher.GeminiTransientError("truncated JSON")
+
+        research = [
+            autopublisher.ResearchItem(
+                source="Official docs",
+                title="Network troubleshooting commands",
+                url="https://example.com/network-troubleshooting",
+                summary="Official network troubleshooting guidance.",
+                published="2026-07-15",
+                categories=["technology"],
+                score=1.0,
+                validated=True,
+            )
+        ]
+        selected = autopublisher.choose_topic(
+            InvalidTopicClient(),
+            research,
+            None,
+            [],
+            {
+                "site": {"timezone": "UTC"},
+                "taxonomy": {"allowed_categories": ["technology"], "balance_categories": ["technology"]},
+                "research": {"topic_selection_max_prompt_characters": 18000},
+            },
+            autopublisher.EventLog(),
+        )
+        self.assertIsNotNone(selected)
+        self.assertEqual(selected["source_urls"], [research[0].url])
+
+    def test_github_changelog_is_an_allowed_official_source(self):
+        config = autopublisher.load_config()
+        url = "https://github.blog/changelog/2026-07-14-code-scanning-shows-ai-security-detections-on-pull-requests"
+        self.assertTrue(autopublisher.is_trusted_source_url(url, config))
+
+    def test_removed_broken_feeds_are_not_in_research_inventory(self):
+        config = autopublisher.load_config()
+        urls = {source["url"] for source in config["research"]["trusted_sources"]}
+        self.assertNotIn(
+            "https://techcommunity.microsoft.com/plugins/custom/microsoft/o365/custom-blog-rss?board.id=AzureActiveDirectory",
+            urls,
+        )
+        self.assertNotIn("https://www.cisa.gov/cybersecurity-advisories/all.xml", urls)
+        self.assertNotIn("https://www.ietf.org/feeds/ietf.xml", urls)
 
     def test_active_model_state_overrides_config_defaults(self):
         with tempfile.TemporaryDirectory() as directory:
