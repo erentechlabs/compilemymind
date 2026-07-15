@@ -1,5 +1,6 @@
 # Hugo build output — Netlify rebuilds this from source
 public/
+.hugo_build.lock
 
 # Hugo resource cache (generated images, fingerprinted assets)
 resources/
