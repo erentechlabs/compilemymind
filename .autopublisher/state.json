@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "generated_posts": [
     {
       "time": "2026-07-12T19:15:08.041301Z",
@@ -315,12 +315,31 @@
       "topic": "Securing Autonomous AI Agents: How to Safely Execute Untrusted AI-Generated Code",
       "reason": "qa_failed",
       "feedback": "Article contains external links that are not in its trusted source list.\nArticle is too similar to existing post 'How Ghostcommit Prompt Injections Bypass AI Code Review Agents' (0.53)."
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T13:50:14.120304Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T08:38:51.417156Z",
-      "result": "published"
+      "time": "2026-07-15T13:50:14.120404Z",
+      "result": "qa_failed"
     }
-  }
+  },
+  "rejected_articles": [
+    {
+      "time": "2026-07-15T13:50:14.120304Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    }
+  ]
 }
