@@ -163,6 +163,13 @@
   border-radius: 2px;
 }
 
+/* Keep the primary links anchored to the top-right of the desktop header. */
+@media (min-width: 769px) {
+  .header-menu {
+    margin-left: auto;
+  }
+}
+
 .topic-browser {
   width: min(100%, 900px);
   margin: 0 auto;
