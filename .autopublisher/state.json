@@ -324,11 +324,20 @@
       "reason": "qa_failed",
       "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:04:33.206371Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T13:50:14.120404Z",
+      "time": "2026-07-15T14:04:33.206502Z",
       "result": "qa_failed"
     }
   },
@@ -339,6 +348,14 @@
       "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
       "reason": "qa_failed",
       "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:04:33.206371Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
     }
   ]
