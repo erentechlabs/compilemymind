@@ -118,9 +118,9 @@ paginate = 12
   weight  = 20
 
 [[menus.main]]
-  name   = "Topics"
-  url    = "/#topics"
-  weight = 25
+  name    = "Topics"
+  pageRef = "/topics"
+  weight  = 25
 
 [[menus.main]]
   name    = "Tags"
