@@ -490,6 +490,15 @@
       "reason": "qa_failed",
       "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T15:25:02.516456Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "reason": "build_failed",
+      "detail": "content/posts/troubleshooting-windows-event-logs-powershell/index.md",
+      "attempts": 0
     }
   ],
   "last_runs": {
@@ -546,6 +555,15 @@
       "reason": "qa_failed",
       "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 5
+    },
+    {
+      "time": "2026-07-15T15:25:02.516456Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "reason": "build_failed",
+      "detail": "content/posts/troubleshooting-windows-event-logs-powershell/index.md",
+      "attempts": 0
     }
-  ]
+  ],
+  "provider_cooldowns": {}
 }
