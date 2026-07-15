@@ -1,0 +1,11 @@
+# Retired pages: redirect before Cloudflare Pages serves any stale assets.
+/categories/site / 301
+/categories/site/ / 301
+/contact / 301
+/contact/ / 301
+/privacy-policy / 301
+/privacy-policy/ / 301
+/terms / 301
+/terms/ / 301
+/cookie-policy / 301
+/cookie-policy/ / 301
