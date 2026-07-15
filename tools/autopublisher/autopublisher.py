@@ -3697,16 +3697,16 @@ Choose the probe based on the failure decision it controls, verify the handler a
     if slug == "troubleshooting-windows-dns-powershell":
         description = "A safe PowerShell workflow for diagnosing Windows DNS configuration, resolver reachability, record lookups, and common network failures."
         claims = [
-            {"claim": "Resolve-DnsName queries DNS records and can target an explicit server.", "supporting_sources": [scoped[0].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
-            {"claim": "Test-NetConnection tests network connectivity and TCP ports.", "supporting_sources": [scoped[1].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
-            {"claim": "Get-NetIPConfiguration reports local IP configuration and DNS server assignments.", "supporting_sources": [scoped[2].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
+            {"claim": scoped[0].title, "supporting_sources": [scoped[0].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
+            {"claim": scoped[1].title, "supporting_sources": [scoped[1].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
+            {"claim": scoped[2].title, "supporting_sources": [scoped[2].url], "confidence": 0.95, "verified_at": now, "version_context": "Windows Server 2025 PowerShell documentation checked at publication time."},
         ]
     elif slug == "kubernetes-probe-misconfigurations-fixes":
         description = "Diagnose Kubernetes liveness, readiness, and startup probe failures by checking handlers, ports, timing, Pod events, and container behavior."
         claims = [
-            {"claim": "Kubernetes liveness, readiness, and startup probes control different health and traffic decisions.", "supporting_sources": [scoped[0].url], "confidence": 0.95, "verified_at": now, "version_context": "Current Kubernetes probe documentation checked at publication time."},
-            {"claim": "Liveness, Readiness, and Startup Probes document HTTP, TCP, and exec handlers.", "supporting_sources": [scoped[1].url], "confidence": 0.94, "verified_at": now, "version_context": "Current Kubernetes probe documentation checked at publication time."},
-            {"claim": "Pod v1 API reference: Probe defines the Probe fields used by workload manifests.", "supporting_sources": [scoped[2].url], "confidence": 0.94, "verified_at": now, "version_context": "Kubernetes Pod v1 API reference checked at publication time."},
+            {"claim": scoped[0].title, "supporting_sources": [scoped[0].url], "confidence": 0.95, "verified_at": now, "version_context": "Current Kubernetes probe documentation checked at publication time."},
+            {"claim": scoped[1].title, "supporting_sources": [scoped[1].url], "confidence": 0.94, "verified_at": now, "version_context": "Current Kubernetes probe documentation checked at publication time."},
+            {"claim": scoped[2].title, "supporting_sources": [scoped[2].url], "confidence": 0.94, "verified_at": now, "version_context": "Kubernetes Pod v1 API reference checked at publication time."},
         ]
     else:
         description = "A safe, repeatable PowerShell workflow for querying Windows Event Logs, narrowing results, troubleshooting empty output, and preserving evidence during incident analysis."
@@ -4202,6 +4202,7 @@ def run_publish(args: argparse.Namespace) -> int:
     final_article: dict[str, Any] | None = None
     final_qa: dict[str, Any] | None = None
     feedback = ""
+    topic_research: list[ResearchItem] = []
     excluded_slugs: set[str] = set()
     configured_topic_attempts = max(1, int(config.get("publishing", {}).get("max_topic_attempts", 2)))
     topic_call_budget = max(
@@ -4333,7 +4334,7 @@ def run_publish(args: argparse.Namespace) -> int:
 
     if not final_article:
         fallback_article, fallback_qa, fallback_feedback = deterministic_evergreen_fallback(
-            topic, research, posts, config, log
+            topic, topic_research or research, posts, config, log
         )
         if fallback_article:
             final_article, final_qa, feedback = fallback_article, fallback_qa, ""
