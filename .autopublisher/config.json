@@ -39,8 +39,8 @@
     "topic_selection_max_output_tokens": 1800
   },
   "publishing": {
-    "min_words": 1000,
-    "target_words": 1600,
+    "min_words": 900,
+    "target_words": 1500,
     "max_similarity": 0.34,
     "max_title_similarity": 0.48,
     "max_source_similarity": 0.3,
@@ -222,6 +222,9 @@
         "search_intent": "Diagnose Kubernetes authorization failures using RBAC inspection and kubectl auth can-i.",
         "needs_diagram": false,
         "needs_chart": false,
+        "generation_constraints": [
+          "For kubectl impersonation, state only that the caller must be allowed to use impersonation for the --as option. Do not describe vague privileged users or infer broader permissions."
+        ],
         "seed_sources": [
           {"title": "Using RBAC Authorization", "url": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"},
           {"title": "Authorization", "url": "https://kubernetes.io/docs/reference/access-authn-authz/authorization/"},

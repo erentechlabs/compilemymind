@@ -3644,7 +3644,7 @@ def run_publish(args: argparse.Namespace) -> int:
     previous_publish_result = str(state.get("last_runs", {}).get("publish", {}).get("result", ""))
     prioritize_evergreen = bool(
         config.get("publishing", {}).get("prefer_evergreen_after_quota", True)
-        and previous_publish_result == "quota_limited"
+        and previous_publish_result in {"quota_limited", "qa_failed"}
     )
     grounded_brief: dict[str, Any] | None = None
     if not prioritize_evergreen and config.get("gemini", {}).get("enable_google_search_grounding", True):
