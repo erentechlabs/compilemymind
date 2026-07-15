@@ -355,8 +355,9 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:23:49.099030Z",
-      "result": "qa_failed"
+      "time": "2026-07-15T14:26:32.054580Z",
+      "result": "quota_limited",
+      "stage": "topic_selection"
     }
   },
   "rejected_articles": [
