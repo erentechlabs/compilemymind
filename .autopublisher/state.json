@@ -481,12 +481,21 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T15:06:09.632848Z",
+      "title": "How to Harden Exposed Cloud Functions: Practical Security Steps",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 5
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T15:01:17.776882Z",
-      "result": "published"
+      "time": "2026-07-15T15:06:09.632899Z",
+      "result": "qa_failed"
     }
   },
   "rejected_articles": [
@@ -529,6 +538,14 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "time": "2026-07-15T15:06:09.632848Z",
+      "title": "How to Harden Exposed Cloud Functions: Practical Security Steps",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 5
     }
   ]
 }
