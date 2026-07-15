@@ -570,12 +570,21 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 790 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe misconfigurations can cause repeated restarts or make workloads unavailable, especially for applications with slow Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T16:11:24.355288Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T15:49:58.918169Z",
-      "result": "published"
+      "time": "2026-07-15T16:11:24.355375Z",
+      "result": "qa_failed"
     }
   },
   "rejected_articles": [
@@ -641,6 +650,14 @@
       "slug": "kubernetes-probe-misconfigurations-fixes",
       "reason": "qa_failed",
       "detail": "Article is too short: 790 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe misconfigurations can cause repeated restarts or make workloads unavailable, especially for applications with slow Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T16:11:24.355288Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
     }
   ],
