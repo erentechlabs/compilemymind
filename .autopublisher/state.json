@@ -333,13 +333,21 @@
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:17:14.862766Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T14:10:48.862577Z",
-      "result": "quota_limited",
-      "stage": "evergreen_article_generation"
+      "time": "2026-07-15T14:17:14.862866Z",
+      "result": "qa_failed"
     }
   },
   "rejected_articles": [
@@ -357,6 +365,14 @@
       "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:17:14.862766Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 5
     }
   ]
