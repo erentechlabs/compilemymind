@@ -616,6 +616,71 @@
       },
       "quality_score": 0.9364,
       "path": "content/posts/troubleshooting-windows-dns-powershell/index.md"
+    },
+    {
+      "time": "2026-07-15T20:26:45.183360Z",
+      "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+      "slug": "troubleshoot-microsoft-entra-sign-in-errors",
+      "categories": [
+        "entra-id",
+        "identity-access-management"
+      ],
+      "tags": [
+        "entra-id",
+        "identity",
+        "authentication",
+        "conditional-access",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "What are Microsoft Entra sign-in logs?",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins"
+        },
+        {
+          "title": "Use sign-in diagnostics",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-use-sign-in-diagnostics"
+        },
+        {
+          "title": "Sign-in log activity details",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9124,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.6516,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9231,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.6516,
+            "source_similarity": 0.6406,
+            "existing_content_similarity": 0.6516,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9124,
+      "path": "content/posts/troubleshoot-microsoft-entra-sign-in-errors/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -738,8 +803,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T20:04:27.433095Z",
-      "result": "qa_failed"
+      "time": "2026-07-15T20:26:45.183528Z",
+      "result": "published"
     }
   },
   "rejected_articles": [
