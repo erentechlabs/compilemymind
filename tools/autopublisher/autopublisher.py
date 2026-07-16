@@ -3256,9 +3256,6 @@ def deterministic_qa(
     )
     max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
-    if similarity["score"] > max_similarity:
-        post = similarity["post"]
-        issues.append(f"Article is too similar to existing post '{post.title if post else ''}' ({similarity['score']:.2f}).")
     if similarity["title_score"] > max_title_similarity:
         post = similarity["post"]
         issues.append(f"Title is too similar to existing post '{post.title if post else ''}' ({similarity['title_score']:.2f}).")
@@ -3277,6 +3274,19 @@ def deterministic_qa(
         source_urls=[str(source.get("url", "")) for source in article.get("sources", []) or []],
         posts=posts,
     )
+    # A raw token score also counts generic safety framing and broad taxonomy
+    # terms. It is only a duplicate when the topic-aware semantic score agrees
+    # *and* a content-specific signal agrees; title, intent, heading, exact
+    # n-gram, and source overlap checks below remain independently fail-closed.
+    structural_duplicate = (
+        duplicate["title"] > max_title_similarity
+        or duplicate["intent"] > float(config.get("publishing", {}).get("max_search_intent_similarity", 1.0))
+        or duplicate["heading"] > float(config.get("publishing", {}).get("max_heading_similarity", 1.0))
+        or duplicate["ngram"] > float(config.get("publishing", {}).get("max_ngram_overlap", 1.0))
+    )
+    if similarity["score"] > max_similarity and duplicate["semantic"] > max_similarity and structural_duplicate:
+        post = similarity["post"]
+        issues.append(f"Article is too similar to existing post '{post.title if post else ''}' ({similarity['score']:.2f}).")
     if duplicate["heading"] > float(config.get("publishing", {}).get("max_heading_similarity", 1.0)):
         issues.append("Article heading sequence is too similar to existing content.")
     if duplicate["ngram"] > float(config.get("publishing", {}).get("max_ngram_overlap", 1.0)):
@@ -3512,30 +3522,42 @@ def configured_offline_evergreen_fallback(
     steps = [item for item in template.get("steps", []) or [] if isinstance(item, dict)]
     symptoms = [item for item in template.get("symptoms", []) or [] if isinstance(item, dict)]
     checklist = [normalize_space(str(item)) for item in template.get("checklist", []) or []]
+    operational_notes = [normalize_space(str(item)) for item in template.get("operational_notes", []) or []]
+    evidence_queries = [item for item in template.get("evidence_queries", []) or [] if isinstance(item, dict)]
     if not description or not overview or not preparation or len(steps) < 3 or len(symptoms) < 3 or len(checklist) < 4:
         return None, None, "Configured offline fallback is incomplete."
 
     source_sections = []
     for index, source in enumerate(scoped):
         guidance = normalize_space(str(steps[index % len(steps)].get("source_guidance", "")))
-        source_sections.append(
-            f"### {source.title}\n\n"
+        detail = (
+            f"Official scope: {guidance}"
+            if operational_notes else
             f"Use this official reference to verify the part of the investigation it covers. {guidance} "
             "Treat the document as the authority for product-specific fields, permissions, and user-interface labels; "
             "do not fill a gap with a guess from a similar service or an older screenshot."
         )
+        source_sections.append(f"### {source.title}\n\n{detail}")
     workflow_sections = []
     for index, step in enumerate(steps, start=1):
         title = normalize_space(str(step.get("title", f"Step {index}")))
         body = normalize_space(str(step.get("body", "")))
         if not title or not body:
             return None, None, "Configured offline fallback contains an incomplete workflow step."
-        workflow_sections.append(
-            f"### {index}. {title}\n\n{body} "
-            "Keep this step bounded to the current incident or change request. Record the timestamp, the actor or workload, "
+        suffix = "" if operational_notes else (
+            " Keep this step bounded to the current incident or change request. Record the timestamp, the actor or workload, "
             "the exact result, and the scope of the evidence before moving to the next step. That record makes a later "
             "escalation reproducible and prevents a broad configuration change from hiding the original signal."
         )
+        workflow_sections.append(f"### {index}. {title}\n\n{body}{suffix}")
+    evidence_query_sections = []
+    for item in evidence_queries:
+        title = normalize_space(str(item.get("title", "")))
+        command = str(item.get("command", "")).strip()
+        explanation = normalize_space(str(item.get("explanation", "")))
+        if not title or not command or not explanation:
+            return None, None, "Configured offline fallback contains an incomplete evidence query."
+        evidence_query_sections.append(f"### {title}\n\n```powershell\n{command}\n```\n\n{explanation}")
     symptom_rows = "\n".join(
         f"| {normalize_space(str(item.get('symptom', '')))} | {normalize_space(str(item.get('likely_cause', '')))} | {normalize_space(str(item.get('next_check', '')))} |"
         for item in symptoms
@@ -3548,13 +3570,49 @@ def configured_offline_evergreen_fallback(
             post = next(post for post in posts if post.slug == str(slug))
             internal_links.append(f"[{post.title}]({path})")
     related = " and ".join(internal_links[:3]) or "the related operational guidance in this site"
+    if operational_notes:
+        operational_section = "\n\n".join(
+            f"### {index}. Operational check\n\n{note}"
+            for index, note in enumerate(operational_notes, start=1)
+        )
+        preparation_context = "Record the evidence in the incident before making a change; preserve values and timestamps exactly as observed."
+        interpretation_section = f"## Interpret the evidence\n\n{operational_section}"
+        follow_up = "Record the observed values, command results, and any approved remediation so that the next operator can compare a later incident with the original boundary."
+        version_notes = "Recheck the cited documentation before automating a command or applying this procedure to a different Windows release."
+    else:
+        preparation_context = "Before changing policy, access, networking, or application settings, capture a small reproducible record of the failure. Include the affected identity, workload, tenant or environment, time zone, correlation identifier when available, and the action that produced the result. Mask secrets and personal data in any ticket or shared export. A narrow record is safer to review and lets another administrator test the same hypothesis without repeating a disruptive change."
+        interpretation_section = """## Common mistakes to avoid
+
+Do not treat an isolated success as proof that the underlying configuration is correct. Different users, applications, devices, networks, and token states can follow different paths. Do not remove a security control merely to make one test pass; first identify the exact condition that produced the failure and verify whether a narrower, approved adjustment exists. Avoid copying commands, policy values, or portal labels from old runbooks without checking the current official reference.
+
+Keep the investigation read-only until the evidence identifies a change boundary. If a temporary exception is approved, define who authorized it, when it expires, how it will be monitored, and how the original state will be restored. A reversible experiment is useful; an undocumented workaround creates a second incident to diagnose later."""
+        follow_up = "After the immediate issue is understood, record the conclusion in language that separates facts, inferences, and remaining unknowns. Attach only the necessary evidence and link the relevant official reference rather than pasting a long, unversioned screenshot. If the same pattern returns, compare the new record with the earlier timestamp, scope, and configuration state before making another change. This turns a one-off troubleshooting session into a dependable operating procedure."
+        version_notes = "This article is based on the official sources listed for this topic and was checked at publication time. Cloud services, identity behavior, product labels, and administrative interfaces can change. Recheck the cited documentation before automating a command, relying on a default, or applying the same procedure to a different tenant, subscription, cluster, or operating-system release."
+    evidence_queries_section = (
+        "## Read-only evidence queries\n\n" + "\n\n".join(evidence_query_sections)
+        if evidence_query_sections else ""
+    )
+    symptom_intro = (
+        "" if operational_notes else
+        "Use the observed result to choose the next check instead of changing several controls at once. The following table is a decision aid, not a list of automatic fixes. Confirm the product-specific behavior in the cited documentation before applying a remediation."
+    )
+    related_context = (
+        f"For related background, see {related}."
+        if operational_notes else
+        f"For related background, see {related}. These internal articles provide context, but the cited official documents remain the source of truth for the configuration or diagnostic details in this workflow."
+    )
+    summary = (
+        f"The working conclusion should name the observed boundary, the evidence that supports it, and the smallest approved next action for {topic.get('title', 'the affected component')}."
+        if operational_notes else
+        "Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator."
+    )
     body = f"""## Direct answer
 
-{overview} This recovery article is intentionally conservative: it starts with evidence already available to the operator, separates observation from remediation, and uses the referenced documentation to confirm the exact behavior of the service in scope. It does not assume that a familiar error message has one universal cause.
+{overview} Start with evidence already available to the operator and use the referenced documentation to verify the behavior of the component in scope.
 
 ## Prepare a safe investigation
 
-{preparation} Before changing policy, access, networking, or application settings, capture a small reproducible record of the failure. Include the affected identity, workload, tenant or environment, time zone, correlation identifier when available, and the action that produced the result. Mask secrets and personal data in any ticket or shared export. A narrow record is safer to review and lets another administrator test the same hypothesis without repeating a disruptive change.
+{preparation} {preparation_context}
 
 ## Verify the official references
 
@@ -3564,19 +3622,17 @@ def configured_offline_evergreen_fallback(
 
 {chr(10).join(workflow_sections)}
 
+{evidence_queries_section}
+
 ## Troubleshoot by symptom
 
-Use the observed result to choose the next check instead of changing several controls at once. The following table is a decision aid, not a list of automatic fixes. Confirm the product-specific behavior in the cited documentation before applying a remediation.
+{symptom_intro}
 
 | Symptom | Likely boundary | Next safe check |
 | --- | --- | --- |
 {symptom_rows}
 
-## Common mistakes to avoid
-
-Do not treat an isolated success as proof that the underlying configuration is correct. Different users, applications, devices, networks, and token states can follow different paths. Do not remove a security control merely to make one test pass; first identify the exact condition that produced the failure and verify whether a narrower, approved adjustment exists. Avoid copying commands, policy values, or portal labels from old runbooks without checking the current official reference.
-
-Keep the investigation read-only until the evidence identifies a change boundary. If a temporary exception is approved, define who authorized it, when it expires, how it will be monitored, and how the original state will be restored. A reversible experiment is useful; an undocumented workaround creates a second incident to diagnose later.
+{interpretation_section}
 
 ## Practical checklist
 
@@ -3584,17 +3640,17 @@ Keep the investigation read-only until the evidence identifies a change boundary
 
 ## Preserve the result and follow up
 
-After the immediate issue is understood, record the conclusion in language that separates facts, inferences, and remaining unknowns. Attach only the necessary evidence and link the relevant official reference rather than pasting a long, unversioned screenshot. If the same pattern returns, compare the new record with the earlier timestamp, scope, and configuration state before making another change. This turns a one-off troubleshooting session into a dependable operating procedure.
+{follow_up}
 
-For related background, see {related}. These internal articles provide context, but the cited official documents remain the source of truth for the configuration or diagnostic details in this workflow.
+{related_context}
 
 ## Version and verification notes
 
-This article is based on the official sources listed for this topic and was checked at publication time. Cloud services, identity behavior, product labels, and administrative interfaces can change. Recheck the cited documentation before automating a command, relying on a default, or applying the same procedure to a different tenant, subscription, cluster, or operating-system release.
+{version_notes}
 
 ## Summary
 
-Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator."""
+{summary}"""
     now = iso_z()
     claims = [
         {

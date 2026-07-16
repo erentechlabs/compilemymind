@@ -340,12 +340,12 @@
         }
       },
       {
-        "title": "Troubleshoot Windows Firewall Rules with PowerShell",
-        "slug": "troubleshoot-windows-firewall-rules-powershell",
+        "title": "Investigate Windows Firewall Traffic with PowerShell",
+        "slug": "investigate-windows-firewall-traffic-powershell",
         "primary_category": "system-administration",
         "categories": ["system-administration", "networking"],
         "tags": ["powershell", "windows-server", "firewall", "network-security", "troubleshooting"],
-        "search_intent": "Diagnose Windows Firewall rule and profile problems with read-only PowerShell queries before changing a rule or opening a port.",
+        "search_intent": "Trace blocked Windows Firewall traffic by mapping the active profile, a narrow rule, and its port filter before changing policy.",
         "needs_diagram": false,
         "needs_chart": false,
         "seed_sources": [
@@ -367,18 +367,30 @@
             {"symptom": "A rule exists but the connection still fails", "likely_cause": "Direction, profile, port, protocol, or service mismatch", "next_check": "Inspect the rule and port filter, then test the service separately."},
             {"symptom": "Opening a port appears to fix the issue", "likely_cause": "The original boundary is not yet understood", "next_check": "Revert the broad test and identify the smallest approved rule change."}
           ],
+          "evidence_queries": [
+            {"title": "Record the active connection profile", "command": "Get-NetConnectionProfile | Select-Object Name, NetworkCategory, InterfaceAlias, IPv4Connectivity, IPv6Connectivity", "explanation": "This captures the connection context that determines which firewall profile applies. Keep the interface alias with the failed-flow record rather than assuming the profile from the network name alone."},
+            {"title": "Inspect profile policy", "command": "Get-NetFirewallProfile | Select-Object Name, Enabled, DefaultInboundAction, DefaultOutboundAction", "explanation": "This shows the policy boundary for each Windows Firewall profile. Compare the active profile with the expected inbound and outbound defaults before narrowing the investigation to an individual rule."},
+            {"title": "Locate enabled candidate rules", "command": "Get-NetFirewallRule -Enabled True | Select-Object DisplayName, Direction, Action, Profile, PolicyStoreSource", "explanation": "Use known application, service, or display-name terms to reduce the candidate set. The result is evidence of a configured rule, not evidence that the rule matches the tested protocol and port."},
+            {"title": "Inspect the candidate port filter", "command": "Get-NetFirewallRule -DisplayName '<rule name>' | Get-NetFirewallPortFilter | Select-Object Protocol, LocalPort, RemotePort", "explanation": "Run this only after identifying a specific candidate rule. Compare its protocol and port values with the observed flow and retain the original rule name in the incident record."}
+          ],
+          "operational_notes": [
+            "Start with a single failed flow, not a general statement that the application is blocked. Name the initiating host, destination host, direction, protocol, local port, remote port, and the active network category. A firewall rule can be present yet irrelevant because the tested flow has the wrong direction, belongs to another profile, or does not match the port filter. This record gives the rule query a precise target.",
+            "Profile selection is a separate question from rule discovery. A domain, private, or public profile can have different defaults and different rule applicability. Capture the profile settings that apply at the time of the failure, then determine whether the candidate rule is enabled for that profile. Do not infer profile applicability from a rule display name or from a successful test made while connected through another network.",
+            "A rule is only one layer of the packet decision. Its direction, action, program or service scope, address constraints, protocol, and port filter must agree with the flow under investigation. Compare those attributes one by one with the observed connection. If a rule permits inbound TCP traffic on a different port, it is not evidence that the tested outbound UDP flow should succeed.",
+            "Use a deliberately narrow remediation only after the observed flow and the applicable rule boundary match. Avoid disabling a profile or creating an any-to-any exception to prove a hypothesis; those shortcuts replace useful evidence with a larger exposure. If a temporary rule is authorized, document its scope and expiry, retest the original flow, and remove the test rule when the investigation is complete."
+          ],
           "checklist": ["Record the service, traffic direction, protocol, port, and active network context.", "Inspect active firewall profiles before changing a rule.", "Query the candidate rule and verify its enabled state and profile scope.", "Compare the rule's port-filter information with the service actually being tested.", "Apply and document only the narrowest approved, reversible remediation."],
           "related_slugs": ["troubleshooting-windows-dns-powershell", "common-network-ports-every-it-student-should-know"],
           "version_context": "Windows Server NetSecurity PowerShell documentation checked at publication time."
         }
       },
       {
-        "title": "Troubleshoot Windows Services with PowerShell",
-        "slug": "troubleshoot-windows-services-powershell",
+        "title": "Diagnose Windows Service Failures with PowerShell",
+        "slug": "diagnose-windows-service-failures-powershell",
         "primary_category": "system-administration",
         "categories": ["system-administration"],
         "tags": ["powershell", "windows-server", "troubleshooting", "system-administration", "monitoring"],
-        "search_intent": "Diagnose Windows service failures with read-only PowerShell and sc.exe queries before changing service startup, recovery, or account settings.",
+        "search_intent": "Identify the Windows service state, registered configuration, and dependency boundary before changing startup, recovery, or service-account settings.",
         "needs_diagram": false,
         "needs_chart": false,
         "seed_sources": [
@@ -399,6 +411,17 @@
             {"symptom": "Service is stopped unexpectedly", "likely_cause": "Service failure, dependency, startup condition, or host problem", "next_check": "Capture the current state and correlate the failure time with related evidence."},
             {"symptom": "Service starts then stops", "likely_cause": "Application, dependency, account, or configuration boundary", "next_check": "Inspect the registered service information before attempting another start."},
             {"symptom": "Service behaves differently across hosts", "likely_cause": "Configuration or environment drift", "next_check": "Compare the same read-only service and CIM results from both hosts."}
+          ],
+          "evidence_queries": [
+            {"title": "Resolve the registered service identity", "command": "Get-Service -Name '<service name>' | Select-Object Name, DisplayName, Status, StartType", "explanation": "Use the registered service name from the incident or map it from the display name first. Record the state before trying a restart so that the initial failure remains observable."},
+            {"title": "Inspect the service CIM record", "command": "Get-CimInstance Win32_Service -Filter \"Name='<service name>'\" | Select-Object Name, State, StartMode, StartName, PathName", "explanation": "This separates the service's registered configuration from its current status. Compare the returned account and executable context with the approved design for the affected host."},
+            {"title": "Capture the command-line state", "command": "sc.exe query \"<service name>\"", "explanation": "Use the command-line query where it is part of the established runbook or recovery environment. Retain the output with the timestamp and service name so it can be correlated with other evidence."}
+          ],
+          "operational_notes": [
+            "Treat the display name and service name as separate identifiers. Incident reports often contain a friendly display name while command-line and CIM results use the registered service name. Resolve that mapping before comparing hosts or looking for dependencies. A query against a similarly named service can produce plausible output while leaving the failing workload unexplained.",
+            "State alone does not explain a service failure. Record whether the service is stopped, start-pending, running, or repeatedly returning to a stopped state, together with the first observed failure time. That timing lets you correlate the service result with application logs, system events, updates, certificate changes, or dependency failures instead of assuming that a restart is a diagnosis.",
+            "Registered service configuration provides a different kind of evidence from live state. Compare the relevant configuration fields and the account or executable context with the approved design, especially when the same service behaves differently on another host. Keep environment drift, account permissions, and dependency availability as distinct hypotheses until the evidence connects them to the failed start or workload.",
+            "If a remediation is needed, change one boundary at a time and preserve the before-and-after result. A startup-type change, recovery edit, credential change, or restart can have operational effects beyond the immediate symptom. Use the smallest approved action, verify the workload that originally failed, and document any rollback condition so that a temporary recovery does not conceal the underlying cause."
           ],
           "checklist": ["Record the exact service name, host, expected state, and first observed failure time.", "Inspect the current service state without restarting it.", "Capture the relevant registered service information with a read-only query.", "Correlate the result with application and Windows event evidence.", "Apply one approved, reversible change only after identifying the failing boundary."],
           "related_slugs": ["troubleshooting-windows-event-logs-powershell", "troubleshooting-windows-dns-powershell"],
