@@ -810,6 +810,70 @@
       },
       "quality_score": 0.91,
       "path": "content/posts/investigate-windows-firewall-traffic-powershell/index.md"
+    },
+    {
+      "time": "2026-07-16T20:00:45.804522Z",
+      "title": "Diagnose Windows Service Failures with PowerShell",
+      "slug": "diagnose-windows-service-failures-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting",
+        "system-administration",
+        "monitoring"
+      ],
+      "sources": [
+        {
+          "title": "Get-Service (Microsoft.PowerShell.Management)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.5"
+        },
+        {
+          "title": "Get-CimInstance (CimCmdlets)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance?view=powershell-7.5"
+        },
+        {
+          "title": "Sc.exe query",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-query"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8895,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.5045,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.8571,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.5045,
+            "source_similarity": 0.7004,
+            "existing_content_similarity": 0.5045,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8895,
+      "path": "content/posts/diagnose-windows-service-failures-powershell/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -932,7 +996,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-16T15:05:29.859579Z",
+      "time": "2026-07-16T20:00:45.804656Z",
       "result": "published"
     },
     "maintain": {
