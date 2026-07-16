@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-15T19:37:16.086843Z",
-  "articles_checked": 38,
+  "generated_at": "2026-07-16T11:08:31.814267Z",
+  "articles_checked": 39,
   "summary": {
     "high_risk": 0,
     "medium_risk": 33,
-    "low_risk": 5,
+    "low_risk": 6,
     "noindexed": 0,
     "unresolved": 33
   },
@@ -445,6 +445,16 @@
         "missing_technical_verification_date"
       ],
       "source_count": 0,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-microsoft-entra-sign-in-errors",
+      "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
     },

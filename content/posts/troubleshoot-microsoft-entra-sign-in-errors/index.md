@@ -4,13 +4,13 @@ date: "2026-07-15T23:26:44+03:00"
 lastmod: "2026-07-15T23:26:44+03:00"
 description: "A safe Microsoft Entra sign-in troubleshooting workflow that uses sign-in logs and Sign-in Diagnostics to isolate the failure before changing authentication or access policies."
 tags: ["entra-id", "identity", "authentication", "conditional-access", "troubleshooting"]
-categories: ["entra-id", "identity-access-management"]
+categories: ["entra-id"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
 last_reviewed: "2026-07-15"
 verification_date: "2026-07-15T20:26:44.650136Z"
-verification_version: 1
+verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-08-19"
 ---

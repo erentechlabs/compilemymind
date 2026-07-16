@@ -5,13 +5,13 @@ lastmod: "2026-07-15T17:57:13+03:00"
 description: "Learn how to diagnose Kubernetes RBAC authorization failures using kubectl auth can-i, with practical troubleshooting steps for verifying and resolving access issues."
 summary: "This guide shows how to troubleshoot Kubernetes RBAC authorization failures by using kubectl auth can-i to test permissions and review roles and bindings."
 tags: ["rbac", "kubernetes"]
-categories: ["developer-it-tools"]
+categories: ["identity-access-management"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
 last_reviewed: "2026-07-15"
 verification_date: "2026-07-15T14:57:13.455802Z"
-verification_version: 1
+verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-13"
 ---

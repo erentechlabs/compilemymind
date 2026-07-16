@@ -805,6 +805,11 @@
     "publish": {
       "time": "2026-07-15T20:26:45.183528Z",
       "result": "published"
+    },
+    "maintain": {
+      "time": "2026-07-16T11:08:32.387580Z",
+      "result": "quota_limited",
+      "taxonomy_changes": 4
     }
   },
   "rejected_articles": [
