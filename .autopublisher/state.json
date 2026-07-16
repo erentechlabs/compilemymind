@@ -681,6 +681,70 @@
       },
       "quality_score": 0.9124,
       "path": "content/posts/troubleshoot-microsoft-entra-sign-in-errors/index.md"
+    },
+    {
+      "time": "2026-07-16T11:23:15.184917Z",
+      "title": "Troubleshoot Windows Scheduled Tasks with PowerShell",
+      "slug": "troubleshoot-windows-scheduled-tasks-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting",
+        "system-administration",
+        "automation"
+      ],
+      "sources": [
+        {
+          "title": "Get-ScheduledTask (ScheduledTasks)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtask?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-ScheduledTaskInfo (ScheduledTasks)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtaskinfo?view=windowsserver2025-ps"
+        },
+        {
+          "title": "schtasks",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9325,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.8141,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.7143,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8141,
+            "source_similarity": 0.6882,
+            "existing_content_similarity": 0.8141,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9325,
+      "path": "content/posts/troubleshoot-windows-scheduled-tasks-powershell/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -803,7 +867,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-15T20:26:45.183528Z",
+      "time": "2026-07-16T11:23:15.185038Z",
       "result": "published"
     },
     "maintain": {
