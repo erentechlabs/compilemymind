@@ -745,6 +745,71 @@
       },
       "quality_score": 0.9325,
       "path": "content/posts/troubleshoot-windows-scheduled-tasks-powershell/index.md"
+    },
+    {
+      "time": "2026-07-16T15:05:29.859396Z",
+      "title": "Investigate Windows Firewall Traffic with PowerShell",
+      "slug": "investigate-windows-firewall-traffic-powershell",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "firewall",
+        "network-security",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "Get-NetFirewallRule (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallrule?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetFirewallProfile (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallprofile?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetFirewallPortFilter (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallportfilter?view=windowsserver2025-ps"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.91,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.6345,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.8667,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.6345,
+            "source_similarity": 0.7058,
+            "existing_content_similarity": 0.6345,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.91,
+      "path": "content/posts/investigate-windows-firewall-traffic-powershell/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -867,7 +932,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-16T11:23:15.185038Z",
+      "time": "2026-07-16T15:05:29.859579Z",
       "result": "published"
     },
     "maintain": {
