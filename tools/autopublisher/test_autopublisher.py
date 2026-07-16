@@ -42,16 +42,21 @@ class AutopublisherTests(unittest.TestCase):
     def test_production_has_three_source_qualified_evergreen_fallbacks(self):
         config = autopublisher.load_config()
         existing_slugs = {post.slug for post in autopublisher.load_posts(config)}
-        remaining = [
+        configured_fallbacks = [
             topic
             for topic in config["research"]["evergreen_topics"]
+            if topic.get("offline_fallback")
+        ]
+        remaining = [
+            topic
+            for topic in configured_fallbacks
             if topic.get("slug") not in existing_slugs
         ]
         self.assertIsInstance(remaining, list)
-        self.assertGreaterEqual(len(remaining), 3)
-        self.assertGreaterEqual(len([topic for topic in remaining if topic.get("offline_fallback")]), 3)
+        self.assertGreaterEqual(len(configured_fallbacks), 4)
+        self.assertTrue(remaining, "At least one unpublished offline fallback must remain available.")
         required = config["publishing"]["required_source_count"]
-        for topic in remaining:
+        for topic in configured_fallbacks:
             source_urls = {source["url"] for source in topic.get("seed_sources", [])}
             self.assertGreaterEqual(len(source_urls), required, topic.get("slug"))
 
@@ -59,7 +64,7 @@ class AutopublisherTests(unittest.TestCase):
         config = autopublisher.load_config()
         posts = autopublisher.load_posts(config)
         for configured in config["research"]["evergreen_topics"]:
-            if not configured.get("offline_fallback"):
+            if not configured.get("offline_fallback") or configured.get("slug") in {post.slug for post in posts}:
                 continue
             topic = dict(configured)
             topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
@@ -83,7 +88,7 @@ class AutopublisherTests(unittest.TestCase):
         posts = autopublisher.load_posts(config)
         topic = dict(next(
             item for item in config["research"]["evergreen_topics"]
-            if item.get("slug") == "troubleshoot-microsoft-entra-sign-in-errors"
+            if item.get("offline_fallback") and item.get("slug") not in {post.slug for post in posts}
         ))
         topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
         sources = [
@@ -111,7 +116,7 @@ class AutopublisherTests(unittest.TestCase):
             patch.object(autopublisher, "GeminiClient", return_value=NoModelClient()), \
             patch.object(autopublisher, "choose_evergreen_topic", return_value=topic), \
             patch.object(autopublisher, "collect_topic_research", return_value=sources), \
-            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/troubleshoot-microsoft-entra-sign-in-errors/index.md"), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / f"content/posts/{topic['slug']}/index.md"), \
             patch.object(autopublisher, "save_state"), \
             patch.object(autopublisher, "write_publish_result"):
             result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
@@ -119,6 +124,14 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(result, 0)
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
         self.assertEqual(state["generated_posts"][-1]["slug"], topic["slug"])
+
+    def test_production_evergreen_selection_skips_published_offline_fallbacks(self):
+        config = autopublisher.load_config()
+        posts = autopublisher.load_posts(config)
+        selected = autopublisher.choose_evergreen_topic(posts, config, autopublisher.EventLog())
+        self.assertIsNotNone(selected)
+        self.assertNotEqual(selected["slug"], "troubleshoot-microsoft-entra-sign-in-errors")
+        self.assertNotIn(selected["slug"], {post.slug for post in posts})
 
     def test_offline_evergreen_recovery_passes_quality_gates(self):
         config = autopublisher.load_config()

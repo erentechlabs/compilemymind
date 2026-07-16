@@ -371,6 +371,39 @@
           "related_slugs": ["troubleshooting-windows-dns-powershell", "common-network-ports-every-it-student-should-know"],
           "version_context": "Windows Server NetSecurity PowerShell documentation checked at publication time."
         }
+      },
+      {
+        "title": "Troubleshoot Windows Services with PowerShell",
+        "slug": "troubleshoot-windows-services-powershell",
+        "primary_category": "system-administration",
+        "categories": ["system-administration"],
+        "tags": ["powershell", "windows-server", "troubleshooting", "system-administration", "monitoring"],
+        "search_intent": "Diagnose Windows service failures with read-only PowerShell and sc.exe queries before changing service startup, recovery, or account settings.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Get-Service (Microsoft.PowerShell.Management)", "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.5"},
+          {"title": "Get-CimInstance (CimCmdlets)", "url": "https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance?view=powershell-7.5"},
+          {"title": "Sc.exe query", "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-query"}
+        ],
+        "offline_fallback": {
+          "description": "A read-only PowerShell workflow for diagnosing Windows service state, configuration, and query results before changing startup, recovery, or service-account settings.",
+          "overview": "Windows service troubleshooting is safer when the current service state, its registered configuration, and the result of the most recent failure are kept separate. Start with read-only inspection so a restart, startup-type change, or service-account edit does not destroy the evidence needed to identify the real boundary.",
+          "preparation": "Record the host, service name, display name, expected behavior, first observed failure time, and the account or workload affected. Confirm whether the service is local or remote and use an approved account for the inspection. Do not restart, reconfigure, or change credentials during the first evidence-collection pass.",
+          "steps": [
+            {"title": "Identify the service and its current state", "body": "Use a read-only service query to distinguish the service name from its display name and capture its current state. Compare the live result with the expected state and record any dependent service or application that is reporting the failure.", "source_guidance": "Use the Get-Service reference for supported service discovery and state inspection."},
+            {"title": "Inspect the registered service information", "body": "Use a read-only CIM query to examine the service information relevant to the incident, then compare the observed configuration with the approved service design. Keep the result tied to the same host and timestamp as the initial state query.", "source_guidance": "Use the Get-CimInstance reference for supported CIM instance inspection."},
+            {"title": "Confirm the command-line query view when required", "body": "In a recovery console or an established command-line runbook, use the documented sc.exe query behavior to compare the registered service result. Treat the query as evidence collection and correlate it with service-specific and Windows event information before applying a fix.", "source_guidance": "Use the Sc.exe query reference for its documented query syntax and output behavior."}
+          ],
+          "symptoms": [
+            {"symptom": "Service is stopped unexpectedly", "likely_cause": "Service failure, dependency, startup condition, or host problem", "next_check": "Capture the current state and correlate the failure time with related evidence."},
+            {"symptom": "Service starts then stops", "likely_cause": "Application, dependency, account, or configuration boundary", "next_check": "Inspect the registered service information before attempting another start."},
+            {"symptom": "Service behaves differently across hosts", "likely_cause": "Configuration or environment drift", "next_check": "Compare the same read-only service and CIM results from both hosts."}
+          ],
+          "checklist": ["Record the exact service name, host, expected state, and first observed failure time.", "Inspect the current service state without restarting it.", "Capture the relevant registered service information with a read-only query.", "Correlate the result with application and Windows event evidence.", "Apply one approved, reversible change only after identifying the failing boundary."],
+          "related_slugs": ["troubleshooting-windows-event-logs-powershell", "troubleshooting-windows-dns-powershell"],
+          "version_context": "Windows Server and PowerShell service-management documentation checked at publication time."
+        }
       }
     ],
     "trusted_sources": [
