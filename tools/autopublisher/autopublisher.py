@@ -3606,7 +3606,54 @@ Keep the investigation read-only until the evidence identifies a change boundary
         if operational_notes else
         "Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator."
     )
-    body = f"""## Direct answer
+    if operational_notes:
+        body = f"""## {topic['title']}: direct answer
+
+{overview}
+
+## Investigation record
+
+{preparation}
+
+## Reference map for this incident
+
+{chr(10).join(source_sections)}
+
+## Targeted inspection sequence
+
+{chr(10).join(workflow_sections)}
+
+## Commands to collect service-specific evidence
+
+{chr(10).join(evidence_query_sections)}
+
+## Symptom-to-boundary map
+
+| Observed symptom | Boundary to investigate | Next evidence check |
+| --- | --- | --- |
+{symptom_rows}
+
+## {topic['title']}: interpretation notes
+
+{operational_section}
+
+## Evidence handoff checklist
+
+{chr(10).join(f'{index}. {item}' for index, item in enumerate(checklist, start=1))}
+
+## Relevant internal context
+
+{related}
+
+## Scope and version context
+
+{normalize_space(str(template.get('version_context', 'Official documentation checked at publication time.')))}
+
+## Conclusion
+
+For this incident, record the observed boundary, the evidence that supports it, and the smallest approved next action for {topic['title']}."""
+    else:
+        body = f"""## Direct answer
 
 {overview} Start with evidence already available to the operator and use the referenced documentation to verify the behavior of the component in scope.
 

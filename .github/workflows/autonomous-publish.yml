@@ -15,7 +15,9 @@ on:
 
 concurrency:
   group: autonomous-content-${{ github.ref }}
-  cancel-in-progress: false
+  # A queued run can otherwise execute an old publisher revision after a fix
+  # has already landed, repeating a resolved rejection and wasting quota.
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -40,6 +42,14 @@ jobs:
           # executing publisher bugs that have already been fixed on main.
           ref: ${{ github.event.repository.default_branch }}
           fetch-depth: 0
+
+      - name: Synchronize with the latest main revision
+        shell: bash
+        run: |
+          branch="${{ github.event.repository.default_branch }}"
+          git fetch --no-tags origin "+refs/heads/$branch:refs/remotes/origin/$branch"
+          git checkout --detach "origin/$branch"
+          echo "Using publisher revision $(git rev-parse HEAD) from origin/$branch"
 
       - name: Report publisher revision
         shell: bash
