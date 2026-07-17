@@ -2,3 +2,4 @@ publish once for the validated autonomous publishing pipeline
 retry after deterministic offline recovery was added
 retry DNS and Kubernetes recovery after source-bundle fix
 retry recovery using the exact validated topic source bundle
+retry publication after rendered-audit release gate fix

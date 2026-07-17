@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 AUTOPUBLISHER = ROOT / "tools" / "autopublisher" / "autopublisher.py"
 PUBLISH_RESULT = ROOT / ".autopublisher" / "publish-result.json"
 GATE_RESULT = ROOT / ".autopublisher" / "release-gate-result.json"
+RENDERED_AUDIT_REPORT = ".autopublisher/reports/rendered-site-audit.json"
 
 
 ALLOWED_PATHS: dict[str, tuple[str, ...]] = {
@@ -133,7 +134,13 @@ def main() -> int:
     mode = str(args.mode)
 
     paths_before = status_paths()
-    allowed = ALLOWED_PATHS[mode] + (".autopublisher/release-gate-result.json",)
+    # Every validation mode refreshes the rendered audit timestamp/report.
+    # Treat that machine-readable evidence as an expected gate artifact rather
+    # than rejecting an otherwise clean publication or deployment.
+    allowed = ALLOWED_PATHS[mode] + (
+        ".autopublisher/release-gate-result.json",
+        RENDERED_AUDIT_REPORT,
+    )
     unexpected = [path for path in paths_before if not path_allowed(path, allowed)]
     if unexpected:
         return fail(mode, "unexpected files changed", unexpected)

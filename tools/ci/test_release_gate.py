@@ -40,6 +40,11 @@ class ReleaseGateTests(unittest.TestCase):
         self.assertTrue(release_gate.path_allowed(".hugo-version", (".hugo-version",)))
         self.assertFalse(release_gate.path_allowed("README.md", ("content/posts/",)))
 
+    def test_rendered_audit_report_is_an_expected_validation_artifact(self):
+        for mode in release_gate.ALLOWED_PATHS:
+            allowed = release_gate.ALLOWED_PATHS[mode] + (release_gate.RENDERED_AUDIT_REPORT,)
+            self.assertTrue(release_gate.path_allowed(release_gate.RENDERED_AUDIT_REPORT, allowed))
+
 
 if __name__ == "__main__":
     unittest.main()
