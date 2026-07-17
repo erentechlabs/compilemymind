@@ -4,3 +4,4 @@ retry DNS and Kubernetes recovery after source-bundle fix
 retry recovery using the exact validated topic source bundle
 retry publication after rendered-audit release gate fix
 retry publication after isolating maintenance test artifacts
+retry publication after durable retry queue and fallback expansion
