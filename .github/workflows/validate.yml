@@ -19,14 +19,26 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Validate source-backed editorial backlog
         run: python tools/content_pipeline/publish.py --mode validate
       - name: Run content-pipeline tests
         run: python -m unittest discover -s tools/content_pipeline -p "test_*.py"
-      - uses: ./.github/actions/setup-hugo
+      - name: Install pinned Hugo Extended
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < .hugo-version)"
+          archive="hugo_extended_${version}_linux-amd64.tar.gz"
+          target="$RUNNER_TEMP/hugo-${version}"
+          mkdir -p "$target"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$target" hugo
+          chmod +x "$target/hugo"
+          echo "$target" >> "$GITHUB_PATH"
+          "$target/hugo" version
       - name: Build the site
         run: hugo --gc --minify --cleanDestinationDir --destination public

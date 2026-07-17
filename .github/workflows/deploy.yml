@@ -21,15 +21,27 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: main
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Validate source-backed editorial backlog
         run: python tools/content_pipeline/publish.py --mode validate
-      - uses: ./.github/actions/setup-hugo
+      - name: Install pinned Hugo Extended
+        shell: bash
+        run: |
+          set -euo pipefail
+          version="$(tr -d '\r\n' < .hugo-version)"
+          archive="hugo_extended_${version}_linux-amd64.tar.gz"
+          target="$RUNNER_TEMP/hugo-${version}"
+          mkdir -p "$target"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$target" hugo
+          chmod +x "$target/hugo"
+          echo "$target" >> "$GITHUB_PATH"
+          "$target/hugo" version
       - name: Build the production artifact
         run: hugo --gc --minify --cleanDestinationDir --destination public
       - name: Verify Cloudflare credentials
@@ -43,10 +55,13 @@ jobs:
           for setting in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_PAGES_PROJECT; do
             test -n "${!setting}" || { echo "::error title=Missing Cloudflare secret::$setting is required."; exit 1; }
           done
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
+      - name: Set up Node for Wrangler
+        uses: actions/setup-node@v4
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: pages deploy public --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT }} --branch=main
+          node-version: "22"
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+        run: npx --yes wrangler@4 pages deploy public --project-name="$CLOUDFLARE_PAGES_PROJECT" --branch=main
