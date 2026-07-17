@@ -216,7 +216,7 @@ Microsoft's Zero Trust model is usually summarized as:
 | Assume breach | Design as if attackers may already be inside the network, then limit blast radius and detect suspicious behavior. |
 
 <figure>
-  <img src="https://learn.microsoft.com/en-us/security/zero-trust/media/zero-trust-ramp-overview/zero-trust-architecture.svg" alt="Microsoft Zero Trust architecture" loading="lazy" style="max-width: 100%; height: auto;">
+  <img src="https://learn.microsoft.com/en-us/security/zero-trust/media/zero-trust-ramp-overview/zero-trust-architecture.svg" alt="Microsoft Zero Trust architecture" width="3802" height="2097" loading="lazy" decoding="async" style="max-width: 100%; height: auto;">
   <figcaption>Microsoft Learn Zero Trust architecture diagram.</figcaption>
 </figure>
 
@@ -266,7 +266,7 @@ Good Microsoft 365 security starts with identity because every other control dep
 Microsoft Purview covers data security, data governance, and compliance capabilities. For Microsoft 365 fundamentals, focus on information protection and DLP.
 
 <figure>
-  <img src="https://learn.microsoft.com/en-us/purview/media/powered-by-intelligent-platform.png" alt="Microsoft Purview information protection" loading="lazy" style="max-width: 100%; height: auto;">
+  <img src="https://learn.microsoft.com/en-us/purview/media/powered-by-intelligent-platform.png" alt="Microsoft Purview information protection" width="1026" height="501" loading="lazy" decoding="async" style="max-width: 100%; height: auto;">
   <figcaption>Microsoft Learn Purview information protection diagram.</figcaption>
 </figure>
 

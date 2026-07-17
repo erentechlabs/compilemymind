@@ -19,9 +19,10 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
-# Content pipeline runtime data
-.content-pipeline/result.json
-.content-pipeline/logs/
-
-# Removed legacy automation runtime directory
-.autopublisher/
+# Per-run autonomous publication artifacts. Durable state, configuration, and
+# stable reports remain tracked so scheduled runs can resume safely.
+.autopublisher/publish-result.json
+.autopublisher/release-gate-result.json
+.autopublisher/dashboard.json
+.autopublisher/logs/*.jsonl
+infra-result.json

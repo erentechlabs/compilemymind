@@ -1,0 +1,1124 @@
+{
+  "version": 2,
+  "generated_posts": [
+    {
+      "time": "2026-07-12T19:15:08.041301Z",
+      "title": "Proving Application Resilience on Azure: A Practical Guide to Chaos Studio",
+      "slug": "azure-chaos-studio-application-resilience-guide",
+      "categories": [
+        "microsoft-cloud",
+        "guide"
+      ],
+      "tags": [
+        "azure",
+        "chaos-engineering",
+        "chaos-studio",
+        "resilience",
+        "cloud-architecture"
+      ],
+      "sources": [
+        {
+          "title": "Proving application resilience on Azure with Chaos Studio",
+          "url": "https://azure.microsoft.com/en-us/blog/proving-application-resilience-on-azure-with-chaos-studio/"
+        },
+        {
+          "title": "Built to bounce back: How Azure resiliency evolved",
+          "url": "https://azure.microsoft.com/en-us/blog/built-to-bounce-back-how-azure-resiliency-evolved/"
+        },
+        {
+          "title": "Contributing to U.K. financial sector resilience as a critical third party",
+          "url": "https://cloud.google.com/blog/products/identity-security/contributing-to-uk-financial-sector-resilience-as-a-critical-third-party/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.6,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, highly detailed, and structured logically. It provides a clear, step-by-step guide to using Azure Chaos Studio, complete with an architecture diagram definition, a comprehensive comparison table, and actionable best practices. It successfully integrates internal links and aligns perfectly with the provided sources and search intent."
+      },
+      "path": "content/posts/azure-chaos-studio-application-resilience-guide/index.md"
+    },
+    {
+      "time": "2026-07-12T19:37:24.902818Z",
+      "title": "How Ghostcommit Prompt Injections Bypass AI Code Review Agents",
+      "slug": "ghostcommit-prompt-injection-ai-code-review-bypass",
+      "categories": [
+        "software-engineering",
+        "guide",
+        "cybersecurity"
+      ],
+      "tags": [
+        "ai-agents",
+        "prompt-injection",
+        "code-review",
+        "cybersecurity",
+        "software-security"
+      ],
+      "sources": [
+        {
+          "title": "Ghostcommit hides prompt injection in images to fool AI agents, steal secrets",
+          "url": "https://www.bleepingcomputer.com/news/security/ghostcommit-hides-prompt-injection-in-images-to-fool-ai-agents-steal-secrets/"
+        },
+        {
+          "title": "Safely run AI-generated code in Cloud Run sandboxes",
+          "url": "https://cloud.google.com/blog/topics/developers-practitioners/google-cloud-run-sandboxes-are-in-public-preview/"
+        },
+        {
+          "title": "Better tools made Copilot code review worse. Here’s how we actually improved it.",
+          "url": "https://github.blog/ai-and-ml/github-copilot/better-tools-made-copilot-code-review-worse-heres-how-we-actually-improved-it/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, well-structured, and provides excellent educational depth on the Ghostcommit vulnerability. It effectively balances the explanation of the attack vector with robust, actionable defensive strategies and code examples."
+      },
+      "path": "content/posts/ghostcommit-prompt-injection-ai-code-review-bypass/index.md"
+    },
+    {
+      "time": "2026-07-13T20:48:44.556674Z",
+      "title": "Securing the AI Supply Chain on GKE: Introducing k8s-aibom for Automated AI BOMs",
+      "slug": "securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr",
+      "categories": [
+        "cloud",
+        "guide",
+        "software-engineering"
+      ],
+      "tags": [
+        "cloud",
+        "google-cloud-blog",
+        "securing",
+        "ai",
+        "supply",
+        "chain",
+        "gke"
+      ],
+      "sources": [
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "What’s new with Google Cloud",
+          "url": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud/"
+        },
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.6,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, highly detailed, and provides excellent educational value. It includes a clear architectural diagram, a comprehensive comparison table, and fully functional, well-structured Kubernetes manifests for practical implementation. The explanation of CycloneDX ML-BOMs and the 'Shadow AI' problem is clear and aligns perfectly with the source material."
+      },
+      "path": "content/posts/securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr/index.md"
+    },
+    {
+      "time": "2026-07-14T18:56:31.777432Z",
+      "title": "Model Context Protocol (MCP) Explained: How to Connect LLMs to Real-World Data (With Python Tutorial)",
+      "slug": "model-context-protocol-explained-llms-real-world-data",
+      "categories": [
+        "guide",
+        "ai-engineering"
+      ],
+      "tags": [
+        "mcp",
+        "python"
+      ],
+      "sources": [
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/feeds/8846032960796184778/comments/default"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is highly technical, accurate, and well-structured. It provides an excellent explanation of the Model Context Protocol (MCP) architecture, transport layers, and primitives. The Python tutorial is practical, using the official FastMCP SDK correctly, and the security section adds valuable real-world context."
+      },
+      "path": "content/posts/model-context-protocol-explained-llms-real-world-data/index.md"
+    },
+    {
+      "time": "2026-07-14T19:33:51.111668Z",
+      "title": "Building AI-Defined Vehicles: Integrating Android and Google Cloud for Next-Gen Automotive Solutions",
+      "slug": "ai-defined-vehicles-android-google-cloud",
+      "categories": [
+        "guide",
+        "cloud"
+      ],
+      "tags": [
+        "ai",
+        "automotive"
+      ],
+      "sources": [
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        },
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/2026/07/android-bench-llm-measurement.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is exceptionally well-written, technically accurate, and highly detailed. It provides concrete, production-grade code examples in both Kotlin (for Android Automotive OS) and Python (for Cloud Bigtable), along with a clear architectural diagram and comparison table. It perfectly integrates the source material regarding Nexus SDV, Bigtable, and Google Cloud, while maintaining a strong educational flow and solid security/compliance context."
+      },
+      "path": "content/posts/ai-defined-vehicles-android-google-cloud/index.md"
+    },
+    {
+      "time": "2026-07-14T19:44:14.104805Z",
+      "title": "Operating AI/ML Workloads on Kubernetes: A Headlamp Plugin for Kubeflow",
+      "slug": "operating-ai-ml-workloads-kubernetes",
+      "categories": [
+        "guide",
+        "cloud"
+      ],
+      "tags": [
+        "kubernetes",
+        "ai"
+      ],
+      "sources": [
+        {
+          "title": "Operating AI/ML Workloads on Kubernetes: A Headlamp Plugin for Kubeflow",
+          "url": "https://kubernetes.io/blog/2026/07/13/introducing-headlamp-plugin-for-kubeflow/"
+        },
+        {
+          "title": "Kubernetes Dashboard to Headlamp: A Step-by-Step Guide",
+          "url": "https://kubernetes.io/blog/2026/07/13/kubernetes-dashboard-to-headlamp/"
+        },
+        {
+          "title": "Introducing k8s-aibom on GKE for automated AI bills of materials",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 96.0,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is exceptionally well-written, highly detailed, and technically accurate. It perfectly bridges high-level MLOps concepts with low-level Kubernetes primitives. The step-by-step guide, YAML manifests, comparison table, and architectural diagram are highly educational and directly address the search intent."
+      },
+      "path": "content/posts/operating-ai-ml-workloads-kubernetes/index.md"
+    },
+    {
+      "time": "2026-07-15T03:35:17.189068Z",
+      "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production: Practical Cloud Architecture Guide",
+      "slug": "claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi",
+      "categories": [
+        "guide",
+        "cloud"
+      ],
+      "tags": [
+        "claude",
+        "google-cloud-blog"
+      ],
+      "sources": [
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Google named a Leader in the 2026 IDC MarketScape for Worldwide Foundation Model Software",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-named-a-leader-in-idc-marketscape/"
+        },
+        {
+          "title": "Securing the AI supply chain on GKE: Introducing k8s-aibom for automated AI BOMs",
+          "url": "https://cloud.google.com/blog/products/identity-security/introducing-k8s-aibom-on-gke-for-automated-ai-bills-of-materials/"
+        },
+        {
+          "title": "Building the AI-defined vehicle with Android, Google Cloud, and Nexus SDV",
+          "url": "https://cloud.google.com/blog/products/databases/nexus-sdv-uses-bigtable-android-automotive-for-agentic-vehicles/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.8,
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is exceptionally well-written, highly technical, and structurally sound. It provides deep educational value with concrete code examples (Python SDK and GKE YAML), a clear comparison table, and a robust architectural diagram. It perfectly integrates the source materials and maintains a professional, production-ready tone."
+      },
+      "path": "content/posts/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production-practi/index.md"
+    },
+    {
+      "time": "2026-07-15T08:38:51.417027Z",
+      "title": "Postgres with pgvector vs. Specialized Vector Databases: The Real Cost and Performance Tradeoffs",
+      "slug": "postgres-pgvector-vs-specialized-vector-databases",
+      "categories": [
+        "guide",
+        "databases"
+      ],
+      "tags": [
+        "postgres",
+        "vector-databases"
+      ],
+      "sources": [
+        {
+          "title": "Announcing etcd v3.7.0",
+          "url": "https://kubernetes.io/blog/2026/07/08/announcing-etcd-3.7/"
+        },
+        {
+          "title": "Claude at scale on Google Cloud: Frontier AI, built for enterprise production",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/claude-at-scale-on-google-cloud-frontier-ai-built-for-enterprise-production/"
+        },
+        {
+          "title": "Operating AI/ML Workloads on Kubernetes: A Headlamp Plugin for Kubeflow",
+          "url": "https://kubernetes.io/blog/2026/07/13/introducing-headlamp-plugin-for-kubeflow/"
+        },
+        {
+          "title": "Evolving how LLMs are measured for Android: the next era of Android Bench",
+          "url": "https://android-developers.googleblog.com/2026/07/android-bench-llm-measurement.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.4,
+        "issues": [
+          "The source 'Evolving how LLMs are measured for Android: the next era of Android Bench' is listed in the sources array but is not referenced or integrated anywhere within the article text."
+        ],
+        "required_fixes": [
+          "Integrate a brief mention of the Android Bench LLM measurement source (for example, when discussing client-side embedding generation or resource constraints on mobile devices) or remove it from the sources list to maintain strict citation hygiene."
+        ],
+        "reason": "The article is technically excellent, providing highly accurate mathematical breakdowns of HNSW memory consumption, clear SQL examples for pgvector, and a well-structured comparison of architectural tradeoffs. The diagrams and charts are correctly referenced and integrated. The only minor issue is one unused source in the bibliography."
+      },
+      "path": "content/posts/postgres-pgvector-vs-specialized-vector-databases/index.md"
+    },
+    {
+      "time": "2026-07-15T14:57:15.491175Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "categories": [
+        "developer-it-tools"
+      ],
+      "tags": [
+        "rbac",
+        "kubernetes"
+      ],
+      "sources": [
+        {
+          "title": "Using RBAC Authorization",
+          "url": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/"
+        },
+        {
+          "title": "Authorization",
+          "url": "https://kubernetes.io/docs/reference/access-authn-authz/authorization/"
+        },
+        {
+          "title": "kubectl auth can-i",
+          "url": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_auth/kubectl_auth_can-i/"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, directly supported by official Kubernetes documentation for all material claims, and avoids unsupported statements. It provides original, non-duplicative content with practical troubleshooting steps, clear structure, and relevant examples. Formatting is correct, and sources are properly cited. The guidance on impersonation is precise and adheres to the requested constraint. No factual, structural, or educational issues found.",
+        "quality": {
+          "score": 0.9161,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.7498,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.8889,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7498,
+            "source_similarity": 0.3858,
+            "existing_content_similarity": 0.7498,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9161,
+      "path": "content/posts/troubleshooting-kubernetes-rbac-kubectl-auth-can-i/index.md"
+    },
+    {
+      "time": "2026-07-15T15:01:17.776701Z",
+      "title": "How to Audit GitHub Actions Token Permissions",
+      "slug": "audit-github-actions-token-permissions",
+      "categories": [
+        "cybersecurity"
+      ],
+      "tags": [
+        "github"
+      ],
+      "sources": [
+        {
+          "title": "Authenticate with GITHUB_TOKEN",
+          "url": "https://docs.github.com/en/actions/tutorials/authenticate-with-github_token"
+        },
+        {
+          "title": "Secure use reference",
+          "url": "https://docs.github.com/en/actions/reference/security/secure-use"
+        },
+        {
+          "title": "Workflow syntax permissions",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax#permissions"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, well-supported by official GitHub documentation, and provides clear, actionable guidance for auditing and minimizing GITHUB_TOKEN permissions. All material claims are directly backed by cited sources, including workflow syntax, security best practices, and permission settings. The structure is readable, original, and non-duplicative, with practical examples and a reference table. No broken formatting or missing sources were found. The article offers depth and educational value suitable for its intended audience.",
+        "quality": {
+          "score": 0.9082,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.7091,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.8571,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7091,
+            "source_similarity": 0.3637,
+            "existing_content_similarity": 0.7091,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9082,
+      "path": "content/posts/audit-github-actions-token-permissions/index.md"
+    },
+    {
+      "time": "2026-07-15T15:49:58.918025Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "Get-WinEvent (Microsoft.PowerShell.Diagnostics)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.diagnostics/get-winevent?view=powershell-7.5"
+        },
+        {
+          "title": "Creating Get-WinEvent queries with FilterHashtable",
+          "url": "https://learn.microsoft.com/en-us/powershell/scripting/samples/creating-get-winevent-queries-with-filterhashtable?view=powershell-7.5"
+        },
+        {
+          "title": "wevtutil",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "The article is technically accurate, fully supported by official Microsoft documentation sources, and aligns with stable facts about Get-WinEvent and wevtutil usage. It avoids unsafe commands, uses recommended best practices like FilterHashtable for performance, and includes clear, practical examples. The structure is logical and readable, with a helpful comparison table and scenario-based examples enhancing educational value. SEO clarity is good with relevant keywords and tags. No broken formatting or missing sources were found. The content is original and not duplicative of the cited sources, providing a well-rounded, in-depth guide suitable for system administrators.",
+        "quality": {
+          "score": 0.9466,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.8709,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.9,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8709,
+            "source_similarity": 0.5263,
+            "existing_content_similarity": 0.8709,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9466,
+      "path": "content/posts/troubleshooting-windows-event-logs-powershell/index.md"
+    },
+    {
+      "time": "2026-07-15T16:31:39.637701Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "categories": [
+        "developer-it-tools",
+        "system-administration"
+      ],
+      "tags": [
+        "kubernetes",
+        "troubleshooting",
+        "configuration-management",
+        "developer-it-tools"
+      ],
+      "sources": [
+        {
+          "title": "Configure Liveness, Readiness and Startup Probes",
+          "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/"
+        },
+        {
+          "title": "Liveness, Readiness, and Startup Probes",
+          "url": "https://kubernetes.io/docs/concepts/workloads/pods/probes/"
+        },
+        {
+          "title": "Pod v1 API reference: Probe",
+          "url": "https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#Probe"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Official-source offline recovery article.",
+        "quality": {
+          "score": 0.9277,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.8138,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9091,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8138,
+            "source_similarity": 0.4434,
+            "existing_content_similarity": 0.8138,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9277,
+      "path": "content/posts/kubernetes-probe-misconfigurations-fixes/index.md"
+    },
+    {
+      "time": "2026-07-15T17:08:45.006673Z",
+      "title": "Windows DNS Diagnostics with PowerShell: A Safe Troubleshooting Workflow",
+      "slug": "troubleshooting-windows-dns-powershell",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "powershell",
+        "dns",
+        "troubleshooting",
+        "networking"
+      ],
+      "sources": [
+        {
+          "title": "Resolve-DnsName (DnsClient)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/dnsclient/resolve-dnsname?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Test-NetConnection (NetTCPIP)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/test-netconnection?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetIPConfiguration (NetTCPIP)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/nettcpip/get-netipconfiguration?view=windowsserver2025-ps"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Official-source offline recovery article.",
+        "quality": {
+          "score": 0.9364,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.8276,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.6667,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8276,
+            "source_similarity": 0.801,
+            "existing_content_similarity": 0.8276,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9364,
+      "path": "content/posts/troubleshooting-windows-dns-powershell/index.md"
+    },
+    {
+      "time": "2026-07-15T20:26:45.183360Z",
+      "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+      "slug": "troubleshoot-microsoft-entra-sign-in-errors",
+      "categories": [
+        "entra-id",
+        "identity-access-management"
+      ],
+      "tags": [
+        "entra-id",
+        "identity",
+        "authentication",
+        "conditional-access",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "What are Microsoft Entra sign-in logs?",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins"
+        },
+        {
+          "title": "Use sign-in diagnostics",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-use-sign-in-diagnostics"
+        },
+        {
+          "title": "Sign-in log activity details",
+          "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-in-log-activity-details"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9124,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.6516,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9231,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.6516,
+            "source_similarity": 0.6406,
+            "existing_content_similarity": 0.6516,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9124,
+      "path": "content/posts/troubleshoot-microsoft-entra-sign-in-errors/index.md"
+    },
+    {
+      "time": "2026-07-16T11:23:15.184917Z",
+      "title": "Troubleshoot Windows Scheduled Tasks with PowerShell",
+      "slug": "troubleshoot-windows-scheduled-tasks-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting",
+        "system-administration",
+        "automation"
+      ],
+      "sources": [
+        {
+          "title": "Get-ScheduledTask (ScheduledTasks)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtask?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-ScheduledTaskInfo (ScheduledTasks)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/scheduledtasks/get-scheduledtaskinfo?view=windowsserver2025-ps"
+        },
+        {
+          "title": "schtasks",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9325,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.8141,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.7143,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8141,
+            "source_similarity": 0.6882,
+            "existing_content_similarity": 0.8141,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9325,
+      "path": "content/posts/troubleshoot-windows-scheduled-tasks-powershell/index.md"
+    },
+    {
+      "time": "2026-07-16T15:05:29.859396Z",
+      "title": "Investigate Windows Firewall Traffic with PowerShell",
+      "slug": "investigate-windows-firewall-traffic-powershell",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "firewall",
+        "network-security",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "Get-NetFirewallRule (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallrule?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetFirewallProfile (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallprofile?view=windowsserver2025-ps"
+        },
+        {
+          "title": "Get-NetFirewallPortFilter (NetSecurity)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/netsecurity/get-netfirewallportfilter?view=windowsserver2025-ps"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.91,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.6345,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.8667,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.6345,
+            "source_similarity": 0.7058,
+            "existing_content_similarity": 0.6345,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.91,
+      "path": "content/posts/investigate-windows-firewall-traffic-powershell/index.md"
+    },
+    {
+      "time": "2026-07-16T20:00:45.804522Z",
+      "title": "Diagnose Windows Service Failures with PowerShell",
+      "slug": "diagnose-windows-service-failures-powershell",
+      "categories": [
+        "system-administration"
+      ],
+      "tags": [
+        "powershell",
+        "windows-server",
+        "troubleshooting",
+        "system-administration",
+        "monitoring"
+      ],
+      "sources": [
+        {
+          "title": "Get-Service (Microsoft.PowerShell.Management)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-service?view=powershell-7.5"
+        },
+        {
+          "title": "Get-CimInstance (CimCmdlets)",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/cimcmdlets/get-ciminstance?view=powershell-7.5"
+        },
+        {
+          "title": "Sc.exe query",
+          "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-query"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8895,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.5045,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.8571,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.5045,
+            "source_similarity": 0.7004,
+            "existing_content_similarity": 0.5045,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8895,
+      "path": "content/posts/diagnose-windows-service-failures-powershell/index.md"
+    }
+  ],
+  "maintenance_reviews": {},
+  "failures": [
+    {
+      "time": "2026-07-12T20:57:20.990039Z",
+      "mode": "publish",
+      "topic": "Securing Autonomous AI Agents: How to Safely Execute Untrusted AI-Generated Code",
+      "reason": "qa_failed",
+      "feedback": "Article contains external links that are not in its trusted source list.\nArticle is too similar to existing post 'How Ghostcommit Prompt Injections Bypass AI Code Review Agents' (0.53)."
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T13:50:14.120304Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:04:33.206371Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:17:14.862766Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:23:49.098969Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T14:50:16.937930Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T15:06:09.632848Z",
+      "title": "How to Harden Exposed Cloud Functions: Practical Security Steps",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 5
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T15:25:02.516456Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "reason": "build_failed",
+      "detail": "content/posts/troubleshooting-windows-event-logs-powershell/index.md",
+      "attempts": 0
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T15:38:55.476004Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 790 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe misconfigurations can cause repeated restarts or make workloads unavailable, especially for applications with slow Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T16:11:24.355288Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T16:27:25.568095Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Probe fields such as initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and successThreshold are conf Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T19:37:31.124264Z",
+      "title": "A Practical Guide to Securing Serverless Cloud Functions Against Public Exposure",
+      "slug": "practical-guide-securing-serverless-cloud-functions",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 849 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Understanding the Risks of Publicly Exposed Serverless Functions Serverless cloud functions offer agility and scalability but often come with the risk of unintended public exposure. Many organizations deploy serverless applications that must remain publicly accessible due to business needs yet lack proper authentication or authorization controls. This creates a significant attack surface, as attackers can exploit vulnerabilities such as Local and Remote File Inclusion (LFI/RFI) and command injection to gain control over the underlying container instances. Once compromised, attackers can pivot to broader cloud environment breaches. This guide is for cloud architects, DevOps engineers, and security practitioners who need to secure serverless functions without sacrificing necessary public accessibility. You will learn how to identify exposure risks, implement layered security controls, and validate your protections effectively. ## What Are Serverless Cloud Functions? Serverless applications, also known as Function-as-a-Service (FaaS), allow developers to deploy discrete blocks of code that execute in response to events or HTTP requests without managing servers. These functions often integrate third-party packages and custom logic, which increases the attack surface if not properly secured. Because serverless functions are ephemeral and abstracted from infrastructure, traditional perimeter security approaches are insufficient. Instead, security must be embedded in the deployment, access control, and runtime environment. ## Diagnosing Exposure and Vulnerabilities Start by auditing your serverless functions for public accessibility and authentication gaps. Key diagnostic steps include: - **Inventory Functions:** List all deployed functions and their trigger types (HTTP, event-driven). - **Check Access Controls:** Verify if functions require authentication or are open to anonymous access. - **Review Code Dependencies:** Identify third-party packages that might introduce vulnerabilities. - **Analyze Logs and Metrics:** Look for unusual invocation patterns or error spikes indicating probing or exploitation attempts. ### Common Failure Modes | Scenario | Description | Impact | Detection Tip | |---------------------------------|--------------------------------------------------------------|---------------------------------|--------------------------------------| | Public Function Without Auth | Function is accessible without authentication | Unauthorized data access, code execution | Unexpected traffic from unknown IPs | | Injection Vulnerabilities | Code susceptible to command or file inclusion attacks | Full container compromise | Error logs showing injection patterns | | Misconfigured IAM or Roles | Overly permissive permissions assigned to function identity | Lateral movement in cloud environment | Audit IAM policies regularly | ## Implementing Best Practices for Hardening ### 1. Enforce Authentication and Authorization Even if a function must be publicly reachable, implement authentication mechanisms such as OAuth, API keys, or token validation. Use Identity and Access Management (IAM) policies to restrict who can invoke functions. ### 2. Network Security Controls Apply network-level restrictions where possible, such as VPC Service Controls or firewall rules, to limit access to trusted networks or IP ranges. This reduces the attack surface even if the function endpoint is public. ### 3. Secure Code Practices - Validate and sanitize all inputs rigorously to prevent injection attacks. - Avoid using vulnerable third-party packages; keep depende",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-15T20:04:27.432980Z",
+      "title": "A Practical Guide to Securing Serverless Cloud Functions Against Public Exposure",
+      "slug": "practical-guide-securing-serverless-cloud-functions",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 807 words, expected at least 900. Claim is not directly supported by its referenced source text: Enabling Azure Active Directory authentication on Azure Functions significantly reduces unauthorized access risk by enfo Claim is not directly supported by its referenced source text: Comprehensive monitoring and alerting are essential to detect suspicious activity and respond promptly to potential comp Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-17T08:29:07.158799Z",
+      "title": "Building a Custom Metrics Exporter for Kubernetes: A Practical Guide",
+      "slug": "custom-metrics-exporter-kubernetes-guide",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 741 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Why Custom Metrics Matter for Kubernetes Monitoring and Scaling Kubernetes clusters natively track CPU and memory, but most production workloads demand richer signals for scaling and observability. Whether you need to autoscale based on queue depth, active connections, or job completion times, built-in metrics often fall short. Custom metrics exporters fill this gap, exposing application-specific state so tools like Prometheus and the HorizontalPodAutoscaler (HPA) can drive smarter decisions. This guide is for Kubernetes operators, SREs, and developers responsible for scaling and monitoring applications beyond the basics. If you need actionable steps to build, package, and wire up a custom exporter, you’ll find practical workflows, diagnostic tips, and security considerations here. ## What Is a Metrics Exporter? A metrics exporter is a lightweight HTTP server that exposes application state as text at a `/metrics` endpoint. Prometheus scrapes this endpoint, stores the time-series data, and makes it available for queries, alerts, and autoscaling. You can instrument your app directly or run a standalone exporter, especially when the data source is external or you lack control over the app code. ### Typical Exporter Use Cases - **Queue depth monitoring**: Autoscale workers based on messages waiting. - **Job duration tracking**: Adjust resources for batch jobs by measuring completion times. - **Connection counts**: Scale pods handling WebSocket or TCP connections. ## Step-by-Step: Building a Custom Metrics Exporter ### 1. Choose Your Exporter Model You can either: - **Instrument your application**: Embed a Prometheus client library and expose `/metrics` from within the app. - **Build a standalone exporter**: Useful for external data sources or legacy apps. #### Example: Python Standalone Exporter ```python from flask import Flask, Response import random app = Flask(__name__) @app.route('/metrics') def metrics(): queue_depth = random.randint(0, 100) # Replace with real logic metric = f\"queue_depth {queue_depth}\\n\" return Response(metric, mimetype='text/plain') if __name__ == '__main__': app.run(host='0.0.0.0', port=8000) ``` This exporter exposes a single metric, `queue_depth`, as plain text. Prometheus expects one metric per line, with optional labels. ## Packaging the Exporter as a Container Containerization is essential for Kubernetes deployment. Use a minimal base image and expose port 8000. **Dockerfile Example:** ```dockerfile FROM python:3.10-slim WORKDIR /app COPY exporter.py . RUN pip install flask EXPOSE 8000 CMD [\"python\", \"exporter.py\"] ``` Build and push the image: ```bash docker build -t myorg/queue-exporter:latest . docker push myorg/queue-exporter:latest ``` ## Deploying the Exporter in Kubernetes Create a Deployment and Service to expose the exporter internally: ```yaml apiVersion: apps/v1 kind: Deployment metadata: name: queue-exporter spec: replicas: 1 selector: matchLabels: app: queue-exporter template: metadata: labels: app: queue-exporter spec: containers: - name: exporter image: myorg/queue-exporter:latest ports: - containerPort: 8000 --- apiVersion: v1 kind: Service metadata: name: queue-exporter spec: selector: app: queue-exporter ports: - port: 8000 targetPort: 8000 ``` ## Integrating with Prometheus Configure Prometheus to scrape the exporter: ```yaml scrape_configs: - job_name: 'queue_exporter' static_configs: - targets: ['queue-exporter.default.svc.cluster.local:8000'] ``` Prometheus will now collect the custom metric and make it available for dashboards, alerts, and autoscaling. ## Wiring Custom Metrics to the H",
+      "attempts": 4
+    }
+  ],
+  "last_runs": {
+    "publish": {
+      "time": "2026-07-17T14:02:35.623196Z",
+      "result": "no_topic"
+    },
+    "maintain": {
+      "time": "2026-07-16T11:08:32.387580Z",
+      "result": "quota_limited",
+      "taxonomy_changes": 4
+    }
+  },
+  "rejected_articles": [
+    {
+      "time": "2026-07-15T13:50:14.120304Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Invalid bash code block: /usr/bin/bash: line 1: syntax error near unexpected token `<' /usr/bin/bash: line 1: `kubectl auth can-i <verb> <resource> [flags]' Claim is not directly supported by its referenced source text: Kubernetes RBAC uses Roles and ClusterRoles to define permissions, which are then bound to subjects using RoleBindings a Article is missing a contextual topic-hub link. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:04:33.206371Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: When a client sends a request to the API server, the request must pass through three distinct phases: authentication, au Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:17:14.862766Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 958 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:23:49.098969Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "A code block is missing a language identifier. Article is too short: 1055 words, expected at least 1400. Article is too similar to source 'Using RBAC Authorization'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T14:50:16.937930Z",
+      "title": "Troubleshooting Kubernetes RBAC with kubectl auth can-i",
+      "slug": "troubleshooting-kubernetes-rbac-kubectl-auth-can-i",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 933 words, expected at least 1000. Claim is not directly supported by its referenced source text: Impersonation via --as flag requires permission and is only available to privileged users. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T15:06:09.632848Z",
+      "title": "How to Harden Exposed Cloud Functions: Practical Security Steps",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 5
+    },
+    {
+      "time": "2026-07-15T15:25:02.516456Z",
+      "title": "Troubleshooting Windows Event Logs with PowerShell",
+      "slug": "troubleshooting-windows-event-logs-powershell",
+      "reason": "build_failed",
+      "detail": "content/posts/troubleshooting-windows-event-logs-powershell/index.md",
+      "attempts": 0
+    },
+    {
+      "time": "2026-07-15T15:38:55.476004Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 790 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe misconfigurations can cause repeated restarts or make workloads unavailable, especially for applications with slow Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T16:11:24.355288Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 811 words, expected at least 900. Claim is not directly supported by its referenced source text: Probe parameters such as initialDelaySeconds, periodSeconds, timeoutSeconds, and failureThreshold must be tuned to match Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T16:27:25.568095Z",
+      "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "slug": "kubernetes-probe-misconfigurations-fixes",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Probe fields such as initialDelaySeconds, periodSeconds, timeoutSeconds, failureThreshold, and successThreshold are conf Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T19:37:31.124264Z",
+      "title": "A Practical Guide to Securing Serverless Cloud Functions Against Public Exposure",
+      "slug": "practical-guide-securing-serverless-cloud-functions",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 849 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Understanding the Risks of Publicly Exposed Serverless Functions Serverless cloud functions offer agility and scalability but often come with the risk of unintended public exposure. Many organizations deploy serverless applications that must remain publicly accessible due to business needs yet lack proper authentication or authorization controls. This creates a significant attack surface, as attackers can exploit vulnerabilities such as Local and Remote File Inclusion (LFI/RFI) and command injection to gain control over the underlying container instances. Once compromised, attackers can pivot to broader cloud environment breaches. This guide is for cloud architects, DevOps engineers, and security practitioners who need to secure serverless functions without sacrificing necessary public accessibility. You will learn how to identify exposure risks, implement layered security controls, and validate your protections effectively. ## What Are Serverless Cloud Functions? Serverless applications, also known as Function-as-a-Service (FaaS), allow developers to deploy discrete blocks of code that execute in response to events or HTTP requests without managing servers. These functions often integrate third-party packages and custom logic, which increases the attack surface if not properly secured. Because serverless functions are ephemeral and abstracted from infrastructure, traditional perimeter security approaches are insufficient. Instead, security must be embedded in the deployment, access control, and runtime environment. ## Diagnosing Exposure and Vulnerabilities Start by auditing your serverless functions for public accessibility and authentication gaps. Key diagnostic steps include: - **Inventory Functions:** List all deployed functions and their trigger types (HTTP, event-driven). - **Check Access Controls:** Verify if functions require authentication or are open to anonymous access. - **Review Code Dependencies:** Identify third-party packages that might introduce vulnerabilities. - **Analyze Logs and Metrics:** Look for unusual invocation patterns or error spikes indicating probing or exploitation attempts. ### Common Failure Modes | Scenario | Description | Impact | Detection Tip | |---------------------------------|--------------------------------------------------------------|---------------------------------|--------------------------------------| | Public Function Without Auth | Function is accessible without authentication | Unauthorized data access, code execution | Unexpected traffic from unknown IPs | | Injection Vulnerabilities | Code susceptible to command or file inclusion attacks | Full container compromise | Error logs showing injection patterns | | Misconfigured IAM or Roles | Overly permissive permissions assigned to function identity | Lateral movement in cloud environment | Audit IAM policies regularly | ## Implementing Best Practices for Hardening ### 1. Enforce Authentication and Authorization Even if a function must be publicly reachable, implement authentication mechanisms such as OAuth, API keys, or token validation. Use Identity and Access Management (IAM) policies to restrict who can invoke functions. ### 2. Network Security Controls Apply network-level restrictions where possible, such as VPC Service Controls or firewall rules, to limit access to trusted networks or IP ranges. This reduces the attack surface even if the function endpoint is public. ### 3. Secure Code Practices - Validate and sanitize all inputs rigorously to prevent injection attacks. - Avoid using vulnerable third-party packages; keep depende",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-15T20:04:27.432980Z",
+      "title": "A Practical Guide to Securing Serverless Cloud Functions Against Public Exposure",
+      "slug": "practical-guide-securing-serverless-cloud-functions",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 807 words, expected at least 900. Claim is not directly supported by its referenced source text: Enabling Azure Active Directory authentication on Azure Functions significantly reduces unauthorized access risk by enfo Claim is not directly supported by its referenced source text: Comprehensive monitoring and alerting are essential to detect suspicious activity and respond promptly to potential comp Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
+    },
+    {
+      "time": "2026-07-17T08:29:07.158799Z",
+      "title": "Building a Custom Metrics Exporter for Kubernetes: A Practical Guide",
+      "slug": "custom-metrics-exporter-kubernetes-guide",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 741 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Why Custom Metrics Matter for Kubernetes Monitoring and Scaling Kubernetes clusters natively track CPU and memory, but most production workloads demand richer signals for scaling and observability. Whether you need to autoscale based on queue depth, active connections, or job completion times, built-in metrics often fall short. Custom metrics exporters fill this gap, exposing application-specific state so tools like Prometheus and the HorizontalPodAutoscaler (HPA) can drive smarter decisions. This guide is for Kubernetes operators, SREs, and developers responsible for scaling and monitoring applications beyond the basics. If you need actionable steps to build, package, and wire up a custom exporter, you’ll find practical workflows, diagnostic tips, and security considerations here. ## What Is a Metrics Exporter? A metrics exporter is a lightweight HTTP server that exposes application state as text at a `/metrics` endpoint. Prometheus scrapes this endpoint, stores the time-series data, and makes it available for queries, alerts, and autoscaling. You can instrument your app directly or run a standalone exporter, especially when the data source is external or you lack control over the app code. ### Typical Exporter Use Cases - **Queue depth monitoring**: Autoscale workers based on messages waiting. - **Job duration tracking**: Adjust resources for batch jobs by measuring completion times. - **Connection counts**: Scale pods handling WebSocket or TCP connections. ## Step-by-Step: Building a Custom Metrics Exporter ### 1. Choose Your Exporter Model You can either: - **Instrument your application**: Embed a Prometheus client library and expose `/metrics` from within the app. - **Build a standalone exporter**: Useful for external data sources or legacy apps. #### Example: Python Standalone Exporter ```python from flask import Flask, Response import random app = Flask(__name__) @app.route('/metrics') def metrics(): queue_depth = random.randint(0, 100) # Replace with real logic metric = f\"queue_depth {queue_depth}\\n\" return Response(metric, mimetype='text/plain') if __name__ == '__main__': app.run(host='0.0.0.0', port=8000) ``` This exporter exposes a single metric, `queue_depth`, as plain text. Prometheus expects one metric per line, with optional labels. ## Packaging the Exporter as a Container Containerization is essential for Kubernetes deployment. Use a minimal base image and expose port 8000. **Dockerfile Example:** ```dockerfile FROM python:3.10-slim WORKDIR /app COPY exporter.py . RUN pip install flask EXPOSE 8000 CMD [\"python\", \"exporter.py\"] ``` Build and push the image: ```bash docker build -t myorg/queue-exporter:latest . docker push myorg/queue-exporter:latest ``` ## Deploying the Exporter in Kubernetes Create a Deployment and Service to expose the exporter internally: ```yaml apiVersion: apps/v1 kind: Deployment metadata: name: queue-exporter spec: replicas: 1 selector: matchLabels: app: queue-exporter template: metadata: labels: app: queue-exporter spec: containers: - name: exporter image: myorg/queue-exporter:latest ports: - containerPort: 8000 --- apiVersion: v1 kind: Service metadata: name: queue-exporter spec: selector: app: queue-exporter ports: - port: 8000 targetPort: 8000 ``` ## Integrating with Prometheus Configure Prometheus to scrape the exporter: ```yaml scrape_configs: - job_name: 'queue_exporter' static_configs: - targets: ['queue-exporter.default.svc.cluster.local:8000'] ``` Prometheus will now collect the custom metric and make it available for dashboards, alerts, and autoscaling. ## Wiring Custom Metrics to the H",
+      "attempts": 4
+    }
+  ],
+  "provider_cooldowns": {}
+}

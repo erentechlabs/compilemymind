@@ -1,0 +1,136 @@
+name: Autonomous content maintenance
+
+on:
+  schedule:
+    - cron: "31 2 * * 1,4"
+  workflow_dispatch:
+
+concurrency:
+  group: autonomous-content-${{ github.ref }}
+  # Do not let a queued maintenance job run stale publisher tests after a
+  # newer content automation revision has superseded it.
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  maintain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_TEXT_MODEL: ${{ vars.GEMINI_TEXT_MODEL }}
+      GEMINI_QA_MODEL: ${{ vars.GEMINI_QA_MODEL }}
+      GEMINI_GROUNDED_RESEARCH_MODEL: ${{ vars.GEMINI_GROUNDED_RESEARCH_MODEL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Synchronize with the latest main revision
+        shell: bash
+        run: |
+          branch="${{ github.event.repository.default_branch }}"
+          git fetch --no-tags origin "+refs/heads/$branch:refs/remotes/origin/$branch"
+          git checkout --detach "origin/$branch"
+          echo "Using publisher revision $(git rev-parse HEAD) from origin/$branch"
+
+      - name: Report publisher revision
+        shell: bash
+        run: echo "Autonomous publisher revision $(git rev-parse HEAD) from $(git branch --show-current)"
+
+      - name: Read pinned Hugo version
+        id: hugo-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .hugo-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install publishing validators
+        run: python -m pip install --requirement tools/autopublisher/requirements.txt
+
+      - name: Run deterministic publishing tests
+        run: |
+          python -m unittest discover -s tools/autopublisher -p "test_*.py"
+          python -m unittest discover -s tools/ci -p "test_*.py"
+          python -m unittest discover -s tools/maintenance -p "test_*.py"
+
+      - name: Install Hugo Extended
+        shell: bash
+        run: |
+          version="${{ steps.hugo-version.outputs.version }}"
+          archive="hugo_extended_${version}_linux-amd64.tar.gz"
+          mkdir -p "$RUNNER_TEMP/hugo"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP/hugo" hugo
+          chmod +x "$RUNNER_TEMP/hugo/hugo"
+          echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/hugo/hugo" version
+
+      - name: Audit existing content and isolate high-risk pages
+        run: python tools/autopublisher/autopublisher.py --mode existing-audit
+
+      - name: Review links and stale facts
+        run: python tools/autopublisher/autopublisher.py --mode maintain
+
+      - name: Run shared release gate
+        run: python tools/ci/release_gate.py --mode maintenance
+
+      - name: Commit and push approved maintenance
+        id: commit
+        shell: bash
+        run: |
+          git config user.name "compilemymind-maintenance[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if test -z "$(git status --porcelain=v1 -- content/posts)" && python - <<'PY'
+          import json
+          from pathlib import Path
+
+          state = json.loads(Path('.autopublisher/state.json').read_text(encoding='utf-8'))
+          raise SystemExit(0 if state.get('last_runs', {}).get('maintain', {}).get('result') == 'quota_limited' else 1)
+          PY
+          then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Maintenance was quota-limited; no state-only deployment commit will be created."
+            exit 0
+          fi
+          if git diff --quiet -- content/posts .autopublisher/state.json .autopublisher/reports; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No maintenance changes were required."
+            exit 0
+          fi
+          git add content/posts .autopublisher/state.json .autopublisher/reports
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore(content): autonomous maintenance"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Report deployment configuration
+        if: steps.commit.outputs.changed == 'true'
+        run: echo "Maintenance was pushed. Cloudflare Pages Git integration will deploy the new commit."
+
+      - name: Build autonomous monitoring report
+        if: always()
+        run: python tools/autopublisher/autopublisher.py --mode report
+
+      - name: Upload maintenance logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: autonomous-maintenance-${{ github.run_id }}
+          path: |
+            .autopublisher/logs/
+            .autopublisher/dashboard.json
+            .autopublisher/reports/content-audit.json
+            .autopublisher/reports/maintenance-latest.json
+          if-no-files-found: ignore
+          retention-days: 30

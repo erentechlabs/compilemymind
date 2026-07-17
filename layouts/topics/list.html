@@ -1,18 +1,18 @@
 {{ define "main" }}
   {{ $topics := slice
-    (dict "key" "software-engineering" "label" "Software Engineering" "tags" (slice "programming" "java" "spring-boot" "software-development" "algorithms" "api-design" "architecture" "jdk" "c-sharp" "python" "developer-tools" "problem-solving" "software-engineering" "software-architecture"))
-    (dict "key" "ai-engineering" "label" "AI Engineering" "tags" (slice "ai-engineering" "artificial-intelligence" "generative-ai" "llm" "ai-agents" "rag" "model-evaluation" "inference" "mlops" "machine-learning"))
-    (dict "key" "programming-languages" "label" "Programming Languages" "tags" (slice "programming-languages" "java" "python" "go" "rust" "kotlin" "c-sharp" "compilers" "runtimes" "jdk"))
-    (dict "key" "systems-design" "label" "Systems Design" "tags" (slice "systems-design" "distributed-systems" "software-architecture" "microservices" "databases" "observability" "performance" "scalability"))
-    (dict "key" "developer-tools" "label" "Developer Tools" "tags" (slice "developer-tools" "developer-experience" "devops" "ci-cd" "docker" "kubernetes" "open-source" "testing" "observability"))
-    (dict "key" "networking-it" "label" "Networking & IT" "tags" (slice "networking" "it-fundamentals" "sysadmin" "protocols" "infrastructure" "web" "api-design"))
-    (dict "key" "microsoft-cloud-security" "label" "Microsoft Cloud" "tags" (slice "microsoft" "azure" "cloud" "microsoft-365" "entra" "defender" "sentinel" "purview" "compliance" "licensing" "az-900" "ms-900" "sc-900"))
-    (dict "key" "hardware-pc-building" "label" "Hardware & PC Building" "tags" (slice "hardware" "pc-building" "cpu" "gpu" "motherboards"))
-    (dict "key" "certifications" "label" "Certifications" "tags" (slice "certification" "comptia" "tech-plus" "az-900" "ms-900" "sc-900" "cheatsheet" "career"))
-    (dict "key" "cybersecurity" "label" "Security" "tags" (slice "cybersecurity" "zero-trust" "identity" "mfa" "passwordless" "passkeys" "authentication" "network-security" "cloud-security" "security-architecture" "vulnerability-analysis" "heartbleed" "openssl" "tls" "siem" "xdr" "soar" "soc" "incident-response" "security-operations" "sc-900"))
+    (dict "key" "cybersecurity" "label" "Cybersecurity" "tags" (slice "cybersecurity" "zero-trust" "vulnerability-management" "incident-response" "siem" "xdr" "soar" "owasp" "nist" "network-security" "software-security" "prompt-injection" "ai-security"))
+    (dict "key" "identity-access-management" "label" "Identity & Access" "tags" (slice "identity" "iam" "authentication" "authorization" "mfa" "passkeys" "conditional-access" "rbac" "identity-governance"))
+    (dict "key" "networking" "label" "Networking" "tags" (slice "networking" "dns" "tcp" "udp" "tls" "vpn" "firewall" "routing" "protocols"))
+    (dict "key" "it-fundamentals" "label" "IT Fundamentals" "tags" (slice "it-fundamentals" "operating-systems" "hardware" "comptia" "study-guide"))
+    (dict "key" "azure" "label" "Microsoft Azure" "tags" (slice "azure" "azure-virtual-machines" "azure-kubernetes-service" "azure-monitor" "azure-security" "cloud-architecture"))
+    (dict "key" "entra-id" "label" "Microsoft Entra ID" "tags" (slice "entra-id" "conditional-access" "service-principals" "identity-governance" "microsoft-365"))
+    (dict "key" "cloud-certifications" "label" "Cloud Certifications" "tags" (slice "cloud-certifications" "az-900" "sc-900" "ms-900" "exam-preparation" "study-guide"))
+    (dict "key" "system-administration" "label" "System Administration" "tags" (slice "system-administration" "powershell" "windows-server" "linux" "active-directory" "configuration-management" "backup-recovery"))
+    (dict "key" "practical-infrastructure-guides" "label" "Infrastructure Guides" "tags" (slice "infrastructure" "availability" "monitoring" "observability" "troubleshooting" "best-practices" "checklist"))
+    (dict "key" "developer-it-tools" "label" "Developer & IT Tools" "tags" (slice "developer-it-tools" "github" "git" "docker" "kubernetes" "terraform" "ci-cd" "api" "command-line" "automation"))
   }}
   {{ $posts := where site.RegularPages "Type" "posts" }}
-  {{ $defaultTopic := "software-engineering" }}
+  {{ $defaultTopic := "cybersecurity" }}
 
   <div class="topic-browser">
     <header class="list-header topic-browser-header">
@@ -25,7 +25,8 @@
         {{ $topic := . }}
         {{ $count := 0 }}
         {{ range $posts }}
-          {{ if gt (len (intersect (.Params.tags | default (slice)) $topic.tags)) 0 }}{{ $count = add $count 1 }}{{ end }}
+          {{ $classifiers := union (.Params.tags | default (slice)) (.Params.categories | default (slice)) }}
+          {{ if or (in $classifiers $topic.key) (gt (len (intersect $classifiers $topic.tags)) 0) }}{{ $count = add $count 1 }}{{ end }}
         {{ end }}
         <button class="topic-filter-button{{ if eq .key $defaultTopic }} active{{ end }}" type="button" role="tab" aria-selected="{{ if eq .key $defaultTopic }}true{{ else }}false{{ end }}" data-topic-filter="{{ .key }}">
           <span>{{ .label }}</span><span class="topic-filter-count">{{ $count }}</span>
@@ -36,8 +37,8 @@
     <div class="posts-list topic-posts-list" id="topic-posts-container">
       {{ range $posts }}
         {{ $postTopics := slice }}
-        {{ $postTags := .Params.tags | default (slice) }}
-        {{ range $topics }}{{ if gt (len (intersect $postTags .tags)) 0 }}{{ $postTopics = $postTopics | append .key }}{{ end }}{{ end }}
+        {{ $postClassifiers := union (.Params.tags | default (slice)) (.Params.categories | default (slice)) }}
+        {{ range $topics }}{{ if or (in $postClassifiers .key) (gt (len (intersect $postClassifiers .tags)) 0) }}{{ $postTopics = $postTopics | append .key }}{{ end }}{{ end }}
         {{ if gt (len $postTopics) 0 }}
           <div class="topic-result-card" data-topic-list="{{ delimit $postTopics "," }}" {{ if not (in $postTopics $defaultTopic) }}hidden{{ end }}>
             {{ partial "post-card.html" (dict "page" . "limit" 3 "dataYearMonth" (.Date.Format "2006-01") "dataTags" (delimit (.Params.tags | default (slice)) ",")) }}

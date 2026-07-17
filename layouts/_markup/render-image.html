@@ -12,6 +12,18 @@
     </picture>
     {{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
   </figure>
+{{- else if and $resource (eq $resource.MediaType.SubType "svg") -}}
+  {{- $svgWidth := "1200" -}}
+  {{- $svgHeight := "675" -}}
+  {{- $viewBox := findRESubmatch `(?i)viewBox=["']\s*[-0-9.]+\s+[-0-9.]+\s+([0-9.]+)\s+([0-9.]+)["']` $resource.Content 1 -}}
+  {{- with index $viewBox 0 -}}
+    {{- $svgWidth = index . 1 -}}
+    {{- $svgHeight = index . 2 -}}
+  {{- end -}}
+  <figure>
+    <img src="{{ $resource.RelPermalink }}" alt="{{ $alt }}" width="{{ $svgWidth }}" height="{{ $svgHeight }}" loading="lazy" decoding="async">
+    {{ with .Title }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
 {{- else -}}
   <figure>
     <img src="{{ if $resource }}{{ $resource.RelPermalink }}{{ else }}{{ $destination | safeURL }}{{ end }}" alt="{{ $alt }}" loading="lazy" decoding="async">

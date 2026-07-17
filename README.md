@@ -33,17 +33,17 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 - **Dark/Light Mode:** Seamless switching to match user preference.
 - **SEO Optimized:** Automatic sitemap generation, structured data, and meta tags.
 
-## Content pipeline
+## Autonomous publishing
 
-The site publishes technical guides through a small source-first Gemini pipeline. Each configured brief carries its own official documentation, so publication starts with a verified source set instead of a model-invented topic. The pipeline writes a post only after source availability, structure, length, citation, and Hugo build checks pass.
+The site can publish and maintain its own technical content through Gemini and GitHub Actions. The automation researches trusted current sources, avoids duplicate reader intent, maps material claims to evidence, generates long-form Hugo page bundles with useful visuals, applies deterministic and Gemini quality gates, checks links and stale facts, and pushes only validated changes.
 
-See [docs/CONTENT_PIPELINE.md](docs/CONTENT_PIPELINE.md) for setup, operations, and the editorial backlog.
+See [docs/AUTONOMOUS_PUBLISHING.md](docs/AUTONOMOUS_PUBLISHING.md) for setup, schedules, safety gates, monitoring, and local validation commands.
 
 ---
 
 ## 🛠️ Tech Stack
 
-*   **Framework:** [Hugo](https://gohugo.io/) v0.163.1 (Extended Edition)
+*   **Framework:** [Hugo](https://gohugo.io/) v0.164.0 (Extended Edition)
 *   **Theme:** [Mana Theme](https://github.com/Livour/hugo-mana-theme) (customized)
 *   **Hosting/Deployment:** [Cloudflare Pages](https://pages.cloudflare.com/)
 *   **Language:** Markdown / HTML / SCSS / Go Templates

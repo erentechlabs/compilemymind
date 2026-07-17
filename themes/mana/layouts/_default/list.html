@@ -17,7 +17,7 @@
   {{ $uniqueYearMonths := $yearMonths | uniq | sort }}
 
   {{ $paginator := .Paginate $allPosts 999 }}
-  <div class="list-container">
+  <div class="list-container" data-post-total="{{ len $allPosts }}">
     <header class="list-header">
       <h1 class="list-title">
         <span class="list-title-line2">{{ i18n "posts" | upper }}</span>

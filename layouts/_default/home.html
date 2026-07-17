@@ -1,4 +1,5 @@
 {{ define "main" }}
+  {{ $allPosts := where site.RegularPages "Type" "posts" }}
   <!-- Hero Section -->
   <section class="hero-section">
     <div class="hero-container">
@@ -84,11 +85,11 @@
 
   <div class="home-container">
     <!-- Posts List -->
-    <section class="posts-section">
+    <section class="posts-section" data-post-total="{{ len $allPosts }}">
       <h2 class="posts-title">{{ i18n "recentPosts" }}</h2>
 
       <div class="posts-list">
-        {{ range where site.RegularPages "Type" "posts" | first 10 }}
+        {{ range $allPosts | first 10 }}
           {{ partial "post-card.html" (dict "page" . "limit" 3) }}
         {{ end }}
       </div>

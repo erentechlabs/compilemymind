@@ -1,16 +1,10 @@
-name: Deploy production site
+name: Deploy Hugo site
 
 on:
   push:
-    branches: [main]
-    paths-ignore:
-      - ".content-pipeline/state.json"
-      - ".content-pipeline/logs/**"
+    branches:
+      - main
   workflow_dispatch:
-
-concurrency:
-  group: cloudflare-pages-production
-  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -19,49 +13,50 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
-      - uses: actions/setup-python@v5
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Read pinned Hugo version
+        id: hugo-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .hugo-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Validate source-backed editorial backlog
-        run: python tools/content_pipeline/publish.py --mode validate
-      - name: Install pinned Hugo Extended
+
+      - name: Run deterministic repository tests
+        run: |
+          python -m pip install --requirement tools/autopublisher/requirements.txt
+          python -m unittest discover -s tools/autopublisher -p "test_*.py"
+          python -m unittest discover -s tools/ci -p "test_*.py"
+          python -m unittest discover -s tools/maintenance -p "test_*.py"
+
+      - name: Install Hugo Extended
         shell: bash
         run: |
-          set -euo pipefail
-          version="$(tr -d '\r\n' < .hugo-version)"
+          version="${{ steps.hugo-version.outputs.version }}"
           archive="hugo_extended_${version}_linux-amd64.tar.gz"
-          target="$RUNNER_TEMP/hugo-${version}"
-          mkdir -p "$target"
+          mkdir -p "$RUNNER_TEMP/hugo"
           curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
-          tar -xzf "$RUNNER_TEMP/$archive" -C "$target" hugo
-          chmod +x "$target/hugo"
-          echo "$target" >> "$GITHUB_PATH"
-          "$target/hugo" version
-      - name: Build the production artifact
-        run: hugo --gc --minify --cleanDestinationDir --destination public
-      - name: Verify Cloudflare credentials
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          for setting in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_PAGES_PROJECT; do
-            test -n "${!setting}" || { echo "::error title=Missing Cloudflare secret::$setting is required."; exit 1; }
-          done
-      - name: Set up Node for Wrangler
-        uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
-        run: npx --yes wrangler@4 pages deploy public --project-name="$CLOUDFLARE_PAGES_PROJECT" --branch=main
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP/hugo" hugo
+          chmod +x "$RUNNER_TEMP/hugo/hugo"
+          echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/hugo/hugo" version
+
+      - name: Synchronize Hugo version with Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        run: python3 tools/maintenance/sync_cloudflare_hugo.py
+
+      - name: Run shared release gate
+        run: python3 tools/ci/release_gate.py --mode validate
+
+      - name: Report deployment configuration
+        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == ''
+        run: echo "Hugo build passed. Cloudflare Pages Git integration will deploy the site; API synchronization was skipped because its settings are incomplete."

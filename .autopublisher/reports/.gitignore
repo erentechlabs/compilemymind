@@ -1,0 +1,6 @@
+*
+!.gitignore
+!*.md
+!content-audit.json
+!maintenance-latest.json
+!rendered-site-audit.json

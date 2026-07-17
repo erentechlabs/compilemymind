@@ -1,0 +1,146 @@
+name: Autonomous publishing
+
+on:
+  # A deliberate publish trigger is limited to this sentinel path. Ordinary
+  # code/configuration pushes remain test-and-deploy only, preventing paid
+  # duplicate attempts while still allowing an automated run when requested.
+  push:
+    branches:
+      - main
+    paths:
+      - ".autopublisher/publish-now"
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: autonomous-content-${{ github.ref }}
+  # A queued run can otherwise execute an old publisher revision after a fix
+  # has already landed, repeating a resolved rejection and wasting quota.
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  models: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GITHUB_MODELS_TOKEN: ${{ github.token }}
+      GEMINI_TEXT_MODEL: ${{ vars.GEMINI_TEXT_MODEL }}
+      GEMINI_QA_MODEL: ${{ vars.GEMINI_QA_MODEL }}
+      GEMINI_GROUNDED_RESEARCH_MODEL: ${{ vars.GEMINI_GROUNDED_RESEARCH_MODEL }}
+      GEMINI_IMAGE_MODEL: ${{ vars.GEMINI_IMAGE_MODEL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          # A rerun normally checks out the original event SHA, which can keep
+          # executing publisher bugs that have already been fixed on main.
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Synchronize with the latest main revision
+        shell: bash
+        run: |
+          branch="${{ github.event.repository.default_branch }}"
+          git fetch --no-tags origin "+refs/heads/$branch:refs/remotes/origin/$branch"
+          git checkout --detach "origin/$branch"
+          echo "Using publisher revision $(git rev-parse HEAD) from origin/$branch"
+
+      - name: Report publisher revision
+        shell: bash
+        run: echo "Autonomous publisher revision $(git rev-parse HEAD) from $(git branch --show-current)"
+
+      - name: Read pinned Hugo version
+        id: hugo-version
+        shell: bash
+        run: echo "version=$(tr -d '\r\n' < .hugo-version)" >> "$GITHUB_OUTPUT"
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install publishing validators
+        run: python -m pip install --requirement tools/autopublisher/requirements.txt
+
+      - name: Run deterministic publishing tests
+        run: |
+          python -m unittest discover -s tools/autopublisher -p "test_*.py"
+          python -m unittest discover -s tools/ci -p "test_*.py"
+          python -m unittest discover -s tools/maintenance -p "test_*.py"
+
+      - name: Install Hugo Extended
+        shell: bash
+        run: |
+          version="${{ steps.hugo-version.outputs.version }}"
+          archive="hugo_extended_${version}_linux-amd64.tar.gz"
+          mkdir -p "$RUNNER_TEMP/hugo"
+          curl --fail --location --retry 3 --output "$RUNNER_TEMP/$archive" "https://github.com/gohugoio/hugo/releases/download/v${version}/$archive"
+          tar -xzf "$RUNNER_TEMP/$archive" -C "$RUNNER_TEMP/hugo" hugo
+          chmod +x "$RUNNER_TEMP/hugo/hugo"
+          echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
+          "$RUNNER_TEMP/hugo/hugo" version
+
+      - name: Run autonomous research, generation, and QA
+        run: python tools/autopublisher/autopublisher.py --mode publish
+
+      - name: Run shared release gate
+        id: publication_gate
+        run: python tools/ci/release_gate.py --mode publish
+
+      - name: Commit and push approved content
+        id: commit
+        shell: bash
+        run: |
+          git config user.name "compilemymind-autopublisher[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          approved=$(python -c 'import json; from pathlib import Path; print(str(json.loads(Path(".autopublisher/release-gate-result.json").read_text(encoding="utf-8")).get("approved", False)).lower())')
+          if test "$approved" != "true"; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            if ! git diff --quiet -- .autopublisher/state.json; then
+              git add .autopublisher/state.json
+              git commit -m "chore(automation): record rejected publish diagnostics [skip ci]"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+              echo "Rejected publication diagnostics were persisted; no public content was committed."
+            else
+              echo "No approved publication and no new diagnostics to persist."
+            fi
+            exit 0
+          fi
+          if git diff --quiet -- content/posts .autopublisher/state.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No content or durable state changes were produced."
+            exit 0
+          fi
+          git add content/posts .autopublisher/state.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git commit -m "chore(content): autonomous publish"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Report deployment configuration
+        if: steps.commit.outputs.changed == 'true'
+        run: echo "Content was pushed. Cloudflare Pages Git integration will deploy the new commit."
+
+      - name: Build autonomous monitoring report
+        if: always()
+        run: python tools/autopublisher/autopublisher.py --mode report
+
+      - name: Upload autonomous run logs
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: autonomous-publish-${{ github.run_id }}
+          path: |
+            .autopublisher/logs/
+            .autopublisher/dashboard.json
+          if-no-files-found: ignore
+          retention-days: 30
