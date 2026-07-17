@@ -19,8 +19,9 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
-# Per-run publication gate marker
-.autopublisher/publish-result.json
-.autopublisher/release-gate-result.json
-.autopublisher/dashboard.json
-infra-result.json
+# Content pipeline runtime data
+.content-pipeline/result.json
+.content-pipeline/logs/
+
+# Removed legacy automation runtime directory
+.autopublisher/

@@ -1,0 +1,32 @@
+name: Validate site
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate source-backed editorial backlog
+        run: python tools/content_pipeline/publish.py --mode validate
+      - name: Run content-pipeline tests
+        run: python -m unittest discover -s tools/content_pipeline -p "test_*.py"
+      - uses: ./.github/actions/setup-hugo
+      - name: Build the site
+        run: hugo --gc --minify --cleanDestinationDir --destination public

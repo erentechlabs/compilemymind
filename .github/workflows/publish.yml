@@ -1,0 +1,98 @@
+name: Publish source-backed article
+
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: content-publish-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  deployments: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      GEMINI_MODEL: ${{ vars.GEMINI_MODEL }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Validate source-backed editorial backlog
+        run: python tools/content_pipeline/publish.py --mode validate
+      - name: Run content-pipeline tests
+        run: python -m unittest discover -s tools/content_pipeline -p "test_*.py"
+      - uses: ./.github/actions/setup-hugo
+      - name: Generate one approved article
+        run: python tools/content_pipeline/publish.py --mode publish
+      - name: Commit the article or recorded outcome
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          result=$(python -c 'import json; from pathlib import Path; print(json.loads(Path(".content-pipeline/result.json").read_text(encoding="utf-8"))["result"])')
+          git config user.name "compilemymind-content-pipeline[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          push_commit() {
+            if git push origin "HEAD:main"; then return 0; fi
+            git fetch --no-tags origin main
+            git rebase origin/main
+            git push origin "HEAD:main"
+          }
+
+          if [ "$result" = "published" ]; then
+            git add content/posts .content-pipeline/state.json
+            git commit -m "chore(content): publish source-backed article [skip ci]"
+            push_commit
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if ! git diff --quiet -- .content-pipeline/state.json; then
+            git add .content-pipeline/state.json
+            git commit -m "chore(automation): record content-pipeline outcome [skip ci]"
+            push_commit
+          fi
+          echo "published=false" >> "$GITHUB_OUTPUT"
+          echo "::notice title=No article published::Content pipeline result: $result"
+      - name: Verify Cloudflare credentials
+        if: steps.commit.outputs.published == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_PAGES_PROJECT: ${{ secrets.CLOUDFLARE_PAGES_PROJECT }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for setting in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID CLOUDFLARE_PAGES_PROJECT; do
+            test -n "${!setting}" || { echo "::error title=Missing Cloudflare secret::$setting is required."; exit 1; }
+          done
+      - name: Deploy approved article to Cloudflare Pages
+        if: steps.commit.outputs.published == 'true'
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy public --project-name=${{ secrets.CLOUDFLARE_PAGES_PROJECT }} --branch=main
+      - name: Upload publish result
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: content-pipeline-${{ github.run_id }}
+          path: |
+            .content-pipeline/result.json
+            .content-pipeline/state.json
+          if-no-files-found: ignore
+          retention-days: 14
