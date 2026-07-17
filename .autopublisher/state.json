@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "generated_posts": [
     {
       "time": "2026-07-12T19:15:08.041301Z",
@@ -874,6 +874,72 @@
       },
       "quality_score": 0.8895,
       "path": "content/posts/diagnose-windows-service-failures-powershell/index.md"
+    },
+    {
+      "time": "2026-07-17T21:15:39.828513Z",
+      "title": "Troubleshoot Windows Time Synchronization with w32tm",
+      "slug": "troubleshoot-windows-time-synchronization-w32tm",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "windows-server",
+        "troubleshooting",
+        "networking",
+        "system-administration"
+      ],
+      "sources": [
+        {
+          "title": "Windows Time service tools and settings",
+          "url": "https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings"
+        },
+        {
+          "title": "How the Windows Time service works",
+          "url": "https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/how-the-windows-time-service-works"
+        },
+        {
+          "title": "w32tm resync reports no time data available",
+          "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/error-message-run-w32tm-resync-no-time-data-available"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8846,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.433,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 1.0,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.433,
+            "source_similarity": 0.4872,
+            "existing_content_similarity": 0.433,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8846,
+      "path": "content/posts/troubleshoot-windows-time-synchronization-w32tm/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1005,8 +1071,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-17T20:29:20.155098Z",
-      "result": "no_topic"
+      "time": "2026-07-17T21:15:39.828651Z",
+      "result": "published"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1120,5 +1186,6 @@
       "attempts": 4
     }
   ],
-  "provider_cooldowns": {}
+  "provider_cooldowns": {},
+  "pending_publication": {}
 }
