@@ -1399,17 +1399,22 @@ class AutopublisherTests(unittest.TestCase):
             def generate_json(self, *_args, **_kwargs):
                 raise AssertionError("maintenance must not generate after a quota response")
 
-        with patch.object(autopublisher, "load_config", return_value={"maintenance": {"max_articles_per_run": 1}}), \
-            patch.object(autopublisher, "load_state", return_value=state), \
-            patch.object(autopublisher, "load_posts", return_value=[post]), \
-            patch.object(autopublisher, "select_posts_for_maintenance", return_value=[post]), \
-            patch.object(autopublisher, "GeminiClient", return_value=QuotaClient()), \
-            patch.object(autopublisher, "run_hugo_build", return_value=True), \
-            patch.object(autopublisher, "save_state") as save_state:
-            result = autopublisher.run_maintain(SimpleNamespace(max_articles=None, dry_run=False))
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "maintenance-latest.json"
+            with patch.object(autopublisher, "load_config", return_value={"maintenance": {"max_articles_per_run": 1}}), \
+                patch.object(autopublisher, "load_state", return_value=state), \
+                patch.object(autopublisher, "load_posts", return_value=[post]), \
+                patch.object(autopublisher, "select_posts_for_maintenance", return_value=[post]), \
+                patch.object(autopublisher, "GeminiClient", return_value=QuotaClient()), \
+                patch.object(autopublisher, "run_hugo_build", return_value=True), \
+                patch.object(autopublisher, "MAINTENANCE_REPORT_PATH", report_path), \
+                patch.object(autopublisher, "save_state") as save_state:
+                result = autopublisher.run_maintain(SimpleNamespace(max_articles=None, dry_run=False))
+            report = json.loads(report_path.read_text(encoding="utf-8"))
 
         self.assertEqual(result, 0)
         self.assertEqual(state["last_runs"]["maintain"]["result"], "quota_limited")
+        self.assertEqual(report["failed_repairs"][0]["slug"], "test-post")
         save_state.assert_called_once_with(state)
 
     def test_topic_relevance_accepts_approved_cluster_and_rejects_disallowed_topic(self):
