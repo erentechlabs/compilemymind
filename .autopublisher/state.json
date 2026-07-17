@@ -940,6 +940,72 @@
       },
       "quality_score": 0.8846,
       "path": "content/posts/troubleshoot-windows-time-synchronization-w32tm/index.md"
+    },
+    {
+      "time": "2026-07-17T21:23:55.623900Z",
+      "title": "Troubleshoot Docker Container Health Checks",
+      "slug": "troubleshoot-docker-container-health-checks",
+      "categories": [
+        "developer-it-tools",
+        "system-administration"
+      ],
+      "tags": [
+        "docker",
+        "troubleshooting",
+        "monitoring",
+        "developer-it-tools"
+      ],
+      "sources": [
+        {
+          "title": "Dockerfile HEALTHCHECK reference",
+          "url": "https://docs.docker.com/reference/dockerfile"
+        },
+        {
+          "title": "docker inspect",
+          "url": "https://docs.docker.com/reference/cli/docker/inspect"
+        },
+        {
+          "title": "docker container ls health filter",
+          "url": "https://docs.docker.com/reference/cli/docker/container/ls"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8855,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.4621,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.7857,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.4621,
+            "source_similarity": 0.6329,
+            "existing_content_similarity": 0.4621,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8855,
+      "path": "content/posts/troubleshoot-docker-container-health-checks/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1071,7 +1137,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-17T21:15:39.828651Z",
+      "time": "2026-07-17T21:23:55.624026Z",
       "result": "published"
     },
     "maintain": {
