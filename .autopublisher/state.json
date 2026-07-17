@@ -1005,8 +1005,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-17T08:29:07.159500Z",
-      "result": "qa_failed"
+      "time": "2026-07-17T14:02:35.623196Z",
+      "result": "no_topic"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
