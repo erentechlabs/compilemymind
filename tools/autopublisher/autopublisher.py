@@ -177,7 +177,8 @@ class EventLog:
         with self.path.open("a", encoding="utf-8") as handle:
             handle.write(json.dumps(payload, ensure_ascii=False) + "\n")
         printable = {k: v for k, v in payload.items() if k not in {"article", "markdown"}}
-        print(json.dumps(printable, ensure_ascii=False))
+        if os.environ.get("AUTOPUBLISHER_LOG_STDOUT", "1").strip().lower() not in {"0", "false", "no", "off"}:
+            print(json.dumps(printable, ensure_ascii=False))
 
 
 def normalize_space(value: str) -> str:
@@ -396,19 +397,20 @@ def load_state() -> dict[str, Any]:
     state = read_json(
         STATE_PATH,
         {
-            "version": 2,
+            "version": 3,
             "generated_posts": [],
             "maintenance_reviews": {},
             "failures": [],
             "last_runs": {},
             "rejected_articles": [],
             "provider_cooldowns": {},
+            "pending_publication": {},
         },
     )
     if not isinstance(state, dict):
         state = {}
-    state.setdefault("version", 2)
-    state["version"] = max(2, int(state["version"] or 2))
+    state.setdefault("version", 3)
+    state["version"] = max(3, int(state["version"] or 3))
     for key, default in {
         "generated_posts": [],
         "maintenance_reviews": {},
@@ -416,6 +418,7 @@ def load_state() -> dict[str, Any]:
         "last_runs": {},
         "rejected_articles": [],
         "provider_cooldowns": {},
+        "pending_publication": {},
     }.items():
         state.setdefault(key, default)
     return state
@@ -484,15 +487,149 @@ def save_state(state: dict[str, Any]) -> None:
     write_json(STATE_PATH, state)
 
 
-def record_publish_retryable(state: dict[str, Any], stage: str, error: Exception) -> None:
-    details = {"time": iso_z(), "result": "retryable", "stage": stage}
-    state["last_runs"]["publish"] = details
-    save_state(state)
-    write_publish_result("retryable", stage=stage, error=str(error))
-
-
 def write_publish_result(result: str, **fields: Any) -> None:
     write_json(PUBLISH_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
+
+
+def retry_topic_payload(topic: dict[str, Any] | None, sources: list[ResearchItem] | None = None) -> dict[str, Any]:
+    """Store only the durable, source-bound fields needed for a clean retry."""
+    if not isinstance(topic, dict):
+        return {}
+    allowed_fields = {
+        "title",
+        "slug",
+        "primary_category",
+        "categories",
+        "tags",
+        "search_intent",
+        "why_now",
+        "source_urls",
+        "needs_diagram",
+        "needs_chart",
+        "series",
+        "generation_constraints",
+        "offline_fallback",
+    }
+    payload = {key: value for key, value in topic.items() if key in allowed_fields}
+    retry_sources = [
+        {"title": item.title, "url": item.url}
+        for item in sources or []
+        if item.title and item.url and (item.validated or not item.validation)
+    ]
+    configured_sources = [
+        {"title": str(item.get("title", "")), "url": str(item.get("url", ""))}
+        for item in topic.get("seed_sources", []) or []
+        if isinstance(item, dict) and item.get("title") and item.get("url")
+    ]
+    if retry_sources or configured_sources:
+        payload["seed_sources"] = dedupe_sources([*retry_sources, *configured_sources])
+        payload["source_urls"] = [item["url"] for item in payload["seed_sources"]]
+    return payload
+
+
+def schedule_publish_retry(
+    state: dict[str, Any],
+    config: dict[str, Any],
+    log: "EventLog",
+    *,
+    reason: str,
+    stage: str,
+    detail: str = "",
+    topic: dict[str, Any] | None = None,
+    sources: list[ResearchItem] | None = None,
+) -> None:
+    """Persist a retry across scheduled runs without weakening publication gates."""
+    previous = state.get("pending_publication", {}) or {}
+    previous_topic = previous.get("topic", {}) or {}
+    candidate = retry_topic_payload(topic, sources)
+    same_topic = bool(candidate.get("slug") and candidate.get("slug") == previous_topic.get("slug"))
+    topic_attempts = int(previous.get("topic_attempts", 0) or 0) + 1 if same_topic else (1 if candidate else 0)
+    consecutive_attempts = int(previous.get("consecutive_attempts", 0) or 0) + 1
+    retry_config = config.get("retry", {})
+    delay_hours = max(1, int(retry_config.get("base_delay_hours", 6)))
+    pending = {
+        "scheduled_at": iso_z(),
+        "next_retry_at": iso_z(utc_now() + dt.timedelta(hours=delay_hours)),
+        "reason": reason,
+        "stage": stage,
+        "detail": normalize_space(detail)[:2000],
+        "consecutive_attempts": consecutive_attempts,
+        "topic_attempts": topic_attempts,
+        "topic": candidate,
+    }
+    state["pending_publication"] = pending
+    state["last_runs"]["publish"] = {
+        "time": iso_z(),
+        "result": "retry_scheduled",
+        "reason": reason,
+        "stage": stage,
+        "next_retry_at": pending["next_retry_at"],
+    }
+    save_state(state)
+    write_publish_result(
+        "retry_scheduled",
+        reason=reason,
+        stage=stage,
+        next_retry_at=pending["next_retry_at"],
+    )
+    log.log(
+        "publish_retry_scheduled",
+        reason=reason,
+        stage=stage,
+        next_retry_at=pending["next_retry_at"],
+        consecutive_attempts=consecutive_attempts,
+        topic=str(candidate.get("slug", "")),
+    )
+
+
+def pending_publication_topic(
+    state: dict[str, Any],
+    posts: list[Post],
+    config: dict[str, Any],
+    log: "EventLog",
+) -> dict[str, Any] | None:
+    """Return a still-eligible queued topic, otherwise let discovery choose a fresh one."""
+    pending = state.get("pending_publication", {}) or {}
+    topic = pending.get("topic", {}) or {}
+    if not isinstance(topic, dict) or not topic.get("title"):
+        return None
+    maximum = max(1, int(config.get("retry", {}).get("max_same_topic_attempts", 3)))
+    if int(pending.get("topic_attempts", 0) or 0) >= maximum:
+        log.log(
+            "publish_retry_topic_exhausted",
+            slug=topic.get("slug"),
+            attempts=pending.get("topic_attempts", 0),
+        )
+        pending["topic"] = {}
+        pending["topic_attempts"] = 0
+        state["pending_publication"] = pending
+        return None
+    slug = slugify(str(topic.get("slug") or topic.get("title", "")), int(config.get("publishing", {}).get("max_slug_length", 82)))
+    if not slug or slug in {post.slug for post in posts}:
+        pending["topic"] = {}
+        pending["topic_attempts"] = 0
+        state["pending_publication"] = pending
+        return None
+    topic = dict(topic)
+    topic["slug"] = slug
+    topic["categories"] = sanitize_categories(topic.get("categories", []), topic.get("primary_category"), config)
+    topic["tags"] = sanitize_tags(topic.get("tags", []), topic, config)
+    relevance = topic_relevance_score(topic, config)
+    if not relevance.get("approved") or relevance.get("score", 0.0) < float(
+        config.get("publishing", {}).get("topic_relevance_min_score", 0.0)
+    ):
+        log.log("publish_retry_topic_dropped", slug=slug, reason="topic_relevance_too_low")
+        pending["topic"] = {}
+        pending["topic_attempts"] = 0
+        state["pending_publication"] = pending
+        return None
+    log.log(
+        "publish_retry_resumed",
+        slug=slug,
+        attempts=pending.get("topic_attempts", 0),
+        original_reason=pending.get("reason", ""),
+    )
+    return topic
 
 
 def record_rejection(
@@ -660,9 +797,10 @@ def decode_http_body(body: bytes, headers: dict[str, str]) -> bytes:
 
 
 class GeminiClient:
-    def __init__(self, config: dict[str, Any], log: EventLog) -> None:
+    def __init__(self, config: dict[str, Any], log: EventLog, state: dict[str, Any] | None = None) -> None:
         self.config = config
         self.log = log
+        self.state = state
         self.api_key = os.environ.get("GEMINI_API_KEY", "").strip()
         github_models = config.get("github_models", {})
         self.github_models_enabled = bool(github_models.get("enabled", True))
@@ -725,7 +863,6 @@ class GeminiClient:
         max_output_tokens: int | None = None,
         task: str | None = None,
     ) -> dict[str, Any]:
-        self.require_key()
         if self._use_lightweight_model(task):
             for github_model in self.github_models_models:
                 try:
@@ -744,6 +881,7 @@ class GeminiClient:
                         error=str(error),
                     )
         selected_model = model or self.text_model
+        self.require_key()
         config = {
             "temperature": temperature
             if temperature is not None
@@ -769,7 +907,6 @@ class GeminiClient:
         max_output_tokens: int | None = None,
         task: str | None = None,
     ) -> str:
-        self.require_key()
         if self._use_lightweight_model(task):
             for github_model in self.github_models_models:
                 try:
@@ -788,6 +925,7 @@ class GeminiClient:
                         error=str(error),
                     )
         selected_model = model or self.text_model
+        self.require_key()
         config = {
             "temperature": temperature
             if temperature is not None
@@ -919,6 +1057,11 @@ class GeminiClient:
 
     def grounded_research(self, prompt: str) -> dict[str, Any]:
         self.require_key()
+        if provider_circuit_open(self.state, "gemini_grounded_research"):
+            raise GeminiQuotaError(
+                "Gemini grounded research is paused because the billing-credit circuit is open; "
+                "trusted feeds and configured official sources remain available."
+            )
         url = f"{self.base_url}/interactions"
         payload = {
             "model": self.grounded_model,
@@ -935,7 +1078,14 @@ class GeminiClient:
         )
         if status >= 400:
             if status == 429:
-                raise GeminiQuotaError(f"Gemini grounded research quota exceeded: HTTP {status}: {body[:500]!r}")
+                error = GeminiQuotaError(f"Gemini grounded research quota exceeded: HTTP {status}: {body[:500]!r}")
+                if open_provider_circuit(self.state, "gemini_grounded_research", error, self.config):
+                    self.log.log(
+                        "provider_circuit_opened",
+                        provider="gemini_grounded_research",
+                        reason="billing_credit_depleted",
+                    )
+                raise error
             if status in {500, 502, 503, 504}:
                 raise GeminiTransientError(f"Gemini grounded research temporarily unavailable: HTTP {status}: {body[:500]!r}")
             raise RuntimeError(f"Gemini grounded research failed: HTTP {status}: {body[:500]!r}")
@@ -987,6 +1137,11 @@ class GeminiClient:
         *,
         timeout: int = 120,
     ) -> dict[str, Any]:
+        if provider_circuit_open(self.state, "gemini_generation"):
+            raise GeminiQuotaError(
+                "Gemini generation is paused because the billing-credit circuit is open; "
+                "GitHub Models or a source-bound offline fallback may still complete the publication."
+            )
         url = f"{self.base_url}/models/{urllib.parse.quote(model)}:generateContent"
         payload = {
             "contents": [{"role": "user", "parts": [{"text": prompt}]}],
@@ -1002,7 +1157,14 @@ class GeminiClient:
         )
         if status >= 400:
             if status == 429:
-                raise GeminiQuotaError(f"Gemini quota exceeded for model {model}: HTTP {status}: {body[:1000]!r}")
+                error = GeminiQuotaError(f"Gemini quota exceeded for model {model}: HTTP {status}: {body[:1000]!r}")
+                if open_provider_circuit(self.state, "gemini_generation", error, self.config):
+                    self.log.log(
+                        "provider_circuit_opened",
+                        provider="gemini_generation",
+                        reason="billing_credit_depleted",
+                    )
+                raise error
             if status in {500, 502, 503, 504}:
                 raise GeminiTransientError(f"Gemini generateContent temporarily unavailable: HTTP {status}: {body[:1000]!r}")
             raise RuntimeError(f"Gemini generateContent failed: HTTP {status}: {body[:1000]!r}")
@@ -1462,10 +1624,7 @@ def collect_topic_research(
                 validated_count=len(validated),
             )
         except GeminiQuotaError as error:
-            opened = open_provider_circuit(state, "gemini_grounded_research", error, config)
             log.log("topic_grounded_research_quota_limited", title=topic.get("title"), error=str(error))
-            if opened:
-                log.log("provider_circuit_opened", provider="gemini_grounded_research", reason="billing_credit_depleted")
         except GeminiTransientError as error:
             log.log("topic_grounded_research_retryable", title=topic.get("title"), error=str(error))
         except Exception as error:
@@ -1957,17 +2116,15 @@ def choose_topic(
             reasoning=result.get("editorial_reasoning", ""),
         )
         return topic
-    fallback = None
-    if not require_source_qualified:
-        fallback = fallback_topic_from_research(
-            research,
-            posts,
-            config,
-            log,
-            max_similarity=max_similarity,
-            max_title_similarity=max_title_similarity,
-            excluded_slugs=excluded_slugs,
-        )
+    fallback = fallback_topic_from_research(
+        research,
+        posts,
+        config,
+        log,
+        max_similarity=max_similarity,
+        max_title_similarity=max_title_similarity,
+        excluded_slugs=excluded_slugs,
+    )
     if fallback:
         return fallback
     log.log("no_topic_selected", candidate_count=len(candidates))
@@ -2030,6 +2187,27 @@ def fallback_topic_from_research(
                 "needs_chart": bool(re.search(r"(?i)\b(cost|price|benchmark|performance|percent|growth|compare|comparison)\b", item.title + " " + item.summary)),
                 "series": {"name": "", "part": None, "total_estimate": None, "planned_next_parts": []},
             }
+            required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+            require_source_qualified = bool(config.get("cost_control", {}).get("require_source_qualified_topic", False))
+            if require_source_qualified:
+                scoped = research_items_for_topic(
+                    topic,
+                    research,
+                    limit=max(required_sources, int(config.get("research", {}).get("topic_source_max_items", 6))),
+                    config=config,
+                )
+                if len(scoped) < required_sources:
+                    log.log(
+                        "fallback_topic_rejected",
+                        title=title,
+                        reason="insufficient_prevalidated_sources",
+                        source_count=len(scoped),
+                        required=required_sources,
+                    )
+                    continue
+                topic["source_urls"] = [source.url for source in scoped]
+                topic["source_titles"] = [source.title for source in scoped]
+                topic["source_domains"] = [normalized_url_host(source.url) for source in scoped]
             relevance = topic_relevance_score(topic, config)
             if relevance["score"] < float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0)):
                 log.log("fallback_topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
@@ -2537,6 +2715,11 @@ def extract_html_canonical(document: str, base_url: str) -> str:
 
 def extract_primary_page_text(document: str) -> str:
     """Prefer documentation body text over headers, navigation, and footers."""
+    # Documentation sites can embed HTML-looking template strings inside
+    # JavaScript. Searching the raw document for a content class may otherwise
+    # select a sidebar script before the real <main> element and make unrelated
+    # pages share the same fingerprint.
+    document = re.sub(r"(?is)<(script|style)\b[^>]*>.*?</\1>", " ", document)
     content_classes = (
         "td-content",
         "theme-doc-markdown",
@@ -2562,7 +2745,10 @@ def extract_primary_page_text(document: str) -> str:
         text = strip_html(body)
         if len(text) >= 100:
             return text
-    for tag in ("main", "article"):
+    # An <article> nested inside <main> is normally more specific. Large docs
+    # shells can put a shared sidebar and table of contents before it; hashing
+    # the whole <main> then makes unrelated pages appear identical.
+    for tag in ("article", "main"):
         candidates = [
             strip_html(match)
             for match in re.findall(rf"(?is)<{tag}\b[^>]*>(.*?)</{tag}>", document)
@@ -4810,16 +4996,13 @@ def run_publish(args: argparse.Namespace) -> int:
     state = load_state()
     log = EventLog()
     write_publish_result("started")
-    client = GeminiClient(config, log)
-    client.require_key()
+    client = GeminiClient(config, log, state)
 
     posts = load_posts(config)
     research = collect_research(config, log)
     if not research:
-        log.log("publish_skipped", reason="no_research_items")
-        write_publish_result("skipped", reason="no_research_items")
-        return 0
-    if config.get("source_validation"):
+        log.log("publish_recovery_needed", reason="no_research_items", fallback="configured_evergreen_sources")
+    elif config.get("source_validation"):
         research = validate_research_items(research, config, log)
     else:
         # Preserve the original lightweight behavior for isolated test and
@@ -4827,9 +5010,12 @@ def run_publish(args: argparse.Namespace) -> int:
         enrich_research_snippets(research, config, log)
     required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
     if len(research) < required_sources:
-        log.log("publish_skipped", reason="not_enough_valid_sources", valid_sources=len(research))
-        write_publish_result("skipped", reason="not_enough_valid_sources", valid_sources=len(research))
-        return 0
+        log.log(
+            "publish_recovery_needed",
+            reason="not_enough_valid_sources",
+            valid_sources=len(research),
+            fallback="configured_evergreen_sources",
+        )
 
     previous_publish_result = str(state.get("last_runs", {}).get("publish", {}).get("result", ""))
     prioritize_evergreen = bool(
@@ -4877,9 +5063,6 @@ def run_publish(args: argparse.Namespace) -> int:
                     total_research_sources=len(research),
                 )
         except GeminiQuotaError as error:
-            opened = open_provider_circuit(state, "gemini_grounded_research", error, config)
-            if opened:
-                log.log("provider_circuit_opened", provider="gemini_grounded_research", reason="billing_credit_depleted")
             if grounded_research_fallback_enabled(config):
                 grounded_brief = None
                 log.log(
@@ -4906,26 +5089,53 @@ def run_publish(args: argparse.Namespace) -> int:
             grounded_brief = None
             log.log("grounded_research_failed", error=str(error))
 
-    topic = choose_evergreen_topic(posts, config, log) if prioritize_evergreen else None
+    topic = pending_publication_topic(state, posts, config, log)
+    retrying_pending_topic = bool(topic)
+    if not topic and prioritize_evergreen:
+        topic = choose_evergreen_topic(posts, config, log)
     if topic:
-        log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
+        if not retrying_pending_topic:
+            log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
     else:
         try:
             topic = choose_topic(client, research, grounded_brief, posts, config, log)
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="topic_selection", error=str(error))
-            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
-            save_state(state)
-            write_publish_result("quota_limited", stage="topic_selection")
-            return 0
+            topic = choose_evergreen_topic(posts, config, log)
+            if topic:
+                log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
+            else:
+                schedule_publish_retry(
+                    state,
+                    config,
+                    log,
+                    reason="provider_quota_limited",
+                    stage="topic_selection",
+                    detail=str(error),
+                )
+                return 0
         except GeminiTransientError as error:
             log.log("publish_retryable", stage="topic_selection", error=str(error))
-            record_publish_retryable(state, "topic_selection", error)
-            return 0
+            topic = choose_evergreen_topic(posts, config, log)
+            if not topic:
+                schedule_publish_retry(
+                    state,
+                    config,
+                    log,
+                    reason="provider_transient_error",
+                    stage="topic_selection",
+                    detail=str(error),
+                )
+                return 0
     if not topic:
-        state["last_runs"]["publish"] = {"time": iso_z(), "result": "no_topic"}
-        save_state(state)
-        write_publish_result("no_topic")
+        schedule_publish_retry(
+            state,
+            config,
+            log,
+            reason="no_valid_topic",
+            stage="topic_selection",
+            detail="No source-qualified, in-scope, non-duplicate topic was available in this run.",
+        )
         return 0
 
     final_article: dict[str, Any] | None = None
@@ -4938,7 +5148,7 @@ def run_publish(args: argparse.Namespace) -> int:
         1,
         int(config.get("cost_control", {}).get("max_topic_selection_calls_per_run", configured_topic_attempts)),
     )
-    max_topic_attempts = 1 if prioritize_evergreen else min(
+    max_topic_attempts = 1 if (prioritize_evergreen and not retrying_pending_topic) else min(
         topic_call_budget,
         configured_topic_attempts,
     )
@@ -4957,14 +5167,12 @@ def run_publish(args: argparse.Namespace) -> int:
                 )
             except GeminiQuotaError as error:
                 log.log("publish_quota_limited", stage="topic_selection", attempt=topic_attempt, error=str(error))
-                state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "topic_selection"}
-                save_state(state)
-                write_publish_result("quota_limited", stage="topic_selection")
-                return 0
+                feedback = str(error)
+                break
             except GeminiTransientError as error:
                 log.log("publish_retryable", stage="topic_selection", attempt=topic_attempt, error=str(error))
-                record_publish_retryable(state, "topic_selection", error)
-                return 0
+                feedback = str(error)
+                break
             if not topic:
                 feedback = "No alternative topic passed duplicate and category checks."
                 break
@@ -5010,14 +5218,14 @@ def run_publish(args: argparse.Namespace) -> int:
                 )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="article_generation", attempt=topic_attempt, error=str(error))
-            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "article_generation"}
-            save_state(state)
-            write_publish_result("quota_limited", stage="article_generation", attempt=topic_attempt)
-            return 0
+            feedback = str(error)
+            log.log("publish_offline_recovery_started", stage="article_generation", attempt=topic_attempt)
+            break
         except GeminiTransientError as error:
             log.log("publish_retryable", stage="article_generation", attempt=topic_attempt, error=str(error))
-            record_publish_retryable(state, "article_generation", error)
-            return 0
+            feedback = str(error)
+            log.log("publish_offline_recovery_started", stage="article_generation", attempt=topic_attempt)
+            break
         if final_article:
             break
         log.log(
@@ -5070,14 +5278,12 @@ def run_publish(args: argparse.Namespace) -> int:
                 )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="evergreen_article_generation", attempt=evergreen_attempt, error=str(error))
-            state["last_runs"]["publish"] = {"time": iso_z(), "result": "quota_limited", "stage": "evergreen_article_generation"}
-            save_state(state)
-            write_publish_result("quota_limited", stage="evergreen_article_generation", attempt=evergreen_attempt)
-            return 0
+            feedback = str(error)
+            continue
         except GeminiTransientError as error:
             log.log("publish_retryable", stage="evergreen_article_generation", attempt=evergreen_attempt, error=str(error))
-            record_publish_retryable(state, "evergreen_article_generation", error)
-            return 0
+            feedback = str(error)
+            continue
         if not final_article:
             log.log("evergreen_recovery_failed", attempt=evergreen_attempt, title=topic.get("title"), feedback=feedback)
 
@@ -5099,9 +5305,17 @@ def run_publish(args: argparse.Namespace) -> int:
             attempts=max_topic_attempts + evergreen_attempts,
         )
         state["last_runs"]["publish"] = {"time": iso_z(), "result": "qa_failed"}
-        save_state(state)
         log.log("publish_rejected_all_drafts", title=topic.get("title"), feedback=feedback)
-        write_publish_result("rejected", reason="qa_failed", title=topic.get("title"))
+        schedule_publish_retry(
+            state,
+            config,
+            log,
+            reason="all_drafts_failed_quality_gates",
+            stage="article_quality",
+            detail=feedback,
+            topic=topic,
+            sources=topic_research,
+        )
         return 0
 
     try:
@@ -5110,16 +5324,32 @@ def run_publish(args: argparse.Namespace) -> int:
         failed_post_dir = ROOT / config["site"].get("content_dir", "content/posts") / str(final_article.get("slug", ""))
         shutil.rmtree(failed_post_dir, ignore_errors=True)
         record_rejection(state, log, topic=topic, reason="asset_validation_failed", detail=str(error))
-        save_state(state)
         log.log("publish_rejected", reason="asset_validation_failed", error=str(error))
-        write_publish_result("rejected", reason="asset_validation_failed", error=str(error))
+        schedule_publish_retry(
+            state,
+            config,
+            log,
+            reason="asset_validation_failed",
+            stage="asset_validation",
+            detail=str(error),
+            topic=topic,
+            sources=topic_research,
+        )
         return 0
     if not args.dry_run and not run_hugo_build(log):
         if index_path.parent.exists():
             shutil.rmtree(index_path.parent)
         record_rejection(state, log, topic=topic, reason="build_failed", detail=str(index_path.relative_to(ROOT)))
-        save_state(state)
-        write_publish_result("rejected", reason="build_failed", path=str(index_path.relative_to(ROOT)))
+        schedule_publish_retry(
+            state,
+            config,
+            log,
+            reason="build_failed",
+            stage="hugo_build",
+            detail=str(index_path.relative_to(ROOT)),
+            topic=topic,
+            sources=topic_research,
+        )
         return 0
 
     state.setdefault("generated_posts", []).append(
@@ -5136,6 +5366,7 @@ def run_publish(args: argparse.Namespace) -> int:
         }
     )
     state["last_runs"]["publish"] = {"time": iso_z(), "result": "published" if not args.dry_run else "dry_run"}
+    state["pending_publication"] = {}
     save_state(state)
     write_publish_result(
         "published" if not args.dry_run else "dry_run",
@@ -5490,7 +5721,7 @@ def run_maintain(args: argparse.Namespace) -> int:
     config = load_config()
     state = load_state()
     log = EventLog()
-    client = GeminiClient(config, log)
+    client = GeminiClient(config, log, state)
     client.require_key()
     taxonomy_changed = 0
     if config.get("taxonomy", {}).get("controlled_tags"):

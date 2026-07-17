@@ -74,6 +74,10 @@
     "require_source_qualified_topic": true,
     "gemini_billing_cooldown_hours": 168
   },
+  "retry": {
+    "base_delay_hours": 6,
+    "max_same_topic_attempts": 3
+  },
   "source_validation": {
     "max_document_bytes": 1500000,
     "max_candidates_per_run": 18,
@@ -443,6 +447,105 @@
           "checklist": ["Record the exact service name, host, expected state, and first observed failure time.", "Inspect the current service state without restarting it.", "Capture the relevant registered service information with a read-only query.", "Correlate the result with application and Windows event evidence.", "Apply one approved, reversible change only after identifying the failing boundary."],
           "related_slugs": ["troubleshooting-windows-event-logs-powershell", "troubleshooting-windows-dns-powershell"],
           "version_context": "Windows Server and PowerShell service-management documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot Windows Time Synchronization with w32tm",
+        "slug": "troubleshoot-windows-time-synchronization-w32tm",
+        "primary_category": "system-administration",
+        "categories": ["system-administration", "networking"],
+        "tags": ["windows-server", "troubleshooting", "networking", "system-administration"],
+        "search_intent": "Diagnose Windows Time service source, status, peer, and resynchronization failures with bounded w32tm queries before changing domain time configuration.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Windows Time service tools and settings", "url": "https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/windows-time-service-tools-and-settings"},
+          {"title": "How the Windows Time service works", "url": "https://learn.microsoft.com/en-us/windows-server/networking/windows-time-service/how-the-windows-time-service-works"},
+          {"title": "w32tm resync reports no time data available", "url": "https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/error-message-run-w32tm-resync-no-time-data-available"}
+        ],
+        "offline_fallback": {
+          "description": "A read-first Windows Time service troubleshooting workflow that uses w32tm status, source, peer, and bounded offset queries before changing NTP or domain hierarchy settings.",
+          "overview": "Windows time failures should be separated into the configured source, the source that is currently selected, peer reachability, and the measured offset. Read those boundaries first because changing peers or forcing a resynchronization too early can hide whether the problem is policy, domain hierarchy, name resolution, UDP 123 reachability, or an unavailable source.",
+          "preparation": "Record the affected host, domain membership, operating-system version, current time and time zone, authentication symptom, and approximate offset from a trusted reference. Use an approved administrative console for w32tm, preserve the first query results, and do not edit registry values or domain-controller time policy during the initial evidence pass.",
+          "steps": [
+            {"title": "Read the current source and status", "body": "Query the current time source and detailed service status on the affected host. Keep the source name, stratum, last successful synchronization time, and reported offset together so the evidence describes one observation rather than several unrelated commands.", "source_guidance": "Use the Windows Time tools reference for documented w32tm query behavior and required context."},
+            {"title": "Compare peers with the domain design", "body": "Inspect the configured peers and determine whether a domain member is expected to follow the domain hierarchy or a reviewed manual peer list. Compare the runtime result with Group Policy and role expectations before treating a registry value as the active configuration.", "source_guidance": "Use the Windows Time service architecture reference to interpret hierarchy and source selection."},
+            {"title": "Investigate a no-time-data result", "body": "When resynchronization reports that no time data is available, verify name resolution, the selected source, network reachability, and relevant service events before repeating the request. A repeated resync is not a substitute for finding why no acceptable sample reached the client.", "source_guidance": "Use Microsoft's no-time-data troubleshooting article for the documented failure boundaries."}
+          ],
+          "symptoms": [
+            {"symptom": "The source is Local CMOS Clock", "likely_cause": "No acceptable upstream source is currently selected", "next_check": "Compare runtime source and peers with the expected domain or manual configuration."},
+            {"symptom": "Resync reports no time data", "likely_cause": "Source discovery, DNS, reachability, policy, or peer response problem", "next_check": "Preserve status and peer output, then verify the selected source path."},
+            {"symptom": "Only one host has a large offset", "likely_cause": "Host-specific service, policy, network, or virtualization boundary", "next_check": "Compare the same bounded queries with a healthy host in the same role."}
+          ],
+          "checklist": ["Record host role, domain membership, time zone, observed offset, and failure time.", "Capture current source, status, and peer information before changing configuration.", "Compare runtime behavior with the intended domain hierarchy or approved manual source.", "Verify DNS and the network path to the selected source when samples are unavailable.", "Apply one approved change, then repeat the original bounded measurement and retain the before-and-after evidence."],
+          "related_slugs": ["troubleshooting-windows-dns-powershell", "troubleshooting-windows-event-logs-powershell"],
+          "version_context": "Windows Server 2016 through Windows Server 2025 Windows Time service documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot Docker Container Health Checks",
+        "slug": "troubleshoot-docker-container-health-checks",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools", "system-administration"],
+        "tags": ["docker", "troubleshooting", "monitoring", "developer-it-tools"],
+        "search_intent": "Diagnose Docker containers that remain starting or become unhealthy by inspecting HEALTHCHECK configuration, status, and recorded probe output.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Dockerfile HEALTHCHECK reference", "url": "https://docs.docker.com/reference/dockerfile/#healthcheck"},
+          {"title": "docker inspect", "url": "https://docs.docker.com/reference/cli/docker/inspect/"},
+          {"title": "docker container ls health filter", "url": "https://docs.docker.com/reference/cli/docker/container/ls/#filtering---filter"}
+        ],
+        "offline_fallback": {
+          "description": "A practical Docker health-check troubleshooting workflow for inspecting the image check, container health state, and recorded probe output before rebuilding or restarting a workload.",
+          "overview": "An unhealthy Docker container can still have a running main process. Diagnosis should therefore keep process state, health-check configuration, individual probe results, and application readiness separate. Inspect those facts before restarting the container or weakening the check, because a restart can erase the timing pattern without correcting the command, dependency, or startup budget.",
+          "preparation": "Record the container name or ID, image reference, deployment time, expected endpoint or command, current container status, and the first unhealthy timestamp. Use read-only Docker commands against the correct daemon context and preserve the initial inspect output before rebuilding the image, recreating the container, or disabling its health check.",
+          "steps": [
+            {"title": "Confirm the configured HEALTHCHECK", "body": "Inspect the image and container configuration to identify the exact health command, interval, timeout, retries, and start period. Distinguish an inherited image check from an override so the remediation is applied to the configuration that actually created the container.", "source_guidance": "Use the Dockerfile HEALTHCHECK reference for instruction forms, timing options, exit status, and stored output behavior."},
+            {"title": "Read the health history", "body": "Use docker inspect to capture the current health status and recent probe records, including timestamps, exit codes, and bounded output. Compare the probe time with application logs and dependency availability instead of assuming that every nonzero exit is an application crash.", "source_guidance": "Use the docker inspect reference for supported low-level object inspection and formatted output."},
+            {"title": "Find the affected set without changing it", "body": "Filter the container list by health state to determine whether the problem is isolated to one instance or shared by containers from the same image or environment. Keep health state separate from running or exited state when deciding the next evidence check.", "source_guidance": "Use the docker container ls reference for documented health filtering."}
+          ],
+          "symptoms": [
+            {"symptom": "Container remains in starting state", "likely_cause": "Start period, slow dependency, or probe execution boundary", "next_check": "Compare probe timestamps and command duration with the application startup timeline."},
+            {"symptom": "Container is running but unhealthy", "likely_cause": "Probe command, endpoint, dependency, permission, or timeout failure", "next_check": "Inspect recent probe exit codes and output, then correlate the same timestamp with application logs."},
+            {"symptom": "Every replica becomes unhealthy together", "likely_cause": "Shared image, configuration, or external dependency", "next_check": "Compare image identity and probe output across replicas before recreating them."}
+          ],
+          "checklist": ["Record container, image, daemon context, deployment time, and first unhealthy timestamp.", "Inspect the effective health-check command and timing options.", "Capture recent health records with exit codes and bounded output.", "Correlate probe time with application and dependency evidence.", "Change one reviewed boundary, recreate only when required, and verify the original health condition."],
+          "related_slugs": ["kubernetes-probe-misconfigurations-fixes", "operating-ai-ml-workloads-kubernetes"],
+          "version_context": "Current Dockerfile and Docker CLI references checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot Microsoft Entra Conditional Access with What If",
+        "slug": "troubleshoot-entra-conditional-access-what-if",
+        "primary_category": "entra-id",
+        "categories": ["entra-id", "identity-access-management", "cybersecurity"],
+        "tags": ["entra-id", "conditional-access", "identity", "troubleshooting"],
+        "search_intent": "Use the Microsoft Entra Conditional Access What If evaluation and matching sign-in evidence to explain why a policy applies or does not apply before editing it.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Conditional Access What If tool", "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/what-if-tool"},
+          {"title": "Troubleshoot sign-in problems with Conditional Access", "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/troubleshoot-conditional-access"},
+          {"title": "Use Microsoft Entra sign-in diagnostics", "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/howto-use-sign-in-diagnostics"}
+        ],
+        "offline_fallback": {
+          "description": "A safe Microsoft Entra Conditional Access troubleshooting workflow that compares a complete What If simulation with the matching sign-in record before changing policy assignments or controls.",
+          "overview": "Conditional Access troubleshooting requires both a modeled policy evaluation and evidence from the real sign-in. The What If tool explains how enabled and report-only policies evaluate the supplied identity, resource, and conditions, while the sign-in record shows the application, resource, client, device, location, risk, and policy result that actually occurred. Neither should be treated as a universal policy test on its own.",
+          "preparation": "Capture the affected identity, target application and resource, sign-in time, request or correlation identifier, client app, device platform, location context, and user-facing error. Use an appropriately scoped read-only role where possible, preserve the original policy state, and do not exclude a broad group or disable a policy merely to confirm that access can succeed.",
+          "steps": [
+            {"title": "Reproduce the intended conditions in What If", "body": "Supply the identity, exact target resource, device platform, client app, and every condition that matters to the suspected policy. Review both applying and nonapplying policies and retain the first unmet condition reported for a policy that does not apply.", "source_guidance": "Use the What If reference for required inputs, evaluation results, and documented limitations such as service dependencies."},
+            {"title": "Match the simulation to the real sign-in", "body": "Find the sign-in record for the reported attempt and compare its resource, client, device, location, risk, and Conditional Access details with the values used in the simulation. A simulation with missing or different conditions does not explain the recorded event.", "source_guidance": "Use Microsoft's Conditional Access troubleshooting reference for sign-in-event correlation and policy details."},
+            {"title": "Use diagnostics before narrowing a policy", "body": "Open the sign-in diagnostic for the matching event and record the recommendation and relevant authentication or policy context. If a change is justified, adjust only the identified assignment or condition through the approved process and retest the same scenario.", "source_guidance": "Use the sign-in diagnostics reference for the supported diagnostic workflow and its scope."}
+          ],
+          "symptoms": [
+            {"symptom": "What If says a policy does not apply but the sign-in was blocked", "likely_cause": "Simulation inputs differ from the recorded resource or conditions", "next_check": "Compare every supplied What If parameter with the matching sign-in fields."},
+            {"symptom": "A policy applies unexpectedly", "likely_cause": "Broad assignment, resource dependency, audience, or condition match", "next_check": "Read the applying-policy details and the actual resource or audience in the sign-in record."},
+            {"symptom": "One user or device behaves differently", "likely_cause": "Identity, group, device, client, risk, or location-specific condition", "next_check": "Run a complete simulation for each scenario and compare the corresponding sign-in evidence."}
+          ],
+          "checklist": ["Capture the exact identity, application, resource, client, device, location, and sign-in time.", "Run What If with all conditions required by the policies in scope.", "Compare applying and nonapplying results with the matching sign-in record.", "Review Sign-in Diagnostics before changing an assignment or control.", "Apply one approved narrow change, retest the same scenario, and remove any temporary exception."],
+          "related_slugs": ["troubleshoot-microsoft-entra-sign-in-errors", "microsoft-entra-id-explained-users-groups-apps-roles-conditional-access"],
+          "version_context": "Microsoft Entra Conditional Access What If, troubleshooting, and Sign-in Diagnostics documentation checked at publication time."
         }
       }
     ],

@@ -2,6 +2,8 @@ import json
 import sys
 import tempfile
 import unittest
+from contextlib import redirect_stderr, redirect_stdout
+from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
@@ -20,19 +22,21 @@ class ReleaseGateTests(unittest.TestCase):
                 patch.object(release_gate, "write_result") as write_result, \
                 patch.object(release_gate, "run_validation") as run_validation, \
                 patch.object(sys, "argv", ["release_gate.py", "--mode", "publish"]):
-                self.assertEqual(release_gate.main(), 1)
+                with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
+                    self.assertEqual(release_gate.main(), 1)
             run_validation.assert_not_called()
             write_result.assert_called_once()
 
-    def test_publish_without_approved_content_is_a_safe_noop(self):
+    def test_publish_with_scheduled_retry_is_a_safe_noop(self):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "publish-result.json"
-            marker.write_text(json.dumps({"result": "rejected"}), encoding="utf-8")
+            marker.write_text(json.dumps({"result": "retry_scheduled"}), encoding="utf-8")
             with patch.object(release_gate, "PUBLISH_RESULT", marker), \
                 patch.object(release_gate, "status_paths", return_value=[".autopublisher/state.json"]), \
                 patch.object(release_gate, "write_result") as write_result, \
                 patch.object(sys, "argv", ["release_gate.py", "--mode", "publish"]):
-                self.assertEqual(release_gate.main(), 0)
+                with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
+                    self.assertEqual(release_gate.main(), 0)
             write_result.assert_called_once()
 
     def test_allowed_path_matching_supports_directories(self):

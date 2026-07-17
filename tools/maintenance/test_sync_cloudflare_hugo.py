@@ -25,7 +25,8 @@ class CloudflareSyncTests(unittest.TestCase):
     def test_retries_transient_522_then_succeeds(self):
         error = urllib.error.HTTPError("https://api.cloudflare.com", 522, "timeout", {}, io.BytesIO())
         with patch.object(sync_cloudflare_hugo.urllib.request, "urlopen", side_effect=[error, Response()]), \
-            patch.object(sync_cloudflare_hugo.time, "sleep") as sleep:
+            patch.object(sync_cloudflare_hugo.time, "sleep") as sleep, \
+            patch("builtins.print"):
             result = sync_cloudflare_hugo.api_request("https://api.cloudflare.com", "token")
         self.assertTrue(result["success"])
         sleep.assert_called_once_with(1.0)

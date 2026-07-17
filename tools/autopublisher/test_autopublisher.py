@@ -11,6 +11,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 
+os.environ.setdefault("AUTOPUBLISHER_LOG_STDOUT", "0")
 sys.path.insert(0, str(Path(__file__).parent))
 import autopublisher  # noqa: E402
 
@@ -314,7 +315,7 @@ class AutopublisherTests(unittest.TestCase):
         }
         with patch.dict(
             os.environ,
-            {"GEMINI_API_KEY": "gemini-key", "GITHUB_MODELS_TOKEN": "github-token"},
+            {"GEMINI_API_KEY": "", "GITHUB_MODELS_TOKEN": "github-token"},
             clear=False,
         ), patch.object(autopublisher, "http_request", return_value=(200, json.dumps(response).encode(), {})) as request:
             client = autopublisher.GeminiClient(config, autopublisher.EventLog())
@@ -1119,6 +1120,27 @@ class AutopublisherTests(unittest.TestCase):
         self.assertFalse(state["provider_cooldowns"])
         save_state.assert_not_called()
 
+    def test_depleted_billing_opens_generation_circuit_and_skips_repeat_call(self):
+        state = {"provider_cooldowns": {}}
+        config = {
+            "gemini": {},
+            "github_models": {"enabled": False},
+            "cost_control": {"gemini_billing_cooldown_hours": 168},
+        }
+        body = b'{"error":{"message":"Your prepayment credits are depleted. Please manage your project and billing."}}'
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}), \
+            patch.object(autopublisher, "http_request", return_value=(429, body, {})), \
+            patch.object(autopublisher, "save_state"):
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog(), state)
+            with self.assertRaises(autopublisher.GeminiQuotaError):
+                client.generate_text("test")
+
+        self.assertTrue(autopublisher.provider_circuit_open(state, "gemini_generation"))
+        with patch.object(autopublisher, "http_request") as request:
+            with self.assertRaises(autopublisher.GeminiQuotaError):
+                client.generate_text("test again")
+        request.assert_not_called()
+
     def test_topic_research_skips_grounding_while_billing_circuit_is_open(self):
         class NoCallClient:
             def grounded_research(self, _prompt):
@@ -1269,12 +1291,147 @@ class AutopublisherTests(unittest.TestCase):
             result = autopublisher.run_publish(SimpleNamespace(dry_run=False))
 
         self.assertEqual(result, 0)
-        self.assertEqual(state["last_runs"]["publish"]["result"], "retryable")
-        self.assertEqual(write_result.call_args_list[-1].args, ("retryable",))
-        self.assertEqual(
-            write_result.call_args_list[-1].kwargs,
-            {"stage": "article_generation", "error": "model unavailable"},
+        self.assertEqual(state["last_runs"]["publish"]["result"], "retry_scheduled")
+        self.assertEqual(state["pending_publication"]["topic"]["slug"], "a-current-guide")
+        self.assertEqual(write_result.call_args_list[-1].args, ("retry_scheduled",))
+        self.assertEqual(write_result.call_args_list[-1].kwargs["stage"], "article_quality")
+        self.assertEqual(write_result.call_args_list[-1].kwargs["reason"], "all_drafts_failed_quality_gates")
+
+    def test_source_qualified_fallback_requires_a_coherent_bundle(self):
+        config = {
+            "publishing": {
+                "required_source_count": 3,
+                "topic_relevance_min_score": 0.0,
+                "max_slug_length": 72,
+            },
+            "cost_control": {"require_source_qualified_topic": True},
+            "research": {
+                "topic_source_max_items": 6,
+                "topic_source_min_similarity": 0.05,
+                "topic_source_min_token_overlap": 1,
+            },
+            "taxonomy": {
+                "allowed_categories": ["networking"],
+                "controlled_tags": ["networking", "dns", "troubleshooting"],
+                "max_tags_per_article": 5,
+            },
+            "topic_scope": {
+                "approved_categories": ["networking"],
+                "category_keywords": {"networking": ["networking", "dns", "resolver", "troubleshooting"]},
+                "disallowed_terms": [],
+            },
+        }
+        research = [
+            autopublisher.ResearchItem(
+                "Official",
+                f"DNS resolver troubleshooting reference {index}",
+                f"https://trusted.example/dns-{index}",
+                "DNS resolver troubleshooting commands and interpretation",
+                "",
+                ["networking"],
+                2.0 - index / 10,
+                "DNS resolver troubleshooting commands and interpretation",
+                True,
+            )
+            for index in range(1, 4)
+        ]
+        selected = autopublisher.fallback_topic_from_research(
+            research,
+            [],
+            config,
+            autopublisher.EventLog(),
+            max_similarity=0.5,
+            max_title_similarity=0.6,
         )
+        self.assertIsNotNone(selected)
+        self.assertEqual(len(selected["source_urls"]), 3)
+
+        selected_with_missing_source = autopublisher.fallback_topic_from_research(
+            research[:2],
+            [],
+            config,
+            autopublisher.EventLog(),
+            max_similarity=0.5,
+            max_title_similarity=0.6,
+        )
+        self.assertIsNone(selected_with_missing_source)
+
+    def test_pending_publication_topic_is_resumed_then_rotated(self):
+        config = autopublisher.load_config()
+        state = {
+            "pending_publication": {
+                "reason": "provider_transient_error",
+                "topic_attempts": 1,
+                "topic": {
+                    "title": "Unit Test Pending DNS Investigation",
+                    "slug": "unit-test-pending-dns-investigation",
+                    "primary_category": "networking",
+                    "categories": ["networking"],
+                    "tags": ["dns", "troubleshooting"],
+                    "search_intent": "Diagnose a unit test DNS resolver failure with bounded networking checks.",
+                },
+            }
+        }
+        topic = autopublisher.pending_publication_topic(state, [], config, autopublisher.EventLog())
+        self.assertEqual(topic["slug"], "unit-test-pending-dns-investigation")
+
+        state["pending_publication"]["topic_attempts"] = config["retry"]["max_same_topic_attempts"]
+        self.assertIsNone(autopublisher.pending_publication_topic(state, [], config, autopublisher.EventLog()))
+        self.assertEqual(state["pending_publication"]["topic"], {})
+
+    def test_publish_resumes_pending_topic_before_new_discovery(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Unit Test Pending DNS Investigation",
+            "slug": "unit-test-pending-dns-investigation",
+            "primary_category": "networking",
+            "categories": ["networking"],
+            "tags": ["dns", "troubleshooting"],
+            "search_intent": "Diagnose a unit test DNS resolver failure with bounded networking checks.",
+        }
+        state = {
+            "generated_posts": [],
+            "maintenance_reviews": {},
+            "failures": [],
+            "last_runs": {},
+            "pending_publication": {"reason": "provider_transient_error", "topic_attempts": 1, "topic": topic},
+        }
+        sources = [
+            autopublisher.ResearchItem(
+                "Official", f"DNS source {index}", f"https://trusted.example/{index}",
+                "DNS resolver troubleshooting", "", ["networking"], 2.0, "DNS resolver troubleshooting", True,
+            )
+            for index in range(3)
+        ]
+        article = {
+            **topic,
+            "description": "A complete pending DNS troubleshooting guide.",
+            "sources": [{"title": item.title, "url": item.url} for item in sources],
+            "article_markdown": "## Complete guide\n\nValidated DNS guidance.",
+        }
+
+        class Client:
+            def require_key(self):
+                return None
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=sources), \
+            patch.object(autopublisher, "validate_research_items", return_value=sources), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_topic") as choose_topic, \
+            patch.object(autopublisher, "collect_topic_research", return_value=sources), \
+            patch.object(autopublisher, "generate_approved_article", return_value=(article, {"approved": True}, "")), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/unit-test-pending-dns-investigation/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        choose_topic.assert_not_called()
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+        self.assertEqual(state["pending_publication"], {})
 
     def test_publish_continues_with_fresh_topic_when_sources_are_insufficient(self):
         config = {
@@ -1518,6 +1675,31 @@ class AutopublisherTests(unittest.TestCase):
         text = autopublisher.extract_primary_page_text(document)
         self.assertIn("Roles and ClusterRoles", text)
         self.assertNotIn("Navigation products", text)
+
+    def test_primary_page_text_ignores_content_class_markup_inside_scripts(self):
+        document = """
+        <html><body>
+        <script>const template = '<div class="markdown-body">shared sidebar script</div>';</script>
+        <main><h1>Docker health status</h1><p>The container health record includes probe exit codes and output.</p>
+        <p>This page-specific documentation must produce a distinct source fingerprint.</p></main>
+        </body></html>
+        """
+        text = autopublisher.extract_primary_page_text(document)
+        self.assertIn("container health record", text)
+        self.assertNotIn("shared sidebar script", text)
+
+    def test_primary_page_text_prefers_nested_article_over_shared_main_shell(self):
+        shared = "Shared documentation navigation and table of contents. " * 20
+        document = f"""
+        <html><body><main><aside>{shared}</aside>
+        <article><h1>docker inspect</h1><p>Inspect returns low-level information for Docker objects.</p>
+        <p>Formatted output can select the container health record and recent probe results for diagnosis.</p>
+        <p>Keep the timestamps, exit codes, and bounded output together when comparing the probe with application logs.</p></article>
+        </main></body></html>
+        """
+        text = autopublisher.extract_primary_page_text(document)
+        self.assertIn("container health record", text)
+        self.assertNotIn("Shared documentation navigation", text)
 
     def test_primary_page_text_prefers_unquoted_documentation_content_class(self):
         document = """

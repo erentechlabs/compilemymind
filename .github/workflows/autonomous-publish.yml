@@ -104,11 +104,11 @@ jobs:
             echo "changed=false" >> "$GITHUB_OUTPUT"
             if ! git diff --quiet -- .autopublisher/state.json; then
               git add .autopublisher/state.json
-              git commit -m "chore(automation): record rejected publish diagnostics [skip ci]"
+              git commit -m "chore(automation): record deferred publication retry [skip ci]"
               git push origin "HEAD:${GITHUB_REF_NAME}"
-              echo "Rejected publication diagnostics were persisted; no public content was committed."
+              echo "Publication retry state was persisted; the next scheduled run will try again without publishing invalid content."
             else
-              echo "No approved publication and no new diagnostics to persist."
+              echo "No approved publication and no new retry state to persist."
             fi
             exit 0
           fi
