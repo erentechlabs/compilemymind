@@ -1293,12 +1293,24 @@
       "reason": "qa_failed",
       "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-18T19:36:24.313284Z",
+      "title": "Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms: Practical Guide and Real-World Examples",
+      "slug": "google-is-a-leader-and-positioned-furthest-in-vision-and-highest-in",
+      "reason": "qa_failed",
+      "detail": "Gemini quota exceeded for model gemini-3.5-flash: HTTP 429: b'{\\n \"error\": {\\n \"code\": 429,\\n \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\\n \"status\": \"RESOURCE_EXHAUSTED\"\\n }\\n}\\n'",
+      "attempts": 6
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-18T13:52:36.552672Z",
-      "result": "published"
+      "time": "2026-07-18T19:36:24.313536Z",
+      "result": "retry_scheduled",
+      "reason": "all_drafts_failed_quality_gates",
+      "stage": "article_quality",
+      "next_retry_at": "2026-07-19T01:36:24.313516Z"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1418,8 +1430,74 @@
       "reason": "qa_failed",
       "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 4
+    },
+    {
+      "time": "2026-07-18T19:36:24.313284Z",
+      "title": "Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms: Practical Guide and Real-World Examples",
+      "slug": "google-is-a-leader-and-positioned-furthest-in-vision-and-highest-in",
+      "reason": "qa_failed",
+      "detail": "Gemini quota exceeded for model gemini-3.5-flash: HTTP 429: b'{\\n \"error\": {\\n \"code\": 429,\\n \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\\n \"status\": \"RESOURCE_EXHAUSTED\"\\n }\\n}\\n'",
+      "attempts": 6
     }
   ],
-  "provider_cooldowns": {},
-  "pending_publication": {}
+  "provider_cooldowns": {
+    "gemini_generation": {
+      "opened_at": "2026-07-18T19:36:24.310766Z",
+      "until": "2026-07-25T19:36:24.310786Z",
+      "reason": "billing_credit_depleted"
+    }
+  },
+  "pending_publication": {
+    "scheduled_at": "2026-07-18T19:36:24.313512Z",
+    "next_retry_at": "2026-07-19T01:36:24.313516Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "Gemini quota exceeded for model gemini-3.5-flash: HTTP 429: b'{\\n \"error\": {\\n \"code\": 429,\\n \"message\": \"Your prepayment credits are depleted. Please go to AI Studio at https://ai.studio/projects to manage your project and billing. Learn more at https://ai.google.dev/gemini-api/docs/billing#prepay. \",\\n \"status\": \"RESOURCE_EXHAUSTED\"\\n }\\n}\\n'",
+    "consecutive_attempts": 1,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms: Practical Guide and Real-World Examples",
+      "slug": "google-is-a-leader-and-positioned-furthest-in-vision-and-highest-in",
+      "primary_category": "practical-infrastructure-guides",
+      "categories": [
+        "practical-infrastructure-guides"
+      ],
+      "tags": [
+        "practical-infrastructure-guides",
+        "cloud",
+        "google",
+        "leader",
+        "positioned"
+      ],
+      "search_intent": "Readers want a practical explanation of Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms and what it changes for technical teams.",
+      "why_now": "Based on a recent item from Google Cloud Blog: Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms",
+      "source_urls": [
+        "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud",
+        "https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-how-ai-leverages-deep-context-defenders-advantage",
+        "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-the-gartner-magic-quadrant-for-conversational-ai"
+      ],
+      "needs_diagram": false,
+      "needs_chart": false,
+      "series": {
+        "name": "",
+        "part": null,
+        "total_estimate": null,
+        "planned_next_parts": []
+      },
+      "seed_sources": [
+        {
+          "title": "What’s new with Google Cloud",
+          "url": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud"
+        },
+        {
+          "title": "Cloud CISO Perspectives: How AI leverages deep context as the defender’s advantage",
+          "url": "https://cloud.google.com/blog/products/identity-security/cloud-ciso-perspectives-how-ai-leverages-deep-context-defenders-advantage"
+        },
+        {
+          "title": "Google is a Leader and positioned furthest in Vision and highest in Execution in the 2026 Gartner® Magic Quadrant™ for Conversational AI Platforms",
+          "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-is-a-leader-in-the-gartner-magic-quadrant-for-conversational-ai"
+        }
+      ]
+    }
+  }
 }
