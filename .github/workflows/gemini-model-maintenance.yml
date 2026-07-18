@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: gemini-model-maintenance-${{ github.ref }}
+  group: repository-write-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:

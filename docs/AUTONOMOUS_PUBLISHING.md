@@ -1,8 +1,8 @@
 # Autonomous publishing platform
 
-Compile My Mind uses a fail-closed Hugo publisher driven by GitHub Actions. A candidate is published automatically only after its topic, sources, material claims, code, originality, metadata, links, structured data, and rendered output pass the configured gates. There is no editor queue, manual approval, or pull-request approval in the content publishing path.
+Compile My Mind uses a fail-closed Hugo publisher driven by GitHub Actions. A candidate enters a private ready queue only after its topic, sources, material claims, code, originality, metadata, links, structured data, and rendered output pass the configured gates. The public publishing workflow promotes an already approved queue item before making any model or research request. There is no manual approval or pull-request approval in the content publishing path.
 
-The publisher runs every six hours and can accept at most one article per run, so the hard operational ceiling is four new posts per day. This is a maximum, not a quota: invalid, weak, duplicate, or unsupported candidates are rejected internally and the publication is queued for another autonomous attempt instead of being forced public to satisfy a schedule.
+The preparer runs every two hours and fills a twelve-article ready queue. The publisher runs every six hours and accepts at most one article per run, so the hard operational ceiling is four new posts per day. Once the queue is populated, short provider outages, quota failures, bad topic selections, and draft repair failures do not cause a missed public publishing slot. Invalid candidates are rejected during preparation instead of being forced public to satisfy a schedule.
 
 ## One-time GitHub setup
 
@@ -35,9 +35,10 @@ Optional direct Cloudflare Pages synchronization uses `CLOUDFLARE_API_TOKEN`, `C
 6. Generate an original article using a type-specific structure for tutorials, troubleshooting guides, explainers, certification guides, product/platform articles, and comparisons.
 7. Validate claim-to-source mappings, source use, numerical context, code and commands, verification claims, practical depth, repetition, generic filler, metadata, controlled taxonomy, internal links, similarity, and quality score.
 8. Run a separate Gemini accuracy and originality review using only the validated topic-specific evidence.
-9. Repair the failed section and repeat the complete deterministic and AI review up to the configured retry limit.
-10. Build Hugo, audit rendered metadata, JSON-LD, canonicals, navigation counts, accessibility basics, and sitemap membership, then publish only when every critical gate passes.
-11. Record the invalid candidate, queue a source-bound retry when possible, and continue to another candidate when repair is exhausted. Failure on one article does not stop later candidates or future scheduled runs.
+9. Repair the failed section and repeat the complete deterministic and AI review up to the configured retry limit. Repair prompts retain only a compact structural summary so a rejected draft cannot exceed a provider's input limit; HTTP 413 responses receive one smaller retry.
+10. Build Hugo, audit rendered metadata, JSON-LD, canonicals, navigation counts, accessibility basics, and sitemap membership, then move the approved page bundle into the private ready queue.
+11. On each public publishing run, promote the oldest non-expired approved queue bundle, refresh its publication and review dates, rebuild Hugo, and commit it without making a provider call.
+12. Record invalid preparation candidates, preserve a source-bound retry when possible, and continue on later preparation runs. Failure on one candidate does not consume a buffered public publishing slot.
 
 Approved clusters are cybersecurity, identity and access management, networking, IT fundamentals, Azure, Entra ID, cloud certifications, system administration, practical infrastructure, and developer/IT tools. Celebrity, entertainment, political, automotive, lifestyle, random trend, consumer launch, and unrelated AI topics are explicitly blocked.
 
@@ -55,13 +56,13 @@ The current single-article design intentionally omits featured images. Automated
 
 ## Recovery, maintenance, and monitoring
 
-Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code, metadata, and links, and rerun scoring. Unsupported or source-similar drafts are regenerated from a clean slate instead of being pasted into the next prompt. A repeatedly stalled repair is abandoned early so the run can try another topic. The current configuration can attempt three dynamic topics, including when the preferred evergreen catalog is exhausted, construct a conservative fallback only when at least three coherent prevalidated sources support it, and then use up to three configured evergreen recovery slots backed by official documentation. An evergreen topic is skipped once equivalent content exists, and all evergreen candidates pass the same live source, evidence, originality, and quality checks.
+Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code, metadata, and links, and rerun scoring. Unsupported or source-similar drafts are regenerated from a clean slate instead of being pasted into the next prompt. A repeatedly stalled repair is abandoned early so the run can try another topic. Source selection now requires overlap with at least two subject-specific anchor terms, so a generic word such as "metrics" cannot attach an unrelated product source to a draft. The current configuration can attempt three dynamic topics, including when the preferred evergreen catalog is exhausted, construct a conservative fallback only when at least three coherent prevalidated sources support it, and then use up to three configured evergreen recovery slots backed by official documentation. An evergreen topic is skipped once equivalent content exists, and all evergreen candidates pass the same live source, evidence, originality, and quality checks.
 
-When all attempts are exhausted, the invalid candidate is recorded in `.autopublisher/state.json`, any public bundle is removed, and no sitemap entry is created. The run records `retry_scheduled`, preserves a compact topic and validated-source bundle when one is safe to reuse, and tries it again on the next six-hour cycle. After three failed cycles for the same topic, that topic is rotated out so a bad candidate cannot block future publication. A successful publication clears the pending retry.
+When all preparation attempts are exhausted, the invalid candidate is recorded in `.autopublisher/state.json`, any temporary public bundle is removed, and no sitemap entry is created. The preparation run records `retry_scheduled`, preserves a compact topic and validated-source bundle when one is safe to reuse, and tries it again on a later two-hour cycle. After three failed cycles for the same topic, that topic is rotated out so a bad candidate cannot block future preparation. A successfully queued candidate clears the pending retry.
 
 Billing-credit exhaustion opens a persistent seven-day circuit for the affected Gemini path instead of repeatedly spending requests that cannot succeed. GitHub Models and reviewed source-bound offline fallbacks remain eligible while that circuit is open. The offline recovery catalog includes Windows Time, Docker health-check, and Microsoft Entra Conditional Access workflows in addition to the previously published recovery topics. These fallbacks still require live validation of three official sources and the complete deterministic quality gate.
 
-This retry policy improves eventual recovery; it does not promise that every scheduled run will publish. If no in-scope, nonduplicate, source-supported article passes all critical gates, the correct result is a queued retry with no public content change.
+The queue is the delivery guarantee boundary: with at least one approved bundle available, every scheduled public run publishes without depending on live model availability. An absolutely unconditional guarantee is not technically honest if the queue has never been populated, is exhausted for longer than its buffer, GitHub itself is unavailable, or Hugo rejects the stored bundle after a repository-wide change. The twelve-item target provides roughly three days of publishing inventory, while preparation has three times the scheduled throughput needed to replenish it. Quality gates remain fail-closed.
 
 Content maintenance runs twice weekly, revision selection runs daily, and infrastructure maintenance runs approximately every six months. Maintenance audits due articles and broken sources, changes visible `lastmod` only after a substantive accepted update, and automatically noindexes a high-risk legacy page until evidence-backed repair succeeds. Dependency automation inventories Python, Hugo, GitHub Actions, Gemini model, image-tool, and requirements state; it auto-applies only regression-tested patch upgrades whose release notes contain no breaking-change signals, exercises the publisher in dry-run mode when provider credentials are available, and puts higher-risk candidate pins plus their report into a tested draft review pull request without deploying them.
 
@@ -69,13 +70,14 @@ Operational evidence is stored at:
 
 - Runtime JSONL: `.autopublisher/logs/`
 - Durable scheduler and rejection state: `.autopublisher/state.json`
+- Pre-approved private page bundles: `.autopublisher/queue/ready/`
 - Machine-readable monitoring snapshot: `.autopublisher/dashboard.json`
 - Existing-content risk inventory: `.autopublisher/reports/content-audit.json`
 - Latest maintenance outcome: `.autopublisher/reports/maintenance-latest.json`
 - Rendered-site validation: `.autopublisher/reports/rendered-site-audit.json`
 - Timestamped infrastructure inventories: `.autopublisher/reports/infrastructure-maintenance-*.md`
 
-The dashboard exposes discovered and rejected topics, rejection stages, source failures, unsupported/numerical/generic/repeated claim counts, code and secret-scan failures, similarity results, maintenance outcomes, and the last run per mode.
+The dashboard exposes ready-queue depth, target and minimum health, discovered and rejected topics, rejection stages, source failures, unsupported/numerical/generic/repeated claim counts, code and secret-scan failures, similarity results, maintenance outcomes, and the last run per mode.
 
 ## Local verification
 
@@ -95,6 +97,7 @@ For a real autonomous local publish or evidence-backed maintenance run, set `GEM
 
 ```bash
 python tools/autopublisher/autopublisher.py --mode publish
+python tools/autopublisher/autopublisher.py --mode prepare
 python tools/autopublisher/autopublisher.py --mode maintain --max-articles 2
 ```
 

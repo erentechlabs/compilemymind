@@ -22,6 +22,7 @@ __pycache__/
 # Per-run autonomous publication artifacts. Durable state, configuration, and
 # stable reports remain tracked so scheduled runs can resume safely.
 .autopublisher/publish-result.json
+.autopublisher/prepare-result.json
 .autopublisher/release-gate-result.json
 .autopublisher/dashboard.json
 .autopublisher/logs/*.jsonl

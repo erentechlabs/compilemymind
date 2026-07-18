@@ -16,6 +16,7 @@ from __future__ import annotations
 import argparse
 import ast
 import base64
+import copy
 import datetime as dt
 import email.utils
 import gzip
@@ -70,6 +71,8 @@ PUBLISH_RESULT_PATH = AUTOPUBLISHER_DIR / "publish-result.json"
 DASHBOARD_PATH = AUTOPUBLISHER_DIR / "dashboard.json"
 CONTENT_AUDIT_PATH = AUTOPUBLISHER_DIR / "reports" / "content-audit.json"
 MAINTENANCE_REPORT_PATH = AUTOPUBLISHER_DIR / "reports" / "maintenance-latest.json"
+READY_QUEUE_DIR = AUTOPUBLISHER_DIR / "queue" / "ready"
+PREPARE_RESULT_PATH = AUTOPUBLISHER_DIR / "prepare-result.json"
 
 STOP_WORDS = {
     "a",
@@ -118,6 +121,36 @@ STOP_WORDS = {
     "with",
     "you",
     "your",
+}
+
+TOPIC_SOURCE_GENERIC_TOKENS = {
+    "ai",
+    "announcement",
+    "announcing",
+    "azure",
+    "best",
+    "build",
+    "building",
+    "cloud",
+    "developer",
+    "example",
+    "examples",
+    "github",
+    "google",
+    "guide",
+    "improvement",
+    "improvements",
+    "introducing",
+    "kubernetes",
+    "microsoft",
+    "platform",
+    "platforms",
+    "practical",
+    "technology",
+    "tools",
+    "using",
+    "windows",
+    "world",
 }
 
 
@@ -183,6 +216,18 @@ class EventLog:
 
 def normalize_space(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
+
+
+def compact_model_prompt(prompt: str, max_characters: int) -> str:
+    """Keep provider requests below their input ceiling without losing instructions or schema."""
+    limit = max(4000, int(max_characters))
+    if len(prompt) <= limit:
+        return prompt
+    marker = "\n\n[Middle context compacted to stay within the provider input budget.]\n\n"
+    available = limit - len(marker)
+    head = int(available * 0.58)
+    tail = available - head
+    return prompt[:head].rstrip() + marker + prompt[-tail:].lstrip()
 
 
 def strip_html(value: str) -> str:
@@ -397,7 +442,7 @@ def load_state() -> dict[str, Any]:
     state = read_json(
         STATE_PATH,
         {
-            "version": 3,
+            "version": 4,
             "generated_posts": [],
             "maintenance_reviews": {},
             "failures": [],
@@ -405,12 +450,13 @@ def load_state() -> dict[str, Any]:
             "rejected_articles": [],
             "provider_cooldowns": {},
             "pending_publication": {},
+            "ready_publications": [],
         },
     )
     if not isinstance(state, dict):
         state = {}
-    state.setdefault("version", 3)
-    state["version"] = max(3, int(state["version"] or 3))
+    state.setdefault("version", 4)
+    state["version"] = max(4, int(state["version"] or 4))
     for key, default in {
         "generated_posts": [],
         "maintenance_reviews": {},
@@ -419,6 +465,7 @@ def load_state() -> dict[str, Any]:
         "rejected_articles": [],
         "provider_cooldowns": {},
         "pending_publication": {},
+        "ready_publications": [],
     }.items():
         state.setdefault(key, default)
     return state
@@ -489,6 +536,10 @@ def save_state(state: dict[str, Any]) -> None:
 
 def write_publish_result(result: str, **fields: Any) -> None:
     write_json(PUBLISH_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
+
+
+def write_prepare_result(result: str, **fields: Any) -> None:
+    write_json(PREPARE_RESULT_PATH, {"time": iso_z(), "result": result, **fields})
 
 
 def retry_topic_payload(topic: dict[str, Any] | None, sources: list[ResearchItem] | None = None) -> dict[str, Any]:
@@ -664,6 +715,37 @@ def load_posts(config: dict[str, Any]) -> list[Post]:
         text = index_path.read_text(encoding="utf-8")
         frontmatter, body = split_frontmatter(text)
         slug = index_path.parent.name
+        posts.append(
+            Post(
+                path=index_path,
+                slug=slug,
+                title=str(frontmatter.get("title", slug.replace("-", " ").title())),
+                description=str(frontmatter.get("description", "")),
+                date=str(frontmatter.get("date", "")),
+                tags=list(frontmatter.get("tags", []) or []),
+                categories=list(frontmatter.get("categories", []) or []),
+                body=body,
+                frontmatter=frontmatter,
+            )
+        )
+    return posts
+
+
+def load_queued_posts(state: dict[str, Any]) -> list[Post]:
+    """Load queued bundles for duplicate detection without exposing them as internal links."""
+    posts: list[Post] = []
+    for entry in state.get("ready_publications", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        bundle_path = ready_bundle_path(entry)
+        if bundle_path is None:
+            continue
+        index_path = bundle_path / "index.md"
+        if not index_path.is_file():
+            continue
+        frontmatter, body = split_frontmatter(index_path.read_text(encoding="utf-8"))
+        frontmatter["_queued"] = True
+        slug = str(entry.get("slug") or bundle_path.name)
         posts.append(
             Post(
                 path=index_path,
@@ -995,6 +1077,19 @@ class GeminiClient:
         github_model: str,
         json_mode: bool = False,
     ) -> dict[str, Any]:
+        configured_input_limit = int(
+            self.config.get("github_models", {}).get("max_input_characters", 24000)
+        )
+        compacted_prompt = compact_model_prompt(prompt, configured_input_limit)
+        if compacted_prompt != prompt:
+            self.log.log(
+                "model_prompt_compacted",
+                task=task,
+                model=github_model,
+                original_characters=len(prompt),
+                compacted_characters=len(compacted_prompt),
+            )
+        prompt = compacted_prompt
         payload = {
             "model": github_model,
             "messages": [
@@ -1026,6 +1121,29 @@ class GeminiClient:
             timeout=120,
             retries=4,
         )
+        if status == 413:
+            retry_limit = max(8000, min(configured_input_limit - 1000, int(len(prompt) * 0.65)))
+            retry_prompt = compact_model_prompt(prompt, retry_limit)
+            payload["messages"][1]["content"] = retry_prompt
+            self.log.log(
+                "model_prompt_retried_compact",
+                task=task,
+                model=github_model,
+                original_characters=len(prompt),
+                compacted_characters=len(retry_prompt),
+            )
+            status, body, _headers = http_request(
+                self.github_models_endpoint,
+                method="POST",
+                payload=payload,
+                headers={
+                    "Authorization": f"Bearer {self.github_models_token}",
+                    "Accept": "application/vnd.github+json",
+                    "X-GitHub-Api-Version": "2026-03-10",
+                },
+                timeout=120,
+                retries=2,
+            )
         if status == 429:
             raise GitHubModelsQuotaError(
                 f"GitHub Models quota exceeded for {github_model}: HTTP {status}: {body[:800]!r}"
@@ -1376,7 +1494,7 @@ def enrich_research_snippets(items: list[ResearchItem], config: dict[str, Any], 
         item.snippet = fetch_page_snippet(item.url, characters, log)
 
 
-def research_for_prompt(items: list[ResearchItem]) -> list[dict[str, Any]]:
+def research_for_prompt(items: list[ResearchItem], *, snippet_characters: int = 1400) -> list[dict[str, Any]]:
     payload: list[dict[str, Any]] = []
     for item in items:
         payload.append(
@@ -1388,7 +1506,7 @@ def research_for_prompt(items: list[ResearchItem]) -> list[dict[str, Any]]:
                 "published": item.published,
                 "categories": item.categories,
                 "score": item.score,
-                "snippet": item.snippet[:1400],
+                "snippet": item.snippet[:max(200, int(snippet_characters))],
                 "verified_at": item.validation.get("verified_at", ""),
                 "page_title": item.validation.get("page_title", ""),
             }
@@ -1454,11 +1572,14 @@ def topic_source_is_directly_relevant(
         return False
     source_tokens = set(tokenize(f"{item.title} {item.summary} {item.snippet}"))
     shared_tokens = topic_tokens & source_tokens
+    anchor_tokens = topic_tokens - TOPIC_SOURCE_GENERIC_TOKENS
+    shared_anchor_tokens = anchor_tokens & source_tokens
     minimum_overlap = int(research_config.get("topic_source_min_token_overlap", 2))
+    minimum_anchor_overlap = int(research_config.get("topic_source_min_anchor_overlap", 2))
     minimum_similarity = float(research_config.get("topic_source_min_similarity", 0.16))
     category_overlap = bool(set(topic.get("categories", []) or []) & set(item.categories))
     similarity = research_item_topic_similarity(topic, item)
-    return len(shared_tokens) >= minimum_overlap and (
+    return len(shared_tokens) >= minimum_overlap and len(shared_anchor_tokens) >= minimum_anchor_overlap and (
         similarity >= minimum_similarity
         or (category_overlap and similarity >= minimum_similarity * 0.75)
     )
@@ -1662,6 +1783,8 @@ def select_internal_links(posts: list[Post], topic: dict[str, Any], config: dict
     )
     scored: list[tuple[float, Post]] = []
     for post in posts:
+        if post.frontmatter.get("_queued"):
+            continue
         score = cosine_similarity(topic_text, post.searchable_text[:5000])
         if set(topic.get("tags", []) or []) & set(post.tags):
             score += 0.15
@@ -2570,6 +2693,9 @@ def article_generation_prompt(
     min_words = int(config.get("publishing", {}).get("min_words", 1400))
     target_words = max(min_words + 350, int(config.get("publishing", {}).get("target_words", min_words + 500)))
     required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+    source_snippet_characters = int(
+        config.get("research", {}).get("article_prompt_snippet_characters", 900)
+    )
     return f"""
 You are writing for Compile My Mind. Create a comprehensive, original Hugo blog article as structured JSON.
 
@@ -2618,7 +2744,7 @@ Available internal links:
 {json.dumps(internal_links, ensure_ascii=False, indent=2)}
 
 Research snippets:
-{json.dumps(research_for_prompt(source_items), ensure_ascii=False, indent=2)}
+{json.dumps(research_for_prompt(source_items, snippet_characters=source_snippet_characters), ensure_ascii=False, indent=2)}
 
 Previous QA feedback to fix:
 {feedback or "No previous feedback. Produce the full article on the first attempt."}
@@ -4126,7 +4252,7 @@ def feedback_text(value: Any, fallback: str) -> str:
 
 def generation_feedback(issues: list[str], article: dict[str, Any]) -> str:
     """Give the next attempt actionable QA feedback and enough draft context to repair it."""
-    feedback = "\n".join(issue for issue in issues if issue)
+    feedback = "\n".join(issue for issue in issues if issue)[:3500]
     draft = str(article.get("article_markdown", "")).strip()
     clean_slate_required = any(
         marker in feedback.lower()
@@ -4144,12 +4270,18 @@ def generation_feedback(issues: list[str], article: dict[str, Any]) -> str:
             "topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft."
         )
     elif draft and feedback:
+        headings = re.findall(r"(?m)^#{2,6}\s+(.+)$", markdown_without_fenced_code(draft))[:16]
+        draft_context = {
+            "word_count": word_count(draft),
+            "headings": headings,
+        }
         feedback += (
             "\nThe previous draft was rejected. Return a complete replacement article, not an outline, "
             "summary, or apology. Preserve useful technical detail while fixing every listed issue. "
             "The replacement must satisfy the required word count and include a useful Markdown table "
-            "when the configuration requires one. Here is the previous draft for repair:\n"
-            f"{draft[:12000]}"
+            "when the configuration requires one. Rebuild it from the supplied research and this compact "
+            "structural summary; do not paste or continue the previous body:\n"
+            f"{json.dumps(draft_context, ensure_ascii=False)}"
         )
     return feedback or "The previous draft failed quality checks. Return a complete, publishable replacement."
 
@@ -5126,14 +5258,265 @@ def run_hugo_build(log: EventLog) -> bool:
     return True
 
 
+def ready_bundle_path(entry: dict[str, Any]) -> Path | None:
+    """Resolve a tracked bundle only when it remains inside the ready queue."""
+    raw_path = str(entry.get("bundle_path", "")).strip()
+    if not raw_path:
+        return None
+    candidate = (ROOT / raw_path).resolve()
+    queue_root = READY_QUEUE_DIR.resolve()
+    try:
+        candidate.relative_to(queue_root)
+    except ValueError:
+        return None
+    return candidate
+
+
+def valid_ready_publications(state: dict[str, Any]) -> list[dict[str, Any]]:
+    valid: list[dict[str, Any]] = []
+    for entry in state.get("ready_publications", []) or []:
+        if not isinstance(entry, dict):
+            continue
+        bundle_path = ready_bundle_path(entry)
+        if bundle_path is not None and (bundle_path / "index.md").is_file():
+            valid.append(entry)
+    return valid
+
+
+def queue_approved_publication(
+    index_path: Path,
+    article: dict[str, Any],
+    qa: dict[str, Any] | None,
+    state: dict[str, Any],
+    config: dict[str, Any],
+    log: EventLog,
+) -> bool:
+    """Move a fully approved Hugo bundle into the durable ready queue."""
+    slug = str(article.get("slug", "")).strip()
+    source_dir = index_path.parent
+    target_dir = READY_QUEUE_DIR / slug
+    approved = (qa or {}).get("approved") is True or str((qa or {}).get("approved", "")).lower() == "true"
+    if not approved:
+        log.log("publication_queue_failed", slug=slug, reason="missing_approved_qa")
+        return False
+    if slug != slugify(slug) or not source_dir.is_dir() or target_dir.exists():
+        log.log("publication_queue_failed", slug=slug, reason="missing_or_duplicate_bundle")
+        return False
+    READY_QUEUE_DIR.mkdir(parents=True, exist_ok=True)
+    shutil.move(str(source_dir), str(target_dir))
+    queued_at = iso_z()
+    record = {
+        "time": queued_at,
+        "title": article.get("title", ""),
+        "slug": slug,
+        "categories": article.get("categories", []),
+        "tags": article.get("tags", []),
+        "sources": article.get("sources", []),
+        "qa": qa or {},
+        "quality_score": (qa or {}).get("quality", {}).get("score"),
+        "path": str((ROOT / config["site"].get("content_dir", "content/posts") / slug / "index.md").relative_to(ROOT)),
+    }
+    entry = {
+        "queued_at": queued_at,
+        "slug": slug,
+        "title": article.get("title", ""),
+        "bundle_path": str(target_dir.relative_to(ROOT)),
+        "record": record,
+    }
+    state.setdefault("ready_publications", []).append(entry)
+    state["ready_publications"] = state["ready_publications"][-100:]
+    state.setdefault("last_runs", {})["prepare"] = {
+        "time": queued_at,
+        "result": "queued",
+        "slug": slug,
+        "queue_depth": len(valid_ready_publications(state)),
+    }
+    state["pending_publication"] = {}
+    save_state(state)
+    write_prepare_result(
+        "queued",
+        slug=slug,
+        title=article.get("title", ""),
+        queue_depth=len(valid_ready_publications(state)),
+    )
+    log.log(
+        "publication_queued",
+        slug=slug,
+        title=article.get("title", ""),
+        queue_depth=len(valid_ready_publications(state)),
+    )
+    return True
+
+
+def refresh_queued_publication_dates(index_path: Path, config: dict[str, Any]) -> None:
+    frontmatter, body = split_frontmatter(index_path.read_text(encoding="utf-8"))
+    now = local_now(config)
+    frontmatter["date"] = now.replace(microsecond=0).isoformat()
+    frontmatter["lastmod"] = now.replace(microsecond=0).isoformat()
+    frontmatter["last_reviewed"] = now.date().isoformat()
+    frontmatter["verification_date"] = iso_z(now)
+    recheck_days = int(config.get("revalidation_intervals", {}).get("default_days", 60))
+    frontmatter["recheck_after"] = (now + dt.timedelta(days=recheck_days)).date().isoformat()
+    index_path.write_text(compose_markdown(frontmatter, body), encoding="utf-8")
+
+
+def publish_ready_publication(
+    state: dict[str, Any],
+    config: dict[str, Any],
+    log: EventLog,
+    *,
+    dry_run: bool,
+) -> bool:
+    """Promote the oldest approved queue item before making any provider call."""
+    entries = sorted(
+        valid_ready_publications(state),
+        key=lambda entry: str(entry.get("queued_at", "")),
+    )
+    if not entries:
+        return False
+    maximum_age = max(1, int(config.get("publication_queue", {}).get("max_age_days", 7)))
+    content_dir = ROOT / config["site"].get("content_dir", "content/posts")
+    for entry in entries:
+        slug = str(entry.get("slug", ""))
+        queued_at = parse_date(str(entry.get("queued_at", "")))
+        if queued_at and utc_now() - queued_at > dt.timedelta(days=maximum_age):
+            log.log("queued_publication_skipped", slug=slug, reason="queue_item_expired")
+            continue
+        source_dir = ready_bundle_path(entry)
+        destination = content_dir / slug
+        if (
+            slug != slugify(slug)
+            or source_dir is None
+            or destination.exists()
+            or not (source_dir / "index.md").is_file()
+        ):
+            log.log("queued_publication_skipped", slug=slug, reason="invalid_or_duplicate_bundle")
+            continue
+        record = entry.get("record", {}) if isinstance(entry.get("record"), dict) else {}
+        qa = record.get("qa", {}) if isinstance(record.get("qa"), dict) else {}
+        approved = qa.get("approved") is True or str(qa.get("approved", "")).lower() == "true"
+        if not approved:
+            log.log("queued_publication_skipped", slug=slug, reason="missing_approved_qa")
+            continue
+        if dry_run:
+            log.log("queued_publication_ready", slug=slug, title=entry.get("title", ""), dry_run=True)
+            write_publish_result("dry_run", slug=slug, source="ready_queue")
+            return True
+        try:
+            shutil.copytree(source_dir, destination)
+            refresh_queued_publication_dates(destination / "index.md", config)
+            build_passed = run_hugo_build(log)
+        except Exception as error:
+            shutil.rmtree(destination, ignore_errors=True)
+            log.log(
+                "queued_publication_skipped",
+                slug=slug,
+                reason="promotion_failed",
+                error=str(error),
+            )
+            continue
+        if not build_passed:
+            shutil.rmtree(destination, ignore_errors=True)
+            log.log("queued_publication_skipped", slug=slug, reason="hugo_build_failed")
+            continue
+        try:
+            shutil.rmtree(source_dir)
+        except Exception as error:
+            shutil.rmtree(destination, ignore_errors=True)
+            log.log(
+                "queued_publication_skipped",
+                slug=slug,
+                reason="queue_cleanup_failed",
+                error=str(error),
+            )
+            continue
+        state["ready_publications"] = [
+            candidate
+            for candidate in state.get("ready_publications", []) or []
+            if not isinstance(candidate, dict) or candidate.get("slug") != slug
+        ]
+        publication_record = dict(record)
+        publication_record["time"] = iso_z()
+        state.setdefault("generated_posts", []).append(publication_record)
+        state.setdefault("last_runs", {})["publish"] = {
+            "time": iso_z(),
+            "result": "published",
+            "source": "ready_queue",
+            "queue_depth": len(valid_ready_publications(state)),
+        }
+        state["pending_publication"] = {}
+        save_state(state)
+        write_publish_result(
+            "published",
+            path=publication_record.get("path", str((destination / "index.md").relative_to(ROOT))),
+            title=publication_record.get("title", entry.get("title", "")),
+            source="ready_queue",
+        )
+        log.log(
+            "queued_publication_published",
+            slug=slug,
+            title=entry.get("title", ""),
+            queue_depth=len(valid_ready_publications(state)),
+        )
+        return True
+    return False
+
+
+def run_prepare(args: argparse.Namespace) -> int:
+    config = load_config()
+    state_before = load_state()
+    target = max(1, int(config.get("publication_queue", {}).get("target_depth", 12)))
+    depth = len(valid_ready_publications(state_before))
+    if depth >= target:
+        write_prepare_result("capacity_reached", queue_depth=depth, target_depth=target)
+        return 0
+    prepared_args = argparse.Namespace(dry_run=False, prepare_only=True)
+    result = run_publish(prepared_args)
+    state_after = load_state()
+    prepare_marker = read_json(PREPARE_RESULT_PATH, {})
+    if prepare_marker.get("result") == "queued":
+        return result
+
+    # Preparation must not overwrite the public publisher's pending retry or
+    # last result when it cannot add a queue item. Preserve only useful provider
+    # cooldown evidence from the attempted preparation.
+    restored = copy.deepcopy(state_before)
+    restored["provider_cooldowns"] = state_after.get(
+        "provider_cooldowns", restored.get("provider_cooldowns", {})
+    )
+    failure = state_after.get("last_runs", {}).get("publish", {}) or {}
+    restored.setdefault("last_runs", {})["prepare"] = {
+        "time": iso_z(),
+        "result": "retry_scheduled",
+        "reason": failure.get("reason", failure.get("result", "no_approved_candidate")),
+        "queue_depth": depth,
+    }
+    save_state(restored)
+    write_prepare_result(
+        "retry_scheduled",
+        reason=restored["last_runs"]["prepare"]["reason"],
+        queue_depth=depth,
+    )
+    return result
+
+
 def run_publish(args: argparse.Namespace) -> int:
     config = load_config()
     state = load_state()
     log = EventLog()
-    write_publish_result("started")
-    client = GeminiClient(config, log, state)
-
+    prepare_only = bool(getattr(args, "prepare_only", False))
+    if prepare_only:
+        write_prepare_result("started")
+    else:
+        write_publish_result("started")
     posts = load_posts(config)
+    if prepare_only:
+        posts = [*posts, *load_queued_posts(state)]
+    elif config.get("publication_queue", {}).get("enabled", True):
+        if publish_ready_publication(state, config, log, dry_run=bool(args.dry_run)):
+            return 0
+
+    client = GeminiClient(config, log, state)
     research = collect_research(config, log)
     if not research:
         log.log("publish_recovery_needed", reason="no_research_items", fallback="configured_evergreen_sources")
@@ -5487,6 +5870,23 @@ def run_publish(args: argparse.Namespace) -> int:
             log,
             reason="build_failed",
             stage="hugo_build",
+            detail=str(index_path.relative_to(ROOT)),
+            topic=topic,
+            sources=topic_research,
+        )
+        return 0
+
+    if prepare_only and not args.dry_run:
+        if queue_approved_publication(index_path, final_article, final_qa, state, config, log):
+            return 0
+        if index_path.parent.exists():
+            shutil.rmtree(index_path.parent)
+        schedule_publish_retry(
+            state,
+            config,
+            log,
+            reason="queue_storage_failed",
+            stage="publication_queue",
             detail=str(index_path.relative_to(ROOT)),
             topic=topic,
             sources=topic_research,
@@ -6121,7 +6521,12 @@ def read_log_events() -> list[dict[str, Any]]:
     return events
 
 
-def monitoring_dashboard(state: dict[str, Any], posts: list[Post]) -> dict[str, Any]:
+def monitoring_dashboard(
+    state: dict[str, Any],
+    posts: list[Post],
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    config = config or {}
     today = utc_now().date().isoformat()
     events = [event for event in read_log_events() if str(event.get("time", "")).startswith(today)]
     event_counts = Counter(str(event.get("event", "unknown")) for event in events)
@@ -6132,8 +6537,15 @@ def monitoring_dashboard(state: dict[str, Any], posts: list[Post]) -> dict[str, 
         for entry in state.get("generated_posts", [])
         if entry.get("quality_score") is not None
     ]
+    queue_depth = len(valid_ready_publications(state))
+    queue_target = int(config.get("publication_queue", {}).get("target_depth", 0))
+    queue_minimum = int(config.get("publication_queue", {}).get("minimum_depth", 0))
     return {
         "generated_at": iso_z(),
+        "ready_queue_depth": queue_depth,
+        "ready_queue_target": queue_target,
+        "ready_queue_minimum": queue_minimum,
+        "ready_queue_healthy": queue_depth >= queue_minimum if queue_minimum else bool(queue_depth),
         "topics_discovered_today": event_counts["research_collected"] + event_counts["grounded_research_completed"],
         "topics_rejected_today": event_counts["topic_rejected"] + event_counts["topic_deferred_to_maintenance"],
         "articles_generated_today": len([event for event in events if event.get("event") == "article_generation_started"]),
@@ -6178,7 +6590,7 @@ def monitoring_dashboard(state: dict[str, Any], posts: list[Post]) -> dict[str, 
 def run_report(_args: argparse.Namespace) -> int:
     config = load_config()
     state = load_state()
-    dashboard = monitoring_dashboard(state, load_posts(config))
+    dashboard = monitoring_dashboard(state, load_posts(config), config)
     write_json(DASHBOARD_PATH, dashboard)
     print(json.dumps(dashboard, indent=2, ensure_ascii=False, default=dict))
     return 0
@@ -6393,7 +6805,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Autonomous publishing engine for Compile My Mind.")
     parser.add_argument(
         "--mode",
-        choices=["publish", "maintain", "audit", "report", "taxonomy", "existing-audit", "rendered-audit"],
+        choices=["publish", "prepare", "maintain", "audit", "report", "taxonomy", "existing-audit", "rendered-audit"],
         required=True,
     )
     parser.add_argument("--dry-run", action="store_true", help="Run decisions without writing article updates.")
@@ -6407,6 +6819,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.mode == "publish":
         return run_publish(args)
+    if args.mode == "prepare":
+        return run_prepare(args)
     if args.mode == "maintain":
         return run_maintain(args)
     if args.mode == "audit":

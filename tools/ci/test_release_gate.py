@@ -39,6 +39,37 @@ class ReleaseGateTests(unittest.TestCase):
                     self.assertEqual(release_gate.main(), 0)
             write_result.assert_called_once()
 
+    def test_prepare_requires_a_queue_bundle_for_queued_result(self):
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "prepare-result.json"
+            marker.write_text(json.dumps({"result": "queued"}), encoding="utf-8")
+            paths = [".autopublisher/state.json"]
+            with patch.object(release_gate, "PREPARE_RESULT", marker), \
+                patch.object(release_gate, "status_paths", return_value=paths), \
+                patch.object(release_gate, "write_result"), \
+                patch.object(release_gate, "run_validation") as run_validation, \
+                patch.object(sys, "argv", ["release_gate.py", "--mode", "prepare"]):
+                with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
+                    self.assertEqual(release_gate.main(), 1)
+            run_validation.assert_not_called()
+
+    def test_prepare_validates_an_approved_queue_bundle(self):
+        with tempfile.TemporaryDirectory() as directory:
+            marker = Path(directory) / "prepare-result.json"
+            marker.write_text(json.dumps({"result": "queued"}), encoding="utf-8")
+            paths = [
+                ".autopublisher/state.json",
+                ".autopublisher/queue/ready/queued-guide/index.md",
+            ]
+            with patch.object(release_gate, "PREPARE_RESULT", marker), \
+                patch.object(release_gate, "status_paths", return_value=paths), \
+                patch.object(release_gate, "write_result") as write_result, \
+                patch.object(release_gate, "run_validation", return_value=(True, "passed")), \
+                patch.object(sys, "argv", ["release_gate.py", "--mode", "prepare"]):
+                with redirect_stdout(StringIO()), redirect_stderr(StringIO()):
+                    self.assertEqual(release_gate.main(), 0)
+            self.assertTrue(write_result.call_args.args[1])
+
     def test_allowed_path_matching_supports_directories(self):
         self.assertTrue(release_gate.path_allowed("content/posts/example/index.md", ("content/posts/",)))
         self.assertTrue(release_gate.path_allowed(".hugo-version", (".hugo-version",)))

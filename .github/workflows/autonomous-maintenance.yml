@@ -6,10 +6,10 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: autonomous-content-${{ github.ref }}
-  # Do not let a queued maintenance job run stale publisher tests after a
-  # newer content automation revision has superseded it.
-  cancel-in-progress: true
+  group: repository-write-${{ github.ref }}
+  # Serialize every repository writer; each job synchronizes main only after
+  # it leaves this queue, preventing non-fast-forward pushes and lost state.
+  cancel-in-progress: false
 
 permissions:
   contents: write

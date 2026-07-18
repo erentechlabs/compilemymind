@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: infrastructure-maintenance-${{ github.ref }}
+  group: repository-write-${{ github.ref }}
   cancel-in-progress: false
 
 permissions:

@@ -29,6 +29,9 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
+        self.assertEqual(config["github_models"]["max_input_characters"], 24000)
+        self.assertEqual(config["publication_queue"]["target_depth"], 12)
+        self.assertEqual(config["research"]["topic_source_min_anchor_overlap"], 2)
         self.assertEqual(config["taxonomy"]["preferred_tags_per_article"], 3)
         self.assertTrue(config["taxonomy"]["allow_new_tags"])
 
@@ -42,13 +45,23 @@ class AutopublisherTests(unittest.TestCase):
         self.assertIn("schedule:", trigger_block)
         self.assertIn("workflow_dispatch:", trigger_block)
         self.assertIn("python -m unittest discover -s tools/autopublisher", deploy_workflow)
+        preparation_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-prepare.yml").read_text(encoding="utf-8")
+        self.assertIn('".autopublisher/prepare-now"', preparation_workflow)
+        self.assertIn("--mode prepare", preparation_workflow)
+        self.assertIn(".autopublisher/queue/ready", preparation_workflow)
         for workflow_name in (
             "autonomous-publish.yml",
+            "autonomous-prepare.yml",
             "autonomous-maintenance.yml",
             "revise-existing-posts.yml",
+            "gemini-model-maintenance.yml",
+            "infrastructure-maintenance.yml",
         ):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
-            self.assertIn("cancel-in-progress: true", workflow)
+            self.assertIn("group: repository-write-${{ github.ref }}", workflow)
+            self.assertIn("cancel-in-progress: false", workflow)
+        for workflow_name in ("autonomous-maintenance.yml", "revise-existing-posts.yml"):
+            workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
             self.assertIn("Synchronize with the latest main revision", workflow)
             self.assertIn('git checkout --detach "origin/$branch"', workflow)
 
@@ -526,13 +539,15 @@ class AutopublisherTests(unittest.TestCase):
             "Missing table; Add a comparison table\nRetry",
         )
 
-    def test_generation_feedback_preserves_rejected_draft_for_repair(self):
+    def test_generation_feedback_uses_compact_repair_context(self):
         feedback = autopublisher.generation_feedback(
             ["Article is too short: 40 words, expected at least 1400.", "Article should include a useful Markdown table."],
             {"article_markdown": "## Existing explanation\n\nKeep this useful detail."},
         )
         self.assertIn("complete replacement article", feedback)
-        self.assertIn("## Existing explanation", feedback)
+        self.assertIn('"headings": ["Existing explanation"]', feedback)
+        self.assertNotIn("Keep this useful detail", feedback)
+        self.assertLess(len(feedback), 4500)
 
     def test_generation_feedback_discards_contaminated_draft(self):
         feedback = autopublisher.generation_feedback(
@@ -565,15 +580,191 @@ class AutopublisherTests(unittest.TestCase):
             "https://kubernetes.io/blog/headlamp", "Use Headlamp as a desktop cluster dashboard", "",
             ["developer-it-tools"], 2.2,
         )
+        adjacent_metrics = autopublisher.ResearchItem(
+            "GitHub Changelog", "Repository-level GitHub Copilot usage metrics generally available",
+            "https://github.blog/changelog/copilot-usage-metrics", "Copilot repository review metrics", "",
+            ["developer-it-tools"], 2.1,
+        )
         scoped = autopublisher.research_items_for_topic(
             topic,
-            [selected, unrelated, related],
+            [selected, unrelated, adjacent_metrics, related],
             limit=6,
             config={"research": {"topic_source_min_similarity": 0.16}},
         )
         self.assertIn(selected, scoped)
         self.assertIn(related, scoped)
         self.assertNotIn(unrelated, scoped)
+        self.assertNotIn(adjacent_metrics, scoped)
+
+    def test_topic_research_rejects_same_vendor_adjacent_ai_source(self):
+        topic = {
+            "title": "Google Conversational AI Platforms Gartner Magic Quadrant",
+            "search_intent": "Evaluate Google's conversational AI platform position and execution",
+            "categories": ["practical-infrastructure-guides"],
+            "tags": ["google", "cloud", "ai"],
+            "source_urls": [],
+        }
+        relevant = autopublisher.ResearchItem(
+            "Google Cloud Blog",
+            "Google is a Leader in the Gartner Magic Quadrant for Conversational AI",
+            "https://cloud.google.com/blog/conversational-ai",
+            "Conversational AI platform vision and execution",
+            "",
+            ["practical-infrastructure-guides"],
+            2.0,
+        )
+        adjacent = autopublisher.ResearchItem(
+            "Google Cloud Blog",
+            "Cloud CISO Perspectives: How AI gives defenders deeper context",
+            "https://cloud.google.com/blog/cloud-ciso-ai-context",
+            "Google Cloud security teams apply AI context to threat defense",
+            "",
+            ["practical-infrastructure-guides"],
+            2.1,
+        )
+        scoped = autopublisher.research_items_for_topic(
+            topic,
+            [adjacent, relevant],
+            limit=6,
+            config={"research": {"topic_source_min_similarity": 0.16}},
+        )
+        self.assertIn(relevant, scoped)
+        self.assertNotIn(adjacent, scoped)
+
+    def test_github_model_request_compacts_and_retries_http_413(self):
+        oversized = "A" * 30000
+        responses = [
+            (413, b'{"error":{"code":"tokens_limit_reached"}}', {}),
+            (200, json.dumps({"choices": [{"message": {"content": '{"ok": true}'}}]}).encode(), {}),
+        ]
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "openai/gpt-4.1",
+                "lightweight_tasks": ["article_generation"],
+                "max_input_characters": 24000,
+            },
+        }
+        with patch.dict(os.environ, {"GITHUB_MODELS_TOKEN": "token"}, clear=False), \
+            patch.object(autopublisher, "http_request", side_effect=responses) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json(oversized, task="article_generation")
+
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(request.call_count, 2)
+        second_prompt = request.call_args_list[1].kwargs["payload"]["messages"][1]["content"]
+        self.assertLessEqual(len(second_prompt), 15600)
+        self.assertLess(len(second_prompt), len(oversized))
+
+    def test_ready_queue_promotes_preapproved_bundle_without_provider_call(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            queue_dir = root / ".autopublisher/queue/ready"
+            state_path = root / ".autopublisher/state.json"
+            prepare_result = root / ".autopublisher/prepare-result.json"
+            publish_result = root / ".autopublisher/publish-result.json"
+            source_dir = root / "content/posts/queued-guide"
+            source_dir.mkdir(parents=True)
+            (source_dir / "index.md").write_text(
+                autopublisher.compose_markdown(
+                    {
+                        "title": "Queued Guide",
+                        "date": "2026-07-18T00:00:00+00:00",
+                        "categories": ["guide"],
+                        "tags": ["powershell", "windows", "troubleshooting"],
+                    },
+                    "## Diagnose the issue\n\nUse the evidence in order.",
+                ),
+                encoding="utf-8",
+            )
+            article = {
+                "title": "Queued Guide",
+                "slug": "queued-guide",
+                "categories": ["guide"],
+                "tags": ["powershell", "windows", "troubleshooting"],
+                "sources": [{"title": "Official", "url": "https://example.test/docs"}],
+            }
+            qa = {"approved": True, "quality": {"score": 0.94}}
+            state = {"ready_publications": [], "last_runs": {}, "generated_posts": []}
+            config = {
+                "site": {"content_dir": "content/posts", "timezone": "UTC"},
+                "publication_queue": {"max_age_days": 7},
+                "revalidation_intervals": {"default_days": 60},
+            }
+            log = SimpleNamespace(log=lambda *_args, **_kwargs: None)
+
+            with patch.object(autopublisher, "ROOT", root), \
+                patch.object(autopublisher, "READY_QUEUE_DIR", queue_dir), \
+                patch.object(autopublisher, "STATE_PATH", state_path), \
+                patch.object(autopublisher, "PREPARE_RESULT_PATH", prepare_result), \
+                patch.object(autopublisher, "PUBLISH_RESULT_PATH", publish_result), \
+                patch.object(autopublisher, "run_hugo_build", return_value=True):
+                self.assertTrue(
+                    autopublisher.queue_approved_publication(
+                        source_dir / "index.md", article, qa, state, config, log
+                    )
+                )
+                self.assertFalse(source_dir.exists())
+                self.assertTrue((queue_dir / "queued-guide/index.md").is_file())
+                self.assertTrue(
+                    autopublisher.publish_ready_publication(
+                        state, config, log, dry_run=False
+                    )
+                )
+
+            self.assertTrue((root / "content/posts/queued-guide/index.md").is_file())
+            self.assertFalse((queue_dir / "queued-guide").exists())
+            self.assertEqual(state["ready_publications"], [])
+            self.assertEqual(state["last_runs"]["publish"]["source"], "ready_queue")
+            self.assertEqual(
+                json.loads(publish_result.read_text(encoding="utf-8"))["result"],
+                "published",
+            )
+
+    def test_prepare_does_not_mistake_a_stale_success_for_a_new_queue_item(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            state_path = root / ".autopublisher/state.json"
+            prepare_result = root / ".autopublisher/prepare-result.json"
+            queue_dir = root / ".autopublisher/queue/ready"
+            initial = {
+                "version": 4,
+                "ready_publications": [],
+                "provider_cooldowns": {},
+                "last_runs": {"prepare": {"result": "queued", "slug": "old-guide"}},
+            }
+            state_path.parent.mkdir(parents=True)
+            state_path.write_text(json.dumps(initial), encoding="utf-8")
+
+            def failed_preparation(_args):
+                failed = autopublisher.read_json(state_path, {})
+                failed["last_runs"]["publish"] = {
+                    "result": "retry_scheduled",
+                    "reason": "all_drafts_failed_quality_gates",
+                }
+                autopublisher.write_json(state_path, failed)
+                autopublisher.write_json(prepare_result, {"result": "started"})
+                return 0
+
+            with patch.object(autopublisher, "ROOT", root), \
+                patch.object(autopublisher, "STATE_PATH", state_path), \
+                patch.object(autopublisher, "PREPARE_RESULT_PATH", prepare_result), \
+                patch.object(autopublisher, "READY_QUEUE_DIR", queue_dir), \
+                patch.object(
+                    autopublisher,
+                    "load_config",
+                    return_value={"publication_queue": {"target_depth": 12}},
+                ), \
+                patch.object(autopublisher, "run_publish", side_effect=failed_preparation):
+                self.assertEqual(autopublisher.run_prepare(SimpleNamespace()), 0)
+
+            restored = json.loads(state_path.read_text(encoding="utf-8"))
+            self.assertEqual(restored["last_runs"]["prepare"]["result"], "retry_scheduled")
+            self.assertEqual(
+                json.loads(prepare_result.read_text(encoding="utf-8"))["result"],
+                "retry_scheduled",
+            )
 
     def test_collect_topic_research_validates_focused_grounded_sources(self):
         topic = {

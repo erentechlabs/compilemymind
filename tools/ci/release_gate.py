@@ -15,6 +15,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 AUTOPUBLISHER = ROOT / "tools" / "autopublisher" / "autopublisher.py"
 PUBLISH_RESULT = ROOT / ".autopublisher" / "publish-result.json"
+PREPARE_RESULT = ROOT / ".autopublisher" / "prepare-result.json"
 GATE_RESULT = ROOT / ".autopublisher" / "release-gate-result.json"
 RENDERED_AUDIT_REPORT = ".autopublisher/reports/rendered-site-audit.json"
 
@@ -23,8 +24,15 @@ ALLOWED_PATHS: dict[str, tuple[str, ...]] = {
     "publish": (
         "content/posts/",
         ".autopublisher/state.json",
+        ".autopublisher/queue/",
         ".autopublisher/logs/",
         ".autopublisher/publish-result.json",
+    ),
+    "prepare": (
+        ".autopublisher/state.json",
+        ".autopublisher/queue/",
+        ".autopublisher/logs/",
+        ".autopublisher/prepare-result.json",
     ),
     "maintenance": (
         "content/posts/",
@@ -156,6 +164,22 @@ def main() -> int:
         if result != "published":
             write_result(mode, False, f"no approved publication: {result or 'missing result'}", paths_before)
             print(f"release_gate: no publication; result={result or 'missing'}")
+            return 0
+
+    if mode == "prepare":
+        marker = json.loads(PREPARE_RESULT.read_text(encoding="utf-8")) if PREPARE_RESULT.exists() else {}
+        result = marker.get("result")
+        queue_changed = any(
+            path.replace("\\", "/").startswith(".autopublisher/queue/")
+            for path in paths_before
+        )
+        if result == "queued" and not queue_changed:
+            return fail(mode, "preparer reported queued but no queue bundle changed", paths_before)
+        if result != "queued" and queue_changed:
+            return fail(mode, "queue changed without an approved prepared publication", paths_before)
+        if result != "queued":
+            write_result(mode, False, f"no prepared publication: {result or 'missing result'}", paths_before)
+            print(f"release_gate: no prepared publication; result={result or 'missing'}")
             return 0
 
     valid, reason = run_validation(mode)
