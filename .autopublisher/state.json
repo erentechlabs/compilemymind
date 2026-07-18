@@ -1222,6 +1222,71 @@
       },
       "quality_score": 0.8821,
       "path": "content/posts/troubleshoot-powershell-remoting-winrm-connections/index.md"
+    },
+    {
+      "time": "2026-07-18T21:42:34.223948Z",
+      "title": "Troubleshoot Docker Volume Mounts Safely",
+      "slug": "troubleshoot-docker-volume-mounts-safely",
+      "categories": [
+        "developer-it-tools",
+        "system-administration"
+      ],
+      "tags": [
+        "docker",
+        "troubleshooting",
+        "storage"
+      ],
+      "sources": [
+        {
+          "title": "Docker volumes",
+          "url": "https://docs.docker.com/engine/storage/volumes"
+        },
+        {
+          "title": "docker inspect",
+          "url": "https://docs.docker.com/reference/cli/docker/inspect"
+        },
+        {
+          "title": "docker volume ls",
+          "url": "https://docs.docker.com/reference/cli/docker/volume/ls"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8479,
+          "components": {
+            "topic_relevance": 0.815,
+            "originality": 0.3249,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.7647,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.3249,
+            "source_similarity": 0.4636,
+            "existing_content_similarity": 0.3249,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8479,
+      "path": "content/posts/troubleshoot-docker-volume-mounts-safely/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1371,7 +1436,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-18T20:36:50.572538Z",
+      "time": "2026-07-18T21:42:34.223959Z",
       "result": "published",
       "source": "ready_queue",
       "queue_depth": 0
@@ -1518,78 +1583,6 @@
     }
   },
   "pending_publication": {},
-  "ready_publications": [
-    {
-      "queued_at": "2026-07-18T20:38:48.021792Z",
-      "slug": "troubleshoot-docker-volume-mounts-safely",
-      "title": "Troubleshoot Docker Volume Mounts Safely",
-      "bundle_path": ".autopublisher/queue/ready/troubleshoot-docker-volume-mounts-safely",
-      "record": {
-        "time": "2026-07-18T20:38:48.021792Z",
-        "title": "Troubleshoot Docker Volume Mounts Safely",
-        "slug": "troubleshoot-docker-volume-mounts-safely",
-        "categories": [
-          "developer-it-tools",
-          "system-administration"
-        ],
-        "tags": [
-          "docker",
-          "troubleshooting",
-          "storage"
-        ],
-        "sources": [
-          {
-            "title": "Docker volumes",
-            "url": "https://docs.docker.com/engine/storage/volumes"
-          },
-          {
-            "title": "docker inspect",
-            "url": "https://docs.docker.com/reference/cli/docker/inspect"
-          },
-          {
-            "title": "docker volume ls",
-            "url": "https://docs.docker.com/reference/cli/docker/volume/ls"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.8479,
-            "components": {
-              "topic_relevance": 0.815,
-              "originality": 0.3249,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.7647,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.3249,
-              "source_similarity": 0.4636,
-              "existing_content_similarity": 0.3249,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.8479,
-        "path": "content/posts/troubleshoot-docker-volume-mounts-safely/index.md"
-      }
-    }
-  ],
+  "ready_publications": [],
   "preparation_pending_publication": {}
 }
