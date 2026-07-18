@@ -558,6 +558,138 @@
           "related_slugs": ["troubleshoot-microsoft-entra-sign-in-errors", "microsoft-entra-id-explained-users-groups-apps-roles-conditional-access"],
           "version_context": "Microsoft Entra Conditional Access What If, troubleshooting, and Sign-in Diagnostics documentation checked at publication time."
         }
+      },
+      {
+        "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
+        "slug": "troubleshoot-kubernetes-dns-resolution-pods",
+        "primary_category": "networking",
+        "categories": ["networking", "developer-it-tools", "system-administration"],
+        "tags": ["kubernetes", "dns", "networking", "troubleshooting"],
+        "search_intent": "Diagnose Kubernetes service-name resolution failures from a test pod by checking resolver configuration, CoreDNS, Services, and endpoints in a safe order.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Debugging DNS Resolution", "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution/"},
+          {"title": "DNS for Services and Pods", "url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/"},
+          {"title": "Debug Services", "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service/"}
+        ],
+        "offline_fallback": {
+          "description": "A safe Kubernetes DNS troubleshooting workflow that separates pod resolver configuration, CoreDNS health, Service records, and endpoint availability before changing the cluster.",
+          "overview": "A failed service-name lookup inside Kubernetes can originate in the test pod, its generated resolver configuration, the cluster DNS Service, CoreDNS Pods, the Service name or namespace, or the workload endpoints. Test those boundaries in order from a disposable pod and preserve the results before restarting DNS components or editing cluster-wide configuration.",
+          "preparation": "Record the cluster context, namespace, failing pod, requested DNS name, expected Service, first failure time, and whether direct IP connectivity works. Use a disposable diagnostic pod approved for the namespace, keep the first resolver and lookup output, and do not restart CoreDNS or change kubelet DNS settings during the initial evidence pass.",
+          "steps": [
+            {"title": "Reproduce the lookup from the affected namespace", "body": "Run a bounded lookup from a diagnostic pod in the same namespace and compare the short Service name with its namespace-qualified and fully qualified forms. Capture the returned resolver address and exact error so a name-scope problem is not mistaken for a DNS outage.", "source_guidance": "Use the DNS debugging guide for the supported diagnostic pod, resolver inspection, lookup sequence, and CoreDNS checks."},
+            {"title": "Verify the expected DNS record shape", "body": "Compare the Service type, namespace, name, named ports, and headless or normal configuration with the record the client expects. Confirm the pod DNS policy and search suffixes before changing an application hostname.", "source_guidance": "Use the DNS for Services and Pods reference to interpret Service, Pod, SRV, search-list, and DNS-policy behavior."},
+            {"title": "Separate name resolution from Service routing", "body": "Inspect the Service and its EndpointSlices after DNS returns an address. Test the Service boundary independently so an empty selector result, wrong target port, or unready backend is not reported as a resolver failure.", "source_guidance": "Use the Service debugging guide to verify the Service definition, EndpointSlices, proxy path, and backend boundary."}
+          ],
+          "symptoms": [
+            {"symptom": "Short name fails but namespace-qualified name works", "likely_cause": "Namespace or resolver search-path mismatch", "next_check": "Compare the pod namespace and search entries with the requested Service namespace."},
+            {"symptom": "All lookups time out from several namespaces", "likely_cause": "Cluster DNS Service, CoreDNS workload, or network path boundary", "next_check": "Inspect resolver addresses, DNS Service endpoints, CoreDNS Pods, and recent logs."},
+            {"symptom": "Name resolves but the application still cannot connect", "likely_cause": "Service port, EndpointSlice, readiness, or backend problem", "next_check": "Debug the Service and endpoints separately from DNS."}
+          ],
+          "checklist": ["Capture cluster context, namespace, pod, requested name, expected Service, and failure time.", "Reproduce short, qualified, and fully qualified lookups from a controlled pod.", "Preserve the pod resolver configuration and cluster DNS Service address.", "Inspect CoreDNS health and logs only after confirming the client-side evidence.", "When resolution succeeds, verify the Service, EndpointSlices, port, and ready backends separately."],
+          "related_slugs": ["troubleshooting-windows-dns-powershell", "kubernetes-probe-misconfigurations-fixes", "troubleshooting-kubernetes-rbac-kubectl-auth-can-i"],
+          "version_context": "Current Kubernetes DNS, Service discovery, and Service debugging documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot PowerShell Remoting and WinRM Connections",
+        "slug": "troubleshoot-powershell-remoting-winrm-connections",
+        "primary_category": "system-administration",
+        "categories": ["system-administration", "networking"],
+        "tags": ["powershell", "windows-server", "networking", "troubleshooting"],
+        "search_intent": "Diagnose PowerShell remoting failures by separating name resolution, WSMan reachability, listeners, authentication, authorization, and endpoint configuration.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "about Remote Troubleshooting", "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_remote_troubleshooting?view=powershell-7.5"},
+          {"title": "Test-WSMan", "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.wsman.management/test-wsman?view=powershell-7.5"},
+          {"title": "Using WS-Management Remoting in PowerShell", "url": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/wsman-remoting-in-powershell?view=powershell-7.5"}
+        ],
+        "offline_fallback": {
+          "description": "A read-first PowerShell remoting workflow for isolating DNS, WSMan transport, listener, authentication, authorization, and endpoint failures before changing WinRM.",
+          "overview": "PowerShell remoting errors often collapse several boundaries into one connection message. Separate host resolution and network reachability from the WSMan identification response, authentication mechanism, authorization, and the selected PowerShell endpoint. Preserve those observations before enabling remoting again, editing TrustedHosts, changing listeners, or opening broader firewall scope.",
+          "preparation": "Record the client and target hosts, their domains or workgroups, PowerShell versions, transport and port, authentication method, endpoint name, account context, exact error, and failure time. Confirm that remote administration is authorized and begin with read-only checks from the same client path that failed.",
+          "steps": [
+            {"title": "Classify the exact remoting error", "body": "Match the current message to access denied, connection refused, name resolution, listener, public-network, credential delegation, or endpoint configuration guidance. Keep the original text and avoid applying a fix for a similar-looking error from another authentication path.", "source_guidance": "Use about Remote Troubleshooting to map documented errors to prerequisites, listener, firewall, authentication, and authorization checks."},
+            {"title": "Test the WSMan boundary without opening a session", "body": "Use a bounded Test-WSMan request against the intended target, transport, port, and application name. A successful identification response proves the WSMan service path, but it does not prove that the account is authorized for a PowerShell session.", "source_guidance": "Use the Test-WSMan reference for supported identification requests, platform scope, authentication, port, SSL, and application-name parameters."},
+            {"title": "Verify the endpoint and PowerShell version", "body": "Confirm that the target has the expected remoting endpoint for the PowerShell installation and that the client selects the intended configuration name. Treat enabling or reconfiguring remoting as a reviewed remediation rather than a first diagnostic step.", "source_guidance": "Use the WS-Management remoting guide to verify supported platforms, endpoint creation, configuration names, and version-specific behavior."}
+          ],
+          "symptoms": [
+            {"symptom": "Test-WSMan cannot reach the target", "likely_cause": "DNS, routing, firewall, listener, port, or WinRM service boundary", "next_check": "Verify the resolved target and approved transport path before testing credentials."},
+            {"symptom": "WSMan responds but Enter-PSSession is denied", "likely_cause": "Authentication, authorization, endpoint permission, or account-context boundary", "next_check": "Preserve the chosen authentication and endpoint, then review the documented access requirements."},
+            {"symptom": "One PowerShell version connects and another does not", "likely_cause": "Missing or mismatched version-specific endpoint", "next_check": "List the intended configuration names and compare the client selection with the installed host versions."}
+          ],
+          "checklist": ["Capture client, target, domain context, transport, port, authentication, endpoint, account, and exact error.", "Verify name resolution and the approved network path before changing WinRM.", "Use Test-WSMan to isolate WSMan reachability from PowerShell session authorization.", "Confirm the expected endpoint and PowerShell version on the target.", "Apply one reviewed, reversible change and repeat the original connection from the same client context."],
+          "related_slugs": ["troubleshooting-windows-dns-powershell", "investigate-windows-firewall-traffic-powershell", "diagnose-windows-service-failures-powershell"],
+          "version_context": "PowerShell 7.5 remoting and Microsoft.WSMan.Management documentation checked at publication time; WSMan remoting is scoped to supported Windows systems."
+        }
+      },
+      {
+        "title": "Troubleshoot Docker Volume Mounts Safely",
+        "slug": "troubleshoot-docker-volume-mounts-safely",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools", "system-administration"],
+        "tags": ["docker", "storage", "troubleshooting", "system-administration"],
+        "search_intent": "Diagnose missing Docker data and read-only or incorrect volume mounts by inspecting the effective container mounts, volume object, and daemon inventory before recreating anything.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Docker volumes", "url": "https://docs.docker.com/engine/storage/volumes/"},
+          {"title": "docker inspect", "url": "https://docs.docker.com/reference/cli/docker/inspect/"},
+          {"title": "docker volume ls", "url": "https://docs.docker.com/reference/cli/docker/volume/ls/"}
+        ],
+        "offline_fallback": {
+          "description": "A read-first Docker volume troubleshooting workflow for confirming the effective mount, volume identity, driver, destination, and daemon context before recreating a container.",
+          "overview": "A container that cannot see expected data may be using a different volume name, mount destination, daemon context, driver, read-only mode, or an anonymous volume created by an earlier command. Inspect the effective container and volume objects before rebuilding, pruning, copying data, or changing ownership, because those actions can hide the original mount mapping or remove recoverable data.",
+          "preparation": "Record the daemon context, container name and ID, image reference, deployment command or Compose project, expected in-container path, expected volume name, first failure time, and whether the container is running. Keep the initial inspect output and do not run volume prune, remove the container, or write test data into an unidentified mount.",
+          "steps": [
+            {"title": "Confirm the storage type and intended lifecycle", "body": "Identify whether the workload expects a managed volume, bind mount, or temporary filesystem and compare that choice with the deployment definition. Keep named and anonymous volumes distinct, and note whether the mount should be read-only or read-write.", "source_guidance": "Use the Docker volumes guide for volume lifecycle, mount syntax, read-only behavior, population, backup, and removal semantics."},
+            {"title": "Inspect the effective container mount", "body": "Read the container Mounts structure and capture the type, source or volume name, destination, driver, mode, propagation, and read-write flag. Compare the effective object with the deployment definition rather than assuming the last command created this container.", "source_guidance": "Use docker inspect for low-level container and volume information and type-qualified inspection."},
+            {"title": "Verify the volume in the correct daemon inventory", "body": "List volumes in the active daemon context and narrow by the expected name, label, or driver. An absent name may indicate another context, a Compose-prefixed name, an anonymous volume, or a deployment that never created the expected object.", "source_guidance": "Use docker volume ls for documented inventory, filters, driver, labels, and formatted read-only output."}
+          ],
+          "symptoms": [
+            {"symptom": "The expected directory is empty inside a new container", "likely_cause": "Different volume identity, destination, context, or obscured image data", "next_check": "Compare the effective Mounts entry and volume identity with the deployment definition."},
+            {"symptom": "Writes fail with a read-only error", "likely_cause": "Read-only mount mode, container filesystem policy, or application path mismatch", "next_check": "Inspect the mount read-write flag and exact destination before changing host permissions."},
+            {"symptom": "A volume exists but is not attached to this container", "likely_cause": "Name prefix, anonymous volume, recreated container, or wrong daemon context", "next_check": "Match the container Mounts name with the filtered volume inventory in the same context."}
+          ],
+          "checklist": ["Capture daemon context, container, image, deployment definition, expected path, volume name, and failure time.", "Identify whether the intended storage is a volume, bind mount, or temporary filesystem.", "Inspect the effective container Mounts structure before recreating the container.", "Verify the exact volume name, driver, labels, and daemon inventory.", "Back up identified data and apply one reviewed mount change without pruning unrelated volumes."],
+          "related_slugs": ["troubleshoot-docker-container-health-checks", "operating-ai-ml-workloads-kubernetes", "kubernetes-probe-misconfigurations-fixes"],
+          "version_context": "Current Docker Engine storage and Docker CLI inspect and volume-list documentation checked at publication time."
+        }
+      },
+      {
+        "title": "Troubleshoot GitHub Actions Cache Misses",
+        "slug": "troubleshoot-github-actions-cache-misses",
+        "primary_category": "developer-it-tools",
+        "categories": ["developer-it-tools"],
+        "tags": ["github", "automation", "ci-cd", "troubleshooting"],
+        "search_intent": "Diagnose repeated GitHub Actions dependency-cache misses by comparing keys, restore keys, paths, scopes, workflow events, and existing cache entries.",
+        "needs_diagram": false,
+        "needs_chart": false,
+        "seed_sources": [
+          {"title": "Dependency caching reference", "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"},
+          {"title": "Managing caches", "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches"},
+          {"title": "actions cache", "url": "https://github.com/actions/cache"}
+        ],
+        "offline_fallback": {
+          "description": "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely.",
+          "overview": "A cache miss is expected when the evaluated key has no exact match, and a restored prefix is not the same as an exact hit. Repeated misses can also result from changing lockfiles, operating-system boundaries, branch and event scope, a path that is never populated, a job that does not complete successfully, eviction, or an old action configuration. Preserve the evaluated workflow context before changing keys or deleting cache entries.",
+          "preparation": "Record the repository, workflow and run, event, ref, runner operating system, action version, evaluated primary key, restore keys, cached paths, cache-hit output, dependency lockfile hash inputs, and whether the job completed successfully. Do not delete repository caches or weaken key specificity during the first evidence pass.",
+          "steps": [
+            {"title": "Classify exact hits, prefix restores, and misses", "body": "Capture the evaluated primary key and ordered restore keys from the same workflow run, then interpret the cache-hit output according to exact-match behavior. Confirm that the path exists and contains the intended dependency data before the post-job save phase.", "source_guidance": "Use the dependency caching reference for exact and partial matching, restore-key order, cache-hit output, save timing, access scope, limits, and security guidance."},
+            {"title": "Compare the repository cache inventory", "body": "Review the existing cache entries and compare their key, ref or scope, creation time, last use, and size with the failing run. Treat deletion as a maintenance action only after the evidence proves that an obsolete entry is interfering with the intended policy.", "source_guidance": "Use Managing caches for the supported repository inventory and cache-management interfaces."},
+            {"title": "Verify the action inputs and supported behavior", "body": "Compare the workflow's action version, path, key, restore keys, lookup behavior, and optional cross-OS settings with the maintained action documentation. Avoid caching credentials, generated secrets, or a path readable by untrusted workflow contexts.", "source_guidance": "Use the actions/cache repository documentation for maintained inputs, outputs, examples, compatibility, and migration notes."}
+          ],
+          "symptoms": [
+            {"symptom": "The key changes on every run", "likely_cause": "Unstable key input, generated file, timestamp, or changing lockfile", "next_check": "Print the non-secret evaluated components and compare the exact key across two runs."},
+            {"symptom": "A restore key finds data but cache-hit is not true", "likely_cause": "Partial prefix match rather than an exact primary-key match", "next_check": "Compare the restored key with the full primary key and decide whether a new cache should be saved."},
+            {"symptom": "No cache is saved after a miss", "likely_cause": "Job failure, empty or incorrect path, scope restriction, limit, or action configuration", "next_check": "Verify job completion, populated paths, action output, and repository cache inventory."}
+          ],
+          "checklist": ["Capture run event, ref, runner OS, action version, primary key, restore keys, paths, and cache-hit output.", "Compare the exact evaluated key and its stable inputs across two runs.", "Confirm the cached path exists and is populated before the save phase.", "Review existing cache entries and access scope without deleting evidence.", "Apply one reviewed key or path change and verify both restore and save behavior on the next comparable run."],
+          "related_slugs": ["audit-github-actions-token-permissions", "copilot-code-review-customization-and-configurability-improvements"],
+          "version_context": "Current GitHub Actions dependency caching, cache management, and actions/cache documentation checked at publication time."
+        }
       }
     ],
     "trusted_sources": [

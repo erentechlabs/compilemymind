@@ -88,6 +88,12 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           approved=$(python -c 'import json; from pathlib import Path; print(str(json.loads(Path(".autopublisher/release-gate-result.json").read_text(encoding="utf-8")).get("approved", False)).lower())')
           if test "$approved" != "true"; then
+            if ! git diff --quiet -- .autopublisher/state.json; then
+              git add .autopublisher/state.json
+              git commit -m "chore(automation): record preparation retry [skip ci]"
+              git push origin "HEAD:${GITHUB_REF_NAME}"
+              echo "Preparation retry evidence was persisted without changing public content."
+            fi
             echo "No approved publication was added to the ready queue."
             exit 0
           fi

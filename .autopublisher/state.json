@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "generated_posts": [
     {
       "time": "2026-07-12T19:15:08.041301Z",
@@ -1500,5 +1500,6 @@
       ]
     }
   },
-  "ready_publications": []
+  "ready_publications": [],
+  "preparation_pending_publication": {}
 }

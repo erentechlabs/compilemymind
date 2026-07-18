@@ -442,7 +442,7 @@ def load_state() -> dict[str, Any]:
     state = read_json(
         STATE_PATH,
         {
-            "version": 4,
+            "version": 5,
             "generated_posts": [],
             "maintenance_reviews": {},
             "failures": [],
@@ -450,13 +450,14 @@ def load_state() -> dict[str, Any]:
             "rejected_articles": [],
             "provider_cooldowns": {},
             "pending_publication": {},
+            "preparation_pending_publication": {},
             "ready_publications": [],
         },
     )
     if not isinstance(state, dict):
         state = {}
-    state.setdefault("version", 4)
-    state["version"] = max(4, int(state["version"] or 4))
+    state.setdefault("version", 5)
+    state["version"] = max(5, int(state["version"] or 5))
     for key, default in {
         "generated_posts": [],
         "maintenance_reviews": {},
@@ -465,6 +466,7 @@ def load_state() -> dict[str, Any]:
         "rejected_articles": [],
         "provider_cooldowns": {},
         "pending_publication": {},
+        "preparation_pending_publication": {},
         "ready_publications": [],
     }.items():
         state.setdefault(key, default)
@@ -5470,11 +5472,22 @@ def run_prepare(args: argparse.Namespace) -> int:
     if depth >= target:
         write_prepare_result("capacity_reached", queue_depth=depth, target_depth=target)
         return 0
+    # Preparation has its own retry lane. A failed public topic must not pin
+    # every queue-filling run to the same candidate, and a preparation retry
+    # must not replace the public publisher's durable state.
+    working_state = copy.deepcopy(state_before)
+    working_state["pending_publication"] = copy.deepcopy(
+        state_before.get("preparation_pending_publication", {}) or {}
+    )
+    save_state(working_state)
     prepared_args = argparse.Namespace(dry_run=False, prepare_only=True)
     result = run_publish(prepared_args)
     state_after = load_state()
     prepare_marker = read_json(PREPARE_RESULT_PATH, {})
     if prepare_marker.get("result") == "queued":
+        state_after["pending_publication"] = {}
+        state_after["preparation_pending_publication"] = {}
+        save_state(state_after)
         return result
 
     # Preparation must not overwrite the public publisher's pending retry or
@@ -5484,6 +5497,13 @@ def run_prepare(args: argparse.Namespace) -> int:
     restored["provider_cooldowns"] = state_after.get(
         "provider_cooldowns", restored.get("provider_cooldowns", {})
     )
+    restored["preparation_pending_publication"] = copy.deepcopy(
+        state_after.get("pending_publication", {}) or {}
+    )
+    restored["rejected_articles"] = state_after.get(
+        "rejected_articles", restored.get("rejected_articles", [])
+    )
+    restored["failures"] = state_after.get("failures", restored.get("failures", []))
     failure = state_after.get("last_runs", {}).get("publish", {}) or {}
     restored.setdefault("last_runs", {})["prepare"] = {
         "time": iso_z(),

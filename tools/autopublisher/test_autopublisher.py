@@ -729,9 +729,11 @@ class AutopublisherTests(unittest.TestCase):
             prepare_result = root / ".autopublisher/prepare-result.json"
             queue_dir = root / ".autopublisher/queue/ready"
             initial = {
-                "version": 4,
+                "version": 5,
                 "ready_publications": [],
                 "provider_cooldowns": {},
+                "pending_publication": {"topic": {"slug": "public-retry"}},
+                "preparation_pending_publication": {"topic": {"slug": "prepare-retry"}},
                 "last_runs": {"prepare": {"result": "queued", "slug": "old-guide"}},
             }
             state_path.parent.mkdir(parents=True)
@@ -739,10 +741,15 @@ class AutopublisherTests(unittest.TestCase):
 
             def failed_preparation(_args):
                 failed = autopublisher.read_json(state_path, {})
+                self.assertEqual(
+                    failed["pending_publication"]["topic"]["slug"],
+                    "prepare-retry",
+                )
                 failed["last_runs"]["publish"] = {
                     "result": "retry_scheduled",
                     "reason": "all_drafts_failed_quality_gates",
                 }
+                failed["pending_publication"] = {"topic": {"slug": "next-prepare-retry"}}
                 autopublisher.write_json(state_path, failed)
                 autopublisher.write_json(prepare_result, {"result": "started"})
                 return 0
@@ -761,6 +768,14 @@ class AutopublisherTests(unittest.TestCase):
 
             restored = json.loads(state_path.read_text(encoding="utf-8"))
             self.assertEqual(restored["last_runs"]["prepare"]["result"], "retry_scheduled")
+            self.assertEqual(
+                restored["pending_publication"]["topic"]["slug"],
+                "public-retry",
+            )
+            self.assertEqual(
+                restored["preparation_pending_publication"]["topic"]["slug"],
+                "next-prepare-retry",
+            )
             self.assertEqual(
                 json.loads(prepare_result.read_text(encoding="utf-8"))["result"],
                 "retry_scheduled",
