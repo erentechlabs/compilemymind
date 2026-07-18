@@ -1157,6 +1157,71 @@
       },
       "quality_score": 0.928,
       "path": "content/posts/copilot-code-review-customization-and-configurability-improvements/index.md"
+    },
+    {
+      "time": "2026-07-18T20:36:50.572502Z",
+      "title": "Troubleshoot PowerShell Remoting and WinRM Connections",
+      "slug": "troubleshoot-powershell-remoting-winrm-connections",
+      "categories": [
+        "system-administration",
+        "networking"
+      ],
+      "tags": [
+        "powershell",
+        "authentication",
+        "dns"
+      ],
+      "sources": [
+        {
+          "title": "Using WS-Management Remoting in PowerShell",
+          "url": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/wsman-remoting-in-powershell?view=powershell-7.6"
+        },
+        {
+          "title": "about Remote Troubleshooting",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_remote_troubleshooting?view=powershell-7.6"
+        },
+        {
+          "title": "Test-WSMan",
+          "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.wsman.management/test-wsman?view=powershell-7.6"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.8821,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.4122,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9286,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.4122,
+            "source_similarity": 0.5714,
+            "existing_content_similarity": 0.4122,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.8821,
+      "path": "content/posts/troubleshoot-powershell-remoting-winrm-connections/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1306,11 +1371,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-18T19:36:24.313536Z",
-      "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
-      "stage": "article_quality",
-      "next_retry_at": "2026-07-19T01:36:24.313516Z"
+      "time": "2026-07-18T20:36:50.572538Z",
+      "result": "published",
+      "source": "ready_queue",
+      "queue_depth": 0
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1454,78 +1518,6 @@
     }
   },
   "pending_publication": {},
-  "ready_publications": [
-    {
-      "queued_at": "2026-07-18T20:35:43.014976Z",
-      "slug": "troubleshoot-powershell-remoting-winrm-connections",
-      "title": "Troubleshoot PowerShell Remoting and WinRM Connections",
-      "bundle_path": ".autopublisher/queue/ready/troubleshoot-powershell-remoting-winrm-connections",
-      "record": {
-        "time": "2026-07-18T20:35:43.014976Z",
-        "title": "Troubleshoot PowerShell Remoting and WinRM Connections",
-        "slug": "troubleshoot-powershell-remoting-winrm-connections",
-        "categories": [
-          "system-administration",
-          "networking"
-        ],
-        "tags": [
-          "powershell",
-          "authentication",
-          "dns"
-        ],
-        "sources": [
-          {
-            "title": "Using WS-Management Remoting in PowerShell",
-            "url": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/wsman-remoting-in-powershell?view=powershell-7.6"
-          },
-          {
-            "title": "about Remote Troubleshooting",
-            "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_remote_troubleshooting?view=powershell-7.6"
-          },
-          {
-            "title": "Test-WSMan",
-            "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.wsman.management/test-wsman?view=powershell-7.6"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.8821,
-            "components": {
-              "topic_relevance": 0.965,
-              "originality": 0.4122,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.9286,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.4122,
-              "source_similarity": 0.5714,
-              "existing_content_similarity": 0.4122,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.8821,
-        "path": "content/posts/troubleshoot-powershell-remoting-winrm-connections/index.md"
-      }
-    }
-  ],
+  "ready_publications": [],
   "preparation_pending_publication": {}
 }

@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot PowerShell Remoting and WinRM Connections"
-date: "2026-07-18T23:35:42+03:00"
-lastmod: "2026-07-18T23:35:42+03:00"
+date: "2026-07-18T23:36:49+03:00"
+lastmod: "2026-07-18T23:36:49+03:00"
 description: "A read-first PowerShell remoting workflow for isolating DNS, WSMan transport, listener, authentication, authorization, and endpoint failures before changing WinRM."
 tags: ["powershell", "authentication", "dns"]
 categories: ["system-administration", "networking"]
@@ -10,8 +10,8 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-18"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-18T20:35:42.408632Z"
-verification_version: 1
+verification_date: "2026-07-18T20:36:49.914211Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-16"
 ---
