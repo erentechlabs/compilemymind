@@ -1073,6 +1073,88 @@
       },
       "quality_score": 0.85,
       "path": "content/posts/troubleshoot-entra-conditional-access-what-if/index.md"
+    },
+    {
+      "time": "2026-07-18T13:52:36.552533Z",
+      "title": "Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples",
+      "slug": "copilot-code-review-customization-and-configurability-improvements",
+      "categories": [
+        "developer-it-tools"
+      ],
+      "tags": [
+        "developer-it-tools"
+      ],
+      "sources": [
+        {
+          "title": "Copilot code review: Customization and configurability improvements",
+          "url": "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements"
+        },
+        {
+          "title": "Repository-level GitHub Copilot usage metrics generally available",
+          "url": "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available"
+        },
+        {
+          "title": "GitHub Mobile: Fix pull request comments with Copilot cloud agent",
+          "url": "https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.5,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [
+          {
+            "type": "minor",
+            "field": "test_metadata",
+            "detail": "Hands-on testing is not claimed, but test_metadata is empty. If hands-on testing is performed, structured metadata should be provided."
+          },
+          {
+            "type": "minor",
+            "field": "version-specific commands",
+            "detail": "The article references Copilot code review as of July 2026 but does not specify Copilot version numbers or API versions. If available, these should be included for clarity."
+          }
+        ],
+        "required_fixes": [
+          {
+            "field": "test_metadata",
+            "fix": "If hands-on testing is performed, add structured test metadata including test-account conditions, roles, permissions, expected and failure results, and interpretation."
+          },
+          {
+            "field": "version-context",
+            "fix": "If Copilot code review or API endpoints have explicit version numbers, add them to commands and examples for precision."
+          }
+        ],
+        "reason": "The article is technically accurate, well-supported by primary sources, and provides practical, product-specific guidance with examples, tables, and actionable checklists. No material claims are unsupported or unsafe. Minor improvements could be made by clarifying test metadata and version numbers if available, but these do not affect approval.",
+        "quality": {
+          "score": 0.928,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.8462,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.7692,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8462,
+            "source_similarity": 0.253,
+            "existing_content_similarity": 0.8462,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.928,
+      "path": "content/posts/copilot-code-review-customization-and-configurability-improvements/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1213,11 +1295,8 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-18T08:12:11.504763Z",
-      "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
-      "stage": "article_quality",
-      "next_retry_at": "2026-07-18T14:12:11.504730Z"
+      "time": "2026-07-18T13:52:36.552672Z",
+      "result": "published"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1340,53 +1419,5 @@
     }
   ],
   "provider_cooldowns": {},
-  "pending_publication": {
-    "scheduled_at": "2026-07-18T08:12:11.504726Z",
-    "next_retry_at": "2026-07-18T14:12:11.504730Z",
-    "reason": "all_drafts_failed_quality_gates",
-    "stage": "article_quality",
-    "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
-    "consecutive_attempts": 1,
-    "topic_attempts": 1,
-    "topic": {
-      "title": "Copilot code review: Customization and configurability improvements: Practical Guide and Real-World Examples",
-      "slug": "copilot-code-review-customization-and-configurability-improvements",
-      "primary_category": "developer-it-tools",
-      "categories": [
-        "developer-it-tools"
-      ],
-      "tags": [
-        "developer-it-tools"
-      ],
-      "search_intent": "Readers want a practical explanation of Copilot code review: Customization and configurability improvements and what it changes for technical teams.",
-      "why_now": "Based on a recent item from GitHub Changelog: Copilot code review: Customization and configurability improvements",
-      "source_urls": [
-        "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements",
-        "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available",
-        "https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent"
-      ],
-      "needs_diagram": false,
-      "needs_chart": false,
-      "series": {
-        "name": "",
-        "part": null,
-        "total_estimate": null,
-        "planned_next_parts": []
-      },
-      "seed_sources": [
-        {
-          "title": "Copilot code review: Customization and configurability improvements",
-          "url": "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements"
-        },
-        {
-          "title": "Repository-level GitHub Copilot usage metrics generally available",
-          "url": "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available"
-        },
-        {
-          "title": "GitHub Mobile: Fix pull request comments with Copilot cloud agent",
-          "url": "https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent"
-        }
-      ]
-    }
-  }
+  "pending_publication": {}
 }
