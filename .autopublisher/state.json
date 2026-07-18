@@ -1200,12 +1200,24 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 741 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Why Custom Metrics Matter for Kubernetes Monitoring and Scaling Kubernetes clusters natively track CPU and memory, but most production workloads demand richer signals for scaling and observability. Whether you need to autoscale based on queue depth, active connections, or job completion times, built-in metrics often fall short. Custom metrics exporters fill this gap, exposing application-specific state so tools like Prometheus and the HorizontalPodAutoscaler (HPA) can drive smarter decisions. This guide is for Kubernetes operators, SREs, and developers responsible for scaling and monitoring applications beyond the basics. If you need actionable steps to build, package, and wire up a custom exporter, you’ll find practical workflows, diagnostic tips, and security considerations here. ## What Is a Metrics Exporter? A metrics exporter is a lightweight HTTP server that exposes application state as text at a `/metrics` endpoint. Prometheus scrapes this endpoint, stores the time-series data, and makes it available for queries, alerts, and autoscaling. You can instrument your app directly or run a standalone exporter, especially when the data source is external or you lack control over the app code. ### Typical Exporter Use Cases - **Queue depth monitoring**: Autoscale workers based on messages waiting. - **Job duration tracking**: Adjust resources for batch jobs by measuring completion times. - **Connection counts**: Scale pods handling WebSocket or TCP connections. ## Step-by-Step: Building a Custom Metrics Exporter ### 1. Choose Your Exporter Model You can either: - **Instrument your application**: Embed a Prometheus client library and expose `/metrics` from within the app. - **Build a standalone exporter**: Useful for external data sources or legacy apps. #### Example: Python Standalone Exporter ```python from flask import Flask, Response import random app = Flask(__name__) @app.route('/metrics') def metrics(): queue_depth = random.randint(0, 100) # Replace with real logic metric = f\"queue_depth {queue_depth}\\n\" return Response(metric, mimetype='text/plain') if __name__ == '__main__': app.run(host='0.0.0.0', port=8000) ``` This exporter exposes a single metric, `queue_depth`, as plain text. Prometheus expects one metric per line, with optional labels. ## Packaging the Exporter as a Container Containerization is essential for Kubernetes deployment. Use a minimal base image and expose port 8000. **Dockerfile Example:** ```dockerfile FROM python:3.10-slim WORKDIR /app COPY exporter.py . RUN pip install flask EXPOSE 8000 CMD [\"python\", \"exporter.py\"] ``` Build and push the image: ```bash docker build -t myorg/queue-exporter:latest . docker push myorg/queue-exporter:latest ``` ## Deploying the Exporter in Kubernetes Create a Deployment and Service to expose the exporter internally: ```yaml apiVersion: apps/v1 kind: Deployment metadata: name: queue-exporter spec: replicas: 1 selector: matchLabels: app: queue-exporter template: metadata: labels: app: queue-exporter spec: containers: - name: exporter image: myorg/queue-exporter:latest ports: - containerPort: 8000 --- apiVersion: v1 kind: Service metadata: name: queue-exporter spec: selector: app: queue-exporter ports: - port: 8000 targetPort: 8000 ``` ## Integrating with Prometheus Configure Prometheus to scrape the exporter: ```yaml scrape_configs: - job_name: 'queue_exporter' static_configs: - targets: ['queue-exporter.default.svc.cluster.local:8000'] ``` Prometheus will now collect the custom metric and make it available for dashboards, alerts, and autoscaling. ## Wiring Custom Metrics to the H",
       "attempts": 4
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-18T08:12:11.504541Z",
+      "title": "Copilot code review: Customization and configurability improvements: Practical Guide and Real-World Examples",
+      "slug": "copilot-code-review-customization-and-configurability-improvements",
+      "reason": "qa_failed",
+      "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-18T03:34:48.613319Z",
-      "result": "published"
+      "time": "2026-07-18T08:12:11.504763Z",
+      "result": "retry_scheduled",
+      "reason": "all_drafts_failed_quality_gates",
+      "stage": "article_quality",
+      "next_retry_at": "2026-07-18T14:12:11.504730Z"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1317,8 +1329,64 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 741 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Here is the previous draft for repair: ## Why Custom Metrics Matter for Kubernetes Monitoring and Scaling Kubernetes clusters natively track CPU and memory, but most production workloads demand richer signals for scaling and observability. Whether you need to autoscale based on queue depth, active connections, or job completion times, built-in metrics often fall short. Custom metrics exporters fill this gap, exposing application-specific state so tools like Prometheus and the HorizontalPodAutoscaler (HPA) can drive smarter decisions. This guide is for Kubernetes operators, SREs, and developers responsible for scaling and monitoring applications beyond the basics. If you need actionable steps to build, package, and wire up a custom exporter, you’ll find practical workflows, diagnostic tips, and security considerations here. ## What Is a Metrics Exporter? A metrics exporter is a lightweight HTTP server that exposes application state as text at a `/metrics` endpoint. Prometheus scrapes this endpoint, stores the time-series data, and makes it available for queries, alerts, and autoscaling. You can instrument your app directly or run a standalone exporter, especially when the data source is external or you lack control over the app code. ### Typical Exporter Use Cases - **Queue depth monitoring**: Autoscale workers based on messages waiting. - **Job duration tracking**: Adjust resources for batch jobs by measuring completion times. - **Connection counts**: Scale pods handling WebSocket or TCP connections. ## Step-by-Step: Building a Custom Metrics Exporter ### 1. Choose Your Exporter Model You can either: - **Instrument your application**: Embed a Prometheus client library and expose `/metrics` from within the app. - **Build a standalone exporter**: Useful for external data sources or legacy apps. #### Example: Python Standalone Exporter ```python from flask import Flask, Response import random app = Flask(__name__) @app.route('/metrics') def metrics(): queue_depth = random.randint(0, 100) # Replace with real logic metric = f\"queue_depth {queue_depth}\\n\" return Response(metric, mimetype='text/plain') if __name__ == '__main__': app.run(host='0.0.0.0', port=8000) ``` This exporter exposes a single metric, `queue_depth`, as plain text. Prometheus expects one metric per line, with optional labels. ## Packaging the Exporter as a Container Containerization is essential for Kubernetes deployment. Use a minimal base image and expose port 8000. **Dockerfile Example:** ```dockerfile FROM python:3.10-slim WORKDIR /app COPY exporter.py . RUN pip install flask EXPOSE 8000 CMD [\"python\", \"exporter.py\"] ``` Build and push the image: ```bash docker build -t myorg/queue-exporter:latest . docker push myorg/queue-exporter:latest ``` ## Deploying the Exporter in Kubernetes Create a Deployment and Service to expose the exporter internally: ```yaml apiVersion: apps/v1 kind: Deployment metadata: name: queue-exporter spec: replicas: 1 selector: matchLabels: app: queue-exporter template: metadata: labels: app: queue-exporter spec: containers: - name: exporter image: myorg/queue-exporter:latest ports: - containerPort: 8000 --- apiVersion: v1 kind: Service metadata: name: queue-exporter spec: selector: app: queue-exporter ports: - port: 8000 targetPort: 8000 ``` ## Integrating with Prometheus Configure Prometheus to scrape the exporter: ```yaml scrape_configs: - job_name: 'queue_exporter' static_configs: - targets: ['queue-exporter.default.svc.cluster.local:8000'] ``` Prometheus will now collect the custom metric and make it available for dashboards, alerts, and autoscaling. ## Wiring Custom Metrics to the H",
       "attempts": 4
+    },
+    {
+      "time": "2026-07-18T08:12:11.504541Z",
+      "title": "Copilot code review: Customization and configurability improvements: Practical Guide and Real-World Examples",
+      "slug": "copilot-code-review-customization-and-configurability-improvements",
+      "reason": "qa_failed",
+      "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 4
     }
   ],
   "provider_cooldowns": {},
-  "pending_publication": {}
+  "pending_publication": {
+    "scheduled_at": "2026-07-18T08:12:11.504726Z",
+    "next_retry_at": "2026-07-18T14:12:11.504730Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "Article is too similar to source 'Repository-level GitHub Copilot usage metrics generally available'. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+    "consecutive_attempts": 1,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Copilot code review: Customization and configurability improvements: Practical Guide and Real-World Examples",
+      "slug": "copilot-code-review-customization-and-configurability-improvements",
+      "primary_category": "developer-it-tools",
+      "categories": [
+        "developer-it-tools"
+      ],
+      "tags": [
+        "developer-it-tools"
+      ],
+      "search_intent": "Readers want a practical explanation of Copilot code review: Customization and configurability improvements and what it changes for technical teams.",
+      "why_now": "Based on a recent item from GitHub Changelog: Copilot code review: Customization and configurability improvements",
+      "source_urls": [
+        "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements",
+        "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available",
+        "https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent"
+      ],
+      "needs_diagram": false,
+      "needs_chart": false,
+      "series": {
+        "name": "",
+        "part": null,
+        "total_estimate": null,
+        "planned_next_parts": []
+      },
+      "seed_sources": [
+        {
+          "title": "Copilot code review: Customization and configurability improvements",
+          "url": "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements"
+        },
+        {
+          "title": "Repository-level GitHub Copilot usage metrics generally available",
+          "url": "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available"
+        },
+        {
+          "title": "GitHub Mobile: Fix pull request comments with Copilot cloud agent",
+          "url": "https://github.blog/changelog/2026-07-17-github-mobile-fix-pull-request-comments-with-copilot-cloud-agent"
+        }
+      ]
+    }
+  }
 }
