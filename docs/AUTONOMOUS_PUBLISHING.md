@@ -41,6 +41,8 @@ Optional direct Cloudflare Pages synchronization uses `CLOUDFLARE_API_TOKEN`, `C
 
 Approved clusters are cybersecurity, identity and access management, networking, IT fundamentals, Azure, Entra ID, cloud certifications, system administration, practical infrastructure, and developer/IT tools. Celebrity, entertainment, political, automotive, lifestyle, random trend, consumer launch, and unrelated AI topics are explicitly blocked.
 
+New articles normally receive three topic tags. Metadata generation is given the site's existing tag vocabulary and usage counts, and the publisher deterministically chooses relevant existing tags before accepting a new tag. A new tag is permitted only when the reusable vocabulary cannot adequately describe the article. Category slugs are not repeated as substitute tags when more specific choices exist.
+
 ## Editorial and evidence gates
 
 Thresholds are centralized in `.autopublisher/config.json`. The baseline requires topic relevance of 0.78, overall quality of 0.82, three validated sources including an official source, three claim-evidence records, two practical elements, two contextual article links, source similarity no higher than 0.30, and zero critical errors.
@@ -53,7 +55,7 @@ The current single-article design intentionally omits featured images. Automated
 
 ## Recovery, maintenance, and monitoring
 
-Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code, metadata, and links, and rerun scoring. Unsupported or source-similar drafts are regenerated from a clean slate instead of being pasted into the next prompt. A repeatedly stalled repair is abandoned early so the run can try another topic. The current configuration can attempt three dynamic topics, construct a conservative fallback only when at least three coherent prevalidated sources support it, and then use up to three configured evergreen recovery slots backed by official documentation. An evergreen topic is skipped once equivalent content exists, and all evergreen candidates pass the same live source, evidence, originality, and quality checks.
+Recovery can replace sources, gather additional official documentation, regenerate unsupported sections, rewrite similar text, correct code, metadata, and links, and rerun scoring. Unsupported or source-similar drafts are regenerated from a clean slate instead of being pasted into the next prompt. A repeatedly stalled repair is abandoned early so the run can try another topic. The current configuration can attempt three dynamic topics, including when the preferred evergreen catalog is exhausted, construct a conservative fallback only when at least three coherent prevalidated sources support it, and then use up to three configured evergreen recovery slots backed by official documentation. An evergreen topic is skipped once equivalent content exists, and all evergreen candidates pass the same live source, evidence, originality, and quality checks.
 
 When all attempts are exhausted, the invalid candidate is recorded in `.autopublisher/state.json`, any public bundle is removed, and no sitemap entry is created. The run records `retry_scheduled`, preserves a compact topic and validated-source bundle when one is safe to reuse, and tries it again on the next six-hour cycle. After three failed cycles for the same topic, that topic is rotated out so a bad candidate cannot block future publication. A successful publication clears the pending retry.
 

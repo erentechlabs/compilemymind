@@ -4,7 +4,7 @@ date: "2026-07-18T16:52:35+03:00"
 lastmod: "2026-07-18T16:52:35+03:00"
 description: "Explore Copilot code review’s new customization and configurability features, including branch-level instructions, firewall integration, and repository metrics."
 summary: "This guide details Copilot code review’s July 2026 improvements, showing how branch-level instructions, firewall support, and repository metrics empower technical teams to tailor and secure review automation."
-tags: ["developer-it-tools"]
+tags: ["github", "automation", "firewall"]
 categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false

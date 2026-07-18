@@ -167,6 +167,8 @@
       "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
     ],
     "max_tags_per_article": 5,
+    "preferred_tags_per_article": 3,
+    "allow_new_tags": true,
     "min_articles_to_index_tag": 3,
     "aliases": {
       "security": "cybersecurity", "microsoft-cloud": "azure", "certification": "cloud-certifications",

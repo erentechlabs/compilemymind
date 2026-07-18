@@ -29,6 +29,8 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
+        self.assertEqual(config["taxonomy"]["preferred_tags_per_article"], 3)
+        self.assertTrue(config["taxonomy"]["allow_new_tags"])
 
     def test_publisher_code_pushes_run_tests_without_triggering_paid_publication(self):
         publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
@@ -417,7 +419,7 @@ class AutopublisherTests(unittest.TestCase):
             "description": "",
             "categories": ["guide"],
             "tags": ["systems"],
-            "article_markdown": "A detailed article about distributed systems.",
+            "article_markdown": "A detailed article about distributed systems architecture.",
         }
         autopublisher.enrich_article_metadata(
             MetadataClient(),
@@ -431,6 +433,67 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(article["categories"], ["guide", "software-engineering"])
         self.assertEqual(article["tags"], ["distributed-systems", "architecture"])
         self.assertIn("summary", article)
+
+    def test_article_tags_prefer_three_relevant_existing_tags_over_category_slug(self):
+        config = {
+            "taxonomy": {
+                "controlled_tags": ["developer-it-tools", "github", "automation", "firewall"],
+                "allow_new_tags": True,
+                "preferred_tags_per_article": 3,
+                "max_tags_per_article": 5,
+            }
+        }
+        posts = [
+            autopublisher.Post(Path("github.md"), "github", "GitHub Actions", "", "", ["github"], ["cybersecurity"], "", {}),
+            autopublisher.Post(Path("automation.md"), "automation", "Task automation", "", "", ["automation"], ["system-administration"], "", {}),
+            autopublisher.Post(Path("firewall.md"), "firewall", "Firewall traffic", "", "", ["firewall"], ["networking"], "", {}),
+        ]
+        article = {
+            "title": "Copilot Code Review Customization",
+            "description": "Configure GitHub Copilot review automation and firewall controls.",
+            "categories": ["developer-it-tools"],
+            "tags": ["developer-it-tools"],
+            "article_markdown": "GitHub teams can customize review automation and restrict it with a firewall.",
+        }
+        tags = autopublisher.reconcile_article_tags(
+            article,
+            {"title": article["title"], "categories": article["categories"]},
+            posts,
+            config,
+        )
+
+        self.assertEqual(set(tags), {"github", "automation", "firewall"})
+        self.assertEqual(len(tags), 3)
+        self.assertNotIn("developer-it-tools", tags)
+
+    def test_article_tags_create_relevant_new_tag_only_after_existing_vocabulary(self):
+        config = {
+            "taxonomy": {
+                "controlled_tags": ["github"],
+                "allow_new_tags": True,
+                "preferred_tags_per_article": 3,
+                "max_tags_per_article": 5,
+            }
+        }
+        posts = [
+            autopublisher.Post(Path("github.md"), "github", "GitHub Actions", "", "", ["github"], ["cybersecurity"], "", {}),
+        ]
+        article = {
+            "title": "GitHub Copilot Code Review",
+            "description": "A GitHub guide to Copilot code review.",
+            "categories": ["developer-it-tools"],
+            "tags": ["copilot", "unrelated-invention"],
+            "article_markdown": "GitHub Copilot performs code review for pull requests.",
+        }
+        tags = autopublisher.reconcile_article_tags(
+            article,
+            {"title": article["title"], "categories": article["categories"]},
+            posts,
+            config,
+        )
+
+        self.assertEqual(tags[:2], ["github", "copilot"])
+        self.assertNotIn("unrelated-invention", tags)
 
     def test_markdown_format_issues_reject_structural_errors(self):
         issues = autopublisher.markdown_format_issues(
@@ -1436,7 +1499,12 @@ class AutopublisherTests(unittest.TestCase):
     def test_publish_continues_with_fresh_topic_when_sources_are_insufficient(self):
         config = {
             "gemini": {"enable_google_search_grounding": False},
-            "publishing": {"required_source_count": 2, "max_topic_attempts": 2},
+            "publishing": {
+                "required_source_count": 2,
+                "max_topic_attempts": 2,
+                "prefer_source_qualified_evergreen_first": True,
+            },
+            "cost_control": {"max_topic_selection_calls_per_run": 2},
             "site": {"content_dir": "content/posts"},
         }
         state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}

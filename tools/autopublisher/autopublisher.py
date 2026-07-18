@@ -2332,6 +2332,7 @@ def sanitize_tags(values: Any, topic: dict[str, Any], config: dict[str, Any] | N
     if not taxonomy and isinstance(topic.get("_taxonomy"), dict):
         taxonomy = topic["_taxonomy"]
     controlled = {slugify(str(value), max_length=34) for value in taxonomy.get("controlled_tags", [])}
+    allow_new_tags = bool(taxonomy.get("allow_new_tags", False))
     aliases = {
         slugify(str(key), max_length=34): slugify(str(value), max_length=34)
         for key, value in taxonomy.get("tag_aliases", {}).items()
@@ -2340,7 +2341,7 @@ def sanitize_tags(values: Any, topic: dict[str, Any], config: dict[str, Any] | N
     for value in raw_values:
         tag = slugify(str(value), max_length=34)
         tag = aliases.get(tag, tag)
-        if controlled and tag not in controlled:
+        if controlled and tag not in controlled and not allow_new_tags:
             continue
         if tag and tag not in tags:
             tags.append(tag)
@@ -2351,14 +2352,136 @@ def sanitize_tags(values: Any, topic: dict[str, Any], config: dict[str, Any] | N
     return tags[:max_tags]
 
 
-def metadata_enrichment_prompt(article: dict[str, Any], topic: dict[str, Any], config: dict[str, Any]) -> str:
+def existing_tag_counts(posts: list[Post]) -> Counter[str]:
+    """Return the reusable tag vocabulary already present on public posts."""
+    return Counter(
+        tag
+        for post in posts
+        for raw_tag in post.tags
+        if (tag := slugify(str(raw_tag), max_length=34))
+    )
+
+
+def article_tag_relevance(tag: str, article: dict[str, Any], topic: dict[str, Any]) -> float:
+    """Score whether a tag describes a material subject of an article."""
+    normalized_tag = slugify(tag, max_length=34)
+    tag_tokens = tokenize(normalized_tag.replace("-", " "))
+    if not normalized_tag or not tag_tokens:
+        return 0.0
+
+    title = re.sub(r"[-_/]+", " ", str(article.get("title") or topic.get("title", ""))).lower()
+    metadata = re.sub(
+        r"[-_/]+",
+        " ",
+        " ".join(
+            str(value)
+            for value in (
+                article.get("description", ""),
+                article.get("summary", ""),
+                topic.get("search_intent", ""),
+            )
+        ),
+    ).lower()
+    body = re.sub(r"[-_/]+", " ", str(article.get("article_markdown", ""))).lower()
+    phrase = normalized_tag.replace("-", " ")
+    title_tokens = set(tokenize(title))
+    metadata_tokens = set(tokenize(metadata))
+    body_tokens = set(tokenize(body))
+
+    score = 0.0
+    if phrase in title:
+        score += 8.0
+    if phrase in metadata:
+        score += 5.0
+    if phrase in body:
+        score += min(5.0, 1.0 + body.count(phrase) * 0.5)
+    if set(tag_tokens) <= title_tokens:
+        score += 4.0
+    elif set(tag_tokens) <= metadata_tokens:
+        score += 2.5
+    elif set(tag_tokens) <= body_tokens:
+        score += 1.5
+    return score
+
+
+def reconcile_article_tags(
+    article: dict[str, Any],
+    topic: dict[str, Any],
+    posts: list[Post],
+    config: dict[str, Any],
+) -> list[str]:
+    """Prefer relevant existing tags, creating a tag only when reuse is insufficient."""
+    taxonomy = config.get("taxonomy", {})
+    preferred_count = max(1, int(taxonomy.get("preferred_tags_per_article", 3)))
+    max_tags = max(preferred_count, int(taxonomy.get("max_tags_per_article", 8)))
+    categories = {
+        slugify(str(category), max_length=34)
+        for category in article.get("categories", topic.get("categories", [])) or []
+    }
+    proposed = sanitize_tags(
+        [*(article.get("tags", []) or []), *(topic.get("tags", []) or [])],
+        topic,
+        config,
+    )
+    counts = existing_tag_counts(posts)
+
+    def relevance(tag: str) -> float:
+        return article_tag_relevance(tag, article, topic)
+
+    reusable = [
+        tag
+        for tag in counts
+        if tag not in categories and relevance(tag) > 0
+    ]
+    reusable.sort(key=lambda tag: (-relevance(tag), -counts[tag], tag))
+    selected = reusable[:preferred_count]
+
+    # A model-proposed tag may enter the vocabulary only when the existing
+    # catalog cannot provide enough relevant choices for this article.
+    if len(selected) < preferred_count and taxonomy.get("allow_new_tags", False):
+        new_candidates = [
+            tag
+            for tag in proposed
+            if tag not in counts and tag not in categories and relevance(tag) > 0
+        ]
+        new_candidates.sort(key=lambda tag: (-relevance(tag), tag))
+        for tag in new_candidates:
+            if tag not in selected:
+                selected.append(tag)
+            if len(selected) >= preferred_count:
+                break
+
+    # Preserve a relevant proposed tag when no historical vocabulary exists,
+    # including legacy configurations that do not maintain a controlled list.
+    if not selected:
+        selected = [tag for tag in proposed if tag not in categories and relevance(tag) > 0][:preferred_count]
+    if not selected:
+        selected = proposed[:preferred_count]
+    return selected[:max_tags]
+
+
+def metadata_enrichment_prompt(
+    article: dict[str, Any],
+    topic: dict[str, Any],
+    config: dict[str, Any],
+    posts: list[Post] | None = None,
+) -> str:
     allowed_categories = config.get("taxonomy", {}).get("allowed_categories", [])
+    existing_tags = existing_tag_counts(posts or [])
+    reusable_tags = [
+        {"tag": tag, "articles": count}
+        for tag, count in sorted(existing_tags.items(), key=lambda item: (-item[1], item[0]))
+    ]
     return f"""
 You are a lightweight editorial metadata assistant for Compile My Mind.
 
 Do not rewrite the article. Read the existing title and body, then return concise,
 accurate metadata that is faithful to the article. Do not invent facts, sources,
-or categories. Use only the allowed categories.
+or categories. Use only the allowed categories. Select three concise tags. Prefer
+logically relevant tags from the existing site vocabulary below. Create a new tag
+only when no existing tag accurately describes a major subject of the article.
+Do not repeat a category slug as a tag and do not split a category name into
+generic fragments.
 
 Topic context:
 {json.dumps({k: topic.get(k) for k in ["title", "categories", "tags", "search_intent"]}, ensure_ascii=False, indent=2)}
@@ -2369,6 +2492,9 @@ Current article metadata:
 Allowed categories:
 {json.dumps(allowed_categories, ensure_ascii=False)}
 
+Existing site tags and usage counts:
+{json.dumps(reusable_tags, ensure_ascii=False)}
+
 Article body:
 {str(article.get("article_markdown", ""))[:18000]}
 
@@ -2377,7 +2503,7 @@ Return JSON only:
   "description": "105-180 character SEO description",
   "summary": "one concise, reader-facing article summary",
   "categories": ["guide", "one allowed technical category"],
-  "tags": ["specific-topic-tag", "technology-tag"]
+  "tags": ["relevant-existing-tag", "another-existing-tag", "specific-topic-tag"]
 }}
 """.strip()
 
@@ -2388,6 +2514,7 @@ def enrich_article_metadata(
     topic: dict[str, Any],
     config: dict[str, Any],
     log: EventLog,
+    posts: list[Post] | None = None,
 ) -> dict[str, Any]:
     """Use the lightweight model for metadata without changing article prose."""
     metadata_topic = dict(topic)
@@ -2396,7 +2523,7 @@ def enrich_article_metadata(
     metadata_topic["tags"] = article.get("tags") or topic.get("tags", [])
     try:
         payload = client.generate_json(
-            metadata_enrichment_prompt(article, metadata_topic, config),
+            metadata_enrichment_prompt(article, metadata_topic, config, posts),
             temperature=0.2,
             max_output_tokens=1200,
             task="metadata_enrichment",
@@ -2418,9 +2545,15 @@ def enrich_article_metadata(
         article["categories"] = sanitize_categories(payload["categories"], None, config)
     if isinstance(payload.get("tags"), list) and payload["tags"]:
         article["tags"] = sanitize_tags(payload["tags"], metadata_topic, config)
+    reconciled_topic = dict(metadata_topic)
+    reconciled_topic["tags"] = list(article.get("tags", []))
+    article["tags"] = reconcile_article_tags(article, reconciled_topic, posts or [], config)
+    reused_tags = sorted(set(article["tags"]) & set(existing_tag_counts(posts or [])))
     log.log(
         "metadata_enriched",
         fields=[field for field in ["description", "summary", "categories", "tags"] if field in article],
+        tags=article["tags"],
+        reused_tags=reused_tags,
     )
     return article
 
@@ -3114,6 +3247,8 @@ def normalize_article_payload(
     article["test_metadata"] = article.get("test_metadata") if isinstance(article.get("test_metadata"), dict) else {}
     article["categories"] = sanitize_categories(article.get("categories", topic.get("categories", [])), topic.get("primary_category"), config)
     article["tags"] = sanitize_tags(article.get("tags", topic.get("tags", [])), topic, config)
+    if posts is not None:
+        article["tags"] = reconcile_article_tags(article, topic, posts, config)
     article["sources"] = supplement_article_sources(article.get("sources", []), topic, research, config)
     allowed_source_urls = {canonical_url(str(source.get("url", ""))) for source in article["sources"]}
     evidence: list[dict[str, Any]] = []
@@ -4049,7 +4184,7 @@ def generate_approved_article(
             task="article_generation",
         )
         article = normalize_article_payload(raw_article, topic, config, research, posts=posts)
-        enrich_article_metadata(client, article, topic, config, log)
+        enrich_article_metadata(client, article, topic, config, log, posts)
         issues = deterministic_qa(article, topic, posts, config, research)
         if issues:
             feedback = generation_feedback(issues, article)
@@ -5091,8 +5226,10 @@ def run_publish(args: argparse.Namespace) -> int:
 
     topic = pending_publication_topic(state, posts, config, log)
     retrying_pending_topic = bool(topic)
+    initial_topic_is_evergreen = False
     if not topic and prioritize_evergreen:
         topic = choose_evergreen_topic(posts, config, log)
+        initial_topic_is_evergreen = bool(topic)
     if topic:
         if not retrying_pending_topic:
             log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
@@ -5103,6 +5240,7 @@ def run_publish(args: argparse.Namespace) -> int:
             log.log("publish_quota_limited", stage="topic_selection", error=str(error))
             topic = choose_evergreen_topic(posts, config, log)
             if topic:
+                initial_topic_is_evergreen = True
                 log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
             else:
                 schedule_publish_retry(
@@ -5127,6 +5265,7 @@ def run_publish(args: argparse.Namespace) -> int:
                     detail=str(error),
                 )
                 return 0
+            initial_topic_is_evergreen = True
     if not topic:
         schedule_publish_retry(
             state,
@@ -5148,7 +5287,9 @@ def run_publish(args: argparse.Namespace) -> int:
         1,
         int(config.get("cost_control", {}).get("max_topic_selection_calls_per_run", configured_topic_attempts)),
     )
-    max_topic_attempts = 1 if (prioritize_evergreen and not retrying_pending_topic) else min(
+    # Prefer an evergreen topic when one exists, but do not suppress alternate
+    # dynamic-topic attempts merely because the evergreen catalog is exhausted.
+    max_topic_attempts = 1 if (initial_topic_is_evergreen and not retrying_pending_topic) else min(
         topic_call_budget,
         configured_topic_attempts,
     )
@@ -5597,6 +5738,8 @@ def post_metadata_issues(posts: list[Post], config: dict[str, Any]) -> list[str]
     canonicals: set[str] = set()
     allowed_categories = set(config.get("taxonomy", {}).get("allowed_categories", []))
     controlled_tags = set(config.get("taxonomy", {}).get("controlled_tags", []))
+    allow_new_tags = bool(config.get("taxonomy", {}).get("allow_new_tags", False))
+    max_tags = int(config.get("taxonomy", {}).get("max_tags_per_article", 8))
     for post in posts:
         normalized_title = normalize_space(post.title).lower()
         if normalized_title in titles:
@@ -5626,7 +5769,13 @@ def post_metadata_issues(posts: list[Post], config: dict[str, Any]) -> list[str]
             issues.append(f"Updated date precedes publication date in {post.path.relative_to(ROOT)}")
         if allowed_categories and not set(post.categories) <= allowed_categories:
             issues.append(f"Uncontrolled category in {post.path.relative_to(ROOT)}")
-        if controlled_tags and (not post.tags or not set(post.tags) <= controlled_tags):
+        invalid_tag_format = any(
+            tag != slugify(str(tag), max_length=34)
+            for tag in post.tags
+        )
+        if not post.tags or len(post.tags) > max_tags or invalid_tag_format:
+            issues.append(f"Uncontrolled tag metadata in {post.path.relative_to(ROOT)}")
+        elif controlled_tags and not allow_new_tags and not set(post.tags) <= controlled_tags:
             issues.append(f"Uncontrolled tag metadata in {post.path.relative_to(ROOT)}")
     return issues
 
