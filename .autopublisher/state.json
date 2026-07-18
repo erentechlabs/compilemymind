@@ -1534,8 +1534,8 @@
         ],
         "tags": [
           "docker",
-          "identity",
-          "troubleshooting"
+          "troubleshooting",
+          "storage"
         ],
         "sources": [
           {

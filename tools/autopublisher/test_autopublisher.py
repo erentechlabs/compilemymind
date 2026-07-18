@@ -508,6 +508,61 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(tags[:2], ["github", "copilot"])
         self.assertNotIn("unrelated-invention", tags)
 
+    def test_article_tags_do_not_reuse_lexically_ambiguous_cross_category_tag(self):
+        config = {
+            "taxonomy": {
+                "controlled_tags": ["docker", "troubleshooting", "identity"],
+                "allow_new_tags": True,
+                "preferred_tags_per_article": 3,
+                "max_tags_per_article": 5,
+            }
+        }
+        posts = [
+            autopublisher.Post(
+                Path("identity.md"),
+                "identity",
+                "Identity access",
+                "",
+                "",
+                ["identity"],
+                ["identity-access-management"],
+                "Identity policies",
+                {},
+            ),
+            autopublisher.Post(
+                Path("docker.md"),
+                "docker",
+                "Docker health checks",
+                "",
+                "",
+                ["docker", "troubleshooting"],
+                ["developer-it-tools"],
+                "Docker troubleshooting",
+                {},
+            ),
+        ]
+        article = {
+            "title": "Troubleshoot Docker Volume Mounts",
+            "description": "Inspect Docker volume storage and mounts safely.",
+            "categories": ["developer-it-tools", "system-administration"],
+            "tags": ["docker", "storage", "troubleshooting"],
+            "article_markdown": "Docker troubleshooting starts by confirming the volume identity before changing the mount.",
+        }
+        tags = autopublisher.reconcile_article_tags(
+            article,
+            {
+                "title": article["title"],
+                "search_intent": "Troubleshoot Docker volume storage mounts",
+                "categories": article["categories"],
+                "tags": article["tags"],
+            },
+            posts,
+            config,
+        )
+
+        self.assertEqual(tags, ["docker", "troubleshooting", "storage"])
+        self.assertNotIn("identity", tags)
+
     def test_markdown_format_issues_reject_structural_errors(self):
         issues = autopublisher.markdown_format_issues(
             "# Duplicate title\n\n##\n\n```python\nprint('hello')\n"

@@ -2549,6 +2549,27 @@ def reconcile_article_tags(
         config,
     )
     counts = existing_tag_counts(posts)
+    tag_categories: dict[str, set[str]] = defaultdict(set)
+    for post in posts:
+        for raw_tag in post.tags:
+            tag = slugify(str(raw_tag), max_length=34)
+            if tag:
+                tag_categories[tag].update(
+                    slugify(str(category), max_length=40)
+                    for category in post.categories
+                )
+    descriptor_tokens = set(
+        tokenize(
+            " ".join(
+                [
+                    str(article.get("title") or topic.get("title", "")),
+                    str(article.get("description", "")),
+                    str(article.get("summary", "")),
+                    str(topic.get("search_intent", "")),
+                ]
+            )
+        )
+    )
 
     def relevance(tag: str) -> float:
         return article_tag_relevance(tag, article, topic)
@@ -2556,7 +2577,12 @@ def reconcile_article_tags(
     reusable = [
         tag
         for tag in counts
-        if tag not in categories and relevance(tag) > 0
+        if tag not in categories
+        and relevance(tag) > 0
+        and (
+            bool(tag_categories[tag] & categories)
+            or set(tokenize(tag.replace("-", " "))) <= descriptor_tokens
+        )
     ]
     reusable.sort(key=lambda tag: (-relevance(tag), -counts[tag], tag))
     selected = reusable[:preferred_count]

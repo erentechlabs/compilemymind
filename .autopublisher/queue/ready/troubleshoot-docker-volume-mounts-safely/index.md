@@ -3,7 +3,7 @@ title: "Troubleshoot Docker Volume Mounts Safely"
 date: "2026-07-18T23:38:47+03:00"
 lastmod: "2026-07-18T23:38:47+03:00"
 description: "A read-first Docker volume troubleshooting workflow for confirming the effective mount, volume identity, driver, destination, and daemon context before recreating a container."
-tags: ["docker", "identity", "troubleshooting"]
+tags: ["docker", "troubleshooting", "storage"]
 categories: ["developer-it-tools", "system-administration"]
 publisher: "Compile My Mind"
 draft: false
