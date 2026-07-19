@@ -1529,9 +1529,9 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-19T15:18:22.599516Z",
+      "time": "2026-07-19T17:15:45.603707Z",
       "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
+      "reason": "no_valid_topic",
       "queue_depth": 0
     }
   },
@@ -1734,6 +1734,11 @@
       "opened_at": "2026-07-18T19:36:24.310766Z",
       "until": "2026-07-25T19:36:24.310786Z",
       "reason": "billing_credit_depleted"
+    },
+    "gemini_grounded_research": {
+      "opened_at": "2026-07-19T17:15:34.412168Z",
+      "until": "2026-07-26T17:15:34.412185Z",
+      "reason": "billing_credit_depleted"
     }
   },
   "pending_publication": {
@@ -1837,99 +1842,13 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-19T15:18:22.592696Z",
-    "next_retry_at": "2026-07-19T21:18:22.592704Z",
-    "reason": "all_drafts_failed_quality_gates",
-    "stage": "article_quality",
-    "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
-    "consecutive_attempts": 7,
-    "topic_attempts": 1,
-    "topic": {
-      "title": "Troubleshoot GitHub Actions Cache Misses",
-      "slug": "troubleshoot-github-actions-cache-misses",
-      "primary_category": "developer-it-tools",
-      "categories": [
-        "developer-it-tools"
-      ],
-      "tags": [
-        "github",
-        "automation",
-        "ci-cd",
-        "troubleshooting"
-      ],
-      "search_intent": "Diagnose repeated GitHub Actions dependency-cache misses by comparing keys, restore keys, paths, scopes, workflow events, and existing cache entries.",
-      "needs_diagram": false,
-      "needs_chart": false,
-      "offline_fallback": {
-        "description": "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely.",
-        "overview": "A cache miss is expected when the evaluated key has no exact match, and a restored prefix is not the same as an exact hit. Repeated misses can also result from changing lockfiles, operating-system boundaries, branch and event scope, a path that is never populated, a job that does not complete successfully, eviction, or an old action configuration. Preserve the evaluated workflow context before changing keys or deleting cache entries.",
-        "preparation": "Record the repository, workflow and run, event, ref, runner operating system, action version, evaluated primary key, restore keys, cached paths, cache-hit output, dependency lockfile hash inputs, and whether the job completed successfully. Do not delete repository caches or weaken key specificity during the first evidence pass.",
-        "steps": [
-          {
-            "title": "Classify exact hits, prefix restores, and misses",
-            "body": "Capture the evaluated primary key and ordered restore keys from the same workflow run, then interpret the cache-hit output according to exact-match behavior. Confirm that the path exists and contains the intended dependency data before the post-job save phase.",
-            "source_guidance": "Use the dependency caching reference for exact and partial matching, restore-key order, cache-hit output, save timing, access scope, limits, and security guidance."
-          },
-          {
-            "title": "Compare the repository cache inventory",
-            "body": "Review the existing cache entries and compare their key, ref or scope, creation time, last use, and size with the failing run. Treat deletion as a maintenance action only after the evidence proves that an obsolete entry is interfering with the intended policy.",
-            "source_guidance": "Use Managing caches for the supported repository inventory and cache-management interfaces."
-          },
-          {
-            "title": "Verify the action inputs and supported behavior",
-            "body": "Compare the workflow's action version, path, key, restore keys, lookup behavior, and optional cross-OS settings with the maintained action documentation. Avoid caching credentials, generated secrets, or a path readable by untrusted workflow contexts.",
-            "source_guidance": "Use the actions/cache repository documentation for maintained inputs, outputs, examples, compatibility, and migration notes."
-          }
-        ],
-        "symptoms": [
-          {
-            "symptom": "The key changes on every run",
-            "likely_cause": "Unstable key input, generated file, timestamp, or changing lockfile",
-            "next_check": "Print the non-secret evaluated components and compare the exact key across two runs."
-          },
-          {
-            "symptom": "A restore key finds data but cache-hit is not true",
-            "likely_cause": "Partial prefix match rather than an exact primary-key match",
-            "next_check": "Compare the restored key with the full primary key and decide whether a new cache should be saved."
-          },
-          {
-            "symptom": "No cache is saved after a miss",
-            "likely_cause": "Job failure, empty or incorrect path, scope restriction, limit, or action configuration",
-            "next_check": "Verify job completion, populated paths, action output, and repository cache inventory."
-          }
-        ],
-        "checklist": [
-          "Capture run event, ref, runner OS, action version, primary key, restore keys, paths, and cache-hit output.",
-          "Compare the exact evaluated key and its stable inputs across two runs.",
-          "Confirm the cached path exists and is populated before the save phase.",
-          "Review existing cache entries and access scope without deleting evidence.",
-          "Apply one reviewed key or path change and verify both restore and save behavior on the next comparable run."
-        ],
-        "related_slugs": [
-          "audit-github-actions-token-permissions",
-          "copilot-code-review-customization-and-configurability-improvements"
-        ],
-        "version_context": "Current GitHub Actions dependency caching, cache management, and actions/cache documentation checked at publication time."
-      },
-      "source_urls": [
-        "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching",
-        "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches",
-        "https://github.com/actions/cache"
-      ],
-      "seed_sources": [
-        {
-          "title": "Dependency caching reference",
-          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
-        },
-        {
-          "title": "Managing caches",
-          "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches"
-        },
-        {
-          "title": "actions cache",
-          "url": "https://github.com/actions/cache"
-        }
-      ]
-    }
+    "scheduled_at": "2026-07-19T17:15:45.599542Z",
+    "next_retry_at": "2026-07-19T23:15:45.599545Z",
+    "reason": "no_valid_topic",
+    "stage": "topic_selection",
+    "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
+    "consecutive_attempts": 8,
+    "topic_attempts": 0,
+    "topic": {}
   }
 }
