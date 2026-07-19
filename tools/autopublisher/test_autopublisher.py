@@ -179,6 +179,57 @@ class AutopublisherTests(unittest.TestCase):
             self.assertTrue(qa["approved"])
             self.assertGreaterEqual(qa["quality"]["score"], config["publishing"]["quality_min_score"])
 
+    def test_educational_offline_fallbacks_remain_original_when_published_in_sequence(self):
+        config = autopublisher.load_config()
+        educational_topics = [
+            topic
+            for topic in config["research"]["evergreen_topics"]
+            if (topic.get("offline_fallback") or {}).get("content_mode") == "educational"
+        ]
+        self.assertGreaterEqual(len(educational_topics), 8)
+        fallback_slugs = {
+            str(topic.get("slug", ""))
+            for topic in config["research"]["evergreen_topics"]
+            if topic.get("offline_fallback")
+        }
+        posts = [post for post in autopublisher.load_posts(config) if post.slug not in fallback_slugs]
+
+        for configured in educational_topics:
+            topic = dict(configured)
+            topic["source_urls"] = [item["url"] for item in topic["seed_sources"]]
+            sources = [
+                autopublisher.ResearchItem(
+                    "Official",
+                    item["title"],
+                    item["url"],
+                    f"{item['title']} official documentation for {topic['title']}.",
+                    "",
+                    topic["categories"],
+                    2.0,
+                    item["title"],
+                    True,
+                )
+                for item in topic["seed_sources"]
+            ]
+            article, qa, feedback = autopublisher.deterministic_evergreen_fallback(
+                topic, sources, posts, config, autopublisher.EventLog()
+            )
+            self.assertTrue(article, f"{topic['slug']}: {feedback}")
+            self.assertTrue(qa["approved"])
+            posts.append(
+                autopublisher.Post(
+                    path=Path(topic["slug"]),
+                    slug=article["slug"],
+                    title=article["title"],
+                    description=article["description"],
+                    date="2026-07-19",
+                    tags=article["tags"],
+                    categories=article["categories"],
+                    body=article["article_markdown"],
+                    frontmatter={},
+                )
+            )
+
     def test_publish_uses_configured_offline_fallback_without_model_generation(self):
         config = autopublisher.load_config()
         config["publishing"]["prefer_source_qualified_evergreen_first"] = True
@@ -2006,6 +2057,74 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(generate.call_args.args[1], evergreen_topic)
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
+    def test_publish_uses_evergreen_when_dynamic_selection_returns_none(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {
+                "required_source_count": 1,
+                "max_topic_attempts": 2,
+                "max_evergreen_topic_attempts": 0,
+            },
+            "cost_control": {"max_topic_selection_calls_per_run": 2},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [
+            autopublisher.ResearchItem(
+                "Official", "Source", "https://trusted.example/one", "One", "", ["technology"], 1.0
+            )
+        ]
+        evergreen_topic = {
+            "title": "Evergreen topic",
+            "slug": "evergreen-topic",
+            "categories": ["technology"],
+            "offline_fallback": {"configured": True},
+        }
+        article = {
+            "title": "Evergreen topic",
+            "slug": "evergreen-topic",
+            "description": "Evergreen description",
+            "categories": ["technology"],
+            "tags": ["technology"],
+            "sources": [],
+            "article_markdown": "## Evergreen\n\nComplete article.",
+        }
+
+        class Client:
+            def require_key(self):
+                return None
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_topic", return_value=None) as choose_dynamic, \
+            patch.object(autopublisher, "choose_evergreen_topic", return_value=evergreen_topic) as choose_evergreen, \
+            patch.object(autopublisher, "collect_topic_research", return_value=research), \
+            patch.object(
+                autopublisher,
+                "deterministic_evergreen_fallback",
+                return_value=(article, {"approved": True}, ""),
+            ) as fallback, \
+            patch.object(
+                autopublisher,
+                "generate_approved_article",
+                side_effect=AssertionError("the configured offline fallback must bypass model generation"),
+            ), \
+            patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/evergreen-topic/index.md"), \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        choose_dynamic.assert_called_once()
+        choose_evergreen.assert_called_once()
+        fallback.assert_called_once()
+        self.assertEqual(fallback.call_args.args[0], evergreen_topic)
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
     def test_publish_result_marker_records_explicit_result(self):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "publish-result.json"
@@ -2220,6 +2339,37 @@ class AutopublisherTests(unittest.TestCase):
         unsupported = {"claim_evidence": [{"claim": "Azure includes an unrelated hardware warranty", "supporting_sources": [source.url], "confidence": 0.97, "verified_at": "2026-07-15T00:00:00Z"}]}
         self.assertEqual(autopublisher.claim_evidence_issues(supported, config, [source]), [])
         self.assertTrue(any("not directly supported" in issue for issue in autopublisher.claim_evidence_issues(unsupported, config, [source])))
+
+    def test_claim_evidence_matches_a_localized_passage_on_a_long_source_page(self):
+        prefix = " ".join(f"navigation{index}" for index in range(180))
+        suffix = " ".join(f"appendix{index}" for index in range(180))
+        source = autopublisher.ResearchItem(
+            "Official",
+            "Python mapping types",
+            "https://docs.python.org/mapping",
+            "Dictionary reference.",
+            "",
+            ["programming-languages"],
+            1.0,
+            snippet=(
+                f"{prefix} Dictionary keys map hashable values to stored objects and key lookup retrieves the "
+                f"associated value. {suffix}"
+            ),
+            validated=True,
+        )
+        config = {
+            "publishing": {"required_claim_evidence_count": 1},
+            "source_validation": {"min_claim_confidence": 0.75, "min_claim_source_similarity": 0.12},
+        }
+        article = {
+            "claim_evidence": [{
+                "claim": "Python dictionary key lookup retrieves the value associated with a hashable key.",
+                "supporting_sources": [source.url],
+                "confidence": 0.95,
+                "verified_at": "2026-07-19T00:00:00Z",
+            }]
+        }
+        self.assertEqual(autopublisher.claim_evidence_issues(article, config, [source]), [])
 
     def test_code_validation_rejects_syntax_secrets_and_unwarned_destructive_commands(self):
         markdown = """## Example\n\n```python\nif True print('broken')\n```\n\n```json\n{\"password\": \"realistic-secret-value\"}\n```\n\n```bash\nrm -rf /\n```\n"""

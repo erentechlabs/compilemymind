@@ -4147,11 +4147,29 @@ def claim_evidence_issues(
             issues.append(f"Claim has no validated supporting source: {claim[:120]}")
             continue
         if matched_sources and max(
-            cosine_similarity(claim, f"{source.title} {source.snippet or source.summary}")
+            localized_claim_source_similarity(claim, source)
             for source in matched_sources
         ) < min_similarity:
             issues.append(f"Claim is not directly supported by its referenced source text: {claim[:120]}")
     return issues
+
+
+def localized_claim_source_similarity(claim: str, source: ResearchItem) -> float:
+    """Match a claim to the most relevant passage instead of diluting it across a long page."""
+    source_text = normalize_space(str(source.snippet or source.summary or ""))
+    whole = f"{source.title} {source_text}"
+    scores = [cosine_similarity(claim, whole)]
+    words = re.findall(r"\b[\w+#.-]+\b", source_text)
+    window_size = 100
+    stride = 50
+    for start in range(0, len(words), stride):
+        window = words[start:start + window_size]
+        if not window:
+            break
+        scores.append(cosine_similarity(claim, f"{source.title} {' '.join(window)}"))
+        if start + window_size >= len(words):
+            break
+    return max(scores, default=0.0)
 
 
 def source_similarity_issues(article: dict[str, Any], research: list[ResearchItem], config: dict[str, Any]) -> list[str]:
@@ -4639,6 +4657,10 @@ def configured_offline_evergreen_fallback(
     description = normalize_space(str(template.get("description", "")))
     overview = normalize_space(str(template.get("overview", "")))
     preparation = normalize_space(str(template.get("preparation", "")))
+    content_mode = normalize_space(str(template.get("content_mode", "troubleshooting"))).lower()
+    application = normalize_space(str(template.get("application", "")))
+    mistakes = normalize_space(str(template.get("mistakes", "")))
+    conclusion = normalize_space(str(template.get("conclusion", "")))
     steps = [item for item in template.get("steps", []) or [] if isinstance(item, dict)]
     symptoms = [item for item in template.get("symptoms", []) or [] if isinstance(item, dict)]
     checklist = [normalize_space(str(item)) for item in template.get("checklist", []) or []]
@@ -4646,16 +4668,33 @@ def configured_offline_evergreen_fallback(
     evidence_queries = [item for item in template.get("evidence_queries", []) or [] if isinstance(item, dict)]
     if not description or not overview or not preparation or len(steps) < 3 or len(symptoms) < 3 or len(checklist) < 4:
         return None, None, "Configured offline fallback is incomplete."
+    if content_mode == "educational" and (not application or not mistakes or not conclusion):
+        return None, None, "Configured educational fallback lacks topic-specific application, mistakes, or conclusion content."
+
+    seed_positions = {
+        canonical_url(str(source.get("url", ""))): index
+        for index, source in enumerate(topic.get("seed_sources", []) or [])
+        if isinstance(source, dict) and source.get("url")
+    }
+
+    def reviewed_step_for_source(source: ResearchItem, fallback_index: int) -> dict[str, Any]:
+        position = seed_positions.get(canonical_url(source.url), fallback_index)
+        return steps[position % len(steps)]
 
     source_sections = []
     for index, source in enumerate(scoped):
-        guidance = normalize_space(str(steps[index % len(steps)].get("source_guidance", "")))
-        detail = (
-            f"Official scope: {guidance}"
-            if operational_notes else
-            f"Use {source.title} to verify this specific part of the investigation: {guidance} "
-            f"Match the field names, permissions, and interface labels for {source.title} before changing the affected service."
-        )
+        guidance = normalize_space(str(reviewed_step_for_source(source, index).get("source_guidance", "")))
+        if content_mode == "educational":
+            detail = (
+                f"Use {source.title} for this boundary of the topic: {guidance}"
+            )
+        else:
+            detail = (
+                f"Official scope: {guidance}"
+                if operational_notes else
+                f"Use {source.title} to verify this specific part of the investigation: {guidance} "
+                f"Match the field names, permissions, and interface labels for {source.title} before changing the affected service."
+            )
         source_sections.append(f"### {source.title}\n\n{detail}")
     workflow_sections = []
     for index, step in enumerate(steps, start=1):
@@ -4685,7 +4724,55 @@ def configured_offline_evergreen_fallback(
             post = next(post for post in posts if post.slug == str(slug))
             internal_links.append(f"[{post.title}]({path})")
     related = " and ".join(internal_links[:3]) or "the related operational guidance in this site"
-    if operational_notes:
+    if content_mode == "educational":
+        decision_rows = "\n".join(
+            f"| {normalize_space(str(item.get('symptom', '')))} | {normalize_space(str(item.get('likely_cause', '')))} | {normalize_space(str(item.get('next_check', '')))} |"
+            for item in symptoms
+        )
+        body = f"""{overview}
+
+## A working model for {topic['title']}
+
+{preparation}
+
+## Apply the model to a concrete case
+
+{application}
+
+## Source boundaries for {topic['primary_category'].replace('-', ' ')}
+
+{chr(10).join(source_sections)}
+
+## Reason through {topic['slug'].replace('-', ' ')}
+
+{chr(10).join(workflow_sections)}
+
+## {topic['title']}: decisions and tradeoffs
+
+| Situation or decision | Tradeoff or common failure mode | Validation question |
+| --- | --- | --- |
+{decision_rows}
+
+## Common mistakes in {topic['primary_category'].replace('-', ' ')}
+
+{mistakes}
+
+## Practical implementation checklist
+
+{chr(10).join(f'{index}. {item}' for index, item in enumerate(checklist, start=1))}
+
+## Related implementation context
+
+{related}
+
+## Version and verification boundary
+
+{normalize_space(str(template.get('version_context', 'Official documentation checked at publication time.')))}
+
+## Summary
+
+{conclusion}"""
+    elif operational_notes:
         operational_section = "\n\n".join(
             f"### {index}. Operational check\n\n{note}"
             for index, note in enumerate(operational_notes, start=1)
@@ -4726,7 +4813,9 @@ Keep the investigation read-only until the evidence identifies a change boundary
         if operational_notes else
         "Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator."
     )
-    if operational_notes:
+    if content_mode == "educational":
+        pass
+    elif operational_notes:
         body = f"""## {topic['title']}: direct answer
 
 {overview}
@@ -4823,13 +4912,15 @@ For this incident, record the observed boundary, the evidence that supports it, 
     now = iso_z()
     claims = [
         {
-            "claim": source.title,
+            "claim": normalize_space(
+                f"{source.title}: {reviewed_step_for_source(source, index).get('source_guidance', '')}"
+            ),
             "supporting_sources": [source.url],
             "confidence": 0.95,
             "verified_at": now,
             "version_context": normalize_space(str(template.get("version_context", "Official documentation checked at publication time."))),
         }
-        for source in scoped
+        for index, source in enumerate(scoped)
     ]
     article = {
         "title": topic["title"],
@@ -5917,6 +6008,20 @@ def run_publish(args: argparse.Namespace) -> int:
                 )
                 return 0
             initial_topic_is_evergreen = True
+    # A valid model response can still contain no coherent three-source topic
+    # (for example while grounded research is unavailable and the feed slate
+    # spans unrelated products). Continue through the reviewed evergreen
+    # catalog instead of turning that normal discovery miss into another retry.
+    if not topic:
+        topic = choose_evergreen_topic(posts, config, log)
+        if topic:
+            initial_topic_is_evergreen = True
+            log.log(
+                "evergreen_topic_selection_recovery_started",
+                title=topic.get("title"),
+                slug=topic.get("slug"),
+                reason="dynamic_topic_selection_exhausted",
+            )
     if not topic:
         schedule_publish_retry(
             state,
