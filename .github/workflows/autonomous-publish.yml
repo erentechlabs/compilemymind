@@ -99,11 +99,19 @@ jobs:
         run: |
           git config user.name "compilemymind-autopublisher[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          stage_ready_queue() {
+            # A rejected publication may never create the queue directory. Only
+            # pass its path to git when there is actually something to stage.
+            if test -n "$(git status --porcelain -- .autopublisher/queue/ready)"; then
+              git add --all -- .autopublisher/queue/ready
+            fi
+          }
           approved=$(python -c 'import json; from pathlib import Path; print(str(json.loads(Path(".autopublisher/release-gate-result.json").read_text(encoding="utf-8")).get("approved", False)).lower())')
           if test "$approved" != "true"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
-            if ! git diff --quiet -- .autopublisher/state.json .autopublisher/queue/ready; then
-              git add .autopublisher/state.json .autopublisher/queue/ready
+            if test -n "$(git status --porcelain -- .autopublisher/state.json .autopublisher/queue/ready)"; then
+              git add --all -- .autopublisher/state.json
+              stage_ready_queue
               git commit -m "chore(automation): record deferred publication retry [skip ci]"
               git push origin "HEAD:${GITHUB_REF_NAME}"
               echo "Publication retry state was persisted; the next scheduled run will try again without publishing invalid content."
@@ -112,12 +120,13 @@ jobs:
             fi
             exit 0
           fi
-          if git diff --quiet -- content/posts .autopublisher/state.json .autopublisher/queue/ready; then
+          if test -z "$(git status --porcelain -- content/posts .autopublisher/state.json .autopublisher/queue/ready)"; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No content or durable state changes were produced."
             exit 0
           fi
-          git add content/posts .autopublisher/state.json .autopublisher/queue/ready
+          git add --all -- content/posts .autopublisher/state.json
+          stage_ready_queue
           if git diff --cached --quiet; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             exit 0

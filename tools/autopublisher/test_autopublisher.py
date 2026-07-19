@@ -65,6 +65,19 @@ class AutopublisherTests(unittest.TestCase):
             self.assertIn("Synchronize with the latest main revision", workflow)
             self.assertIn('git checkout --detach "origin/$branch"', workflow)
 
+    def test_publish_retry_does_not_stage_an_absent_ready_queue(self):
+        publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
+
+        self.assertIn(
+            'git status --porcelain -- .autopublisher/queue/ready',
+            publisher_workflow,
+        )
+        self.assertIn('git add --all -- .autopublisher/state.json', publisher_workflow)
+        self.assertNotIn(
+            'git add .autopublisher/state.json .autopublisher/queue/ready',
+            publisher_workflow,
+        )
+
     def test_production_has_three_source_qualified_evergreen_fallbacks(self):
         config = autopublisher.load_config()
         configured_fallbacks = [
