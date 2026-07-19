@@ -56,7 +56,7 @@
     "max_stalled_repair_attempts": 2,
     "max_topic_attempts": 3,
     "max_evergreen_topic_attempts": 3,
-    "prefer_source_qualified_evergreen_first": true,
+    "prefer_source_qualified_evergreen_first": false,
     "prefer_evergreen_after_quota": true,
     "quality_min_score": 0.82,
     "ai_qa_min_score": 0.8,
@@ -77,7 +77,8 @@
   },
   "retry": {
     "base_delay_hours": 6,
-    "max_same_topic_attempts": 3
+    "max_same_topic_attempts": 3,
+    "retain_quality_failed_topic": false
   },
   "publication_queue": {
     "enabled": true,
@@ -101,8 +102,13 @@
       "aws.amazon.com", "cloud.google.com", "kubernetes.io", "github.com", "github.blog", "docs.github.com", "developer.mozilla.org",
       "ietf.org", "nvlpubs.nist.gov", "nist.gov", "owasp.org", "cisa.gov", "docker.com", "opentelemetry.io",
       "cloudflare.com", "python.org", "nodejs.org", "go.dev", "rust-lang.org", "oracle.com",
-      "rfc-editor.org", "postgresql.org", "ubuntu.com", "redhat.com"
+      "rfc-editor.org", "postgresql.org", "ubuntu.com", "redhat.com", "developer.android.com", "android-developers.googleblog.com",
+      "developer.apple.com", "swift.org", "jetbrains.com", "kotlinlang.org", "leetcode.com", "redis.io", "whatwg.org",
+      "devblogs.microsoft.com", "inside.java", "princeton.edu"
     ]
+  },
+  "editorial_rotation": {
+    "style_order": ["release-update", "algorithm", "system-design", "tutorial", "comparison", "conceptual", "troubleshooting"]
   },
   "editorial_validation": {
     "enabled": true,
@@ -143,8 +149,10 @@
   },
   "topic_scope": {
     "approved_categories": [
-      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
-      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
+      "mobile-development", "software-engineering", "algorithms-data-structures", "systems-design", "programming-languages",
+      "web-development", "databases", "ai-engineering", "networking", "it-fundamentals", "system-administration",
+      "developer-it-tools", "practical-infrastructure-guides", "cybersecurity", "identity-access-management", "azure",
+      "entra-id", "cloud-certifications"
     ],
     "disallowed_terms": [
       "celebrity", "entertainment", "politics", "election", "automotive", "car review", "lifestyle", "recipe", "travel",
@@ -161,17 +169,29 @@
       "cloud-certifications": ["certification", "exam", "az-", "sc-", "ms-", "comptia", "study guide"],
       "system-administration": ["system administration", "sysadmin", "windows server", "linux", "powershell", "active directory", "server"],
       "practical-infrastructure-guides": ["infrastructure", "configuration", "troubleshooting", "deployment", "monitoring", "backup", "availability"],
-      "developer-it-tools": ["developer tools", "git", "github", "docker", "kubernetes", "terraform", "ci/cd", "api", "command line"]
+      "developer-it-tools": ["developer tools", "git", "github", "docker", "kubernetes", "terraform", "ci/cd", "api", "command line"],
+      "mobile-development": ["android", "ios", "swift", "kotlin", "jetpack compose", "swiftui", "xcode", "mobile app", "mobile development"],
+      "software-engineering": ["software engineering", "architecture", "testing", "refactoring", "design pattern", "api design", "code review"],
+      "algorithms-data-structures": ["algorithm", "data structure", "leetcode", "complexity", "array", "graph", "tree", "dynamic programming"],
+      "systems-design": ["system design", "distributed system", "scalability", "load balancing", "caching", "message queue", "consistency"],
+      "programming-languages": ["programming language", "java", "python", "javascript", "typescript", "c#", "dotnet", "go", "rust", "swift", "kotlin"],
+      "web-development": ["web development", "browser", "html", "css", "javascript", "web api", "frontend", "backend", "node.js"],
+      "databases": ["database", "sql", "postgresql", "mysql", "sqlite", "redis", "index", "query", "transaction"],
+      "ai-engineering": ["ai engineering", "machine learning", "llm", "model context protocol", "rag", "inference", "evaluation"]
     }
   },
   "taxonomy": {
     "allowed_categories": [
-      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
-      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
+      "mobile-development", "software-engineering", "algorithms-data-structures", "systems-design", "programming-languages",
+      "web-development", "databases", "ai-engineering", "networking", "it-fundamentals", "system-administration",
+      "developer-it-tools", "practical-infrastructure-guides", "cybersecurity", "identity-access-management", "azure",
+      "entra-id", "cloud-certifications"
     ],
     "balance_categories": [
-      "cybersecurity", "identity-access-management", "networking", "it-fundamentals", "azure", "entra-id",
-      "cloud-certifications", "system-administration", "practical-infrastructure-guides", "developer-it-tools"
+      "mobile-development", "software-engineering", "algorithms-data-structures", "systems-design", "programming-languages",
+      "web-development", "databases", "ai-engineering", "networking", "it-fundamentals", "system-administration",
+      "developer-it-tools", "practical-infrastructure-guides", "cybersecurity", "identity-access-management", "azure",
+      "entra-id", "cloud-certifications"
     ],
     "max_tags_per_article": 5,
     "preferred_tags_per_article": 3,
@@ -180,7 +200,9 @@
     "aliases": {
       "security": "cybersecurity", "microsoft-cloud": "azure", "certification": "cloud-certifications",
       "sysadmin": "system-administration", "entra": "entra-id", "azure-ad": "entra-id",
-      "software-development": "developer-it-tools", "software-engineering": "developer-it-tools", "technology": "it-fundamentals",
+      "software-development": "software-engineering", "technology": "it-fundamentals", "mobile": "mobile-development",
+      "android-development": "mobile-development", "ios-development": "mobile-development", "system-design": "systems-design",
+      "algorithms": "algorithms-data-structures", "data-structures": "algorithms-data-structures", "database": "databases",
       "guide": "practical-infrastructure-guides", "certification": "cloud-certifications", "cloud": "practical-infrastructure-guides",
       "hardware": "it-fundamentals", "ai-engineering": "developer-it-tools"
     },
@@ -195,32 +217,150 @@
       "system-administration", "powershell", "active-directory", "configuration-management", "backup-recovery",
       "infrastructure", "availability", "monitoring", "observability", "best-practices", "checklist",
       "developer-it-tools", "github", "git", "docker", "kubernetes", "terraform", "ci-cd", "api", "command-line", "automation",
-      "java", "python", "spring-boot", "databases", "api-design", "software-security", "prompt-injection", "ai-security", "mcp"
+      "java", "python", "javascript", "typescript", "csharp", "dotnet", "go", "rust", "swift", "kotlin", "jvm",
+      "spring-boot", "android", "ios", "jetpack-compose", "swiftui", "mobile-architecture", "leetcode", "algorithms",
+      "data-structures", "complexity-analysis", "system-design", "distributed-systems", "scalability", "load-balancing", "caching",
+      "web-development", "html", "css", "nodejs", "databases", "postgresql", "mysql", "sqlite", "redis", "sql",
+      "api-design", "software-testing", "design-patterns", "software-security", "prompt-injection", "ai-security", "mcp", "rag", "llm-evaluation"
     ],
     "tag_aliases": {
       "passwordless": "passkeys", "authentication-methods": "authentication", "microsoft": "azure", "cloud-security": "azure-security",
       "security-architecture": "zero-trust", "software-development": "developer-it-tools", "tech-comparison": "it-fundamentals",
       "tech-review": "it-fundamentals", "pc-building": "hardware", "motherboards": "hardware", "cpu": "hardware", "gpu": "hardware",
       "ai": "ai-security", "ai-agents": "ai-security", "google-cloud-blog": "cloud", "tech-plus": "comptia",
-      "career": "exam-preparation", "cheatsheet": "study-guide", "c-sharp": "developer-it-tools", "web": "developer-it-tools"
+      "career": "exam-preparation", "cheatsheet": "study-guide", "c-sharp": "csharp", "web": "web-development",
+      "node-js": "nodejs", "system-design": "system-design", "leetcode-problems": "leetcode"
     }
   },
   "research": {
     "items_per_source": 6,
     "max_items_for_model": 18,
     "snippet_characters": 2800,
-    "topic_selection_max_items": 10,
+    "topic_selection_max_items": 16,
+    "discovery_max_items_per_source": 2,
     "topic_selection_max_existing_posts": 20,
     "topic_selection_summary_characters": 160,
     "topic_selection_snippet_characters": 100,
     "topic_selection_description_characters": 96,
-    "topic_selection_max_prompt_characters": 18000,
+    "topic_selection_max_prompt_characters": 22000,
     "topic_source_min_similarity": 0.16,
     "topic_source_min_token_overlap": 2,
     "topic_source_min_anchor_overlap": 2,
     "article_prompt_snippet_characters": 900,
     "topic_source_max_items": 6,
     "evergreen_topics": [
+      {
+        "title": "Android App Architecture: UI, Domain, and Data Layers",
+        "slug": "android-app-architecture-ui-domain-data-layers",
+        "categories": ["mobile-development", "software-engineering"],
+        "primary_category": "mobile-development",
+        "tags": ["android", "kotlin", "mobile-architecture"],
+        "search_intent": "Design a maintainable Android app using clear UI, domain, and data-layer responsibilities.",
+        "article_type": "conceptual",
+        "seed_sources": [
+          {"title": "Guide to app architecture", "url": "https://developer.android.com/topic/architecture"},
+          {"title": "Android architecture recommendations", "url": "https://developer.android.com/topic/architecture/recommendations"},
+          {"title": "Android data layer", "url": "https://developer.android.com/topic/architecture/data-layer"}
+        ]
+      },
+      {
+        "title": "Swift Concurrency: async/await, Tasks, and Actors Explained",
+        "slug": "swift-concurrency-async-await-tasks-actors",
+        "categories": ["mobile-development", "programming-languages"],
+        "primary_category": "mobile-development",
+        "tags": ["swift", "ios", "software-engineering"],
+        "search_intent": "Understand how modern Swift concurrency structures asynchronous work and protects mutable state.",
+        "article_type": "conceptual",
+        "seed_sources": [
+          {"title": "Swift 5.5 Released!", "url": "https://www.swift.org/blog/swift-5.5-released/"},
+          {"title": "Announcing Swift 6", "url": "https://www.swift.org/blog/announcing-swift-6/"},
+          {"title": "Get started with Swift concurrency", "url": "https://developer.apple.com/news/?id=o140tv24"}
+        ]
+      },
+      {
+        "title": "LeetCode Two Sum: From Brute Force to a Hash Map",
+        "slug": "leetcode-two-sum-brute-force-hash-map",
+        "categories": ["algorithms-data-structures", "programming-languages"],
+        "primary_category": "algorithms-data-structures",
+        "tags": ["leetcode", "algorithms", "data-structures", "complexity-analysis"],
+        "search_intent": "Solve Two Sum, compare the brute-force and hash-map approaches, and reason about time and space complexity.",
+        "article_type": "algorithm",
+        "seed_sources": [
+          {"title": "TwoSumFast.java", "url": "https://algs4.cs.princeton.edu/14analysis/TwoSumFast.java.html"},
+          {"title": "Python mapping types — dict", "url": "https://docs.python.org/3/library/stdtypes.html#mapping-types-dict"},
+          {"title": "Java HashMap", "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/HashMap.html"}
+        ]
+      },
+      {
+        "title": "System Design Caching: Cache-Aside, Expiration, and Invalidation",
+        "slug": "system-design-caching-cache-aside-expiration-invalidation",
+        "categories": ["systems-design", "software-engineering"],
+        "primary_category": "systems-design",
+        "tags": ["system-design", "distributed-systems", "caching", "scalability"],
+        "search_intent": "Choose a caching strategy and reason about invalidation, consistency, failures, and operational tradeoffs.",
+        "article_type": "system-design",
+        "seed_sources": [
+          {"title": "Caching guidance", "url": "https://learn.microsoft.com/en-us/azure/architecture/best-practices/caching"},
+          {"title": "Cloudflare cache concepts", "url": "https://developers.cloudflare.com/cache/concepts/"},
+          {"title": "Redis client-side caching", "url": "https://redis.io/docs/latest/develop/clients/client-side-caching/"}
+        ]
+      },
+      {
+        "title": "Rust Ownership and Borrowing: A Practical Mental Model",
+        "slug": "rust-ownership-borrowing-practical-mental-model",
+        "categories": ["programming-languages", "software-engineering"],
+        "primary_category": "programming-languages",
+        "tags": ["rust", "software-engineering"],
+        "search_intent": "Understand Rust ownership, references, borrowing, and slices well enough to predict compiler behavior.",
+        "article_type": "conceptual",
+        "seed_sources": [
+          {"title": "What Is Ownership?", "url": "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html"},
+          {"title": "References and Borrowing", "url": "https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html"},
+          {"title": "The Slice Type", "url": "https://doc.rust-lang.org/book/ch04-03-slices.html"}
+        ]
+      },
+      {
+        "title": "PostgreSQL Indexes: Types, Tradeoffs, and Query Verification",
+        "slug": "postgresql-indexes-types-tradeoffs-query-verification",
+        "categories": ["databases", "software-engineering"],
+        "primary_category": "databases",
+        "tags": ["postgresql", "sql", "databases"],
+        "search_intent": "Select an appropriate PostgreSQL index and verify that it improves the intended query without unnecessary write cost.",
+        "article_type": "comparison",
+        "seed_sources": [
+          {"title": "PostgreSQL indexes", "url": "https://www.postgresql.org/docs/current/indexes.html"},
+          {"title": "PostgreSQL index types", "url": "https://www.postgresql.org/docs/current/indexes-types.html"},
+          {"title": "Examining index usage", "url": "https://www.postgresql.org/docs/current/indexes-examine.html"}
+        ]
+      },
+      {
+        "title": "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies",
+        "slug": "rest-graphql-pagination-offset-cursor-link-strategies",
+        "categories": ["software-engineering", "web-development"],
+        "primary_category": "software-engineering",
+        "tags": ["api-design", "web-development", "software-engineering"],
+        "search_intent": "Choose and implement a pagination contract that remains stable as a dataset changes.",
+        "article_type": "comparison",
+        "seed_sources": [
+          {"title": "Using pagination in the REST API", "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api"},
+          {"title": "Using pagination in the GraphQL API", "url": "https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api"},
+          {"title": "REST API best practices", "url": "https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api"}
+        ]
+      },
+      {
+        "title": "JavaScript Event Loop: Tasks, Microtasks, and Rendering",
+        "slug": "javascript-event-loop-tasks-microtasks-rendering",
+        "categories": ["web-development", "programming-languages"],
+        "primary_category": "web-development",
+        "tags": ["javascript", "web-development", "software-engineering"],
+        "search_intent": "Predict JavaScript execution order by understanding tasks, microtasks, rendering, and runtime differences.",
+        "article_type": "conceptual",
+        "seed_sources": [
+          {"title": "MDN JavaScript execution model", "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model"},
+          {"title": "HTML event loops", "url": "https://html.spec.whatwg.org/multipage/webappapis.html#event-loops"},
+          {"title": "Node.js event loop", "url": "https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick"}
+        ]
+      },
       {
         "title": "Troubleshooting DNS on Windows with PowerShell",
         "slug": "troubleshooting-windows-dns-powershell",
@@ -693,6 +833,19 @@
       }
     ],
     "trusted_sources": [
+      {"name": "Android Developers Blog", "url": "https://android-developers.googleblog.com/feeds/posts/default?alt=rss", "categories": ["mobile-development", "programming-languages"], "weight": 1.2},
+      {"name": "Apple Developer News", "url": "https://developer.apple.com/news/rss/news.rss", "categories": ["mobile-development", "programming-languages"], "weight": 1.2},
+      {"name": "Kotlin Blog", "url": "https://blog.jetbrains.com/kotlin/feed/", "categories": ["programming-languages", "mobile-development"], "weight": 1.1},
+      {"name": "Swift.org", "url": "https://www.swift.org/atom.xml", "categories": ["programming-languages", "mobile-development"], "weight": 1.15},
+      {"name": "Python Insider", "url": "https://blog.python.org/rss.xml", "categories": ["programming-languages"], "weight": 1.15},
+      {"name": "Go Blog", "url": "https://go.dev/blog/feed.atom", "categories": ["programming-languages", "software-engineering"], "weight": 1.15},
+      {"name": "Rust Blog", "url": "https://blog.rust-lang.org/feed.xml", "categories": ["programming-languages", "software-engineering"], "weight": 1.15},
+      {"name": "Node.js Blog", "url": "https://nodejs.org/en/feed/blog.xml", "categories": ["programming-languages", "web-development"], "weight": 1.15},
+      {"name": ".NET Blog", "url": "https://devblogs.microsoft.com/dotnet/feed/", "categories": ["programming-languages", "software-engineering", "mobile-development"], "weight": 1.15},
+      {"name": "Inside Java", "url": "https://inside.java/feed.xml", "categories": ["programming-languages", "software-engineering"], "weight": 1.1},
+      {"name": "PostgreSQL News", "url": "https://www.postgresql.org/news.rss", "categories": ["databases"], "weight": 1.15},
+      {"name": "MDN Blog", "url": "https://developer.mozilla.org/en-US/blog/rss.xml", "categories": ["web-development", "software-engineering"], "weight": 1.1},
+      {"name": "AWS Architecture Blog", "url": "https://aws.amazon.com/blogs/architecture/feed/", "categories": ["systems-design", "software-engineering"], "weight": 1.15},
       {"name": "Microsoft Azure Blog", "url": "https://azure.microsoft.com/en-us/blog/feed/", "categories": ["azure", "practical-infrastructure-guides"], "weight": 1.2},
       {"name": "Microsoft Security Blog", "url": "https://www.microsoft.com/en-us/security/blog/feed/", "categories": ["cybersecurity", "identity-access-management"], "weight": 1.25},
       {"name": "AWS News Blog", "url": "https://aws.amazon.com/blogs/aws/feed/", "categories": ["practical-infrastructure-guides"], "weight": 1.05},
@@ -704,6 +857,11 @@
       {"name": "OWASP News", "url": "https://owasp.org/feed.xml", "categories": ["cybersecurity"], "weight": 1.2},
       {"name": "Mozilla Hacks", "url": "https://hacks.mozilla.org/feed/", "categories": ["developer-it-tools", "cybersecurity"], "weight": 1.05}
     ],
-    "high_interest_terms": ["security", "identity", "azure", "entra", "network", "dns", "certificate", "exam", "system administration", "infrastructure", "kubernetes", "github", "documentation", "vulnerability", "configuration", "troubleshooting"]
+    "high_interest_terms": [
+      "android", "ios", "swift", "kotlin", "mobile development", "software architecture", "testing", "algorithm", "data structure",
+      "leetcode", "system design", "distributed system", "scalability", "java", "python", "javascript", "typescript", "dotnet", "go", "rust",
+      "postgresql", "database", "release", "announcing", "stable", "beta", "preview", "version", "what's new", "new version", "deprecation", "migration", "security", "identity", "network", "dns",
+      "system administration", "infrastructure", "kubernetes", "github", "documentation", "vulnerability", "configuration"
+    ]
   }
 }

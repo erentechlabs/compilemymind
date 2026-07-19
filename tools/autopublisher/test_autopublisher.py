@@ -25,7 +25,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
         self.assertGreaterEqual(github_models["max_output_tokens"], 12000)
         self.assertTrue(config["publishing"]["prefer_evergreen_after_quota"])
-        self.assertTrue(config["publishing"]["prefer_source_qualified_evergreen_first"])
+        self.assertFalse(config["publishing"]["prefer_source_qualified_evergreen_first"])
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
@@ -34,6 +34,63 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["research"]["topic_source_min_anchor_overlap"], 2)
         self.assertEqual(config["taxonomy"]["preferred_tags_per_article"], 3)
         self.assertTrue(config["taxonomy"]["allow_new_tags"])
+
+    def test_production_editorial_scope_covers_requested_tech_domains(self):
+        config = autopublisher.load_config()
+        categories = set(config["taxonomy"]["allowed_categories"])
+        self.assertTrue({
+            "mobile-development",
+            "software-engineering",
+            "algorithms-data-structures",
+            "systems-design",
+            "programming-languages",
+            "web-development",
+            "databases",
+            "networking",
+            "it-fundamentals",
+        }.issubset(categories))
+        feed_urls = {source["url"] for source in config["research"]["trusted_sources"]}
+        self.assertTrue({
+            "https://android-developers.googleblog.com/feeds/posts/default?alt=rss",
+            "https://developer.apple.com/news/rss/news.rss",
+            "https://blog.python.org/rss.xml",
+            "https://go.dev/blog/feed.atom",
+            "https://blog.rust-lang.org/feed.xml",
+            "https://nodejs.org/en/feed/blog.xml",
+            "https://www.postgresql.org/news.rss",
+        }.issubset(feed_urls))
+        self.assertFalse(config["retry"]["retain_quality_failed_topic"])
+
+    def test_production_diverse_topic_prompt_fits_model_budget(self):
+        config = autopublisher.load_config()
+        limit = config["research"]["topic_selection_max_items"]
+        research = [
+            autopublisher.ResearchItem(
+                f"Source {index}", f"Current platform release {index}",
+                f"https://example.test/releases/{index}", "S" * 500, "2026-07-19",
+                [config["taxonomy"]["balance_categories"][index % len(config["taxonomy"]["balance_categories"])]],
+                2.0, "D" * 500, True,
+            )
+            for index in range(limit)
+        ]
+        prompt = autopublisher.topic_selection_prompt(
+            research,
+            {
+                "text": "T" * 1000,
+                "citations": [
+                    {"title": "C" * 200, "url": f"https://example.test/citations/{index}"}
+                    for index in range(4)
+                ],
+            },
+            autopublisher.load_posts(config),
+            config,
+        )
+
+        self.assertLessEqual(len(prompt), config["research"]["topic_selection_max_prompt_characters"])
+        self.assertLess(
+            config["research"]["topic_selection_max_prompt_characters"],
+            config["github_models"]["max_input_characters"],
+        )
 
     def test_publisher_code_pushes_run_tests_without_triggering_paid_publication(self):
         publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
@@ -124,6 +181,7 @@ class AutopublisherTests(unittest.TestCase):
 
     def test_publish_uses_configured_offline_fallback_without_model_generation(self):
         config = autopublisher.load_config()
+        config["publishing"]["prefer_source_qualified_evergreen_first"] = True
         topic = dict(next(item for item in config["research"]["evergreen_topics"] if item.get("offline_fallback")))
         topic["title"] = "Unit Test Offline Fallback"
         topic["slug"] = "unit-test-offline-fallback"
@@ -950,6 +1008,61 @@ class AutopublisherTests(unittest.TestCase):
         selected = autopublisher.choose_evergreen_topic([existing], config, autopublisher.EventLog())
         self.assertEqual(selected["slug"], "fresh-evergreen")
 
+    def test_evergreen_selection_rotates_to_an_underrepresented_category(self):
+        recent_mobile = autopublisher.Post(
+            Path("mobile/index.md"), "mobile", "Android Architecture", "",
+            autopublisher.iso_z(), ["android"], ["mobile-development"], "", {},
+        )
+        config = {
+            "taxonomy": {
+                "allowed_categories": ["mobile-development", "systems-design"],
+                "balance_categories": ["mobile-development", "systems-design"],
+                "allow_new_tags": True,
+            },
+            "research": {
+                "evergreen_topics": [
+                    {
+                        "title": "Another Android Guide", "slug": "another-android-guide",
+                        "primary_category": "mobile-development", "categories": ["mobile-development"],
+                        "search_intent": "Android mobile development architecture",
+                    },
+                    {
+                        "title": "System Design Caching", "slug": "system-design-caching",
+                        "primary_category": "systems-design", "categories": ["systems-design"],
+                        "search_intent": "System design caching and scalability",
+                    },
+                ]
+            },
+        }
+
+        selected = autopublisher.choose_evergreen_topic([recent_mobile], config, autopublisher.EventLog())
+
+        self.assertEqual(selected["slug"], "system-design-caching")
+
+    def test_research_selection_preserves_category_and_feed_diversity(self):
+        items = [
+            autopublisher.ResearchItem("Infra", f"Infra {index}", f"https://example.test/infra/{index}", "", "", ["networking"], 10 - index)
+            for index in range(6)
+        ]
+        items.extend([
+            autopublisher.ResearchItem("Android", "Android update", "https://example.test/android", "", "", ["mobile-development"], 2.0),
+            autopublisher.ResearchItem("Languages", "Rust update", "https://example.test/rust", "", "", ["programming-languages"], 1.9),
+            autopublisher.ResearchItem("Algorithms", "LeetCode pattern", "https://example.test/algorithm", "", "", ["algorithms-data-structures"], 1.8),
+        ])
+        config = {
+            "taxonomy": {"balance_categories": [
+                "mobile-development", "programming-languages", "algorithms-data-structures", "networking",
+            ]},
+            "research": {"discovery_max_items_per_source": 2},
+        }
+
+        selected = autopublisher.diversify_research_items(items, config, 4)
+
+        self.assertEqual(
+            {category for item in selected for category in item.categories},
+            {"mobile-development", "programming-languages", "algorithms-data-structures", "networking"},
+        )
+
     def test_evergreen_supporting_intent_is_not_rejected_by_category_overlap(self):
         existing = autopublisher.Post(
             Path("dns/index.md"),
@@ -1716,6 +1829,26 @@ class AutopublisherTests(unittest.TestCase):
         self.assertIsNone(autopublisher.pending_publication_topic(state, [], config, autopublisher.EventLog()))
         self.assertEqual(state["pending_publication"]["topic"], {})
 
+    def test_quality_rejected_pending_topic_rotates_immediately_in_production(self):
+        config = autopublisher.load_config()
+        state = {
+            "pending_publication": {
+                "reason": "all_drafts_failed_quality_gates",
+                "topic_attempts": 1,
+                "topic": {
+                    "title": "Repeated Troubleshooting Topic",
+                    "slug": "repeated-troubleshooting-topic",
+                    "primary_category": "networking",
+                    "categories": ["networking"],
+                    "tags": ["troubleshooting"],
+                    "search_intent": "Troubleshoot the same unsupported claim again.",
+                },
+            }
+        }
+
+        self.assertIsNone(autopublisher.pending_publication_topic(state, [], config, autopublisher.EventLog()))
+        self.assertEqual(state["pending_publication"]["topic"], {})
+
     def test_publish_resumes_pending_topic_before_new_discovery(self):
         config = autopublisher.load_config()
         topic = {
@@ -2449,6 +2582,13 @@ Interpret the Conditional Access result: if it reports failure, the next check i
         config = {"taxonomy": {"balance_categories": ["cybersecurity", "networking"]}}
         with patch.object(autopublisher, "utc_now", return_value=now):
             self.assertEqual(autopublisher.target_category(posts, config), "networking")
+
+    def test_category_balance_uses_configured_rotation_order_for_ties(self):
+        config = {"taxonomy": {"balance_categories": [
+            "mobile-development", "systems-design", "programming-languages",
+        ]}}
+
+        self.assertEqual(autopublisher.target_category([], config), "mobile-development")
 
     def test_taxonomy_normalization_preserves_multiple_approved_categories(self):
         post = autopublisher.Post(

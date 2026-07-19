@@ -646,6 +646,19 @@ def pending_publication_topic(
     topic = pending.get("topic", {}) or {}
     if not isinstance(topic, dict) or not topic.get("title"):
         return None
+    if (
+        pending.get("reason") in {"all_drafts_failed_quality_gates", "asset_validation_failed"}
+        and not bool(config.get("retry", {}).get("retain_quality_failed_topic", True))
+    ):
+        log.log(
+            "publish_retry_topic_rotated",
+            slug=topic.get("slug"),
+            reason=pending.get("reason"),
+        )
+        pending["topic"] = {}
+        pending["topic_attempts"] = 0
+        state["pending_publication"] = pending
+        return None
     maximum = max(1, int(config.get("retry", {}).get("max_same_topic_attempts", 3)))
     if int(pending.get("topic_attempts", 0) or 0) >= maximum:
         log.log(
@@ -810,17 +823,120 @@ def target_category(posts: list[Post], config: dict[str, Any]) -> str:
         return "technology"
     seven = snapshot["last_7_days"]
     thirty = snapshot["last_30_days"]
+    configured_order = {
+        category: index
+        for index, category in enumerate(config.get("taxonomy", {}).get("balance_categories", []))
+    }
     # Recent repetition matters most, but total inventory breaks ties so a
     # long-neglected cluster can recover without overriding article quality.
+    # Preserve the configured order for exact ties instead of allowing
+    # alphabetical order to permanently favor one editorial corner.
     return sorted(
         counts,
         key=lambda category: (
             seven.get(category, 0),
             thirty.get(category, 0),
             counts.get(category, 0),
-            category,
+            configured_order.get(category, len(configured_order)),
         ),
     )[0]
+
+
+def editorial_style(
+    title: str,
+    categories: list[str] | None = None,
+    tags: list[str] | None = None,
+    article_type: str = "",
+) -> str:
+    """Classify a topic into a coarse editorial format for rotation."""
+    categories = categories or []
+    tags = tags or []
+    text = " ".join([title, article_type, *categories, *tags]).lower()
+    if "algorithms-data-structures" in categories or re.search(r"\b(leetcode|algorithm|data structure)\b", text):
+        return "algorithm"
+    if "systems-design" in categories or re.search(r"\b(system design|distributed system|scalability)\b", text):
+        return "system-design"
+    if re.search(r"\b(troubleshoot|troubleshooting|diagnos(?:e|ing)|common errors?|fix(?:es)?)\b", text):
+        return "troubleshooting"
+    if re.search(r"\b(what['\u2019]?s new|new in|release notes?|changelog|announc(?:ing|ed)|version\s+\d)\b", text):
+        return "release-update"
+    if re.search(r"\b(vs\.?|versus|compare|comparison|trade-?offs?)\b", text):
+        return "comparison"
+    if re.search(r"\b(how to|tutorial|build|implement|configure|getting started)\b", text):
+        return "tutorial"
+    return "conceptual"
+
+
+def editorial_style_counts(posts: list[Post]) -> dict[str, int]:
+    counts: Counter[str] = Counter()
+    for post in posts:
+        counts[editorial_style(post.title, post.categories, post.tags)] += 1
+    return dict(counts)
+
+
+def recent_editorial_style_counts(
+    posts: list[Post],
+    days: int,
+    *,
+    now: dt.datetime | None = None,
+) -> dict[str, int]:
+    reference = now or utc_now()
+    if reference.tzinfo is None:
+        reference = reference.replace(tzinfo=dt.timezone.utc)
+    cutoff = reference - dt.timedelta(days=max(0, days))
+    return editorial_style_counts(
+        [post for post in posts if (published := parse_date(post.date)) and published >= cutoff]
+    )
+
+
+def editorial_priority_key(
+    topic: dict[str, Any],
+    posts: list[Post],
+    config: dict[str, Any],
+    original_index: int = 0,
+) -> tuple[int, ...]:
+    """Prefer neglected categories and formats while preserving quality order as the final tie-breaker."""
+    snapshot = category_balance_snapshot(posts, config)
+    balance_categories = list(config.get("taxonomy", {}).get("balance_categories", []))
+    category_order = {category: index for index, category in enumerate(balance_categories)}
+    raw_categories = topic.get("categories", []) if isinstance(topic.get("categories"), list) else []
+    primary = slugify(str(topic.get("primary_category", "")), max_length=40)
+    categories = [primary, *[slugify(str(value), max_length=40) for value in raw_categories]]
+    eligible = [primary] if primary in category_order else [
+        category for category in categories if category in category_order
+    ]
+    category_keys = [
+        (
+            snapshot["last_7_days"].get(category, 0),
+            snapshot["last_30_days"].get(category, 0),
+            snapshot["all_time"].get(category, 0),
+            category_order[category],
+        )
+        for category in eligible
+    ]
+    category_key = min(category_keys, default=(10_000, 10_000, 10_000, 10_000))
+    style = editorial_style(
+        str(topic.get("title", "")),
+        eligible,
+        list(topic.get("tags", []) or []),
+        str(topic.get("article_type", "")),
+    )
+    seven_styles = recent_editorial_style_counts(posts, 7)
+    thirty_styles = recent_editorial_style_counts(posts, 30)
+    all_styles = editorial_style_counts(posts)
+    style_order_values = config.get("editorial_rotation", {}).get(
+        "style_order",
+        ["release-update", "algorithm", "system-design", "tutorial", "comparison", "conceptual", "troubleshooting"],
+    )
+    style_order = {value: index for index, value in enumerate(style_order_values)}
+    return (
+        *category_key,
+        seven_styles.get(style, 0),
+        thirty_styles.get(style, 0),
+        all_styles.get(style, 0),
+        style_order.get(style, len(style_order)),
+        original_index,
+    )
 
 
 def http_request(
@@ -1460,6 +1576,80 @@ def score_research_item(
     return round(score, 4)
 
 
+def diversify_research_items(
+    items: list[ResearchItem],
+    config: dict[str, Any],
+    limit: int,
+) -> list[ResearchItem]:
+    """Select high-quality research without letting one feed or category monopolize discovery."""
+    if limit <= 0:
+        return []
+    ranked = sorted(items, key=lambda candidate: candidate.score, reverse=True)
+    categories = list(config.get("taxonomy", {}).get("balance_categories", []))
+    per_source_limit = max(1, int(config.get("research", {}).get("discovery_max_items_per_source", 2)))
+    selected: list[ResearchItem] = []
+    selected_urls: set[str] = set()
+    source_counts: Counter[str] = Counter()
+
+    def add(item: ResearchItem) -> bool:
+        key = canonical_url(item.url) or f"{item.source}:{slugify(item.title)}"
+        if key in selected_urls or len(selected) >= limit:
+            return False
+        selected.append(item)
+        selected_urls.add(key)
+        source_counts[item.source] += 1
+        return True
+
+    # First give every configured editorial category a chance to contribute
+    # one current source. The configured order makes this deterministic.
+    for category in categories:
+        candidate = next(
+            (
+                item
+                for item in ranked
+                if category in item.categories
+                and (canonical_url(item.url) or f"{item.source}:{slugify(item.title)}") not in selected_urls
+                and source_counts[item.source] < per_source_limit
+            ),
+            None,
+        )
+        if candidate is not None:
+            add(candidate)
+        if len(selected) >= limit:
+            return selected
+
+    # Then give configured feeds one representative item in catalog order.
+    # This keeps language and platform feeds visible even when infrastructure
+    # headlines happen to receive slightly higher recency/keyword scores.
+    configured_sources = [
+        str(source.get("name", ""))
+        for source in config.get("research", {}).get("trusted_sources", [])
+        if isinstance(source, dict) and source.get("name")
+    ]
+    for source_name in configured_sources:
+        if source_counts[source_name]:
+            continue
+        candidate = next((item for item in ranked if item.source == source_name), None)
+        if candidate is not None:
+            add(candidate)
+        if len(selected) >= limit:
+            return selected
+
+    # Fill remaining space by score with a per-feed cap, then relax the cap if
+    # the inventory is small. This retains quality without recreating a feed
+    # monoculture in the model prompt.
+    for item in ranked:
+        if source_counts[item.source] < per_source_limit:
+            add(item)
+        if len(selected) >= limit:
+            return selected
+    for item in ranked:
+        add(item)
+        if len(selected) >= limit:
+            break
+    return selected
+
+
 def collect_research(config: dict[str, Any], log: EventLog) -> list[ResearchItem]:
     items: list[ResearchItem] = []
     for source in config.get("research", {}).get("trusted_sources", []):
@@ -1470,7 +1660,7 @@ def collect_research(config: dict[str, Any], log: EventLog) -> list[ResearchItem
         if key not in deduped:
             deduped[key] = item
     max_items = int(config.get("research", {}).get("max_items_for_model", 36))
-    chosen = sorted(deduped.values(), key=lambda candidate: candidate.score, reverse=True)[:max_items]
+    chosen = diversify_research_items(list(deduped.values()), config, max_items)
     log.log("research_collected", count=len(chosen), sources=len(config.get("research", {}).get("trusted_sources", [])))
     return chosen
 
@@ -1967,7 +2157,7 @@ def topic_selection_research_payload(research: list[ResearchItem], config: dict[
     limit = int(research_config.get("topic_selection_max_items", 12))
     summary_chars = int(research_config.get("topic_selection_summary_characters", 260))
     snippet_chars = int(research_config.get("topic_selection_snippet_characters", 180))
-    ranked = sorted(research, key=lambda item: item.score, reverse=True)[:limit]
+    ranked = diversify_research_items(research, config, limit)
     return [
         {
             "source": item.source,
@@ -2010,6 +2200,13 @@ def topic_selection_prompt(
     balance = category_balance_snapshot(posts, config)
     underrepresented = target_category(posts, config)
     existing_posts = topic_selection_existing_posts(posts, config)
+    allowed_categories = config.get("taxonomy", {}).get("allowed_categories", [])
+    allowed_areas = ", ".join(str(category).replace("-", " ") for category in allowed_categories)
+    format_distribution = {
+        "last_7_days": recent_editorial_style_counts(posts, 7),
+        "last_30_days": recent_editorial_style_counts(posts, 30),
+        "all_time": editorial_style_counts(posts),
+    }
     month = str(local_now(config).month)
     seasonal = config.get("seasonal_focus", {}).get(month, [])
     required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
@@ -2025,7 +2222,7 @@ def topic_selection_prompt(
         ][:4],
     }
     return f"""
-You are the autonomous editorial system for Compile My Mind. Publish only practical technical material in these approved areas: cybersecurity, identity and access management, networking, IT fundamentals, Microsoft Azure, Microsoft Entra ID, cloud certifications, system administration, practical infrastructure guides, and developer/IT tools.
+You are the autonomous editorial system for Compile My Mind. Publish practical technical material across this full approved scope: {allowed_areas}.
 
 Choose the strongest publishable article topic for the next autonomous post.
 
@@ -2033,7 +2230,8 @@ Hard requirements:
 - Match one or more allowed categories and give a clear search intent.
 - Never choose celebrity, entertainment, politics, lifestyle, automotive, generic trend, or other out-of-scope content.
 - Prefer the underrepresented category if it can produce a genuinely useful post: {underrepresented}.
-- Use the 7-day and 30-day distribution as a tie-breaker only. Never select a weak topic to fill a category.
+- Include a source-qualified candidate for that underrepresented category whenever the supplied research supports one.
+- Use the 7-day and 30-day category and editorial-format distributions as strong diversity signals. Never select a weak topic merely to fill a category.
 - Avoid duplicates and near-duplicates of existing posts.
 - Compare search intent, not just titles. When a close article exists, choose exactly one action: update, expand, differentiate with a distinct reader question, or cancel. Do not create keyword variants.
 - Use only the supplied primary-source pages. Do not treat keyword overlap alone as evidence.
@@ -2041,10 +2239,13 @@ Hard requirements:
 - Prioritize a reader problem, current trustworthy documentation, and durable search demand.
 - Give additional priority to in-scope certification changes, security deadlines, deprecations, end-of-support transitions, and documentation changes when they are supported by current primary sources.
 - Prefer topics that can be educational and comprehensive, not shallow news summaries.
-- Use titles that answer a concrete intent, such as "How to Configure", "Troubleshooting", "A Practical Guide", "X vs. Y", or "Common Errors and Fixes". Never copy a source or announcement title.
+- Rotate formats: tutorials, concepts, system design, algorithms, comparisons, release/"what's new" analysis, and troubleshooting. Do not default to troubleshooting language.
+- Mobile means Android/iOS application development, SDKs, architecture, testing, and platform APIs—not consumer phone-launch coverage.
+- Release coverage must explain developer impact, compatibility, migration, and concrete new capabilities instead of paraphrasing an announcement.
+- Use titles that answer a concrete intent, including "What's New in X", "How X Works", "Build X", "System Design: X", "LeetCode X", "X vs. Y", and troubleshooting only when the evidence describes a real failure mode. Never copy a source title.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Return exactly 4 concise candidate topics, ranked best to worst.
-- Include backup candidates across at least 2 approved categories so processing can continue after a rejection.
+- Include candidates across at least 3 approved categories and 3 editorial formats so processing can continue after a rejection.
 
 Category counts:
 {json.dumps(counts, ensure_ascii=False, separators=(",", ":"))}
@@ -2052,8 +2253,11 @@ Category counts:
 Rolling category distribution:
 {json.dumps(balance, ensure_ascii=False, separators=(",", ":"))}
 
+Editorial-format distribution:
+{json.dumps(format_distribution, ensure_ascii=False, separators=(",", ":"))}
+
 Allowed categories:
-{json.dumps(config.get("taxonomy", {}).get("allowed_categories", []), ensure_ascii=False)}
+{json.dumps(allowed_categories, ensure_ascii=False)}
 
 Existing posts:
 {json.dumps(existing_posts, ensure_ascii=False, separators=(",", ":"))}
@@ -2118,6 +2322,14 @@ def choose_topic(
         candidates.insert(0, result["topic"])
     if isinstance(result.get("items"), list):
         candidates.extend(item for item in result["items"] if isinstance(item, dict))
+    candidates = [candidate for candidate in candidates if isinstance(candidate, dict)]
+    candidates = [
+        candidate
+        for _, candidate in sorted(
+            enumerate(candidates),
+            key=lambda pair: editorial_priority_key(pair[1], posts, config, pair[0]),
+        )
+    ]
     existing_slugs = {post.slug for post in posts}
     max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
@@ -2354,9 +2566,13 @@ def choose_evergreen_topic(
     existing_slugs = {post.slug for post in posts}
     max_similarity = float(config.get("publishing", {}).get("max_similarity", 0.42))
     max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
-    for configured in config.get("research", {}).get("evergreen_topics", []) or []:
-        if not isinstance(configured, dict):
-            continue
+    configured_topics = [
+        (index, configured)
+        for index, configured in enumerate(config.get("research", {}).get("evergreen_topics", []) or [])
+        if isinstance(configured, dict)
+    ]
+    configured_topics.sort(key=lambda pair: editorial_priority_key(pair[1], posts, config, pair[0]))
+    for _, configured in configured_topics:
         topic = dict(configured)
         title = normalize_space(str(topic.get("title", "")))
         if not title:
@@ -5599,12 +5815,18 @@ def run_publish(args: argparse.Namespace) -> int:
         and config.get("gemini", {}).get("enable_google_search_grounding", True)
     ):
         try:
+            approved_areas = ", ".join(
+                str(category).replace("-", " ")
+                for category in config.get("taxonomy", {}).get("allowed_categories", [])
+            )
             grounded_prompt = (
                 "Find current high-interest, trustworthy technical article opportunities for Compile My Mind. "
-                "Only consider cybersecurity, identity and access management, networking, IT fundamentals, "
-                "Microsoft Azure, Microsoft Entra ID, cloud certifications, system administration, practical "
-                "infrastructure, and developer or IT tools. Exclude consumer hardware launches, mobile products, "
-                "unrelated AI announcements, entertainment, politics, automotive, and lifestyle topics. "
+                f"Search across the full approved scope: {approved_areas}. "
+                "Deliberately include mobile application development, software engineering, algorithms and data "
+                "structures, system design, programming languages, web development, databases, networking, IT, "
+                "security, cloud, and important version or release changes. Exclude consumer device launches, "
+                "unrelated product hype, entertainment, politics, automotive, and lifestyle topics. "
+                "Return opportunities across multiple categories and formats rather than a cluster of similar posts. "
                 "Return concise findings with citations."
             )
             grounded_brief = client.grounded_research(grounded_prompt)
