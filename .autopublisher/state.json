@@ -1517,11 +1517,11 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-19T13:59:50.366078Z",
+      "time": "2026-07-19T19:29:20.967040Z",
       "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
-      "stage": "article_quality",
-      "next_retry_at": "2026-07-19T19:59:50.366063Z"
+      "reason": "no_valid_topic",
+      "stage": "topic_selection",
+      "next_retry_at": "2026-07-20T01:29:20.967023Z"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1742,103 +1742,14 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-07-19T13:59:50.366057Z",
-    "next_retry_at": "2026-07-19T19:59:50.366063Z",
-    "reason": "all_drafts_failed_quality_gates",
-    "stage": "article_quality",
-    "detail": "Claim is not directly supported by its referenced source text: Debug Services",
-    "consecutive_attempts": 2,
-    "topic_attempts": 1,
-    "topic": {
-      "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
-      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
-      "primary_category": "networking",
-      "categories": [
-        "networking",
-        "developer-it-tools",
-        "system-administration"
-      ],
-      "tags": [
-        "kubernetes",
-        "dns",
-        "networking",
-        "troubleshooting"
-      ],
-      "search_intent": "Diagnose Kubernetes service-name resolution failures from a test pod by checking resolver configuration, CoreDNS, Services, and endpoints in a safe order.",
-      "needs_diagram": false,
-      "needs_chart": false,
-      "offline_fallback": {
-        "description": "A safe Kubernetes DNS troubleshooting workflow that separates pod resolver configuration, CoreDNS health, Service records, and endpoint availability before changing the cluster.",
-        "overview": "A failed service-name lookup inside Kubernetes can originate in the test pod, its generated resolver configuration, the cluster DNS Service, CoreDNS Pods, the Service name or namespace, or the workload endpoints. Test those boundaries in order from a disposable pod and preserve the results before restarting DNS components or editing cluster-wide configuration.",
-        "preparation": "Record the cluster context, namespace, failing pod, requested DNS name, expected Service, first failure time, and whether direct IP connectivity works. Use a disposable diagnostic pod approved for the namespace, keep the first resolver and lookup output, and do not restart CoreDNS or change kubelet DNS settings during the initial evidence pass.",
-        "steps": [
-          {
-            "title": "Reproduce the lookup from the affected namespace",
-            "body": "Run a bounded lookup from a diagnostic pod in the same namespace and compare the short Service name with its namespace-qualified and fully qualified forms. Capture the returned resolver address and exact error so a name-scope problem is not mistaken for a DNS outage.",
-            "source_guidance": "Use the DNS debugging guide for the supported diagnostic pod, resolver inspection, lookup sequence, and CoreDNS checks."
-          },
-          {
-            "title": "Verify the expected DNS record shape",
-            "body": "Compare the Service type, namespace, name, named ports, and headless or normal configuration with the record the client expects. Confirm the pod DNS policy and search suffixes before changing an application hostname.",
-            "source_guidance": "Use the DNS for Services and Pods reference to interpret Service, Pod, SRV, search-list, and DNS-policy behavior."
-          },
-          {
-            "title": "Separate name resolution from Service routing",
-            "body": "Inspect the Service and its EndpointSlices after DNS returns an address. Test the Service boundary independently so an empty selector result, wrong target port, or unready backend is not reported as a resolver failure.",
-            "source_guidance": "Use the Service debugging guide to verify the Service definition, EndpointSlices, proxy path, and backend boundary."
-          }
-        ],
-        "symptoms": [
-          {
-            "symptom": "Short name fails but namespace-qualified name works",
-            "likely_cause": "Namespace or resolver search-path mismatch",
-            "next_check": "Compare the pod namespace and search entries with the requested Service namespace."
-          },
-          {
-            "symptom": "All lookups time out from several namespaces",
-            "likely_cause": "Cluster DNS Service, CoreDNS workload, or network path boundary",
-            "next_check": "Inspect resolver addresses, DNS Service endpoints, CoreDNS Pods, and recent logs."
-          },
-          {
-            "symptom": "Name resolves but the application still cannot connect",
-            "likely_cause": "Service port, EndpointSlice, readiness, or backend problem",
-            "next_check": "Debug the Service and endpoints separately from DNS."
-          }
-        ],
-        "checklist": [
-          "Capture cluster context, namespace, pod, requested name, expected Service, and failure time.",
-          "Reproduce short, qualified, and fully qualified lookups from a controlled pod.",
-          "Preserve the pod resolver configuration and cluster DNS Service address.",
-          "Inspect CoreDNS health and logs only after confirming the client-side evidence.",
-          "When resolution succeeds, verify the Service, EndpointSlices, port, and ready backends separately."
-        ],
-        "related_slugs": [
-          "troubleshooting-windows-dns-powershell",
-          "kubernetes-probe-misconfigurations-fixes",
-          "troubleshooting-kubernetes-rbac-kubectl-auth-can-i"
-        ],
-        "version_context": "Current Kubernetes DNS, Service discovery, and Service debugging documentation checked at publication time."
-      },
-      "source_urls": [
-        "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution",
-        "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service",
-        "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
-      ],
-      "seed_sources": [
-        {
-          "title": "Debugging DNS Resolution",
-          "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution"
-        },
-        {
-          "title": "DNS for Services and Pods",
-          "url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
-        },
-        {
-          "title": "Debug Services",
-          "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
-        }
-      ]
-    }
+    "scheduled_at": "2026-07-19T19:29:20.967018Z",
+    "next_retry_at": "2026-07-20T01:29:20.967023Z",
+    "reason": "no_valid_topic",
+    "stage": "topic_selection",
+    "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
+    "consecutive_attempts": 3,
+    "topic_attempts": 0,
+    "topic": {}
   },
   "ready_publications": [],
   "preparation_pending_publication": {
