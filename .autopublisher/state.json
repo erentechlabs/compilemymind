@@ -1517,11 +1517,11 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-19T19:31:03.390194Z",
+      "time": "2026-07-19T19:34:26.920581Z",
       "result": "retry_scheduled",
       "reason": "no_valid_topic",
       "stage": "topic_selection",
-      "next_retry_at": "2026-07-20T01:31:03.390176Z"
+      "next_retry_at": "2026-07-20T01:34:26.920566Z"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1742,12 +1742,12 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-07-19T19:31:03.390171Z",
-    "next_retry_at": "2026-07-20T01:31:03.390176Z",
+    "scheduled_at": "2026-07-19T19:34:26.920564Z",
+    "next_retry_at": "2026-07-20T01:34:26.920566Z",
     "reason": "no_valid_topic",
     "stage": "topic_selection",
     "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
-    "consecutive_attempts": 4,
+    "consecutive_attempts": 5,
     "topic_attempts": 0,
     "topic": {}
   },
