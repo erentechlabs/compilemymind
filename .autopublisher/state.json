@@ -1504,6 +1504,15 @@
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: Debug Services",
       "attempts": 6
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-19T15:18:22.592375Z",
+      "title": "Troubleshoot GitHub Actions Cache Misses",
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
+      "attempts": 6
     }
   ],
   "last_runs": {
@@ -1520,7 +1529,7 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-19T13:55:46.929559Z",
+      "time": "2026-07-19T15:18:22.599516Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
@@ -1710,6 +1719,14 @@
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: Debug Services",
       "attempts": 6
+    },
+    {
+      "time": "2026-07-19T15:18:22.592375Z",
+      "title": "Troubleshoot GitHub Actions Cache Misses",
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "reason": "qa_failed",
+      "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
+      "attempts": 6
     }
   ],
   "provider_cooldowns": {
@@ -1820,100 +1837,97 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-19T13:55:46.924714Z",
-    "next_retry_at": "2026-07-19T19:55:46.924717Z",
+    "scheduled_at": "2026-07-19T15:18:22.592696Z",
+    "next_retry_at": "2026-07-19T21:18:22.592704Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "Claim is not directly supported by its referenced source text: Debug Services",
-    "consecutive_attempts": 6,
+    "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
+    "consecutive_attempts": 7,
     "topic_attempts": 1,
     "topic": {
-      "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
-      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
-      "primary_category": "networking",
+      "title": "Troubleshoot GitHub Actions Cache Misses",
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "primary_category": "developer-it-tools",
       "categories": [
-        "networking",
-        "developer-it-tools",
-        "system-administration"
+        "developer-it-tools"
       ],
       "tags": [
-        "kubernetes",
-        "dns",
-        "networking",
+        "github",
+        "automation",
+        "ci-cd",
         "troubleshooting"
       ],
-      "search_intent": "Diagnose Kubernetes service-name resolution failures from a test pod by checking resolver configuration, CoreDNS, Services, and endpoints in a safe order.",
+      "search_intent": "Diagnose repeated GitHub Actions dependency-cache misses by comparing keys, restore keys, paths, scopes, workflow events, and existing cache entries.",
       "needs_diagram": false,
       "needs_chart": false,
       "offline_fallback": {
-        "description": "A safe Kubernetes DNS troubleshooting workflow that separates pod resolver configuration, CoreDNS health, Service records, and endpoint availability before changing the cluster.",
-        "overview": "A failed service-name lookup inside Kubernetes can originate in the test pod, its generated resolver configuration, the cluster DNS Service, CoreDNS Pods, the Service name or namespace, or the workload endpoints. Test those boundaries in order from a disposable pod and preserve the results before restarting DNS components or editing cluster-wide configuration.",
-        "preparation": "Record the cluster context, namespace, failing pod, requested DNS name, expected Service, first failure time, and whether direct IP connectivity works. Use a disposable diagnostic pod approved for the namespace, keep the first resolver and lookup output, and do not restart CoreDNS or change kubelet DNS settings during the initial evidence pass.",
+        "description": "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely.",
+        "overview": "A cache miss is expected when the evaluated key has no exact match, and a restored prefix is not the same as an exact hit. Repeated misses can also result from changing lockfiles, operating-system boundaries, branch and event scope, a path that is never populated, a job that does not complete successfully, eviction, or an old action configuration. Preserve the evaluated workflow context before changing keys or deleting cache entries.",
+        "preparation": "Record the repository, workflow and run, event, ref, runner operating system, action version, evaluated primary key, restore keys, cached paths, cache-hit output, dependency lockfile hash inputs, and whether the job completed successfully. Do not delete repository caches or weaken key specificity during the first evidence pass.",
         "steps": [
           {
-            "title": "Reproduce the lookup from the affected namespace",
-            "body": "Run a bounded lookup from a diagnostic pod in the same namespace and compare the short Service name with its namespace-qualified and fully qualified forms. Capture the returned resolver address and exact error so a name-scope problem is not mistaken for a DNS outage.",
-            "source_guidance": "Use the DNS debugging guide for the supported diagnostic pod, resolver inspection, lookup sequence, and CoreDNS checks."
+            "title": "Classify exact hits, prefix restores, and misses",
+            "body": "Capture the evaluated primary key and ordered restore keys from the same workflow run, then interpret the cache-hit output according to exact-match behavior. Confirm that the path exists and contains the intended dependency data before the post-job save phase.",
+            "source_guidance": "Use the dependency caching reference for exact and partial matching, restore-key order, cache-hit output, save timing, access scope, limits, and security guidance."
           },
           {
-            "title": "Verify the expected DNS record shape",
-            "body": "Compare the Service type, namespace, name, named ports, and headless or normal configuration with the record the client expects. Confirm the pod DNS policy and search suffixes before changing an application hostname.",
-            "source_guidance": "Use the DNS for Services and Pods reference to interpret Service, Pod, SRV, search-list, and DNS-policy behavior."
+            "title": "Compare the repository cache inventory",
+            "body": "Review the existing cache entries and compare their key, ref or scope, creation time, last use, and size with the failing run. Treat deletion as a maintenance action only after the evidence proves that an obsolete entry is interfering with the intended policy.",
+            "source_guidance": "Use Managing caches for the supported repository inventory and cache-management interfaces."
           },
           {
-            "title": "Separate name resolution from Service routing",
-            "body": "Inspect the Service and its EndpointSlices after DNS returns an address. Test the Service boundary independently so an empty selector result, wrong target port, or unready backend is not reported as a resolver failure.",
-            "source_guidance": "Use the Service debugging guide to verify the Service definition, EndpointSlices, proxy path, and backend boundary."
+            "title": "Verify the action inputs and supported behavior",
+            "body": "Compare the workflow's action version, path, key, restore keys, lookup behavior, and optional cross-OS settings with the maintained action documentation. Avoid caching credentials, generated secrets, or a path readable by untrusted workflow contexts.",
+            "source_guidance": "Use the actions/cache repository documentation for maintained inputs, outputs, examples, compatibility, and migration notes."
           }
         ],
         "symptoms": [
           {
-            "symptom": "Short name fails but namespace-qualified name works",
-            "likely_cause": "Namespace or resolver search-path mismatch",
-            "next_check": "Compare the pod namespace and search entries with the requested Service namespace."
+            "symptom": "The key changes on every run",
+            "likely_cause": "Unstable key input, generated file, timestamp, or changing lockfile",
+            "next_check": "Print the non-secret evaluated components and compare the exact key across two runs."
           },
           {
-            "symptom": "All lookups time out from several namespaces",
-            "likely_cause": "Cluster DNS Service, CoreDNS workload, or network path boundary",
-            "next_check": "Inspect resolver addresses, DNS Service endpoints, CoreDNS Pods, and recent logs."
+            "symptom": "A restore key finds data but cache-hit is not true",
+            "likely_cause": "Partial prefix match rather than an exact primary-key match",
+            "next_check": "Compare the restored key with the full primary key and decide whether a new cache should be saved."
           },
           {
-            "symptom": "Name resolves but the application still cannot connect",
-            "likely_cause": "Service port, EndpointSlice, readiness, or backend problem",
-            "next_check": "Debug the Service and endpoints separately from DNS."
+            "symptom": "No cache is saved after a miss",
+            "likely_cause": "Job failure, empty or incorrect path, scope restriction, limit, or action configuration",
+            "next_check": "Verify job completion, populated paths, action output, and repository cache inventory."
           }
         ],
         "checklist": [
-          "Capture cluster context, namespace, pod, requested name, expected Service, and failure time.",
-          "Reproduce short, qualified, and fully qualified lookups from a controlled pod.",
-          "Preserve the pod resolver configuration and cluster DNS Service address.",
-          "Inspect CoreDNS health and logs only after confirming the client-side evidence.",
-          "When resolution succeeds, verify the Service, EndpointSlices, port, and ready backends separately."
+          "Capture run event, ref, runner OS, action version, primary key, restore keys, paths, and cache-hit output.",
+          "Compare the exact evaluated key and its stable inputs across two runs.",
+          "Confirm the cached path exists and is populated before the save phase.",
+          "Review existing cache entries and access scope without deleting evidence.",
+          "Apply one reviewed key or path change and verify both restore and save behavior on the next comparable run."
         ],
         "related_slugs": [
-          "troubleshooting-windows-dns-powershell",
-          "kubernetes-probe-misconfigurations-fixes",
-          "troubleshooting-kubernetes-rbac-kubectl-auth-can-i"
+          "audit-github-actions-token-permissions",
+          "copilot-code-review-customization-and-configurability-improvements"
         ],
-        "version_context": "Current Kubernetes DNS, Service discovery, and Service debugging documentation checked at publication time."
+        "version_context": "Current GitHub Actions dependency caching, cache management, and actions/cache documentation checked at publication time."
       },
       "source_urls": [
-        "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution",
-        "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service",
-        "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
+        "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching",
+        "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches",
+        "https://github.com/actions/cache"
       ],
       "seed_sources": [
         {
-          "title": "Debugging DNS Resolution",
-          "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution"
+          "title": "Dependency caching reference",
+          "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
         },
         {
-          "title": "DNS for Services and Pods",
-          "url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
+          "title": "Managing caches",
+          "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches"
         },
         {
-          "title": "Debug Services",
-          "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
+          "title": "actions cache",
+          "url": "https://github.com/actions/cache"
         }
       ]
     }
