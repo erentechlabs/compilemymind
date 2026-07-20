@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Windows Time Synchronization with w32tm"
 date: "2026-07-18T00:15:39+03:00"
-lastmod: "2026-07-18T00:15:39+03:00"
+lastmod: "2026-07-20T16:05:02+03:00"
 description: "A read-first Windows Time service troubleshooting workflow that uses w32tm status, source, peer, and bounded offset queries before changing NTP or domain hierarchy settings."
 tags: ["windows-server", "troubleshooting", "networking", "system-administration"]
 categories: ["system-administration", "networking"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-18"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-17T21:15:39.249714Z"
 verification_version: 1
@@ -49,6 +49,21 @@ Inspect the configured peers and determine whether a domain member is expected t
 ### 3. Investigate a no-time-data result
 
 When resynchronization reports that no time data is available, verify name resolution, the selected source, network reachability, and relevant service events before repeating the request. A repeated resync is not a substitute for finding why no acceptable sample reached the client.
+
+## Read-only Windows Time measurements
+
+Use an elevated PowerShell console where required, but keep the first pass observational. These commands report the selected source, detailed status, configured peers, and a bounded offset sample without changing the time-service configuration:
+
+```powershell
+$ReferenceSource = 'time.windows.com'
+
+w32tm /query /source
+w32tm /query /status /verbose
+w32tm /query /peers
+w32tm /stripchart /computer:$ReferenceSource /samples:5 /dataonly
+```
+
+Keep the source, stratum, last successful synchronization, peer state, and five offset samples in one evidence record. Substitute the approved reference for the example host; a public source may be inappropriate for a domain member whose design requires the domain hierarchy.
 
 
 

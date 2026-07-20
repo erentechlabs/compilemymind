@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Docker Volume Mounts Safely"
 date: "2026-07-19T00:42:33+03:00"
-lastmod: "2026-07-19T00:42:33+03:00"
+lastmod: "2026-07-20T16:05:02+03:00"
 description: "A read-first Docker volume troubleshooting workflow for confirming the effective mount, volume identity, driver, destination, and daemon context before recreating a container."
 tags: ["docker", "troubleshooting", "storage"]
 categories: ["developer-it-tools", "system-administration"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-19"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-18T21:42:33.576312Z"
 verification_version: "1"
@@ -49,6 +49,22 @@ Read the container Mounts structure and capture the type, source or volume name,
 ### 3. Verify the volume in the correct daemon inventory
 
 List volumes in the active daemon context and narrow by the expected name, label, or driver. An absent name may indicate another context, a Compose-prefixed name, an anonymous volume, or a deployment that never created the expected object.
+
+## Read-only Docker evidence commands
+
+Set the container and expected volume names explicitly, then collect the daemon context, effective mount mapping, and matching volume inventory without recreating or pruning anything:
+
+```bash
+CONTAINER_NAME='example-app'
+VOLUME_NAME='example-data'
+
+docker context show
+docker inspect --type container "$CONTAINER_NAME" --format '{{json .Mounts}}'
+docker volume ls --filter "name=$VOLUME_NAME"
+docker inspect --type volume "$VOLUME_NAME"
+```
+
+In the container output, compare `Type`, `Name` or `Source`, `Destination`, `Driver`, and `RW` with the deployment definition. In the volume output, confirm that the driver, mount point, labels, and daemon context describe the volume you intended to inspect. Replace the example names; do not infer identity from a similar prefix.
 
 
 

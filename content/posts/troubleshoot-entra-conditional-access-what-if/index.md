@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Microsoft Entra Conditional Access with What If"
 date: "2026-07-18T06:34:48+03:00"
-lastmod: "2026-07-18T06:34:48+03:00"
-description: "A safe Microsoft Entra Conditional Access troubleshooting workflow that compares a complete What If simulation with the matching sign-in record before changing policy assignments o"
+lastmod: "2026-07-20T16:05:02+03:00"
+description: "A safe Microsoft Entra Conditional Access workflow that compares What If results with the matching sign-in record before approved policy changes."
 tags: ["entra-id", "conditional-access", "identity", "troubleshooting"]
 categories: ["entra-id", "identity-access-management", "cybersecurity"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-18"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-18T03:34:48.014758Z"
 verification_version: 1
@@ -19,6 +19,8 @@ recheck_after: "2026-08-22"
 ## Direct answer
 
 Conditional Access troubleshooting requires both a modeled policy evaluation and evidence from the real sign-in. The What If tool explains how enabled and report-only policies evaluate the supplied identity, resource, and conditions, while the sign-in record shows the application, resource, client, device, location, risk, and policy result that actually occurred. Neither should be treated as a universal policy test on its own. Start with evidence already available to the operator and use the referenced documentation to verify the behavior of the component in scope.
+
+![Conditional Access What If evidence workflow](conditional-access-what-if-evidence-flow.svg)
 
 ## Prepare a safe investigation
 

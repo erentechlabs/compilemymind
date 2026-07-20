@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot PowerShell Remoting and WinRM Connections"
 date: "2026-07-18T23:36:49+03:00"
-lastmod: "2026-07-18T23:36:49+03:00"
+lastmod: "2026-07-20T16:05:02+03:00"
 description: "A read-first PowerShell remoting workflow for isolating DNS, WSMan transport, listener, authentication, authorization, and endpoint failures before changing WinRM."
 tags: ["powershell", "authentication", "dns"]
 categories: ["system-administration", "networking"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-18"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-18T20:36:49.914211Z"
 verification_version: "1"
@@ -49,6 +49,20 @@ Use a bounded Test-WSMan request against the intended target, transport, port, a
 ### 3. Verify the endpoint and PowerShell version
 
 Confirm that the target has the expected remoting endpoint for the PowerShell installation and that the client selects the intended configuration name. Treat enabling or reconfiguring remoting as a reviewed remediation rather than a first diagnostic step.
+
+## Read-only remoting boundary checks
+
+Run these checks from the same client path that experienced the failure. They separate DNS and TCP reachability from the WSMan identification response without opening an interactive PowerShell session:
+
+```powershell
+$Target = 'server01.example.test'
+
+Resolve-DnsName -Name $Target
+Test-NetConnection -ComputerName $Target -Port 5985 -InformationLevel Detailed
+Test-WSMan -ComputerName $Target
+```
+
+If DNS resolution or TCP 5985 fails, investigate that boundary before testing credentials. A successful `Test-WSMan` result confirms a responding WSMan endpoint, but it does not prove that the account is authorized for `Enter-PSSession` or that the intended PowerShell configuration endpoint exists.
 
 
 

@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Windows Scheduled Tasks with PowerShell"
 date: "2026-07-16T14:23:14+03:00"
-lastmod: "2026-07-16T14:23:14+03:00"
+lastmod: "2026-07-20T16:05:02+03:00"
 description: "A read-only Windows Scheduled Tasks troubleshooting workflow using PowerShell and schtasks to inspect task definitions, state, and recent execution results safely."
 tags: ["powershell", "windows-server", "troubleshooting", "system-administration", "automation"]
 categories: ["system-administration"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-16"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-16T11:23:14.757889Z"
 verification_version: 1
 version_context: "Documentation current at verification time"
@@ -46,6 +46,22 @@ Read the task information associated with the same registered task and record th
 ### 3. Use a command-line view only when needed
 
 In a recovery console or an existing command-line workflow, use the documented schtasks query view to compare the task's registered state. Keep the query read-only and avoid changing run-as credentials or trigger settings until the evidence identifies the specific boundary. Keep this step bounded to the current incident or change request. Record the timestamp, the actor or workload, the exact result, and the scope of the evidence before moving to the next step. That record makes a later escalation reproducible and prevents a broad configuration change from hiding the original signal.
+
+## Read-only Scheduled Tasks inspection
+
+Use the exact registered task path when duplicate display names are possible. These commands read the definition and recent run information without starting, disabling, or re-registering the task:
+
+```powershell
+$TaskName = 'NightlyReport'
+$TaskPath = '\Operations\'
+
+$Task = Get-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath
+$Task | Select-Object TaskName, TaskPath, State, Actions, Triggers, Principal, Settings
+$Task | Get-ScheduledTaskInfo |
+    Select-Object LastRunTime, LastTaskResult, NextRunTime, NumberOfMissedRuns
+```
+
+Keep the definition and run-information output together. `LastTaskResult` is evidence to correlate with the action's own logs and Windows events; it should not be interpreted in isolation as proof that the scheduler, script, credentials, or dependency is the root cause.
 
 ## Troubleshoot by symptom
 

@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Docker Container Health Checks"
 date: "2026-07-18T00:23:55+03:00"
-lastmod: "2026-07-18T00:23:55+03:00"
-description: "A practical Docker health-check troubleshooting workflow for inspecting the image check, container health state, and recorded probe output before rebuilding or restarting a workloa"
+lastmod: "2026-07-20T16:05:02+03:00"
+description: "A practical Docker health-check workflow for inspecting image configuration, container health state, and probe output before rebuilding or restarting a workload."
 tags: ["docker", "troubleshooting", "monitoring", "developer-it-tools"]
 categories: ["developer-it-tools", "system-administration"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-18"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-17T21:23:55.036527Z"
 verification_version: 1
@@ -49,6 +49,20 @@ Use docker inspect to capture the current health status and recent probe records
 ### 3. Find the affected set without changing it
 
 Filter the container list by health state to determine whether the problem is isolated to one instance or shared by containers from the same image or environment. Keep health state separate from running or exited state when deciding the next evidence check.
+
+## Inspect health configuration and probe history
+
+The following commands read the effective health-check definition, recent probe records, and the set of unhealthy containers. They do not restart or recreate the workload:
+
+```bash
+CONTAINER_NAME='example-app'
+
+docker inspect --type container "$CONTAINER_NAME" --format '{{json .Config.Healthcheck}}'
+docker inspect --type container "$CONTAINER_NAME" --format '{{json .State.Health}}'
+docker container ls --filter health=unhealthy --format 'table {{.ID}}\t{{.Image}}\t{{.Names}}\t{{.Status}}'
+```
+
+Read the command and timing settings from `Config.Healthcheck`, then correlate each `State.Health.Log` timestamp, exit code, and bounded output value with application and dependency logs. The filtered list shows scope; it does not explain why the probes failed.
 
 
 

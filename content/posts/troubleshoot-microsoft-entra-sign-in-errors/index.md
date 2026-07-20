@@ -1,14 +1,14 @@
 ---
 title: "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics"
 date: "2026-07-15T23:26:44+03:00"
-lastmod: "2026-07-15T23:26:44+03:00"
+lastmod: "2026-07-20T16:05:02+03:00"
 description: "A safe Microsoft Entra sign-in troubleshooting workflow that uses sign-in logs and Sign-in Diagnostics to isolate the failure before changing authentication or access policies."
 tags: ["entra-id", "identity", "authentication", "conditional-access", "troubleshooting"]
 categories: ["entra-id"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-15"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-15T20:26:44.650136Z"
 verification_version: "1"
 version_context: "Documentation current at verification time"
@@ -18,6 +18,8 @@ recheck_after: "2026-08-19"
 ## Direct answer
 
 Microsoft Entra sign-in troubleshooting should begin with the affected sign-in record and its diagnostic details. This isolates whether the failure is associated with the account, application, device, network, authentication method, or an access policy before an administrator changes Conditional Access or user settings. This recovery article is intentionally conservative: it starts with evidence already available to the operator, separates observation from remediation, and uses the referenced documentation to confirm the exact behavior of the service in scope. It does not assume that a familiar error message has one universal cause.
+
+![Microsoft Entra sign-in diagnostics workflow](entra-sign-in-diagnostics-flow.svg)
 
 ## Prepare a safe investigation
 

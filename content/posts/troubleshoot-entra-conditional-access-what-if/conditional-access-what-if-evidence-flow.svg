@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="730" viewBox="0 0 1200 730" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef2ff"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <title id="title">Conditional Access What If evidence workflow</title>
+  <desc id="desc">Five-step flow from capturing an affected sign-in through simulation, evidence comparison, policy interpretation, and a narrow approved retest.</desc>
+  <rect width="1200" height="730" rx="28" fill="url(#background)"/>
+  <text x="600" y="52" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Conditional Access: simulation plus real evidence</text>
+
+  <rect x="220" y="92" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="264" cy="133" r="22" fill="#2563eb"/>
+  <text x="264" y="140" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+  <text x="600" y="141" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0f172a">Capture the affected sign-in and conditions</text>
+
+  <line x1="600" y1="184" x2="600" y2="210" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="220" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="264" cy="261" r="22" fill="#2563eb"/>
+  <text x="264" y="268" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+  <text x="600" y="269" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0f172a">Reproduce the complete scenario in What If</text>
+
+  <line x1="600" y1="312" x2="600" y2="338" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="348" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="264" cy="389" r="22" fill="#2563eb"/>
+  <text x="264" y="396" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+  <text x="600" y="397" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0f172a">Match the simulation to the real sign-in record</text>
+
+  <line x1="600" y1="440" x2="600" y2="466" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="476" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="264" cy="517" r="22" fill="#2563eb"/>
+  <text x="264" y="524" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
+  <text x="600" y="525" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0f172a">Compare applying policies and unmet conditions</text>
+
+  <line x1="600" y1="568" x2="600" y2="594" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="604" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+  <circle cx="264" cy="645" r="22" fill="#2563eb"/>
+  <text x="264" y="652" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+  <text x="600" y="653" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="22" fill="#0f172a">Apply one approved narrow change and retest</text>
+</svg>

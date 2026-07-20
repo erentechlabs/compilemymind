@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="730" viewBox="0 0 1200 730" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <defs>
+    <linearGradient id="background" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f0fdfa"/>
+      <stop offset="1" stop-color="#eff6ff"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <title id="title">Microsoft Entra sign-in diagnostics workflow</title>
+  <desc id="desc">Five-step diagnostic flow from the reported failure to matching the sign-in event, reviewing recorded fields, running diagnostics, and verifying one narrow change.</desc>
+  <rect width="1200" height="730" rx="28" fill="url(#background)"/>
+  <text x="600" y="52" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Microsoft Entra sign-in evidence path</text>
+
+  <rect x="220" y="92" width="760" height="82" rx="18" fill="#ffffff" stroke="#99f6e4" stroke-width="2"/>
+  <circle cx="264" cy="133" r="22" fill="#0f766e"/>
+  <text x="264" y="140" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+  <text x="630" y="141" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" fill="#0f172a">Capture time, user, application, device, and error</text>
+
+  <line x1="600" y1="184" x2="600" y2="210" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="220" width="760" height="82" rx="18" fill="#f8fafc" stroke="#99f6e4" stroke-width="2"/>
+  <circle cx="264" cy="261" r="22" fill="#0f766e"/>
+  <text x="264" y="268" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+  <text x="630" y="269" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" fill="#0f172a">Find the matching sign-in event</text>
+
+  <line x1="600" y1="312" x2="600" y2="338" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="348" width="760" height="82" rx="18" fill="#ffffff" stroke="#99f6e4" stroke-width="2"/>
+  <circle cx="264" cy="389" r="22" fill="#0f766e"/>
+  <text x="264" y="396" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+  <text x="630" y="397" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" fill="#0f172a">Read failure, authentication, device, and policy fields</text>
+
+  <line x1="600" y1="440" x2="600" y2="466" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="476" width="760" height="82" rx="18" fill="#f8fafc" stroke="#99f6e4" stroke-width="2"/>
+  <circle cx="264" cy="517" r="22" fill="#0f766e"/>
+  <text x="264" y="524" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
+  <text x="630" y="525" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" fill="#0f172a">Run Sign-in Diagnostics for that event</text>
+
+  <line x1="600" y1="568" x2="600" y2="594" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+  <rect x="220" y="604" width="760" height="82" rx="18" fill="#ffffff" stroke="#99f6e4" stroke-width="2"/>
+  <circle cx="264" cy="645" r="22" fill="#0f766e"/>
+  <text x="264" y="652" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+  <text x="630" y="653" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" fill="#0f172a">Test one approved boundary and verify the result</text>
+</svg>
