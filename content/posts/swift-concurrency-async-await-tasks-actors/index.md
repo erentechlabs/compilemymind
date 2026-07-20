@@ -1,7 +1,7 @@
 ---
 title: "Swift Concurrency: async/await, Tasks, and Actors Explained"
-date: "2026-07-20T14:13:04+03:00"
-lastmod: "2026-07-20T18:45:00+03:00"
+date: "2026-07-20T22:58:16+03:00"
+lastmod: "2026-07-20T22:58:16+03:00"
 description: "A practical model for Swift async/await, tasks, actors, and Swift 6 concurrency checks, with clear choices for isolation, cancellation, and migration."
 tags: ["swift"]
 categories: ["mobile-development", "programming-languages"]
@@ -10,8 +10,8 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T11:13:04.395832Z"
-verification_version: 1
+verification_date: "2026-07-20T19:58:16.885880Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-18"
 ---
