@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Windows Time Synchronization with w32tm"
 date: "2026-07-18T00:15:39+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-first Windows Time service troubleshooting workflow that uses w32tm status, source, peer, and bounded offset queries before changing NTP or domain hierarchy settings."
 tags: ["windows-server", "troubleshooting", "networking", "system-administration"]
 categories: ["system-administration", "networking"]
@@ -15,6 +15,8 @@ verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-08-01"
 ---
+
+![Windows Time synchronization diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

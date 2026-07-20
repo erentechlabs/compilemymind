@@ -1,7 +1,7 @@
 ---
 title: "How to Audit GitHub Actions Token Permissions"
 date: "2026-07-15T18:01:15+03:00"
-lastmod: "2026-07-15T18:01:15+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Learn how to audit and minimize GITHUB_TOKEN permissions in GitHub Actions workflows with step-by-step guidance, security best practices, and common pitfalls."
 summary: "This article explains how to audit and restrict GITHUB_TOKEN permissions in GitHub Actions workflows, helping developers enhance security and reduce risk."
 tags: ["github"]
@@ -9,12 +9,14 @@ categories: ["cybersecurity"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-15"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-15T15:01:15.708576Z"
 verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-13"
 ---
+
+![GitHub Actions token permission audit flow](concept-flow.svg)
 
 ## Why Auditing GITHUB_TOKEN Permissions Matters
 

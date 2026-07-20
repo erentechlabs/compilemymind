@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Docker Container Health Checks"
 date: "2026-07-18T00:23:55+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A practical Docker health-check workflow for inspecting image configuration, container health state, and probe output before rebuilding or restarting a workload."
 tags: ["docker", "troubleshooting", "monitoring", "developer-it-tools"]
 categories: ["developer-it-tools", "system-administration"]
@@ -15,6 +15,8 @@ verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-08-01"
 ---
+
+![Docker health-check diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

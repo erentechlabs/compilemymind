@@ -1,19 +1,21 @@
 ---
 title: "Windows DNS Diagnostics with PowerShell: A Safe Troubleshooting Workflow"
 date: "2026-07-15T20:08:42+03:00"
-lastmod: "2026-07-15T20:08:42+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A safe PowerShell workflow for diagnosing Windows DNS configuration, resolver reachability, record lookups, and common network failures."
 tags: ["powershell", "dns", "troubleshooting", "networking"]
 categories: ["networking"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-15"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-15T17:08:42.760205Z"
 verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-12-12"
 ---
+
+![Windows DNS diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

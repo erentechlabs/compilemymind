@@ -1,7 +1,7 @@
 ---
 title: "Swift Concurrency: async/await, Tasks, and Actors Explained"
 date: "2026-07-20T14:13:04+03:00"
-lastmod: "2026-07-20T14:13:04+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A practical model for Swift async/await, tasks, actors, and Swift 6 concurrency checks, with clear choices for isolation, cancellation, and migration."
 tags: ["swift"]
 categories: ["mobile-development", "programming-languages"]
@@ -17,6 +17,8 @@ recheck_after: "2026-09-18"
 ---
 
 Swift concurrency provides structured ways to suspend work, create concurrent child operations, and isolate mutable state. An async function describes work that may suspend; a task gives that work an execution context; and an actor protects actor-isolated state from unsynchronized access. These mechanisms solve different problems, so understanding their boundaries matters more than adding async keywords throughout a codebase.
+
+![Swift concurrency execution and actor-isolation flow](concept-flow.svg)
 
 ## A working model for Swift Concurrency: async/await, Tasks, and Actors Explained
 

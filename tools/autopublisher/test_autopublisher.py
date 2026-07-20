@@ -28,6 +28,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertFalse(config["publishing"]["prefer_source_qualified_evergreen_first"])
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
         self.assertEqual(config["publishing"]["required_enhanced_elements"], 1)
+        self.assertEqual(config["publishing"]["required_diagrams"], 1)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
@@ -488,7 +489,7 @@ Record the observable outcome.
         self.assertIn("![Reliable Queue Processing: practical flow](concept-flow.svg)", normalized["article_markdown"])
         self.assertIn("diagram", autopublisher.enhanced_content_elements(normalized))
 
-    def test_code_example_satisfies_enhanced_content_without_forcing_a_diagram(self):
+    def test_code_example_is_preserved_and_required_diagram_is_added(self):
         config = autopublisher.load_config()
         topic = {
             "title": "Python Queue Example",
@@ -517,8 +518,11 @@ def process(value: int) -> int:
         }
         normalized = autopublisher.normalize_article_payload(article, topic, config, [], posts=[])
 
-        self.assertEqual(normalized["diagrams"], [])
-        self.assertEqual(autopublisher.enhanced_content_elements(normalized), ["code_or_command_example"])
+        self.assertEqual(len(normalized["diagrams"]), 1)
+        self.assertEqual(
+            autopublisher.enhanced_content_elements(normalized),
+            ["code_or_command_example", "diagram"],
+        )
 
     def test_enhanced_content_gate_does_not_accept_a_table_alone(self):
         config = {
@@ -553,6 +557,42 @@ def process(value: int) -> int:
         issues = autopublisher.deterministic_qa(article, topic, [], config, [])
 
         self.assertTrue(any("code or visual elements" in issue for issue in issues))
+
+    def test_diagram_gate_does_not_accept_code_as_a_substitute(self):
+        config = {
+            "site": {"base_url": "https://www.compilemymind.com/"},
+            "publishing": {
+                "min_words": 0,
+                "required_source_count": 0,
+                "required_claim_evidence_count": 0,
+                "require_table": True,
+                "minimum_practical_elements": 0,
+                "required_enhanced_elements": 1,
+                "required_diagrams": 1,
+                "minimum_internal_post_links": 0,
+            },
+            "taxonomy": {"allowed_categories": ["software-engineering"]},
+        }
+        topic = {
+            "title": "Queue Implementation",
+            "slug": "queue-implementation",
+            "categories": ["software-engineering"],
+            "primary_category": "software-engineering",
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A queue implementation example with enough metadata detail to exercise the required diagram validation boundary.",
+            "categories": ["software-engineering"],
+            "tags": [],
+            "sources": [],
+            "claim_evidence": [],
+            "article_markdown": "## Example\n\n```python\nprint('ready')\n```\n\n| State | Action |\n| --- | --- |\n| Ready | Process |",
+        }
+
+        issues = autopublisher.deterministic_qa(article, topic, [], config, [])
+
+        self.assertTrue(any("diagrams; at least 1" in issue for issue in issues))
 
     def test_model_json_parser_handles_markdown_fences(self):
         self.assertEqual(autopublisher.parse_model_json("```json\n{\"ok\": true}\n```"), {"ok": True})
@@ -974,8 +1014,12 @@ def process(value: int) -> int:
                         "categories": ["guide"],
                         "tags": ["powershell", "windows", "troubleshooting"],
                     },
-                    "## Diagnose the issue\n\nUse the evidence in order.",
+                    "![Queued diagnostic flow](concept-flow.svg)\n\n## Diagnose the issue\n\nUse the evidence in order.",
                 ),
+                encoding="utf-8",
+            )
+            (source_dir / "concept-flow.svg").write_text(
+                '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50"><title>Flow</title></svg>',
                 encoding="utf-8",
             )
             article = {
@@ -1007,6 +1051,7 @@ def process(value: int) -> int:
                 )
                 self.assertFalse(source_dir.exists())
                 self.assertTrue((queue_dir / "queued-guide/index.md").is_file())
+                self.assertTrue((queue_dir / "queued-guide/concept-flow.svg").is_file())
                 self.assertTrue(
                     autopublisher.publish_ready_publication(
                         state, config, log, dry_run=False
@@ -1014,6 +1059,7 @@ def process(value: int) -> int:
                 )
 
             self.assertTrue((root / "content/posts/queued-guide/index.md").is_file())
+            self.assertTrue((root / "content/posts/queued-guide/concept-flow.svg").is_file())
             self.assertFalse((queue_dir / "queued-guide").exists())
             self.assertEqual(state["ready_publications"], [])
             self.assertEqual(state["last_runs"]["publish"]["source"], "ready_queue")

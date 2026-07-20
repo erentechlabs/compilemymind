@@ -1,19 +1,21 @@
 ---
 title: "Diagnose Windows Service Failures with PowerShell"
 date: "2026-07-16T23:00:45+03:00"
-lastmod: "2026-07-16T23:00:45+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-only PowerShell workflow for diagnosing Windows service state, configuration, and query results before changing startup, recovery, or service-account settings."
 tags: ["powershell", "windows-server", "troubleshooting", "system-administration", "monitoring"]
 categories: ["system-administration"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-16"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-16T20:00:45.445567Z"
 verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-07-30"
 ---
+
+![Windows service failure diagnostic flow](concept-flow.svg)
 
 ## Diagnose Windows Service Failures with PowerShell: direct answer
 

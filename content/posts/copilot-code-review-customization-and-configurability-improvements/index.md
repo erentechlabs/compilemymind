@@ -1,7 +1,7 @@
 ---
 title: "Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples"
 date: "2026-07-18T16:52:35+03:00"
-lastmod: "2026-07-18T16:52:35+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Explore Copilot code review’s new customization and configurability features, including branch-level instructions, firewall integration, and repository metrics."
 summary: "This guide details Copilot code review’s July 2026 improvements, showing how branch-level instructions, firewall support, and repository metrics empower technical teams to tailor and secure review automation."
 tags: ["github", "automation", "firewall"]
@@ -9,13 +9,15 @@ categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-18"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-18T13:52:35.938360Z"
 verification_version: 1
 version_context: "Copilot code review as of July 2026, based on GitHub Changelog documentation."
 recheck_after: "2026-09-16"
 ---
+
+![Copilot code review customization and validation flow](concept-flow.svg)
 
 ## Why Copilot Code Review Customization Matters for Technical Teams
 

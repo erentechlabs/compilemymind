@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="868" viewBox="0 0 1200 868" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
+</defs>
+<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>
+<title id="title">Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples: practical flow</title>
+<desc id="desc">A flowchart for Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples: practical flow</desc>
+<text x="600.0" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Copilot Code Review Customization and Configurability</text>
+<text x="600.0" y="86" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Improvements: Practical Guide and Real-World Examples:</text>
+<text x="600.0" y="124" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">practical flow</text>
+<rect x="220" y="186" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="227.0" r="22" fill="#2563eb"/>
+<text x="264" y="234.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+<text x="306" y="218" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Why Copilot Code Review Customization Matters for</text>
+<text x="306" y="240" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Technical Teams</text>
+<line x1="600" y1="276" x2="600" y2="302" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="314" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="355.0" r="22" fill="#2563eb"/>
+<text x="264" y="362.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+<text x="306" y="346" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Expanded Custom Instructions: Branch-Level Control</text>
+<text x="306" y="368" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">and Iteration</text>
+<line x1="600" y1="404" x2="600" y2="430" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="442" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="483.0" r="22" fill="#2563eb"/>
+<text x="264" y="490.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+<text x="306" y="474" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Custom Setup Steps and Firewall Integration</text>
+<line x1="600" y1="532" x2="600" y2="558" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="570" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="611.0" r="22" fill="#2563eb"/>
+<text x="264" y="618.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
+<text x="306" y="602" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Independent Runner Configurations</text>
+<line x1="600" y1="660" x2="600" y2="686" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="698" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="739.0" r="22" fill="#2563eb"/>
+<text x="264" y="746.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+<text x="306" y="730" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Repository-Level Usage Metrics: Actionable Insights</text>
+<text x="626.0" y="296.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="424.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="552.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="680.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+</svg>

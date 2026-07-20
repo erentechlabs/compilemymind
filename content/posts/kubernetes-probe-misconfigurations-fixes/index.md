@@ -1,19 +1,21 @@
 ---
 title: "Common Kubernetes Probe Misconfigurations and Fixes"
 date: "2026-07-15T19:31:37+03:00"
-lastmod: "2026-07-15T19:31:37+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Diagnose Kubernetes liveness, readiness, and startup probe failures by checking handlers, ports, timing, Pod events, and container behavior."
 tags: ["kubernetes", "troubleshooting", "configuration-management", "developer-it-tools"]
 categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-15"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-15T16:31:37.559315Z"
 verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-13"
 ---
+
+![Kubernetes probe configuration diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

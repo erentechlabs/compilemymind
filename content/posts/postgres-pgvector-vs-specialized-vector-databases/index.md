@@ -1,6 +1,7 @@
 ---
 title: "Postgres with pgvector vs. Specialized Vector Databases: The Real Cost and Performance Tradeoffs"
 date: "2026-07-15T11:38:50+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Explore the trade-offs between using Postgres with pgvector and specialized vector databases, focusing on cost, performance, and operational complexity."
 summary: "This article analyzes the pros and cons of using Postgres with pgvector versus specialized vector databases, helping teams make informed architectural decisions."
 tags: ["infrastructure"]
@@ -8,6 +9,7 @@ categories: ["practical-infrastructure-guides"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
+last_reviewed: "2026-07-20"
 ---
 
 The rapid adoption of Retrieval-Augmented Generation (RAG) and semantic search has forced engineering teams to make a critical architectural decision: Should you store and query your vector embeddings in your existing relational database using an extension like `pgvector`, or should you spin up a specialized vector database like Qdrant, Milvus, or Pinecone?
@@ -15,6 +17,8 @@ The rapid adoption of Retrieval-Augmented Generation (RAG) and semantic search h
 While the allure of specialized databases is strong—promising sub-millisecond latencies and billion-scale capacity—the operational complexity of introducing a new database into your stack is often underestimated. Conversely, treating Postgres as a one-size-fits-all solution can lead to severe memory bottlenecks and degraded performance if your vector workload outgrows your hardware resources.
 
 This article breaks down the real-world cost, performance, and operational tradeoffs between Postgres with `pgvector` and specialized vector databases, helping you make an informed decision for your production stack.
+
+![Vector database decision and validation flow](concept-flow.svg)
 
 ## The Mechanics of Vector Search
 
@@ -118,7 +122,7 @@ Specialized vector databases handle this more efficiently. They can use scalar q
 
 ### Latency and Throughput at Scale
 
-As shown in the performance chart `vector-performance-chart.svg`, query latency remains comparable between `pgvector` and specialized databases at smaller scales (under 1 million vectors). However, as concurrency and dataset size increase, specialized databases pull ahead due to their optimized threading models and hardware-level optimizations.
+Performance comparisons are meaningful only when both systems use the same embeddings, recall target, filter selectivity, concurrency, hardware class, index build state, and measurement window. Treat latency and throughput as workload-specific observations rather than properties of a product category, and record the operational cost required to obtain each result.
 
 ## Filtering Strategies: The Hidden Killer of Specialized DBs
 
@@ -150,7 +154,7 @@ The table below summarizes the core differences between Postgres with `pgvector`
 
 To better understand how these systems differ in practice, let's look at the architectural flow of a query in both setups.
 
-As shown in the architectural diagram `vector-architecture.svg`, the unified approach simplifies the application logic by keeping all data within a single transactional boundary, whereas the split architecture requires orchestrating two separate data stores.
+The unified approach can simplify application logic by keeping relational data and embeddings within one database boundary. A split architecture introduces a second datastore and therefore requires explicit ownership for synchronization, access control, failure recovery, and reconciliation when one write succeeds and the other fails.
 
 When scaling these systems in production, organizations must decide whether to manage this infrastructure themselves or rely on managed cloud services. For instance, running enterprise AI workloads at scale often involves deploying models alongside highly optimized database layers. This is similar to how enterprises leverage managed environments like Claude on Google Cloud to handle global compliance and low-latency inference.
 

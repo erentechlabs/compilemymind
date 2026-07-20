@@ -1,6 +1,7 @@
 ---
 title: "Model Context Protocol (MCP) Explained: How to Connect LLMs to Real-World Data (With Python Tutorial)"
 date: "2026-07-14T21:56:31+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Explore how the Model Context Protocol (MCP) connects LLMs to real-world data with a comprehensive Python tutorial."
 summary: "This guide explains the Model Context Protocol (MCP) and provides a step-by-step tutorial for building an MCP server in Python to connect LLMs with real-world data."
 tags: ["mcp", "python"]
@@ -8,6 +9,7 @@ categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
+last_reviewed: "2026-07-20"
 ---
 
 ## The Integration Gap in Modern AI Engineering
@@ -23,6 +25,8 @@ In this comprehensive guide, we will explore the architecture of MCP, compare it
 To understand MCP, we must look at its three-tier architecture. Instead of forcing every LLM client to write custom integrations for every tool, MCP introduces a standardized client-server model that separates the AI application from the data layer.
 
 Refer to the architecture diagram below (`mcp-architecture.svg`) to see how these components interact:
+
+![Model Context Protocol host, client, server, and data-source architecture](mcp-architecture.svg)
 
 *   **The Host**: This is the user-facing AI application where the LLM runs or is orchestrated (for example, Claude Desktop, a developer IDE, or a custom agentic workflow).
 *   **The Client**: A component embedded within the Host. The Client establishes a direct connection with the MCP Server, translating the LLM's intent into standardized protocol requests.

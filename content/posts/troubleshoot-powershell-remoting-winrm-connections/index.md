@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot PowerShell Remoting and WinRM Connections"
 date: "2026-07-18T23:36:49+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-first PowerShell remoting workflow for isolating DNS, WSMan transport, listener, authentication, authorization, and endpoint failures before changing WinRM."
 tags: ["powershell", "authentication", "dns"]
 categories: ["system-administration", "networking"]
@@ -15,6 +15,8 @@ verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-16"
 ---
+
+![PowerShell remoting and WinRM boundary diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

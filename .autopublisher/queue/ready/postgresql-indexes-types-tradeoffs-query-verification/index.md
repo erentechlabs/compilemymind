@@ -1,7 +1,7 @@
 ---
 title: "PostgreSQL Indexes: Types, Tradeoffs, and Query Verification"
 date: "2026-07-20T10:28:51+03:00"
-lastmod: "2026-07-20T10:28:51+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A workload-first PostgreSQL index guide comparing index families and showing how to verify planner choices without ignoring write and storage costs."
 tags: ["storage", "postgresql", "sql"]
 categories: ["databases", "software-engineering"]
@@ -17,6 +17,8 @@ recheck_after: "2026-07-27"
 ---
 
 A PostgreSQL index is useful when its access method and column ordering support a real query predicate, ordering requirement, or constraint at an acceptable maintenance cost. Adding an index does not force the planner to use it, and an index that speeds one read can increase storage, write amplification, vacuum work, and planning choices. Selection therefore begins with the query and data distribution, then ends with measured plans and operational observation.
+
+![PostgreSQL index selection and query verification flow](concept-flow.svg)
 
 ## A working model for PostgreSQL Indexes: Types, Tradeoffs, and Query Verification
 

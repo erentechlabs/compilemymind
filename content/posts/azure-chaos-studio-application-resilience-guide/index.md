@@ -1,12 +1,14 @@
 ---
 title: "Proving Application Resilience on Azure: A Practical Guide to Chaos Studio"
 date: "2026-07-12T22:15:07+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "Learn how to use Azure Chaos Studio to test, validate, and prove application resilience against infrastructure, network, and service-level failures."
 tags: ["azure", "cloud-architecture"]
 categories: ["azure"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
+last_reviewed: "2026-07-20"
 series: "Azure Resilient Architecture"
 series_part: "1"
 planned_next_parts: ["Designing Resilient Multi-Region Azure Architectures"]
@@ -23,6 +25,8 @@ If you are new to the core building blocks of Microsoft's cloud, check out our [
 > **Reading path:** Learn the resilience model first, then follow the experiment workflow before applying the safety and governance recommendations.
 
 ---
+
+![Azure Chaos Studio resilience experiment flow](concept-flow.svg)
 
 ## The Core Principles of Chaos Engineering
 
@@ -125,6 +129,23 @@ With permissions in place, you are ready to execute the test.
 
 ---
 
+## Inspect the experiment without starting it
+
+Use authenticated `GET` requests to capture the experiment definition and prior execution records before anyone starts another fault run. The example uses the generally available `2025-01-01` Chaos Studio REST API and does not create, update, start, cancel, or delete an experiment:
+
+```powershell
+$SubscriptionId = az account show --query id --output tsv
+$ResourceGroup = 'rg-chaos-lab'
+$ExperimentName = 'exp-web-cpu-stress'
+$ApiVersion = '2025-01-01'
+$ExperimentId = "/subscriptions/$SubscriptionId/resourceGroups/$ResourceGroup/providers/Microsoft.Chaos/experiments/$ExperimentName"
+
+az rest --method get --url "https://management.azure.com${ExperimentId}?api-version=${ApiVersion}"
+az rest --method get --url "https://management.azure.com${ExperimentId}/executions?api-version=${ApiVersion}"
+```
+
+Replace the example resource group and experiment name, then save the returned identity, selectors, actions, and execution states with the change record. A successful read confirms visibility of the resource; it does not authorize a fault run or prove that the configured blast radius is safe.
+
 ## Service-Direct vs. Agent-Based Faults: Reference Table
 
 To help you plan your chaos strategy, use this comparison table to choose the right fault type for your scenarios:
@@ -167,4 +188,5 @@ In our next installment of this series, we will explore how to design multi-regi
 
 - [Proving application resilience on Azure with Chaos Studio](https://azure.microsoft.com/en-us/blog/proving-application-resilience-on-azure-with-chaos-studio/)
 - [Built to bounce back: How Azure resiliency evolved](https://azure.microsoft.com/en-us/blog/built-to-bounce-back-how-azure-resiliency-evolved/)
+- [Azure Chaos Studio Experiments REST API](https://learn.microsoft.com/en-us/rest/api/chaosstudio/experiments?view=rest-chaosstudio-2025-01-01)
 - [Contributing to U.K. financial sector resilience as a critical third party](https://cloud.google.com/blog/products/identity-security/contributing-to-uk-financial-sector-resilience-as-a-critical-third-party/)

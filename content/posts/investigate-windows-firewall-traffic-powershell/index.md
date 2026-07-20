@@ -1,19 +1,21 @@
 ---
 title: "Investigate Windows Firewall Traffic with PowerShell"
 date: "2026-07-16T18:05:29+03:00"
-lastmod: "2026-07-16T18:05:29+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-only PowerShell workflow for diagnosing Windows Firewall profile, rule, and port-filter problems before modifying a rule or exposing a service."
 tags: ["powershell", "windows-server", "firewall", "network-security", "troubleshooting"]
 categories: ["system-administration", "networking"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-16"
+last_reviewed: "2026-07-20"
 verification_date: "2026-07-16T15:05:29.326040Z"
 verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-12-13"
 ---
+
+![Windows Firewall traffic investigation flow](concept-flow.svg)
 
 ## Direct answer
 

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="792" viewBox="0 0 1200 792" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
+</defs>
+<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>
+<title id="title">How to Audit GitHub Actions Token Permissions: practical flow</title>
+<desc id="desc">A flowchart for How to Audit GitHub Actions Token Permissions: practical flow</desc>
+<text x="600.0" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">How to Audit GitHub Actions Token Permissions: practical flow</text>
+<rect x="220" y="110" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="151.0" r="22" fill="#2563eb"/>
+<text x="264" y="158.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+<text x="306" y="142" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Why Auditing GITHUB_TOKEN Permissions Matters</text>
+<line x1="600" y1="200" x2="600" y2="226" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="238" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="279.0" r="22" fill="#2563eb"/>
+<text x="264" y="286.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+<text x="306" y="270" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Understanding GITHUB_TOKEN in GitHub Actions</text>
+<line x1="600" y1="328" x2="600" y2="354" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="366" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="407.0" r="22" fill="#2563eb"/>
+<text x="264" y="414.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+<text x="306" y="398" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Auditing Workflow Permissions: Step-by-Step</text>
+<line x1="600" y1="456" x2="600" y2="482" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="494" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="535.0" r="22" fill="#2563eb"/>
+<text x="264" y="542.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
+<text x="306" y="526" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Common Failure Modes and Scenarios</text>
+<line x1="600" y1="584" x2="600" y2="610" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="622" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="663.0" r="22" fill="#2563eb"/>
+<text x="264" y="670.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+<text x="306" y="654" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Reference Table: GITHUB_TOKEN Permission Comparison</text>
+<text x="626.0" y="220.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="348.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="476.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="604.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+</svg>

@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Windows Scheduled Tasks with PowerShell"
 date: "2026-07-16T14:23:14+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-only Windows Scheduled Tasks troubleshooting workflow using PowerShell and schtasks to inspect task definitions, state, and recent execution results safely."
 tags: ["powershell", "windows-server", "troubleshooting", "system-administration", "automation"]
 categories: ["system-administration"]
@@ -14,6 +14,8 @@ verification_version: 1
 version_context: "Documentation current at verification time"
 recheck_after: "2026-07-30"
 ---
+
+![Windows Scheduled Tasks diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 

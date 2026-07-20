@@ -1,7 +1,7 @@
 ---
 title: "LeetCode Two Sum: From Brute Force to a Hash Map"
 date: "2026-07-20T07:06:49+03:00"
-lastmod: "2026-07-20T14:26:14+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A careful Two Sum walkthrough comparing brute force, sorted search, and hash-map lookup while preserving indices, duplicates, and complexity assumptions."
 tags: ["leetcode", "algorithms", "data-structures"]
 categories: ["algorithms-data-structures", "programming-languages"]
@@ -17,6 +17,8 @@ recheck_after: "2026-09-18"
 ---
 
 Two Sum asks for two distinct input positions whose values add to a target. The compact solution is often presented as a memorized hash-map trick, but the important reasoning is the complement equation: when the current value is x, the required earlier value is target minus x. From that observation, the implementation choice becomes a tradeoff between repeated search, sorting, and indexed lookup.
+
+![Two Sum solution progression from brute force to hash map](concept-flow.svg)
 
 ## A working model for LeetCode Two Sum: From Brute Force to a Hash Map
 

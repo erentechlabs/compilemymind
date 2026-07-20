@@ -1,7 +1,7 @@
 ---
 title: "Android App Architecture: UI, Domain, and Data Layers"
 date: "2026-07-19T23:35:17+03:00"
-lastmod: "2026-07-20T14:26:14+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A source-grounded Android architecture guide to separating UI, domain, and data responsibilities while keeping state flow and testing boundaries explicit."
 tags: ["android", "mobile-architecture"]
 categories: ["mobile-development", "software-engineering"]
@@ -17,6 +17,8 @@ recheck_after: "2026-09-17"
 ---
 
 A maintainable Android app does not need the maximum number of layers; it needs clear ownership and predictable data flow. The UI layer presents application data and turns user actions into events, the data layer owns business data and access rules, and an optional domain layer holds reusable or complex business operations. The important design test is whether each responsibility has one understandable home and whether state moves through the system in a way that can be observed and tested.
+
+![Android UI, domain, and data layer architecture flow](concept-flow.svg)
 
 ## A working model for Android App Architecture: UI, Domain, and Data Layers
 

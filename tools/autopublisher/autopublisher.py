@@ -2956,8 +2956,9 @@ Editorial style:
 - Open with the reader's problem, who the guidance is for, and the direct answer or outcome. Do not use generic introductions such as "In today's rapidly evolving digital landscape", "Technology is changing faster than ever", "In the world of modern IT", "This comprehensive guide will explore", or "Whether you are a beginner or an expert".
 - Optimize for search intent naturally, with a clear meta description.
 - Include at least one useful Markdown comparison or reference table in every article.
-- Include at least one additional rich element in every article: a runnable code or command example, a useful architecture/process diagram, or an evidence-backed chart. A table alone does not satisfy this requirement.
-- Prefer runnable code for programming, algorithms, databases, mobile, web, developer-tool, and system-administration topics. Prefer a topic-specific diagram when code would be artificial. Never add decorative or unrelated media merely to satisfy the rule.
+- Include at least one useful, topic-specific architecture, process, decision, or diagnostic diagram in every article. A table, code block, or chart does not replace this diagram requirement.
+- Also include runnable code or commands for programming, algorithms, databases, mobile, web, developer-tool, and system-administration topics when they help the reader apply or verify the guidance. Do not force code into portal-only or conceptual workflows where it would be artificial.
+- Never add decorative or unrelated media merely to satisfy the visual rule. Diagram labels must explain the article's actual components, decisions, or sequence.
 - Include internal links naturally, using only the exact Markdown URLs from the provided internal-link list.
 - Do not create a Sources section inside article_markdown; the publishing system adds it automatically.
 - Do not place external Markdown links, HTML links, autolinks, or bare external URLs inside article_markdown.
@@ -3556,7 +3557,10 @@ def default_diagram_for_topic(topic: dict[str, Any], markdown: str = "") -> dict
     article_sections = [
         normalize_space(match.group(1))
         for match in re.finditer(r"(?m)^##\s+(.+)$", markdown_without_fenced_code(markdown))
-        if not re.search(r"(?i)^(sources|related|summary|version)", normalize_space(match.group(1)))
+        if not re.search(
+            r"(?i)^(sources|related|summary|version|direct answer|a working model for|source boundaries)",
+            normalize_space(match.group(1)),
+        )
     ]
     labels = (reviewed_steps or article_sections)[:5]
     if len(labels) < 3:
@@ -3672,6 +3676,9 @@ def normalize_article_payload(
     ] if isinstance(article.get("diagrams"), list) else []
     if topic.get("needs_diagram") and not article["diagrams"]:
         article["diagrams"] = [default_diagram_for_topic(topic, draft_markdown)]
+    required_diagrams = int(config.get("publishing", {}).get("required_diagrams", 0))
+    if required_diagrams > 0 and len(article["diagrams"]) < required_diagrams:
+        article["diagrams"].append(default_diagram_for_topic(topic, draft_markdown))
     article["charts"] = [
         item for item in article.get("charts", []) if isinstance(item, dict)
     ] if isinstance(article.get("charts"), list) else []
@@ -4392,6 +4399,12 @@ def deterministic_qa(
     if len(enhanced_elements) < required_enhanced:
         issues.append(
             f"Article provides {len(enhanced_elements)} code or visual elements; at least {required_enhanced} are required."
+        )
+    required_diagrams = int(config.get("publishing", {}).get("required_diagrams", 0))
+    diagram_count = len(article.get("diagrams", []) or [])
+    if diagram_count < required_diagrams:
+        issues.append(
+            f"Article provides {diagram_count} diagrams; at least {required_diagrams} are required."
         )
     if topic.get("needs_diagram") and not article.get("diagrams"):
         issues.append("Selected topic requested a diagram, but no diagram spec was returned.")
@@ -5439,11 +5452,13 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
     edges = diagram.get("edges", []) or []
     if not nodes:
         nodes = [{"id": "a", "label": diagram.get("title", "Concept")}]
+    title = str(diagram.get("title", "Concept Flow"))
+    title_lines = svg_text_lines(title, 62)
     width = 1200
     box_width = 760
     box_height = 82
     gap = 46
-    title_height = 96
+    title_height = 72 + len(title_lines) * 38
     height = title_height + len(nodes) * (box_height + gap) + 42
     x = (width - box_width) // 2
     parts = [
@@ -5453,10 +5468,15 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
         '<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>',
         "</defs>",
         '<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>',
-        f'<title id="title">{html.escape(str(diagram.get("title", "Flowchart")))}</title>',
-        f'<desc id="desc">A flowchart for {html.escape(str(diagram.get("title", "the article concept")))}</desc>',
-        f'<text x="{width / 2}" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">{html.escape(str(diagram.get("title", "Concept Flow")))}</text>',
+        f'<title id="title">{html.escape(title)}</title>',
+        f'<desc id="desc">A flowchart for {html.escape(title)}</desc>',
     ]
+    for line_index, line in enumerate(title_lines):
+        parts.append(
+            f'<text x="{width / 2}" y="{48 + line_index * 38}" text-anchor="middle" '
+            f'font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" '
+            f'fill="#0f172a">{html.escape(line)}</text>'
+        )
     node_y: dict[str, int] = {}
     for index, node in enumerate(nodes):
         y = title_height + index * (box_height + gap)

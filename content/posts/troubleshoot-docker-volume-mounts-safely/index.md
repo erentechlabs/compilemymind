@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Docker Volume Mounts Safely"
 date: "2026-07-19T00:42:33+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T18:45:00+03:00"
 description: "A read-first Docker volume troubleshooting workflow for confirming the effective mount, volume identity, driver, destination, and daemon context before recreating a container."
 tags: ["docker", "troubleshooting", "storage"]
 categories: ["developer-it-tools", "system-administration"]
@@ -15,6 +15,8 @@ verification_version: "1"
 version_context: "Documentation current at verification time"
 recheck_after: "2026-09-17"
 ---
+
+![Docker volume mount diagnostic flow](concept-flow.svg)
 
 ## Direct answer
 
