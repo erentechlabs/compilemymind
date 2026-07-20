@@ -1,7 +1,7 @@
 ---
 title: "System Design Caching: Cache-Aside, Expiration, and Invalidation"
-date: "2026-07-20T02:11:27+03:00"
-lastmod: "2026-07-20T02:11:27+03:00"
+date: "2026-07-20T12:35:30+03:00"
+lastmod: "2026-07-20T12:35:30+03:00"
 description: "A system-design guide to cache-aside reads, expiration, invalidation, and failure behavior, with workload assumptions and observable validation points."
 tags: ["caching", "system-design", "distributed-systems"]
 categories: ["systems-design", "software-engineering"]
@@ -10,10 +10,10 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-19T23:11:27.518338Z"
-verification_version: 1
+verification_date: "2026-07-20T09:35:30.333423Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-07-27"
+recheck_after: "2026-09-18"
 ---
 
 A cache is a second representation of data placed closer to a reader or cheaper execution path. It can reduce latency and origin load, but it also introduces another state boundary that can be empty, stale, unavailable, or inconsistent with the source of truth. Good cache design therefore starts with workload and correctness requirements, not with a product selection or a target hit ratio.
