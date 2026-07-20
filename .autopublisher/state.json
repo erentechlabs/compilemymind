@@ -1657,9 +1657,9 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-20T04:03:42.898460Z",
+      "time": "2026-07-20T07:28:52.071581Z",
       "result": "queued",
-      "slug": "javascript-event-loop-tasks-microtasks-rendering",
+      "slug": "postgresql-indexes-types-tradeoffs-query-verification",
       "queue_depth": 3
     }
   },
@@ -2009,6 +2009,77 @@
         },
         "quality_score": 0.9353,
         "path": "content/posts/javascript-event-loop-tasks-microtasks-rendering/index.md"
+      }
+    },
+    {
+      "queued_at": "2026-07-20T07:28:52.071581Z",
+      "slug": "postgresql-indexes-types-tradeoffs-query-verification",
+      "title": "PostgreSQL Indexes: Types, Tradeoffs, and Query Verification",
+      "bundle_path": ".autopublisher/queue/ready/postgresql-indexes-types-tradeoffs-query-verification",
+      "record": {
+        "time": "2026-07-20T07:28:52.071581Z",
+        "title": "PostgreSQL Indexes: Types, Tradeoffs, and Query Verification",
+        "slug": "postgresql-indexes-types-tradeoffs-query-verification",
+        "categories": [
+          "databases",
+          "software-engineering"
+        ],
+        "tags": [
+          "storage",
+          "postgresql",
+          "sql"
+        ],
+        "sources": [
+          {
+            "title": "PostgreSQL indexes",
+            "url": "https://postgresql.org/docs/current/indexes.html"
+          },
+          {
+            "title": "PostgreSQL index types",
+            "url": "https://postgresql.org/docs/current/indexes-types.html"
+          },
+          {
+            "title": "Examining index usage",
+            "url": "https://postgresql.org/docs/current/indexes-examine.html"
+          }
+        ],
+        "qa": {
+          "approved": true,
+          "score": 0.9,
+          "technical_accuracy": 0.94,
+          "factual_confidence": 0.95,
+          "unsupported_claims": [],
+          "issues": [],
+          "required_fixes": [],
+          "reason": "Reviewed official-source offline recovery article.",
+          "quality": {
+            "score": 0.9161,
+            "components": {
+              "topic_relevance": 1.0,
+              "originality": 0.7297,
+              "source_quality": 1.0,
+              "claim_support": 1.0,
+              "factual_confidence": 1.0,
+              "technical_accuracy": 0.94,
+              "search_intent_match": 0.75,
+              "practical_usefulness": 1.0,
+              "readability": 1.0,
+              "internal_linking": 1.0,
+              "duplicate_topic_risk": 0.7297,
+              "source_similarity": 0.4433,
+              "existing_content_similarity": 0.7297,
+              "outdated_information_risk": 1.0,
+              "metadata_completeness": 1.0,
+              "structured_data_validity": 1.0,
+              "code_validity": 1.0,
+              "version_confidence": 1.0,
+              "media_relevance": 1.0,
+              "editorial_specificity": 1.0
+            }
+          }
+        },
+        "quality_score": 0.9161,
+        "path": "content/posts/postgresql-indexes-types-tradeoffs-query-verification/index.md"
       }
     }
   ],
