@@ -27,6 +27,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertTrue(config["publishing"]["prefer_evergreen_after_quota"])
         self.assertFalse(config["publishing"]["prefer_source_qualified_evergreen_first"])
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
+        self.assertEqual(config["publishing"]["required_enhanced_elements"], 1)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
@@ -178,6 +179,23 @@ class AutopublisherTests(unittest.TestCase):
             self.assertTrue(article, f"{topic['slug']}: {feedback}")
             self.assertTrue(qa["approved"])
             self.assertGreaterEqual(qa["quality"]["score"], config["publishing"]["quality_min_score"])
+
+    def test_educational_fallbacks_include_reviewed_code_examples(self):
+        config = autopublisher.load_config()
+        educational_topics = [
+            topic
+            for topic in config["research"]["evergreen_topics"]
+            if (topic.get("offline_fallback") or {}).get("content_mode") == "educational"
+        ]
+        self.assertGreaterEqual(len(educational_topics), 8)
+        for topic in educational_topics:
+            examples = topic["offline_fallback"].get("code_examples", [])
+            self.assertTrue(examples, topic["slug"])
+            for example in examples:
+                self.assertTrue(example.get("title"), topic["slug"])
+                self.assertTrue(example.get("language"), topic["slug"])
+                self.assertTrue(example.get("code"), topic["slug"])
+                self.assertTrue(example.get("explanation"), topic["slug"])
 
     def test_educational_offline_fallbacks_remain_original_when_published_in_sequence(self):
         config = autopublisher.load_config()
@@ -430,6 +448,111 @@ class AutopublisherTests(unittest.TestCase):
             autopublisher.safe_filename("../comparison-chart.png", "chart.svg"),
             "comparison-chart.png",
         )
+
+    def test_normalization_adds_topic_specific_diagram_when_article_lacks_code_or_visuals(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Reliable Queue Processing",
+            "slug": "reliable-queue-processing",
+            "categories": ["software-engineering"],
+            "primary_category": "software-engineering",
+            "tags": ["software-engineering"],
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A detailed queue processing guide with explicit ownership, retry, failure, and verification boundaries for reliable software systems.",
+            "article_markdown": """Queue processing needs an explicit lifecycle.
+
+## Accept work
+
+Validate the message and record ownership.
+
+## Process safely
+
+Make the operation idempotent and bounded.
+
+## Verify completion
+
+Record the observable outcome.
+
+| State | Next action |
+| --- | --- |
+| Pending | Process |
+""",
+        }
+        normalized = autopublisher.normalize_article_payload(article, topic, config, [], posts=[])
+
+        self.assertEqual(len(normalized["diagrams"]), 1)
+        self.assertIn("Accept work", [node["label"] for node in normalized["diagrams"][0]["nodes"]])
+        self.assertIn("![Reliable Queue Processing: practical flow](concept-flow.svg)", normalized["article_markdown"])
+        self.assertIn("diagram", autopublisher.enhanced_content_elements(normalized))
+
+    def test_code_example_satisfies_enhanced_content_without_forcing_a_diagram(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Python Queue Example",
+            "slug": "python-queue-example",
+            "categories": ["programming-languages"],
+            "primary_category": "programming-languages",
+            "tags": ["python"],
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A runnable Python queue example that demonstrates explicit input, processing, output, and verification behavior for developers.",
+            "article_markdown": """Use a small function to make the behavior visible.
+
+## Runnable example
+
+```python
+def process(value: int) -> int:
+    return value * 2
+```
+
+| Input | Output |
+| --- | --- |
+| 2 | 4 |
+""",
+        }
+        normalized = autopublisher.normalize_article_payload(article, topic, config, [], posts=[])
+
+        self.assertEqual(normalized["diagrams"], [])
+        self.assertEqual(autopublisher.enhanced_content_elements(normalized), ["code_or_command_example"])
+
+    def test_enhanced_content_gate_does_not_accept_a_table_alone(self):
+        config = {
+            "site": {"base_url": "https://www.compilemymind.com/"},
+            "publishing": {
+                "min_words": 0,
+                "required_source_count": 0,
+                "required_claim_evidence_count": 0,
+                "require_table": True,
+                "minimum_practical_elements": 0,
+                "required_enhanced_elements": 1,
+                "minimum_internal_post_links": 0,
+            },
+            "taxonomy": {"allowed_categories": ["software-engineering"]},
+        }
+        topic = {
+            "title": "Queue Decisions",
+            "slug": "queue-decisions",
+            "categories": ["software-engineering"],
+            "primary_category": "software-engineering",
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A source-independent unit-test article description long enough to satisfy the metadata validation boundary without ambiguity.",
+            "categories": ["software-engineering"],
+            "tags": [],
+            "sources": [],
+            "claim_evidence": [],
+            "article_markdown": "## Decision table\n\n| State | Action |\n| --- | --- |\n| Ready | Process |",
+        }
+        issues = autopublisher.deterministic_qa(article, topic, [], config, [])
+
+        self.assertTrue(any("code or visual elements" in issue for issue in issues))
 
     def test_model_json_parser_handles_markdown_fences(self):
         self.assertEqual(autopublisher.parse_model_json("```json\n{\"ok\": true}\n```"), {"ok": True})

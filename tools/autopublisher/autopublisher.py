@@ -2955,7 +2955,9 @@ Editorial style:
 - Do not repeat sentences, paragraphs, warnings, section endings, rollback reminders, or formulaic transitions. Consolidate an operational principle in the one section where it belongs.
 - Open with the reader's problem, who the guidance is for, and the direct answer or outcome. Do not use generic introductions such as "In today's rapidly evolving digital landscape", "Technology is changing faster than ever", "In the world of modern IT", "This comprehensive guide will explore", or "Whether you are a beginner or an expert".
 - Optimize for search intent naturally, with a clear meta description.
-- Include at least one useful Markdown comparison or reference table when the subject supports it.
+- Include at least one useful Markdown comparison or reference table in every article.
+- Include at least one additional rich element in every article: a runnable code or command example, a useful architecture/process diagram, or an evidence-backed chart. A table alone does not satisfy this requirement.
+- Prefer runnable code for programming, algorithms, databases, mobile, web, developer-tool, and system-administration topics. Prefer a topic-specific diagram when code would be artificial. Never add decorative or unrelated media merely to satisfy the rule.
 - Include internal links naturally, using only the exact Markdown URLs from the provided internal-link list.
 - Do not create a Sources section inside article_markdown; the publishing system adds it automatically.
 - Do not place external Markdown links, HTML links, autolinks, or bare external URLs inside article_markdown.
@@ -3543,21 +3545,38 @@ def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], chart
     return markdown.rstrip() + "\n\n" + insertion + "\n"
 
 
-def default_diagram_for_topic(topic: dict[str, Any]) -> dict[str, Any]:
+def default_diagram_for_topic(topic: dict[str, Any], markdown: str = "") -> dict[str, Any]:
     title = normalize_space(str(topic.get("title") or "Concept flow"))
+    template = topic.get("offline_fallback") if isinstance(topic.get("offline_fallback"), dict) else {}
+    reviewed_steps = [
+        normalize_space(str(item.get("title", "")))
+        for item in template.get("steps", []) or []
+        if isinstance(item, dict) and normalize_space(str(item.get("title", "")))
+    ]
+    article_sections = [
+        normalize_space(match.group(1))
+        for match in re.finditer(r"(?m)^##\s+(.+)$", markdown_without_fenced_code(markdown))
+        if not re.search(r"(?i)^(sources|related|summary|version)", normalize_space(match.group(1)))
+    ]
+    labels = (reviewed_steps or article_sections)[:5]
+    if len(labels) < 3:
+        labels = [
+            f"Define the {title} boundary",
+            "Apply the core mechanism",
+            "Compare the important trade-offs",
+            "Validate the expected result",
+        ]
+    nodes = [
+        {"id": f"step-{index}", "label": label}
+        for index, label in enumerate(labels, start=1)
+    ]
     return {
         "filename": "concept-flow.svg",
-        "title": f"{title} flow",
-        "nodes": [
-            {"id": "context", "label": "Understand the context and trigger"},
-            {"id": "risk", "label": "Identify the practical risks or trade-offs"},
-            {"id": "controls", "label": "Apply the right technical controls"},
-            {"id": "review", "label": "Review, monitor, and improve over time"},
-        ],
+        "title": f"{title}: practical flow",
+        "nodes": nodes,
         "edges": [
-            {"from": "context", "to": "risk", "label": "leads to"},
-            {"from": "risk", "to": "controls", "label": "mitigate with"},
-            {"from": "controls", "to": "review", "label": "validate through"},
+            {"from": nodes[index]["id"], "to": nodes[index + 1]["id"], "label": "then"}
+            for index in range(len(nodes) - 1)
         ],
     }
 
@@ -3647,15 +3666,24 @@ def normalize_article_payload(
                 }
             )
     article["claim_evidence"] = evidence
+    draft_markdown = str(article.get("article_markdown", ""))
     article["diagrams"] = [
         item for item in article.get("diagrams", []) if isinstance(item, dict)
     ] if isinstance(article.get("diagrams"), list) else []
     if topic.get("needs_diagram") and not article["diagrams"]:
-        article["diagrams"] = [default_diagram_for_topic(topic)]
+        article["diagrams"] = [default_diagram_for_topic(topic, draft_markdown)]
     article["charts"] = [
         item for item in article.get("charts", []) if isinstance(item, dict)
     ] if isinstance(article.get("charts"), list) else []
-    markdown = remove_accidental_frontmatter(str(article.get("article_markdown", "")))
+    required_enhanced = int(config.get("publishing", {}).get("required_enhanced_elements", 0))
+    if (
+        required_enhanced > 0
+        and not fenced_code_blocks(draft_markdown)
+        and not article["diagrams"]
+        and not article["charts"]
+    ):
+        article["diagrams"] = [default_diagram_for_topic(topic, draft_markdown)]
+    markdown = remove_accidental_frontmatter(draft_markdown)
     site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
     markdown = sanitize_article_external_links(markdown, site_base)
     markdown = normalize_code_fence_languages(markdown)
@@ -4211,6 +4239,19 @@ def practical_elements(article: dict[str, Any]) -> list[str]:
     return [name for name, present in signals.items() if present]
 
 
+def enhanced_content_elements(article: dict[str, Any]) -> list[str]:
+    """Return substantive code or visual elements; a Markdown table is intentionally separate."""
+    markdown = str(article.get("article_markdown", ""))
+    elements: list[str] = []
+    if fenced_code_blocks(markdown):
+        elements.append("code_or_command_example")
+    if article.get("diagrams") or re.search(r"!\[[^\]]+\]\([^)]*(?:diagram|flow|architecture)[^)]*\)", markdown, re.I):
+        elements.append("diagram")
+    if article.get("charts") or re.search(r"!\[[^\]]+\]\([^)]*chart[^)]*\)", markdown, re.I):
+        elements.append("chart")
+    return elements
+
+
 def article_metadata_issues(article: dict[str, Any], posts: list[Post], config: dict[str, Any]) -> list[str]:
     issues: list[str] = []
     title = normalize_space(str(article.get("title", "")))
@@ -4346,6 +4387,12 @@ def deterministic_qa(
     minimum_elements = int(config.get("publishing", {}).get("minimum_practical_elements", 0))
     if len(elements) < minimum_elements:
         issues.append(f"Article provides {len(elements)} practical elements; at least {minimum_elements} are required.")
+    enhanced_elements = enhanced_content_elements(article)
+    required_enhanced = int(config.get("publishing", {}).get("required_enhanced_elements", 0))
+    if len(enhanced_elements) < required_enhanced:
+        issues.append(
+            f"Article provides {len(enhanced_elements)} code or visual elements; at least {required_enhanced} are required."
+        )
     if topic.get("needs_diagram") and not article.get("diagrams"):
         issues.append("Selected topic requested a diagram, but no diagram spec was returned.")
     if topic.get("needs_chart") and not article.get("charts") and not re.search(r"\|\s*[^|\n]+\s*\|", markdown):
@@ -4666,6 +4713,7 @@ def configured_offline_evergreen_fallback(
     checklist = [normalize_space(str(item)) for item in template.get("checklist", []) or []]
     operational_notes = [normalize_space(str(item)) for item in template.get("operational_notes", []) or []]
     evidence_queries = [item for item in template.get("evidence_queries", []) or [] if isinstance(item, dict)]
+    code_examples = [item for item in template.get("code_examples", []) or [] if isinstance(item, dict)]
     if not description or not overview or not preparation or len(steps) < 3 or len(symptoms) < 3 or len(checklist) < 4:
         return None, None, "Configured offline fallback is incomplete."
     if content_mode == "educational" and (not application or not mistakes or not conclusion):
@@ -4712,6 +4760,19 @@ def configured_offline_evergreen_fallback(
         if not title or not command or not explanation:
             return None, None, "Configured offline fallback contains an incomplete evidence query."
         evidence_query_sections.append(f"### {title}\n\n```powershell\n{command}\n```\n\n{explanation}")
+    code_example_sections = []
+    for item in code_examples:
+        title = normalize_space(str(item.get("title", "")))
+        language = normalize_space(str(item.get("language", ""))).lower()
+        code = str(item.get("code", "")).strip()
+        explanation = normalize_space(str(item.get("explanation", "")))
+        if not title or not language or not code or not explanation or not re.fullmatch(r"[a-z0-9_+#.-]+", language):
+            return None, None, "Configured offline fallback contains an incomplete code example."
+        code_example_sections.append(f"### {title}\n\n```{language}\n{code}\n```\n\n{explanation}")
+    code_examples_section = (
+        "## Worked code example\n\n" + "\n\n".join(code_example_sections)
+        if code_example_sections else ""
+    )
     symptom_rows = "\n".join(
         f"| {normalize_space(str(item.get('symptom', '')))} | {normalize_space(str(item.get('likely_cause', '')))} | {normalize_space(str(item.get('next_check', '')))} |"
         for item in symptoms
@@ -4746,6 +4807,8 @@ def configured_offline_evergreen_fallback(
 ## Reason through {topic['slug'].replace('-', ' ')}
 
 {chr(10).join(workflow_sections)}
+
+{code_examples_section}
 
 ## {topic['title']}: decisions and tradeoffs
 

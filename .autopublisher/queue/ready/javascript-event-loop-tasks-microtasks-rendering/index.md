@@ -26,6 +26,26 @@ Reduce an ordering question to a small example and label every operation as sync
 
 Imagine browser code that logs A, registers a zero-delay timer to log B, schedules a resolved-promise reaction to log C, and then logs D. The current script task runs to completion, so A and D appear first. At the following microtask checkpoint, the promise reaction logs C. Only after that checkpoint can the timer task log B, subject to timer eligibility and other queued work. If the promise reaction queues another microtask, that new microtask can run in the same drain before the timer. Moving the example to Node.js requires a new model because timers, poll, check, process.nextTick, and promise reactions interact under Node's documented event-loop behavior rather than browser rendering steps.
 
+## Worked code example
+
+### Predict task and microtask output
+
+```javascript
+console.log("A: current task");
+
+setTimeout(() => {
+  console.log("D: timer task");
+}, 0);
+
+Promise.resolve().then(() => {
+  console.log("C: promise microtask");
+});
+
+console.log("B: current task");
+```
+
+In a browser, the current task prints A and B before the promise microtask prints C; the timer task becomes eligible afterward and prints D. Node.js examples must be reasoned about using Node's phase and queue rules instead of browser rendering checkpoints.
+
 ## Source boundaries for web development
 
 ### MDN JavaScript execution model

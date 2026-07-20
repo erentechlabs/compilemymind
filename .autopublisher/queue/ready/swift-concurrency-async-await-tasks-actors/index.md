@@ -26,6 +26,37 @@ Choose one asynchronous flow such as loading a screen, saving a document, or ref
 
 Take an image-loading feature that downloads bytes, decodes them, caches the result, and updates a view. The network and decode functions can be async and throw errors, while the screen starts a task owned by its presentation lifetime. If the screen disappears, cancellation should prevent unnecessary decoding and stop the final UI update. A cache actor can guard its mutable key-to-image storage, and UI-facing state can remain isolated to the main actor. Two independent thumbnail requests may run as child tasks under one parent that awaits both results. This layout separates suspension from parallelism, connects cancellation to ownership, and gives mutable cache and UI state explicit isolation domains.
 
+## Worked code example
+
+### Keep mutable cache state inside an actor
+
+```swift
+actor ImageCache {
+    private var images: [URL: Data] = [:]
+
+    func value(for url: URL) -> Data? {
+        images[url]
+    }
+
+    func insert(_ data: Data, for url: URL) {
+        images[url] = data
+    }
+}
+
+func loadImage(from url: URL, cache: ImageCache) async throws -> Data {
+    if let cached = await cache.value(for: url) {
+        return cached
+    }
+
+    let (data, _) = try await URLSession.shared.data(from: url)
+    try Task.checkCancellation()
+    await cache.insert(data, for: url)
+    return data
+}
+```
+
+The actor owns the mutable dictionary, while the async loader exposes suspension and cancellation explicitly. A screen-owned task can cancel this operation when the result is no longer needed.
+
 ## Source boundaries for mobile development
 
 ### Swift 5.5 Released!

@@ -1,7 +1,7 @@
 ---
 title: "LeetCode Two Sum: From Brute Force to a Hash Map"
 date: "2026-07-20T07:06:49+03:00"
-lastmod: "2026-07-20T07:06:49+03:00"
+lastmod: "2026-07-20T14:26:14+03:00"
 description: "A careful Two Sum walkthrough comparing brute force, sorted search, and hash-map lookup while preserving indices, duplicates, and complexity assumptions."
 tags: ["leetcode", "algorithms", "data-structures"]
 categories: ["algorithms-data-structures", "programming-languages"]
@@ -25,6 +25,25 @@ State the contract before writing code: whether exactly one answer exists, wheth
 ## Apply the model to a concrete case
 
 For values [2, 7, 11, 15] and target 9, start with an empty seen map. At index 0 the value is 2 and its complement is 7, which is not stored, so record 2 mapped to index 0. At index 1 the value is 7 and its complement is 2, which resolves to index 0; return [0, 1]. Now test [3, 3] with target 6. The first 3 is stored after its failed lookup, and the second 3 finds that earlier index. This ordering preserves the distinct-position rule. With [-4, 10, 3, 7] and target 6, negative keys require no special case: 10 finds the stored -4 through the same complement equation.
+
+## Worked code example
+
+### One-pass complement lookup in Python
+
+```python
+def two_sum(nums: list[int], target: int) -> tuple[int, int] | None:
+    seen: dict[int, int] = {}
+
+    for index, value in enumerate(nums):
+        complement = target - value
+        if complement in seen:
+            return seen[complement], index
+        seen[value] = index
+
+    return None
+```
+
+Lookup happens before insertion, so one array position cannot match itself. The map stores the index of each previously seen value and naturally handles equal values at different positions.
 
 ## Source boundaries for algorithms data structures
 

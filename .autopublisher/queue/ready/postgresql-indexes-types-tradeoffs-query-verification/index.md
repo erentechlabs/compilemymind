@@ -26,6 +26,24 @@ Capture the exact query shape, representative parameter values, table size, row-
 
 Suppose an orders table is queried by tenant_id and created_at for the newest fifty rows. A B-tree beginning with tenant_id and then created_at can support the equality boundary and ordered range, with id as a deterministic tie-breaker if required. The baseline plan, representative tenant sizes, and write rate determine whether that index is worthwhile. A separate query searching a JSON or array containment operator may need a different access method rather than another B-tree over the same column. A BRIN index could be considered for a very large physically correlated timestamp range, but its summarized block ranges have different selectivity behavior. Each choice follows the operator and workload, not the column's name.
 
+## Worked code example
+
+### Create and verify a workload-specific B-tree
+
+```sql
+CREATE INDEX CONCURRENTLY idx_orders_tenant_created_id
+    ON orders (tenant_id, created_at DESC, id DESC);
+
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT id, created_at, status
+FROM orders
+WHERE tenant_id = 42
+ORDER BY created_at DESC, id DESC
+LIMIT 50;
+```
+
+The key order mirrors the equality predicate and deterministic ordering of this workload. Run `EXPLAIN ANALYZE` only where executing the statement is safe, and compare estimates, actual rows, buffers, and write impact with the recorded baseline.
+
 ## Source boundaries for databases
 
 ### PostgreSQL indexes

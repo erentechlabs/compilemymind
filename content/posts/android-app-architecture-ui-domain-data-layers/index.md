@@ -1,14 +1,14 @@
 ---
 title: "Android App Architecture: UI, Domain, and Data Layers"
 date: "2026-07-19T23:35:17+03:00"
-lastmod: "2026-07-19T23:35:17+03:00"
+lastmod: "2026-07-20T14:26:14+03:00"
 description: "A source-grounded Android architecture guide to separating UI, domain, and data responsibilities while keeping state flow and testing boundaries explicit."
 tags: ["android", "mobile-architecture"]
 categories: ["mobile-development", "software-engineering"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-19"
+last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
 verification_date: "2026-07-19T20:35:17.576985Z"
 verification_version: 1
@@ -25,6 +25,32 @@ Start from one real feature and draw its read path and write path. Name the scre
 ## Apply the model to a concrete case
 
 Consider an offline-capable task screen. The screen renders a TaskListUiState containing items, a loading flag, and a user-facing error. A TaskListViewModel accepts refresh and completion events, then calls a task repository. The repository exposes a stream from the local database as the readable source of truth and synchronizes remote changes into that database. A completion event writes locally first and queues synchronization according to the product's conflict policy. If sorting rules are reused by the list, widget, and search feature, a focused SortTasks use case can hold that rule. This example makes the direction of dependencies visible: UI code knows a repository contract, the repository knows its concrete data sources, and database or HTTP models are transformed before becoming UI state.
+
+## Worked code example
+
+### Expose repository data as immutable UI state
+
+```kotlin
+data class TaskListUiState(
+    val items: List<Task> = emptyList(),
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null,
+)
+
+class TaskListViewModel(
+    repository: TaskRepository,
+) : ViewModel() {
+    val state = repository.observeTasks()
+        .map { tasks -> TaskListUiState(items = tasks) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = TaskListUiState(isLoading = true),
+        )
+}
+```
+
+The UI observes one immutable state object while the repository remains the data boundary. Loading and error transitions can be added to the same state model and tested with controlled repository emissions.
 
 ## Source boundaries for mobile development
 

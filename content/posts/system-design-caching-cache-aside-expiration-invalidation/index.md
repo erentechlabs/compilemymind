@@ -1,7 +1,7 @@
 ---
 title: "System Design Caching: Cache-Aside, Expiration, and Invalidation"
 date: "2026-07-20T12:35:30+03:00"
-lastmod: "2026-07-20T12:35:30+03:00"
+lastmod: "2026-07-20T14:26:14+03:00"
 description: "A system-design guide to cache-aside reads, expiration, invalidation, and failure behavior, with workload assumptions and observable validation points."
 tags: ["caching", "system-design", "distributed-systems"]
 categories: ["systems-design", "software-engineering"]
@@ -25,6 +25,26 @@ Describe the read-to-write ratio, acceptable staleness, object size, access dist
 ## Apply the model to a concrete case
 
 Imagine a profile service whose database is authoritative and whose reads greatly outnumber edits. The cache key includes tenant and profile identifiers plus a schema version. On a miss, one refill operation loads the profile while concurrent requests wait briefly or follow a bounded fallback, preventing a popular account from producing many identical database reads. Successful edits commit to the database and publish invalidation for the old key; a short, jittered TTL limits the damage if that event is lost. The service measures hit and miss latency separately and protects the database with timeouts and admission control during a full cache loss. Sensitive authorization decisions are not reused beyond the scope encoded in the key.
+
+## Worked code example
+
+### Make cache-aside branches explicit
+
+```python
+def get_profile(tenant_id: str, profile_id: str) -> dict:
+    key = f"profile:v2:{tenant_id}:{profile_id}"
+    cached = cache.get(key)
+    if cached is not None:
+        metrics.increment("profile_cache_hit")
+        return cached
+
+    metrics.increment("profile_cache_miss")
+    profile = database.load_profile(tenant_id, profile_id)
+    cache.set(key, profile, ttl_seconds=jittered_ttl())
+    return profile
+```
+
+The example makes hit, miss, authoritative read, key scope, and refill behavior visible. Production code still needs bounded timeouts, concurrent-miss control, cache-error handling, and an invalidation path for writes.
 
 ## Source boundaries for systems design
 
