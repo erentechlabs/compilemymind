@@ -1913,10 +1913,10 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-20T21:32:44.513144Z",
+      "time": "2026-07-20T23:14:56.090998Z",
       "result": "queued",
-      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
-      "queue_depth": 3
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "queue_depth": 4
     }
   },
   "rejected_articles": [
@@ -2336,6 +2336,76 @@
         },
         "quality_score": 0.886,
         "path": "content/posts/troubleshoot-kubernetes-dns-resolution-pods/index.md"
+      }
+    },
+    {
+      "queued_at": "2026-07-20T23:14:56.090998Z",
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "title": "Troubleshoot GitHub Actions Cache Misses",
+      "bundle_path": ".autopublisher/queue/ready/troubleshoot-github-actions-cache-misses",
+      "record": {
+        "time": "2026-07-20T23:14:56.090998Z",
+        "title": "Troubleshoot GitHub Actions Cache Misses",
+        "slug": "troubleshoot-github-actions-cache-misses",
+        "categories": [
+          "developer-it-tools"
+        ],
+        "tags": [
+          "github",
+          "troubleshooting",
+          "configuration-management"
+        ],
+        "sources": [
+          {
+            "title": "Dependency caching reference",
+            "url": "https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching"
+          },
+          {
+            "title": "Managing caches",
+            "url": "https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches"
+          },
+          {
+            "title": "actions cache",
+            "url": "https://github.com/actions/cache"
+          }
+        ],
+        "qa": {
+          "approved": true,
+          "score": 0.9,
+          "technical_accuracy": 0.94,
+          "factual_confidence": 0.95,
+          "unsupported_claims": [],
+          "issues": [],
+          "required_fixes": [],
+          "reason": "Reviewed official-source offline recovery article.",
+          "quality": {
+            "score": 0.8806,
+            "components": {
+              "topic_relevance": 1.0,
+              "originality": 0.4615,
+              "source_quality": 1.0,
+              "claim_support": 1.0,
+              "factual_confidence": 1.0,
+              "technical_accuracy": 0.94,
+              "search_intent_match": 0.75,
+              "practical_usefulness": 1.0,
+              "readability": 1.0,
+              "internal_linking": 1.0,
+              "duplicate_topic_risk": 0.4615,
+              "source_similarity": 0.5375,
+              "existing_content_similarity": 0.4615,
+              "outdated_information_risk": 1.0,
+              "metadata_completeness": 1.0,
+              "structured_data_validity": 1.0,
+              "code_validity": 1.0,
+              "version_confidence": 1.0,
+              "media_relevance": 1.0,
+              "editorial_specificity": 1.0
+            }
+          }
+        },
+        "quality_score": 0.8806,
+        "path": "content/posts/troubleshoot-github-actions-cache-misses/index.md"
       }
     }
   ],
