@@ -1481,6 +1481,69 @@
       },
       "quality_score": 0.9384,
       "path": "content/posts/system-design-caching-cache-aside-expiration-invalidation/index.md"
+    },
+    {
+      "time": "2026-07-20T13:17:59.226008Z",
+      "title": "JavaScript Event Loop: Tasks, Microtasks, and Rendering",
+      "slug": "javascript-event-loop-tasks-microtasks-rendering",
+      "categories": [
+        "web-development",
+        "programming-languages"
+      ],
+      "tags": [
+        "javascript"
+      ],
+      "sources": [
+        {
+          "title": "MDN JavaScript execution model",
+          "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model"
+        },
+        {
+          "title": "HTML event loops",
+          "url": "https://html.spec.whatwg.org/multipage/webappapis.html"
+        },
+        {
+          "title": "Node.js event loop",
+          "url": "https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9353,
+          "components": {
+            "topic_relevance": 0.965,
+            "originality": 0.7614,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7614,
+            "source_similarity": 0.6168,
+            "existing_content_similarity": 0.7614,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9353,
+      "path": "content/posts/javascript-event-loop-tasks-microtasks-rendering/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1711,7 +1774,7 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-20T09:35:30.967844Z",
+      "time": "2026-07-20T13:17:59.226018Z",
       "result": "published",
       "source": "ready_queue",
       "queue_depth": 2
@@ -1936,75 +1999,6 @@
   },
   "pending_publication": {},
   "ready_publications": [
-    {
-      "queued_at": "2026-07-20T04:03:42.898460Z",
-      "slug": "javascript-event-loop-tasks-microtasks-rendering",
-      "title": "JavaScript Event Loop: Tasks, Microtasks, and Rendering",
-      "bundle_path": ".autopublisher/queue/ready/javascript-event-loop-tasks-microtasks-rendering",
-      "record": {
-        "time": "2026-07-20T04:03:42.898460Z",
-        "title": "JavaScript Event Loop: Tasks, Microtasks, and Rendering",
-        "slug": "javascript-event-loop-tasks-microtasks-rendering",
-        "categories": [
-          "web-development",
-          "programming-languages"
-        ],
-        "tags": [
-          "javascript"
-        ],
-        "sources": [
-          {
-            "title": "MDN JavaScript execution model",
-            "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model"
-          },
-          {
-            "title": "HTML event loops",
-            "url": "https://html.spec.whatwg.org/multipage/webappapis.html"
-          },
-          {
-            "title": "Node.js event loop",
-            "url": "https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.9353,
-            "components": {
-              "topic_relevance": 0.965,
-              "originality": 0.7614,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.9,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.7614,
-              "source_similarity": 0.6168,
-              "existing_content_similarity": 0.7614,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.9353,
-        "path": "content/posts/javascript-event-loop-tasks-microtasks-rendering/index.md"
-      }
-    },
     {
       "queued_at": "2026-07-20T07:28:52.071581Z",
       "slug": "postgresql-indexes-types-tradeoffs-query-verification",

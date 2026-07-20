@@ -1,7 +1,7 @@
 ---
 title: "JavaScript Event Loop: Tasks, Microtasks, and Rendering"
-date: "2026-07-20T07:03:42+03:00"
-lastmod: "2026-07-20T07:03:42+03:00"
+date: "2026-07-20T16:17:58+03:00"
+lastmod: "2026-07-20T16:17:58+03:00"
 description: "A browser-and-Node.js event-loop model for predicting synchronous work, tasks, microtasks, timers, and rendering without mixing runtime-specific rules."
 tags: ["javascript"]
 categories: ["web-development", "programming-languages"]
@@ -10,10 +10,10 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-20"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T04:03:42.317369Z"
-verification_version: 1
+verification_date: "2026-07-20T13:17:58.559083Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-08-03"
+recheck_after: "2026-09-18"
 ---
 
 JavaScript execution order is predictable when three layers are kept separate: synchronous execution on the current stack, work queued by the host environment, and the checkpoints where queued callbacks become eligible to run. Browser event loops distinguish tasks from microtasks and coordinate rendering opportunities, while Node.js organizes host callbacks into event-loop phases with additional queue behavior. The language and each host runtime therefore contribute different parts of the result.
