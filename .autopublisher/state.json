@@ -1351,6 +1351,71 @@
       },
       "quality_score": 0.9338,
       "path": "content/posts/android-app-architecture-ui-domain-data-layers/index.md"
+    },
+    {
+      "time": "2026-07-20T04:06:49.630139Z",
+      "title": "LeetCode Two Sum: From Brute Force to a Hash Map",
+      "slug": "leetcode-two-sum-brute-force-hash-map",
+      "categories": [
+        "algorithms-data-structures",
+        "programming-languages"
+      ],
+      "tags": [
+        "leetcode",
+        "algorithms",
+        "data-structures"
+      ],
+      "sources": [
+        {
+          "title": "TwoSumFast.java",
+          "url": "https://algs4.cs.princeton.edu/14analysis/TwoSumFast.java.html"
+        },
+        {
+          "title": "Python mapping types — dict",
+          "url": "https://docs.python.org/3/library/stdtypes.html"
+        },
+        {
+          "title": "Java HashMap",
+          "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/HashMap.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9357,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.7484,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.7273,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7484,
+            "source_similarity": 0.8019,
+            "existing_content_similarity": 0.7484,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9357,
+      "path": "content/posts/leetcode-two-sum-brute-force-hash-map/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1581,8 +1646,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-19T20:35:18.194198Z",
-      "result": "published"
+      "time": "2026-07-20T04:06:49.630146Z",
+      "result": "published",
+      "source": "ready_queue",
+      "queue_depth": 2
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -1804,77 +1871,6 @@
   },
   "pending_publication": {},
   "ready_publications": [
-    {
-      "queued_at": "2026-07-19T21:07:21.181110Z",
-      "slug": "leetcode-two-sum-brute-force-hash-map",
-      "title": "LeetCode Two Sum: From Brute Force to a Hash Map",
-      "bundle_path": ".autopublisher/queue/ready/leetcode-two-sum-brute-force-hash-map",
-      "record": {
-        "time": "2026-07-19T21:07:21.181110Z",
-        "title": "LeetCode Two Sum: From Brute Force to a Hash Map",
-        "slug": "leetcode-two-sum-brute-force-hash-map",
-        "categories": [
-          "algorithms-data-structures",
-          "programming-languages"
-        ],
-        "tags": [
-          "leetcode",
-          "algorithms",
-          "data-structures"
-        ],
-        "sources": [
-          {
-            "title": "TwoSumFast.java",
-            "url": "https://algs4.cs.princeton.edu/14analysis/TwoSumFast.java.html"
-          },
-          {
-            "title": "Python mapping types — dict",
-            "url": "https://docs.python.org/3/library/stdtypes.html"
-          },
-          {
-            "title": "Java HashMap",
-            "url": "https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/HashMap.html"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.9357,
-            "components": {
-              "topic_relevance": 1.0,
-              "originality": 0.7484,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.7273,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.7484,
-              "source_similarity": 0.8019,
-              "existing_content_similarity": 0.7484,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.9357,
-        "path": "content/posts/leetcode-two-sum-brute-force-hash-map/index.md"
-      }
-    },
     {
       "queued_at": "2026-07-19T23:11:28.094429Z",
       "slug": "system-design-caching-cache-aside-expiration-invalidation",
