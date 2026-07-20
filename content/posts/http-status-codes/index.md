@@ -1,6 +1,7 @@
 ---
 title: "Understanding HTTP Status Codes: What They Mean and How to Use Them"
 date: "2025-11-23T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical guide to HTTP status codes - what they mean, when to use them, and why getting them right matters for API design and security."
 tags: ["developer-it-tools", "networking", "api-design", "protocols"]
 categories: ["networking"]
@@ -14,6 +15,8 @@ This guide covers what each status code category means, when to use specific cod
 > **Reading path:** Use the status-code categories as the map, then work through the API example and the mistakes that commonly produce misleading responses.
 
 ---
+
+![HTTP request, response, and status-handling flow](concept-flow.svg)
 
 ## The Five Categories
 

@@ -1,6 +1,7 @@
 ---
 title: "C# vs Java: A Practical Comparison for 2025"
 date: "2025-03-28T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A detailed, honest comparison of Java and C# - two of the most widely used languages in enterprise software development - covering performance, ecosystem, tooling, and real-world use cases."
 tags: ["java", "developer-it-tools", "it-fundamentals"]
 categories: ["developer-it-tools"]
@@ -14,6 +15,8 @@ And yet, they've evolved in meaningfully different directions. Knowing which to 
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![C# and Java platform comparison flow](concept-flow.svg)
 
 ## Brief History
 

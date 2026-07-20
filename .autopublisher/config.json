@@ -70,6 +70,7 @@
     "minimum_practical_elements": 2,
     "required_enhanced_elements": 1,
     "required_diagrams": 1,
+    "required_code_examples": 1,
     "max_new_posts_per_run": 1
   },
   "cost_control": {

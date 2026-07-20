@@ -52,7 +52,7 @@ A high aggregate score never overrides a critical problem. Blocking checks inclu
 
 Every claim-evidence record stores the claim, supporting source URLs, confidence, verification timestamp, and version context. New front matter records the site publisher, publication date, substantive update date, verification date/version/status, and scheduled recheck date. Allowed verification statuses describe the actual evidence, such as documentation review or test-account verification. Formatting-only edits do not change `lastmod`.
 
-The current single-article design intentionally omits featured images. Automated page bundles can contain evidence-backed Mermaid diagrams, charts, tables, and other body visuals, while social metadata uses the site's default Open Graph image. The media gate rejects decorative or unsupported chart data and requires descriptive alt text and dimensions for raster images that do appear.
+The current single-article design intentionally omits featured images. Every newly approved article must contain a useful Markdown table, at least one rendered topic-specific SVG diagram, and at least one fenced code, command, configuration, query, or structured-data example. Code cannot replace the diagram, and a diagram cannot replace code. Social metadata uses the site's default Open Graph image. The media gate rejects decorative or unsupported chart data and requires descriptive alt text and dimensions for raster images that do appear.
 
 ## Recovery, maintenance, and monitoring
 

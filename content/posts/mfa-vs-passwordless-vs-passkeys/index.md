@@ -1,6 +1,7 @@
 ---
 title: "MFA vs Passwordless vs Passkeys: What Is the Difference?"
 date: "2026-06-13T23:05:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical cybersecurity guide explaining the difference between MFA, passwordless authentication, and passkeys, with real-world examples, comparison tables, phishing-resistance notes, and enterprise rollout guidance."
 tags: ["cybersecurity", "identity", "mfa", "passkeys", "authentication"]
 categories: ["identity-access-management"]
@@ -387,6 +388,27 @@ Passwords are shared secrets. MFA adds friction and protection. Passwordless rem
 For most modern systems, the direction is clear: use MFA now, reduce weak methods, move users toward passwordless, and make passkeys or other phishing-resistant authenticators the target for high-value access.
 
 ---
+
+## Check for a platform authenticator
+
+Before offering a passkey enrollment path, a web application can check whether the browser exposes WebAuthn and whether a user-verifying platform authenticator is available:
+
+```javascript
+async function passkeyReadiness() {
+  if (!("PublicKeyCredential" in window)) {
+    return { webAuthn: false, platformAuthenticator: false };
+  }
+
+  const available = await PublicKeyCredential
+    .isUserVerifyingPlatformAuthenticatorAvailable();
+
+  return { webAuthn: true, platformAuthenticator: available };
+}
+
+passkeyReadiness().then(console.log);
+```
+
+This is capability detection, not authentication. Registration still requires server-generated challenges, origin and relying-party validation, attestation policy, secure credential storage, and recovery design.
 
 ## Sources
 

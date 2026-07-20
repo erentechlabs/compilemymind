@@ -1,6 +1,7 @@
 ---
 title: "Network Communication Basics: Ethernet, MAC Addressing, and How Local Networks Work"
 date: "2025-11-27T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A clear, technical introduction to how local networks actually communicate - covering Ethernet frames, MAC addresses, ARP, switches, and hierarchical network design."
 tags: ["networking", "protocols", "it-fundamentals"]
 categories: ["networking"]
@@ -14,6 +15,8 @@ This guide covers the fundamentals of local network communication: how devices t
 > **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
 
 ---
+
+![Local Ethernet communication and switching flow](concept-flow.svg)
 
 ## The Modern Integrated Network
 
@@ -140,6 +143,20 @@ Enterprise networks follow a three-layer model:
 Security controls typically live at the **distribution layer** - between where untrusted endpoints connect (access) and the high-speed core. This is where ACLs, firewall policies, and traffic inspection happen.
 
 ---
+
+## Read-only local-network commands
+
+These PowerShell commands expose the adapter, local addressing, neighbor cache, route, and a bounded TCP reachability check without changing the host:
+
+```powershell
+Get-NetAdapter | Select-Object Name, Status, LinkSpeed, MacAddress
+Get-NetIPConfiguration
+Get-NetNeighbor -AddressFamily IPv4
+Get-NetRoute -DestinationPrefix '0.0.0.0/0'
+Test-NetConnection -ComputerName 'example.com' -Port 443
+```
+
+Use the evidence in layers: link state and MAC addressing describe the local segment, the route identifies the next hop, and the final command tests DNS plus TCP reachability to one destination.
 
 ## Conclusion
 

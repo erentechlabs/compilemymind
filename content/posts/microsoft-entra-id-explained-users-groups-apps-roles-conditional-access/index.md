@@ -1,6 +1,7 @@
 ---
 title: "Microsoft Entra ID Explained: Users, Groups, Apps, Roles, and Conditional Access"
 date: "2026-06-20T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical guide to Microsoft Entra ID covering tenants, users, groups, app registrations, service principals, roles, permissions, Conditional Access policies, licensing notes, examples, and common mistakes."
 tags: ["azure", "identity", "microsoft-365", "conditional-access", "iam"]
 categories: ["entra-id"]
@@ -702,6 +703,25 @@ Official Microsoft Learn references:
 - [What is Conditional Access?](https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview)
 
 ---
+
+## Identity relationship example
+
+This JSON example makes the distinction between an identity, its group membership, an application object, a tenant-local service principal, and a Conditional Access decision explicit:
+
+```json
+{
+  "user": { "id": "user-123", "groups": ["developers"] },
+  "application": { "appId": "app-456", "displayName": "Example API" },
+  "servicePrincipal": { "tenant": "contoso", "appId": "app-456" },
+  "accessDecision": {
+    "resource": "Example API",
+    "conditions": ["user-in-scope", "managed-device"],
+    "grantControls": ["mfa"]
+  }
+}
+```
+
+The identifiers are placeholders. In a real tenant, collect only the fields required for the investigation and never treat group membership by itself as proof that a token contains a specific role or permission.
 
 ## Final Thoughts
 

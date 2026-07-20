@@ -1,6 +1,7 @@
 ---
 title: "@Component vs @Bean in Spring: When to Use Each"
 date: "2025-07-31T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A clear explanation of the difference between @Component and @Bean in Spring - with practical examples and guidelines for choosing the right approach."
 tags: ["java", "spring-boot", "developer-it-tools"]
 categories: ["developer-it-tools"]
@@ -14,6 +15,8 @@ Understanding which to use - and why - leads to cleaner, more intentional Spring
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![Spring component scanning and bean registration flow](concept-flow.svg)
 
 ## What Is a Spring Bean?
 

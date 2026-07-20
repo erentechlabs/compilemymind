@@ -1,6 +1,7 @@
 ---
 title: "Zero Trust Explained With Real-World Examples"
 date: "2026-06-13T22:30:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical guide to Zero Trust security, covering verify explicitly, least privilege, assume breach, real-world access scenarios, architecture pillars, implementation steps, and common mistakes."
 tags: ["cybersecurity", "zero-trust", "identity", "network-security", "azure-security"]
 categories: ["cybersecurity"]
@@ -399,6 +400,26 @@ The simplest mental model is this:
 That is Zero Trust in real life: not paranoia, not product marketing, but disciplined access design.
 
 ---
+
+## Example policy-as-code boundary
+
+The following Rego policy illustrates an explicit allow decision based on identity, device, resource scope, and risk. It is a teaching example, not a drop-in production policy:
+
+```rego
+package access
+
+default allow := false
+
+allow if {
+    input.identity.authenticated
+    input.identity.mfa
+    input.device.compliant
+    input.risk.level == "low"
+    input.resource.id in input.identity.allowed_resources
+}
+```
+
+Real enforcement also needs trusted input provenance, failure handling, logging, policy versioning, and an emergency-access path. A request is allowed only when every named condition evaluates successfully.
 
 ## Sources
 

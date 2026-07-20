@@ -1,7 +1,7 @@
 ---
 title: "LeetCode Two Sum: From Brute Force to a Hash Map"
 date: "2026-07-20T07:06:49+03:00"
-lastmod: "2026-07-20T18:45:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A careful Two Sum walkthrough comparing brute force, sorted search, and hash-map lookup while preserving indices, duplicates, and complexity assumptions."
 tags: ["leetcode", "algorithms", "data-structures"]
 categories: ["algorithms-data-structures", "programming-languages"]
@@ -51,13 +51,72 @@ Lookup happens before insertion, so one array position cannot match itself. The 
 
 ### TwoSumFast.java
 
-Use TwoSumFast.java for this boundary of the topic: Use the Princeton TwoSumFast material to contrast pair-search strategies and make the algorithmic assumptions visible.
+Princeton's `TwoSumFast` sorts the input and performs a binary search for each negated value. Its published program counts zero-sum pairs, rejects duplicate integers, mutates the array through sorting, and explicitly leaves integer overflow outside its boundary. The following adaptation accepts an arbitrary target and clones the input, but deliberately returns only whether a pair exists because sorting raw values does not preserve the original indices required by LeetCode:
+
+```java
+import java.util.Arrays;
+
+static boolean hasPairWithSortedSearch(int[] input, int target) {
+    int[] values = input.clone();
+    Arrays.sort(values);
+
+    for (int left = 0; left < values.length; left++) {
+        int complement = target - values[left];
+        int right = Arrays.binarySearch(
+            values, left + 1, values.length, complement
+        );
+        if (right >= 0) {
+            return true;
+        }
+    }
+    return false;
+}
+```
+
+Sorting costs `O(n log n)`, and each of the `n` binary searches costs `O(log n)`, so the overall bound remains `O(n log n)`. To return original indices, sort value-index records rather than the raw array.
+
 ### Python mapping types — dict
 
-Use Python mapping types — dict for this boundary of the topic: Use Python mapping semantics to explain key lookup and the role of a dictionary as the seen-value index.
+Python dictionaries map hashable keys to arbitrary values. In the earlier one-pass implementation, each numeric value is a key and its earlier array index is the mapped value. Membership is checked before subscription because `seen[complement]` raises `KeyError` when the key is absent:
+
+```python
+seen: dict[int, int] = {2: 0}
+complement = 2
+
+if complement in seen:
+    earlier_index = seen[complement]
+    assert earlier_index == 0
+
+seen[2] = 4
+assert seen[2] == 4  # Assignment replaces the prior value for key 2.
+```
+
+The replacement behavior is acceptable only because the algorithm checks for the complement before storing the current index. That order allows `[3, 3]` with target `6` to return two distinct positions.
+
 ### Java HashMap
 
-Use Java HashMap for this boundary of the topic: Use the Java HashMap reference for key-value behavior, replacement semantics, and implementation-level performance context.
+Java's `HashMap` expresses the same seen-value index. `containsKey` separates absence from a key explicitly mapped to `null`, while `put` associates the latest index with a value and replaces an older mapping for the same key:
+
+```java
+import java.util.HashMap;
+import java.util.Map;
+
+static int[] twoSum(int[] numbers, int target) {
+    Map<Integer, Integer> seen = new HashMap<>();
+
+    for (int index = 0; index < numbers.length; index++) {
+        int complement = target - numbers[index];
+        if (seen.containsKey(complement)) {
+            return new int[] {seen.get(complement), index};
+        }
+        seen.put(numbers[index], index);
+    }
+
+    throw new IllegalArgumentException("No two-sum solution");
+}
+```
+
+The Java reference describes expected constant-time `get` and `put` behavior when hashes distribute keys properly. State that assumption instead of presenting `O(1)` as an unconditional worst-case guarantee; the algorithm also retains up to `n` mappings.
 
 ## Reason through leetcode two sum brute force hash map
 
@@ -106,5 +165,5 @@ Two Sum follows directly from complement lookup: search only previously seen val
 ## Sources
 
 - [TwoSumFast.java](https://algs4.cs.princeton.edu/14analysis/TwoSumFast.java.html)
-- [Python mapping types — dict](https://docs.python.org/3/library/stdtypes.html)
+- [Python mapping types — dict](https://docs.python.org/3/library/stdtypes.html#mapping-types-dict)
 - [Java HashMap](https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/HashMap.html)

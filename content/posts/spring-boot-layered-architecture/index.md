@@ -1,6 +1,7 @@
 ---
 title: "Spring Boot Layered Architecture: Controller, Service, and Repository"
 date: "2025-06-15T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "How Spring Boot's three-layer architecture organizes code into controllers, services, and repositories - and why separation of concerns makes applications easier to build, test, and maintain."
 tags: ["java", "spring-boot", "developer-it-tools"]
 categories: ["developer-it-tools"]
@@ -14,6 +15,8 @@ This isn't arbitrary organization. Each layer has a specific responsibility and 
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![Spring Boot controller, service, and repository flow](concept-flow.svg)
 
 ## The Three Layers
 

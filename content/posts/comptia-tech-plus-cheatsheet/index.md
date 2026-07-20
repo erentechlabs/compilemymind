@@ -1,6 +1,7 @@
 ---
 title: "The Ultimate CompTIA Tech+ Cheatsheet: Mastering the Fundamentals of IT"
 date: "2026-05-19T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A comprehensive, deep-dive guide into the CompTIA Tech+ (FC0-U71) certification. Explore detailed explanations, real-world examples, and foundational IT concepts spanning infrastructure, software, databases, and cybersecurity."
 tags: ["comptia", "it-fundamentals", "exam-preparation", "study-guide"]
 categories: ["cloud-certifications"]
@@ -283,6 +284,19 @@ The CompTIA Tech+ certification is an extraordinary milestone. It demystifies th
 Keep exploring, keep building, and stay curious. The world of IT is vast, and you have just taken the perfect first step.
 
 ---
+
+## Safe workstation diagnostic example
+
+These PowerShell commands collect basic adapter, address, route, DNS, and HTTPS reachability evidence without changing the workstation configuration:
+
+```powershell
+Get-NetIPConfiguration
+Get-NetRoute -DestinationPrefix '0.0.0.0/0'
+Resolve-DnsName -Name 'example.com'
+Test-NetConnection -ComputerName 'example.com' -Port 443
+```
+
+Interpret each boundary separately: a configured address does not prove DNS works, and successful name resolution does not prove TCP port 443 is reachable.
 
 ## Sources
 

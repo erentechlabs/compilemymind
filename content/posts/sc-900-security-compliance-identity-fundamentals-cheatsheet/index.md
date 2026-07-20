@@ -1,6 +1,7 @@
 ---
 title: "SC-900 Cheatsheet: Microsoft Security, Compliance, and Identity Fundamentals Study Guide"
 date: "2026-06-03T00:30:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A detailed SC-900 study guide covering Microsoft security, compliance, identity, Entra, Defender, Sentinel, Purview, Zero Trust, shared responsibility, DLP, governance, and exam-ready scenario patterns."
 tags: ["azure", "identity", "sc-900", "study-guide"]
 categories: ["cloud-certifications"]
@@ -576,6 +577,21 @@ Use this table when you are stuck between similar products.
 | "Audit prevents incidents" | Audit records activity; prevention requires policy, access control, and protection features |
 
 ---
+
+## Example identity investigation query
+
+This bounded KQL query is a practical way to connect SC-900 identity concepts with sign-in telemetry in a Log Analytics workspace that receives `SigninLogs`:
+
+```kusto
+SigninLogs
+| where TimeGenerated >= ago(24h)
+| project TimeGenerated, UserPrincipalName, AppDisplayName,
+          ResultType, ConditionalAccessStatus, IPAddress
+| order by TimeGenerated desc
+| take 100
+```
+
+The query reads recent records only. Access requires the appropriate workspace and identity permissions, and the results should be handled according to the organization's privacy and retention rules.
 
 ## Sources
 

@@ -29,6 +29,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
         self.assertEqual(config["publishing"]["required_enhanced_elements"], 1)
         self.assertEqual(config["publishing"]["required_diagrams"], 1)
+        self.assertEqual(config["publishing"]["required_code_examples"], 1)
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
@@ -593,6 +594,44 @@ def process(value: int) -> int:
         issues = autopublisher.deterministic_qa(article, topic, [], config, [])
 
         self.assertTrue(any("diagrams; at least 1" in issue for issue in issues))
+
+    def test_code_gate_does_not_accept_a_diagram_as_a_substitute(self):
+        config = {
+            "site": {"base_url": "https://www.compilemymind.com/"},
+            "publishing": {
+                "min_words": 0,
+                "required_source_count": 0,
+                "required_claim_evidence_count": 0,
+                "require_table": True,
+                "minimum_practical_elements": 0,
+                "required_enhanced_elements": 1,
+                "required_diagrams": 1,
+                "required_code_examples": 1,
+                "minimum_internal_post_links": 0,
+            },
+            "taxonomy": {"allowed_categories": ["software-engineering"]},
+        }
+        topic = {
+            "title": "Queue Architecture",
+            "slug": "queue-architecture",
+            "categories": ["software-engineering"],
+            "primary_category": "software-engineering",
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A queue architecture example with enough metadata detail to exercise the required code validation boundary.",
+            "categories": ["software-engineering"],
+            "tags": [],
+            "sources": [],
+            "claim_evidence": [],
+            "diagrams": [{"filename": "concept-flow.svg", "title": "Queue flow"}],
+            "article_markdown": "![Queue flow](concept-flow.svg)\n\n## Decision table\n\n| State | Action |\n| --- | --- |\n| Ready | Process |",
+        }
+
+        issues = autopublisher.deterministic_qa(article, topic, [], config, [])
+
+        self.assertTrue(any("code examples; at least 1" in issue for issue in issues))
 
     def test_model_json_parser_handles_markdown_fences(self):
         self.assertEqual(autopublisher.parse_model_json("```json\n{\"ok\": true}\n```"), {"ok": True})

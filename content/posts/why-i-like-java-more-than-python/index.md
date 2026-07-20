@@ -1,6 +1,7 @@
 ---
 title: "Why I Still Prefer Java Over Python"
 date: "2025-03-28T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A developer's perspective on why Java's strictness, performance, and ecosystem make it the right choice for building serious, long-lived software."
 tags: ["java", "python", "developer-it-tools"]
 categories: ["developer-it-tools"]
@@ -23,6 +24,8 @@ Here's why.
 | Best fit in this article | Durable, team-maintained production systems | Automation, prototyping, data science, and machine learning |
 
 ---
+
+![Java and Python implementation tradeoff flow](concept-flow.svg)
 
 ## 1. Static Typing Catches Errors Before They Cost You
 
@@ -105,6 +108,42 @@ If I need to write a quick automation script, parse some logs, or experiment wit
 But if I'm building a service that will handle real traffic, need to be maintained by a team, has security requirements, and needs to run reliably for years - Java is where I'd start.
 
 ---
+
+## Equivalent typed examples
+
+The practical difference is easier to evaluate with the same model in both languages. Java makes the immutable shape explicit with a record:
+
+```java
+record User(String name, int loginCount) {
+    boolean isActive() {
+        return loginCount > 0;
+    }
+}
+
+User user = new User("Eren", 3);
+System.out.println(user.isActive());
+```
+
+Python can express the same contract with a typed dataclass, while runtime validation remains a separate design choice:
+
+```python
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class User:
+    name: str
+    login_count: int
+
+    def is_active(self) -> bool:
+        return self.login_count > 0
+
+
+user = User(name="Eren", login_count=3)
+print(user.is_active())
+```
+
+The comparison is not that one syntax automatically produces safer software. The relevant boundary is when types are checked, how invalid external data is validated, and which tooling the team consistently runs.
 
 ## Final Word
 

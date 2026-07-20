@@ -1,6 +1,7 @@
 ---
 title: "AZ-900 Cheatsheet: The Complete Azure Fundamentals Study Guide"
 date: "2026-04-22T23:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A comprehensive AZ-900 cheatsheet covering all exam domains: cloud concepts, Azure architecture, compute, networking, storage, databases, governance, and AI - everything you need to pass the Azure Fundamentals exam."
 tags: ["azure", "cloud", "az-900", "study-guide"]
 categories: ["cloud-certifications"]
@@ -649,6 +650,21 @@ The fundamental unit of Azure - anything you create and use: a VM, a database, a
 10. **Responsible AI:** Memorise all 6 principles - Fairness, Reliability & Safety, Privacy & Security, Inclusiveness, Transparency, Accountability.
 
 ---
+
+## Read-only Azure inventory example
+
+Use the Azure CLI to confirm the active subscription and inspect a bounded resource inventory before discussing services, regions, or governance controls:
+
+```bash
+SUBSCRIPTION_ID='00000000-0000-0000-0000-000000000000'
+
+az account show --query '{name:name,id:id,tenantId:tenantId}' --output json
+az resource list --subscription "$SUBSCRIPTION_ID" \
+  --query '[].{name:name,type:type,location:location,group:resourceGroup}' \
+  --output table
+```
+
+Replace the example subscription identifier and use an account with read-only scope where possible. These commands do not create or update resources.
 
 ## Sources
 

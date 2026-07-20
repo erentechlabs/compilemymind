@@ -1,6 +1,7 @@
 ---
 title: "Internet Protocol (IP) Explained: Addressing, Subnets, DHCP, and NAT"
 date: "2025-11-27T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A complete, hands-on guide to IPv4 addressing, subnet masks, DHCP, and NAT - foundational knowledge for anyone working in networking or systems administration."
 tags: ["networking", "protocols", "it-fundamentals"]
 categories: ["networking"]
@@ -14,6 +15,8 @@ This guide takes you through the mechanics of IPv4 addressing, subnetting, DHCP,
 > **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
 
 ---
+
+![IP addressing, subnet, routing, DHCP, and NAT flow](concept-flow.svg)
 
 ## What Is an IP Address?
 
@@ -195,6 +198,25 @@ A private host such as `192.168.1.10` sends traffic to its default gateway, for 
 The gateway address is assigned either statically by an admin or automatically via DHCP.
 
 ---
+
+## Calculate a subnet with Python
+
+Python's standard `ipaddress` module can make network, host, and broadcast boundaries explicit without contacting the network:
+
+```python
+from ipaddress import ip_interface
+
+interface = ip_interface("192.0.2.34/27")
+network = interface.network
+
+print("address:", interface.ip)
+print("network:", network.network_address)
+print("broadcast:", network.broadcast_address)
+print("usable hosts:", network.num_addresses - 2)
+print("contains 192.0.2.50:", interface.ip.__class__("192.0.2.50") in network)
+```
+
+The subtraction of two reflects conventional IPv4 network and broadcast reservations; point-to-point and IPv6 addressing require different assumptions.
 
 ## Conclusion
 

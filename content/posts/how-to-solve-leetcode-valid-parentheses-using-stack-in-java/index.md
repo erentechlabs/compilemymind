@@ -1,6 +1,7 @@
 ---
 title: "Solving LeetCode's Valid Parentheses Problem with a Stack in Java"
 date: "2025-08-06T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A beginner-friendly walkthrough of the Valid Parentheses problem - using the stack data structure to implement a clean, O(n) solution in Java."
 tags: ["java"]
 categories: ["developer-it-tools"]
@@ -22,6 +23,8 @@ The problem: given a string containing only `(`, `)`, `{`, `}`, `[`, and `]`, de
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![Valid Parentheses stack-processing flow](concept-flow.svg)
 
 ## The Right Data Structure
 

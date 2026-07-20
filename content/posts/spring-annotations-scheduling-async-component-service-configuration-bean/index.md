@@ -1,6 +1,7 @@
 ---
 title: "Spring Annotations: @Scheduling, @Async, @Component, @Service, @Configuration, @Bean"
 date: "2025-07-15T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical guide to the most important Spring Framework annotations - what they do, when to use them, and how they fit together in a real application."
 tags: ["java", "spring-boot", "developer-it-tools"]
 categories: ["developer-it-tools"]
@@ -14,6 +15,8 @@ This guide covers six of the most important annotations in day-to-day Spring dev
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![Spring annotation selection and bean lifecycle flow](concept-flow.svg)
 
 ## @Component
 

@@ -1,6 +1,7 @@
 ---
 title: "What's New in Java 25 (JDK 25)"
 date: "2025-10-24T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A developer-friendly tour of the most important changes in Java 25 (LTS): language improvements, concurrency, performance work, JFR tooling, AOT ergonomics, GC updates, and more."
 tags: ["java"]
 categories: ["developer-it-tools"]
@@ -14,6 +15,8 @@ This post is based on the official OpenJDK pages and JEPs for JDK 25.
 > **Reading path:** Begin with the concept, use the code or comparison example to make it concrete, and finish with the design trade-off or practical rule.
 
 ---
+
+![Java 25 feature evaluation and adoption flow](concept-flow.svg)
 
 ## Quick Summary
 

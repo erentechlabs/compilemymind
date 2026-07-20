@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics"
 date: "2026-07-15T23:26:44+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A safe Microsoft Entra sign-in troubleshooting workflow that uses sign-in logs and Sign-in Diagnostics to isolate the failure before changing authentication or access policies."
 tags: ["entra-id", "identity", "authentication", "conditional-access", "troubleshooting"]
 categories: ["entra-id"]
@@ -86,6 +86,25 @@ This article is based on the official sources listed for this topic and was chec
 ## Summary
 
 Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator.
+
+## Build a bounded sign-in evidence record
+
+Use a structured PowerShell object to keep the lookup boundary explicit before opening Sign-in Diagnostics. This example is local and read-only:
+
+```powershell
+$Evidence = [ordered]@{
+    UserPrincipalName = 'user@contoso.test'
+    Application       = 'Example application'
+    ObservedAtUtc     = '2026-07-20T12:00:00Z'
+    CorrelationId     = '00000000-0000-0000-0000-000000000000'
+    ErrorCode         = 'replace-with-observed-code'
+    DeviceId          = 'redacted'
+}
+
+$Evidence | ConvertTo-Json -Depth 3
+```
+
+Populate the fields from the user's error and the matching log entry. Do not invent a correlation identifier or broaden the time window merely to make a record match.
 
 ## Sources
 

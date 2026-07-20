@@ -1,6 +1,7 @@
 ---
 title: "TCP vs UDP Explained With Examples"
 date: "2026-06-14T11:20:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical networking guide explaining TCP and UDP, how they differ, when each one is used, real-world examples, security considerations, troubleshooting commands, and decision tables."
 tags: ["networking", "protocols", "tcp", "udp", "it-fundamentals"]
 categories: ["networking"]
@@ -308,6 +309,30 @@ HTTP/1.1 and HTTP/2 typically use TCP. HTTP/3 uses QUIC over UDP.
 Ping only tests ICMP reachability. A web server can ignore ping while HTTPS works, or respond to ping while TCP/443 is blocked.
 
 ---
+
+## Python socket examples
+
+These functions make the transport choice visible. Both use a timeout; the TCP version establishes a connection and reads a stream, while the UDP version sends one datagram and waits for a datagram response:
+
+```python
+import socket
+
+
+def request_tcp(host: str, port: int, payload: bytes) -> bytes:
+    with socket.create_connection((host, port), timeout=2) as client:
+        client.sendall(payload)
+        return client.recv(4096)
+
+
+def request_udp(host: str, port: int, payload: bytes) -> bytes:
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as client:
+        client.settimeout(2)
+        client.sendto(payload, (host, port))
+        response, _ = client.recvfrom(4096)
+        return response
+```
+
+Run either function only against a test service that implements the expected application protocol. A successful UDP send does not confirm delivery, while a successful TCP connection does not define message boundaries for the application.
 
 ## Quick Summary
 

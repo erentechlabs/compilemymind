@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Microsoft Entra Conditional Access with What If"
 date: "2026-07-18T06:34:48+03:00"
-lastmod: "2026-07-20T16:05:02+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A safe Microsoft Entra Conditional Access workflow that compares What If results with the matching sign-in record before approved policy changes."
 tags: ["entra-id", "conditional-access", "identity", "troubleshooting"]
 categories: ["entra-id", "identity-access-management", "cybersecurity"]
@@ -91,6 +91,25 @@ This article is based on the official sources listed for this topic and was chec
 ## Summary
 
 Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator.
+
+## Reproducible What If input record
+
+Capture the exact simulation inputs as structured data before comparing them with the real sign-in. This PowerShell example creates a reviewable record without changing a policy or calling a tenant API:
+
+```powershell
+$WhatIfInput = [ordered]@{
+    User             = 'user@contoso.test'
+    CloudApplication = 'Example SaaS application'
+    DevicePlatform   = 'Windows'
+    ClientApp        = 'Browser'
+    Country          = 'TR'
+    SignInRisk       = 'none'
+}
+
+$WhatIfInput | ConvertTo-Json -Depth 3
+```
+
+Replace the example values with the affected sign-in's conditions and keep personal data masked in shared records. The output is evidence for reproducing the simulation; it is not a policy export.
 
 ## Sources
 

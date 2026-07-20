@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="830" viewBox="0 0 1200 830" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
+</defs>
+<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>
+<title id="title">Understanding HTTP Status Codes: What They Mean and How to Use Them: practical flow</title>
+<desc id="desc">A flowchart for Understanding HTTP Status Codes: What They Mean and How to Use Them: practical flow</desc>
+<text x="600.0" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Understanding HTTP Status Codes: What They Mean and How to Use</text>
+<text x="600.0" y="86" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Them: practical flow</text>
+<rect x="220" y="148" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="189.0" r="22" fill="#2563eb"/>
+<text x="264" y="196.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+<text x="306" y="180" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">The Five Categories</text>
+<line x1="600" y1="238" x2="600" y2="264" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="276" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="317.0" r="22" fill="#2563eb"/>
+<text x="264" y="324.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+<text x="306" y="308" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">1xx - Informational</text>
+<line x1="600" y1="366" x2="600" y2="392" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="404" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="445.0" r="22" fill="#2563eb"/>
+<text x="264" y="452.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+<text x="306" y="436" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">2xx - Success</text>
+<line x1="600" y1="494" x2="600" y2="520" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="532" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="573.0" r="22" fill="#2563eb"/>
+<text x="264" y="580.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
+<text x="306" y="564" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">3xx - Redirection</text>
+<line x1="600" y1="622" x2="600" y2="648" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="660" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
+<circle cx="264" cy="701.0" r="22" fill="#2563eb"/>
+<text x="264" y="708.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
+<text x="306" y="692" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">4xx - Client Errors</text>
+<text x="626.0" y="258.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="386.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="514.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<text x="626.0" y="642.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+</svg>

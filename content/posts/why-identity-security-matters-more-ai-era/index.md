@@ -1,6 +1,7 @@
 ---
 title: "Why Identity Security Matters More in the AI Era"
 date: "2026-06-15T22:33:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical cybersecurity guide explaining why identity security becomes more important as organizations adopt AI agents, automation, non-human identities, copilots, plugins, and AI-connected workflows."
 tags: ["cybersecurity", "identity", "ai-security", "zero-trust", "iam"]
 categories: ["identity-access-management"]
@@ -397,6 +398,23 @@ The winning strategy is not fear. It is discipline:
 In the AI era, identity is not just who logs in. Identity is the boundary around what AI is allowed to know, decide, and do.
 
 ---
+
+## Example AI-agent permission envelope
+
+Represent an agent's authority as an explicit, reviewable configuration instead of inheriting every permission held by its operator:
+
+```json
+{
+  "agent": "support-summary-agent",
+  "allowedActions": ["tickets.read", "summaries.write"],
+  "deniedActions": ["users.delete", "roles.assign"],
+  "dataScopes": ["support/eu"],
+  "humanApprovalRequired": ["external_message.send"],
+  "credentialLifetimeMinutes": 15
+}
+```
+
+Enforcement must occur in the identity and authorization layer, not only in the prompt. Validate every tool call against the current identity, resource scope, action, and approval state.
 
 ## References
 

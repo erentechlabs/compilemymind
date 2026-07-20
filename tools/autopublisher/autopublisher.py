@@ -2957,7 +2957,8 @@ Editorial style:
 - Optimize for search intent naturally, with a clear meta description.
 - Include at least one useful Markdown comparison or reference table in every article.
 - Include at least one useful, topic-specific architecture, process, decision, or diagnostic diagram in every article. A table, code block, or chart does not replace this diagram requirement.
-- Also include runnable code or commands for programming, algorithms, databases, mobile, web, developer-tool, and system-administration topics when they help the reader apply or verify the guidance. Do not force code into portal-only or conceptual workflows where it would be artificial.
+- Include at least one runnable, safe code or command example in every article. For portal-led or conceptual topics, use a read-only query, a minimal configuration or policy fragment, a small test harness, or a structured-data example that makes the article's boundary concrete.
+- Prefer examples readers can copy into an isolated test environment. Explain inputs, expected output, permissions, side effects, and version assumptions; never use destructive commands merely to satisfy the code requirement.
 - Never add decorative or unrelated media merely to satisfy the visual rule. Diagram labels must explain the article's actual components, decisions, or sequence.
 - Include internal links naturally, using only the exact Markdown URLs from the provided internal-link list.
 - Do not create a Sources section inside article_markdown; the publishing system adds it automatically.
@@ -4406,6 +4407,12 @@ def deterministic_qa(
         issues.append(
             f"Article provides {diagram_count} diagrams; at least {required_diagrams} are required."
         )
+    required_code_examples = int(config.get("publishing", {}).get("required_code_examples", 0))
+    code_example_count = len(fenced_code_blocks(markdown))
+    if code_example_count < required_code_examples:
+        issues.append(
+            f"Article provides {code_example_count} code examples; at least {required_code_examples} are required."
+        )
     if topic.get("needs_diagram") and not article.get("diagrams"):
         issues.append("Selected topic requested a diagram, but no diagram spec was returned.")
     if topic.get("needs_chart") and not article.get("charts") and not re.search(r"\|\s*[^|\n]+\s*\|", markdown):
@@ -4782,6 +4789,25 @@ def configured_offline_evergreen_fallback(
         if not title or not language or not code or not explanation or not re.fullmatch(r"[a-z0-9_+#.-]+", language):
             return None, None, "Configured offline fallback contains an incomplete code example."
         code_example_sections.append(f"### {title}\n\n```{language}\n{code}\n```\n\n{explanation}")
+    if not code_example_sections and not evidence_query_sections:
+        evidence_record = json.dumps(
+            {
+                "topic": str(topic.get("slug", "technical-investigation")),
+                "scope": "replace-with-one-bounded-user-resource-or-request",
+                "observedAtUtc": "2026-01-01T00:00:00Z",
+                "expected": "replace-with-the-documented-expected-result",
+                "observed": "replace-with-the-actual-result",
+                "correlationId": "redacted-or-not-available",
+                "nextReadOnlyCheck": "replace-with-one-evidence-gathering-step",
+            },
+            indent=2,
+        )
+        code_example_sections.append(
+            "### Structured evidence record\n\n"
+            f"```json\n{evidence_record}\n```\n\n"
+            "Replace every placeholder with observed, non-secret values. This local structured-data example "
+            "makes the investigation boundary reproducible without changing the affected service."
+        )
     code_examples_section = (
         "## Worked code example\n\n" + "\n\n".join(code_example_sections)
         if code_example_sections else ""
@@ -4912,6 +4938,8 @@ Keep the investigation read-only until the evidence identifies a change boundary
 
 {chr(10).join(evidence_query_sections)}
 
+{code_examples_section}
+
 ## Symptom-to-boundary map
 
 | Observed symptom | Boundary to investigate | Next evidence check |
@@ -4957,6 +4985,8 @@ For this incident, record the observed boundary, the evidence that supports it, 
 {chr(10).join(workflow_sections)}
 
 {evidence_queries_section}
+
+{code_examples_section}
 
 ## Troubleshoot by symptom
 

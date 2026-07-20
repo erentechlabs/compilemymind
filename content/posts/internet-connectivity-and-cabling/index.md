@@ -1,6 +1,7 @@
 ---
 title: "Understanding Internet Connectivity and Network Cabling: A Complete Guide"
 date: "2025-11-27T00:00:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "How ISPs deliver internet, what connection types actually mean, and the physical cabling infrastructure that underlies every modern network."
 tags: ["networking", "it-fundamentals", "infrastructure"]
 categories: ["networking"]
@@ -14,6 +15,8 @@ This guide covers how internet connectivity is delivered and the physical cablin
 > **Reading path:** Start with the mental model, follow the worked request or packet examples, and finish with the troubleshooting or memory guide.
 
 ---
+
+![Internet access and physical cabling path](concept-flow.svg)
 
 ## How ISPs Deliver Internet
 

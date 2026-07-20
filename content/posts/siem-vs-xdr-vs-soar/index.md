@@ -1,6 +1,7 @@
 ---
 title: "SIEM vs XDR vs SOAR: What They Do and When to Use Each"
 date: "2026-06-14T09:31:00+03:00"
+lastmod: "2026-07-20T19:30:00+03:00"
 description: "A practical cybersecurity guide explaining SIEM, XDR, and SOAR: how they differ, where they overlap, how SOC teams use them, and when to choose each approach."
 tags: ["cybersecurity", "siem", "xdr", "soar", "incident-response"]
 categories: ["cybersecurity"]
@@ -446,6 +447,22 @@ Use **SOAR** when response steps are repetitive, time-sensitive, and mature enou
 Use all three when the organization is ready for integrated security operations: visibility, detection, investigation, response, documentation, and continuous improvement.
 
 ---
+
+## Example SIEM detection query
+
+A SIEM starts with observable events. This KQL example groups failed Entra sign-ins by identity and source address over a bounded window; tune the threshold to the environment instead of treating five failures as universally suspicious:
+
+```kusto
+SigninLogs
+| where TimeGenerated >= ago(1h)
+| where ResultType != 0
+| summarize Failures = count(), Applications = make_set(AppDisplayName, 5)
+    by UserPrincipalName, IPAddress
+| where Failures >= 5
+| order by Failures desc
+```
+
+An XDR platform may correlate the same identity with endpoint or email telemetry, while a SOAR workflow can request approval, enrich the alert, or open a case. Keep detection logic separate from automated containment permissions.
 
 ## Sources
 
