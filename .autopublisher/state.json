@@ -1722,9 +1722,9 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-20T07:28:52.071581Z",
+      "time": "2026-07-20T11:13:05.050999Z",
       "result": "queued",
-      "slug": "postgresql-indexes-types-tradeoffs-query-verification",
+      "slug": "swift-concurrency-async-await-tasks-actors",
       "queue_depth": 3
     }
   },
@@ -2074,6 +2074,75 @@
         },
         "quality_score": 0.9161,
         "path": "content/posts/postgresql-indexes-types-tradeoffs-query-verification/index.md"
+      }
+    },
+    {
+      "queued_at": "2026-07-20T11:13:05.050999Z",
+      "slug": "swift-concurrency-async-await-tasks-actors",
+      "title": "Swift Concurrency: async/await, Tasks, and Actors Explained",
+      "bundle_path": ".autopublisher/queue/ready/swift-concurrency-async-await-tasks-actors",
+      "record": {
+        "time": "2026-07-20T11:13:05.050999Z",
+        "title": "Swift Concurrency: async/await, Tasks, and Actors Explained",
+        "slug": "swift-concurrency-async-await-tasks-actors",
+        "categories": [
+          "mobile-development",
+          "programming-languages"
+        ],
+        "tags": [
+          "swift"
+        ],
+        "sources": [
+          {
+            "title": "Swift 5.5 Released!",
+            "url": "https://swift.org/blog/swift-5.5-released"
+          },
+          {
+            "title": "Announcing Swift 6",
+            "url": "https://swift.org/blog/announcing-swift-6"
+          },
+          {
+            "title": "Get started with Swift concurrency",
+            "url": "https://developer.apple.com/news?id=o140tv24"
+          }
+        ],
+        "qa": {
+          "approved": true,
+          "score": 0.9,
+          "technical_accuracy": 0.94,
+          "factual_confidence": 0.95,
+          "unsupported_claims": [],
+          "issues": [],
+          "required_fixes": [],
+          "reason": "Reviewed official-source offline recovery article.",
+          "quality": {
+            "score": 0.9236,
+            "components": {
+              "topic_relevance": 1.0,
+              "originality": 0.7666,
+              "source_quality": 1.0,
+              "claim_support": 1.0,
+              "factual_confidence": 1.0,
+              "technical_accuracy": 0.94,
+              "search_intent_match": 0.7,
+              "practical_usefulness": 1.0,
+              "readability": 1.0,
+              "internal_linking": 1.0,
+              "duplicate_topic_risk": 0.7666,
+              "source_similarity": 0.5315,
+              "existing_content_similarity": 0.7666,
+              "outdated_information_risk": 1.0,
+              "metadata_completeness": 1.0,
+              "structured_data_validity": 1.0,
+              "code_validity": 1.0,
+              "version_confidence": 1.0,
+              "media_relevance": 1.0,
+              "editorial_specificity": 1.0
+            }
+          }
+        },
+        "quality_score": 0.9236,
+        "path": "content/posts/swift-concurrency-async-await-tasks-actors/index.md"
       }
     }
   ],
