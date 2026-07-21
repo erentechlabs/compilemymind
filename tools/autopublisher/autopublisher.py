@@ -2960,6 +2960,8 @@ Editorial style:
 - Include at least one useful, topic-specific architecture, process, decision, or diagnostic diagram in every article. A table, code block, or chart does not replace this diagram requirement.
 - Place every diagram, chart, or explanatory image inside the section where its concept is introduced, immediately after the paragraph that gives the visual meaning. Use visuals as part of the explanation, not as an end-of-article recap.
 - Never create a "Visual Summary", "Diagram Gallery", or similar media-only section, and never collect the article's visuals at the end.
+- Make each diagram information-rich enough to teach: normally use four to six nodes, give at least three nodes a concise detail sentence, label meaningful transitions, and add a focused subtitle or takeaway. Do not return generic boxes named only "Step 1", "Process", "Check", or "Result".
+- Choose the visual grammar that fits the subject: sequence for ordered execution, architecture for layers and ownership boundaries, decision for diagnostics and branching checks, comparison for trade-offs, and cycle for feedback loops or lifecycles. Do not default every topic to the same flowchart.
 - Include at least one runnable, safe code or command example in every article. For portal-led or conceptual topics, use a read-only query, a minimal configuration or policy fragment, a small test harness, or a structured-data example that makes the article's boundary concrete.
 - Prefer examples readers can copy into an isolated test environment. Explain inputs, expected output, permissions, side effects, and version assumptions; never use destructive commands merely to satisfy the code requirement.
 - Never add decorative or unrelated media merely to satisfy the visual rule. Diagram labels must explain the article's actual components, decisions, or sequence.
@@ -3016,9 +3018,15 @@ Return JSON only with this shape:
     {{
       "filename": "concept-flow.svg",
       "title": "Diagram title",
+      "subtitle": "The precise concept, system boundary, or decision represented",
+      "layout": "sequence|architecture|decision|comparison|cycle",
+      "theme": "blue|violet|emerald|amber|rose",
       "placement_heading": "Exact H2 or H3 heading whose explanation this diagram supports",
       "caption": "One sentence telling the reader what relationship or decision to notice",
-      "nodes": [{{"id": "a", "label": "First step"}}],
+      "takeaway": "A short conclusion visible at the center or foot of the diagram",
+      "center_label": "For cycle layouts, the state or principle at the center of the loop",
+      "lanes": ["Left comparison lane", "Right comparison lane"],
+      "nodes": [{{"id": "a", "label": "Specific component or decision", "detail": "What it owns, checks, receives, or produces", "kind": "input|action|decision|evidence|output", "group": "Optional comparison lane"}}],
       "edges": [{{"from": "a", "to": "b", "label": "then"}}]
     }}
   ],
@@ -3683,51 +3691,241 @@ def contextual_visual_issues(
     return issues
 
 
+def _article_visual_sections(markdown: str) -> list[dict[str, str]]:
+    headings = _markdown_headings(markdown)
+    sections: list[dict[str, str]] = []
+    for index, match in enumerate(headings):
+        heading = normalize_space(match.group(2))
+        if not _contextual_visual_heading(heading) or re.search(
+            r"(?i)^(?:direct answer|a working model for|source boundaries|common mistakes|further learning)",
+            heading,
+        ):
+            continue
+        end = headings[index + 1].start() if index + 1 < len(headings) else len(markdown)
+        body = markdown_without_fenced_code(markdown[match.end():end])
+        body = re.sub(r"(?m)^\s*(?:!\[[^\]]*\]\([^)]*\)|\|.*\||[-*+]\s+|\d+\.\s+)", " ", body)
+        paragraphs = [normalize_space(item) for item in re.split(r"\n\s*\n", body) if len(normalize_space(item)) >= 30]
+        sections.append({"heading": heading, "detail": (paragraphs[0] if paragraphs else "")[:180]})
+    return sections
+
+
+def diagram_layout_for_topic(topic: dict[str, Any], markdown: str = "") -> str:
+    text = " ".join(
+        [
+            str(topic.get("title", "")),
+            str(topic.get("search_intent", "")),
+            str(topic.get("article_type", "")),
+            " ".join(topic.get("categories", []) or []),
+            markdown[:1200],
+        ]
+    ).lower()
+    if re.search(r"\b(troubleshoot|diagnos|investigat|failure|incident|debug|root cause)\w*\b", text):
+        return "decision"
+    if re.search(r"\b(vs\.?|versus|compar(?:e|ison)|trade-?offs?|difference between)\b", text):
+        return "comparison"
+    if re.search(r"\b(architecture|layers?|topology|components?|pipeline|data flow)\b", text):
+        return "architecture"
+    if re.search(r"\b(lifecycle|feedback loop|event loop|cycle|rotation|renewal|cache invalidation)\b", text):
+        return "cycle"
+    return "sequence"
+
+
+def diagram_theme_for_topic(topic: dict[str, Any]) -> str:
+    categories = set(topic.get("categories", []) or []) | {str(topic.get("primary_category", ""))}
+    if categories & {"cybersecurity", "entra-id", "identity-security"}:
+        return "rose"
+    if categories & {"programming-languages", "software-engineering", "web-development"}:
+        return "emerald"
+    if categories & {"mobile-development", "ai-engineering", "developer-it-tools"}:
+        return "violet"
+    if categories & {"networking", "system-administration", "cloud"}:
+        return "blue"
+    return "amber"
+
+
+def _diagram_node_kind(index: int, count: int, layout: str) -> str:
+    if index == 0:
+        return "input"
+    if index == count - 1:
+        return "output"
+    return "decision" if layout == "decision" and index == 1 else "action"
+
+
 def default_diagram_for_topic(topic: dict[str, Any], markdown: str = "") -> dict[str, Any]:
     title = normalize_space(str(topic.get("title") or "Concept flow"))
     template = topic.get("offline_fallback") if isinstance(topic.get("offline_fallback"), dict) else {}
-    reviewed_steps = [
-        normalize_space(str(item.get("title", "")))
+    reviewed_nodes = [
+        {
+            "label": normalize_space(str(item.get("title", ""))),
+            "detail": normalize_space(str(item.get("body", "")))[:180],
+        }
         for item in template.get("steps", []) or []
         if isinstance(item, dict) and normalize_space(str(item.get("title", "")))
     ]
-    article_sections = [
-        normalize_space(match.group(1))
-        for match in re.finditer(r"(?m)^##\s+(.+)$", markdown_without_fenced_code(markdown))
-        if not re.search(
-            r"(?i)^(sources|related|summary|version|direct answer|a working model for|source boundaries)",
-            normalize_space(match.group(1)),
-        )
+    sections = _article_visual_sections(markdown)
+    raw_nodes = (reviewed_nodes or [
+        {"label": section["heading"], "detail": section["detail"]}
+        for section in sections
+    ])[:5]
+    fallback_nodes = [
+        {"label": f"Define the {title} boundary", "detail": "Name the input, owner, scope, and expected result before choosing an implementation."},
+        {"label": "Apply the core mechanism", "detail": "Trace the state or request through the component that performs the important work."},
+        {"label": "Inspect the trade-off", "detail": "Compare failure behavior, operational cost, security, and maintenance at the decision point."},
+        {"label": "Validate the observable result", "detail": "Check the output against the original workload and preserve evidence for the next decision."},
     ]
-    labels = (reviewed_steps or article_sections)[:5]
-    if len(labels) < 3:
-        labels = [
-            f"Define the {title} boundary",
-            "Apply the core mechanism",
-            "Compare the important trade-offs",
-            "Validate the expected result",
-        ]
+    used_labels = {normalize_space(str(item.get("label", ""))).lower() for item in raw_nodes}
+    for fallback in fallback_nodes:
+        if len(raw_nodes) >= 4:
+            break
+        if fallback["label"].lower() not in used_labels:
+            raw_nodes.append(fallback)
+            used_labels.add(fallback["label"].lower())
+    layout = diagram_layout_for_topic(topic, markdown)
     nodes = [
-        {"id": f"step-{index}", "label": label}
-        for index, label in enumerate(labels, start=1)
+        {
+            "id": f"step-{index}",
+            "label": normalize_space(str(item.get("label", "")))[:100],
+            "detail": normalize_space(str(item.get("detail", "")))[:180],
+            "kind": _diagram_node_kind(index - 1, len(raw_nodes), layout),
+        }
+        for index, item in enumerate(raw_nodes, start=1)
     ]
+    if layout == "comparison":
+        for index, node in enumerate(nodes):
+            node["group"] = "Option A" if index < math.ceil(len(nodes) / 2) else "Option B"
+    overview = normalize_space(str(template.get("overview") or topic.get("search_intent") or ""))
+    placement_heading = next(
+        (
+            section["heading"]
+            for section in sections
+            if re.search(r"(?i)\b(?:workflow|architecture|mechanism|model|reason|diagnos|implement|example|works?)\w*\b", section["heading"])
+        ),
+        sections[0]["heading"] if sections else "",
+    )
     return {
         "filename": "concept-flow.svg",
-        "title": f"{title}: practical flow",
-        "placement_heading": next(
-            (
-                heading
-                for heading in article_sections
-                if re.search(r"(?i)\b(?:workflow|architecture|mechanism|model|reason|diagnos|implement|example|works?)\w*\b", heading)
-            ),
-            article_sections[0] if article_sections else "",
-        ),
+        "title": f"{title}: practical model",
+        "subtitle": (overview or f"How the important boundaries in {title} connect in practice.")[:180],
+        "layout": layout,
+        "theme": diagram_theme_for_topic(topic),
+        "placement_heading": placement_heading,
+        "takeaway": normalize_space(str(topic.get("search_intent", "")))[:150],
         "nodes": nodes,
         "edges": [
-            {"from": nodes[index]["id"], "to": nodes[index + 1]["id"], "label": "then"}
+            {"from": nodes[index]["id"], "to": nodes[index + 1]["id"], "label": "next boundary"}
             for index in range(len(nodes) - 1)
         ],
     }
+
+
+def normalize_diagram_spec(diagram: dict[str, Any], topic: dict[str, Any], markdown: str) -> dict[str, Any]:
+    fallback = default_diagram_for_topic(topic, markdown)
+    normalized = dict(diagram)
+    allowed_layouts = {"sequence", "architecture", "decision", "comparison", "cycle"}
+    allowed_themes = {"blue", "violet", "emerald", "amber", "rose"}
+    normalized["filename"] = safe_filename(str(normalized.get("filename", "")), "concept-flow.svg")
+    normalized["title"] = normalize_space(str(normalized.get("title") or fallback["title"]))[:140]
+    normalized["subtitle"] = normalize_space(str(normalized.get("subtitle") or fallback["subtitle"]))[:200]
+    normalized["layout"] = str(normalized.get("layout", "")).strip().lower()
+    if normalized["layout"] not in allowed_layouts:
+        normalized["layout"] = fallback["layout"]
+    normalized["theme"] = str(normalized.get("theme", "")).strip().lower()
+    if normalized["theme"] not in allowed_themes:
+        normalized["theme"] = fallback["theme"]
+    normalized["placement_heading"] = normalize_space(
+        str(normalized.get("placement_heading") or fallback["placement_heading"])
+    )[:160]
+    normalized["caption"] = normalize_space(str(normalized.get("caption", "")))[:220]
+    normalized["takeaway"] = normalize_space(str(normalized.get("takeaway") or fallback.get("takeaway", "")))[:180]
+    normalized["center_label"] = normalize_space(str(normalized.get("center_label", "")))[:120]
+    sections = _article_visual_sections(markdown)
+    source_nodes = [item for item in normalized.get("nodes", []) or [] if isinstance(item, dict)][:6]
+    seen_ids: set[str] = set()
+    seen_labels: set[str] = set()
+    nodes: list[dict[str, str]] = []
+    for index, item in enumerate(source_nodes):
+        label = normalize_space(str(item.get("label", "")))[:100]
+        if not label or label.lower() in seen_labels:
+            continue
+        node_id = slugify(str(item.get("id") or label), 48) or f"node-{index + 1}"
+        while node_id in seen_ids:
+            node_id = f"{node_id}-{index + 1}"
+        detail = normalize_space(str(item.get("detail") or item.get("description") or ""))
+        if not detail and sections:
+            label_words = set(re.findall(r"[a-z0-9]+", label.lower())) - STOP_WORDS
+            ranked = sorted(
+                sections,
+                key=lambda section: len(label_words & (set(re.findall(r"[a-z0-9]+", section["heading"].lower())) - STOP_WORDS)),
+                reverse=True,
+            )
+            detail = ranked[0]["detail"]
+        nodes.append(
+            {
+                "id": node_id,
+                "label": label,
+                "detail": detail[:180],
+                "kind": normalize_space(str(item.get("kind") or _diagram_node_kind(index, len(source_nodes), normalized["layout"])))[:30],
+                "group": normalize_space(str(item.get("group", "")))[:60],
+            }
+        )
+        seen_ids.add(node_id)
+        seen_labels.add(label.lower())
+    for item in fallback["nodes"]:
+        if len(nodes) >= 4:
+            break
+        if item["label"].lower() in seen_labels:
+            continue
+        nodes.append(dict(item))
+        seen_ids.add(item["id"])
+        seen_labels.add(item["label"].lower())
+    normalized["nodes"] = nodes
+    valid_ids = {node["id"] for node in nodes}
+    edges: list[dict[str, str]] = []
+    for item in normalized.get("edges", []) or []:
+        if not isinstance(item, dict):
+            continue
+        source = str(item.get("from", ""))
+        target = str(item.get("to", ""))
+        if source in valid_ids and target in valid_ids and source != target:
+            edges.append({"from": source, "to": target, "label": normalize_space(str(item.get("label", "")))[:80]})
+    if normalized["layout"] != "comparison" and len(edges) < max(0, len(nodes) - 1):
+        edges = [
+            {"from": nodes[index]["id"], "to": nodes[index + 1]["id"], "label": "next boundary"}
+            for index in range(len(nodes) - 1)
+        ]
+    normalized["edges"] = edges
+    lanes = [normalize_space(str(item))[:60] for item in normalized.get("lanes", []) or [] if normalize_space(str(item))]
+    normalized["lanes"] = lanes[:2] if len(lanes) >= 2 else ["Option A", "Option B"]
+    if normalized["layout"] == "comparison":
+        split = math.ceil(len(nodes) / 2)
+        for index, node in enumerate(nodes):
+            if not node.get("group"):
+                node["group"] = normalized["lanes"][0 if index < split else 1]
+    return normalized
+
+
+def diagram_detail_issues(diagrams: list[dict[str, Any]], config: dict[str, Any]) -> list[str]:
+    issues: list[str] = []
+    required_details = int(config.get("publishing", {}).get("required_diagram_detail_nodes", 0))
+    allowed_layouts = set(config.get("publishing", {}).get("allowed_diagram_layouts", []) or [])
+    for diagram in diagrams:
+        title = normalize_space(str(diagram.get("title") or "Untitled diagram"))
+        nodes = [item for item in diagram.get("nodes", []) or [] if isinstance(item, dict)]
+        if allowed_layouts and str(diagram.get("layout", "")) not in allowed_layouts:
+            issues.append(f"Diagram {title} does not use an approved topic-aware layout.")
+        if len(nodes) < 3:
+            issues.append(f"Diagram {title} has fewer than three meaningful nodes.")
+        detailed = sum(1 for item in nodes if len(normalize_space(str(item.get("detail", "")))) >= 24)
+        if detailed < required_details:
+            issues.append(
+                f"Diagram {title} explains {detailed} nodes in detail; at least {required_details} are required."
+            )
+        labels = [normalize_space(str(item.get("label", ""))).lower() for item in nodes]
+        if any(re.fullmatch(r"(?:step\s*\d*|process|check|result|next)", label) for label in labels):
+            issues.append(f"Diagram {title} contains a generic node label instead of topic-specific information.")
+        if len(normalize_space(str(diagram.get("subtitle", "")))) < 24:
+            issues.append(f"Diagram {title} needs a focused explanatory subtitle.")
+    return issues
 
 
 def supplement_article_sources(
@@ -3835,6 +4033,10 @@ def normalize_article_payload(
         and not article["charts"]
     ):
         article["diagrams"] = [default_diagram_for_topic(topic, draft_markdown)]
+    article["diagrams"] = [
+        normalize_diagram_spec(item, topic, draft_markdown)
+        for item in article["diagrams"]
+    ]
     markdown = remove_accidental_frontmatter(draft_markdown)
     site_base = str(config.get("site", {}).get("base_url", "")).rstrip("/")
     markdown = sanitize_article_external_links(markdown, site_base)
@@ -4513,6 +4715,7 @@ def calculate_quality_score(
         "media_relevance": 1.0 if not (
             media_evidence_issues(article)
             + contextual_visual_issues(markdown, article.get("diagrams", []) or [], article.get("charts", []) or [])
+            + diagram_detail_issues(article.get("diagrams", []) or [], config)
         ) else 0.0,
         "editorial_specificity": 1.0 if not editorial_issues else 0.0,
     }
@@ -4542,6 +4745,8 @@ def deterministic_qa(
                 article.get("charts", []) or [],
             )
         )
+    if int(config.get("publishing", {}).get("required_diagram_detail_nodes", 0)) > 0:
+        issues.extend(diagram_detail_issues(article.get("diagrams", []) or [], config))
     if config.get("editorial_validation", {}).get("enabled", False):
         issues.extend(repetition_issues(markdown, config))
         issues.extend(generic_paragraph_issues(markdown, config))
@@ -5655,7 +5860,7 @@ def svg_text_overlap_issues(path: Path) -> list[str]:
     return issues
 
 
-def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
+def _render_legacy_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
     nodes = diagram.get("nodes", []) or []
     edges = diagram.get("edges", []) or []
     if not nodes:
@@ -5718,6 +5923,286 @@ def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
                 f'<text x="{width / 2 + 26}" y="{first_y + line_index * 18}" '
                 f'font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">{html.escape(line)}</text>'
             )
+    parts.append("</svg>")
+    path.write_text("\n".join(parts), encoding="utf-8")
+
+
+DIAGRAM_PALETTES: dict[str, dict[str, str]] = {
+    "blue": {"accent": "#2563eb", "accent2": "#0891b2", "soft": "#dbeafe", "bg1": "#eff6ff", "bg2": "#f8fafc"},
+    "violet": {"accent": "#7c3aed", "accent2": "#db2777", "soft": "#ede9fe", "bg1": "#f5f3ff", "bg2": "#fdf2f8"},
+    "emerald": {"accent": "#059669", "accent2": "#0f766e", "soft": "#d1fae5", "bg1": "#ecfdf5", "bg2": "#f8fafc"},
+    "amber": {"accent": "#d97706", "accent2": "#ea580c", "soft": "#fef3c7", "bg1": "#fffbeb", "bg2": "#fff7ed"},
+    "rose": {"accent": "#e11d48", "accent2": "#9333ea", "soft": "#ffe4e6", "bg1": "#fff1f2", "bg2": "#faf5ff"},
+}
+
+
+def _append_svg_text(
+    parts: list[str],
+    text: str,
+    *,
+    x: float,
+    y: float,
+    max_chars: int,
+    max_lines: int,
+    font_size: int,
+    line_height: int,
+    color: str,
+    weight: int = 400,
+    anchor: str = "start",
+) -> int:
+    wrapped = textwrap.wrap(normalize_space(text), width=max_chars, break_long_words=False)
+    lines = wrapped[:max_lines] or [""]
+    if len(wrapped) > max_lines and lines:
+        lines[-1] = lines[-1].rstrip(" ,;:-") + "…"
+    for index, line in enumerate(lines):
+        parts.append(
+            f'<text x="{x}" y="{y + index * line_height}" text-anchor="{anchor}" '
+            f'font-family="Inter, Arial, sans-serif" font-size="{font_size}" font-weight="{weight}" '
+            f'fill="{color}">{html.escape(line)}</text>'
+        )
+    return len(lines)
+
+
+def _diagram_canvas(diagram: dict[str, Any], width: int, height: int) -> tuple[list[str], int, dict[str, str]]:
+    title = normalize_space(str(diagram.get("title") or "Concept model"))
+    subtitle = normalize_space(str(diagram.get("subtitle") or ""))
+    layout = str(diagram.get("layout") or "sequence").lower()
+    palette = DIAGRAM_PALETTES.get(str(diagram.get("theme") or "blue").lower(), DIAGRAM_PALETTES["blue"])
+    title_lines = textwrap.wrap(title, width=54, break_long_words=False)[:2] or [title]
+    subtitle_lines = textwrap.wrap(subtitle, width=108, break_long_words=False)[:2] if subtitle else []
+    header_height = 56 + len(title_lines) * 38 + len(subtitle_lines) * 23 + 20
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}" role="img" aria-labelledby="title desc" data-text-collision-check="strict">',
+        "<defs>",
+        f'<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="{palette["bg1"]}"/><stop offset="1" stop-color="{palette["bg2"]}"/></linearGradient>',
+        f'<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="{palette["accent"]}"/><stop offset="1" stop-color="{palette["accent2"]}"/></linearGradient>',
+        '<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>',
+        '<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>',
+        f'<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="{palette["accent"]}"/></marker>',
+        "</defs>",
+        f'<rect width="{width}" height="{height}" rx="32" fill="url(#bg)"/>',
+        f'<rect width="{width}" height="{height}" rx="32" fill="url(#dots)"/>',
+        '<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>',
+        f'<title id="title">{html.escape(title)}</title>',
+        f'<desc id="desc">A detailed {html.escape(layout)} diagram explaining {html.escape(title)}.</desc>',
+        f'<rect x="1190" y="34" width="150" height="34" rx="17" fill="{palette["soft"]}"/>',
+        f'<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="{palette["accent"]}">{html.escape(layout.upper())}</text>',
+    ]
+    _append_svg_text(parts, title, x=72, y=64, max_chars=54, max_lines=2, font_size=30, line_height=38, color="#0f172a", weight=750)
+    subtitle_y = 64 + len(title_lines) * 38 + 4
+    if subtitle:
+        _append_svg_text(parts, subtitle, x=72, y=subtitle_y, max_chars=108, max_lines=2, font_size=16, line_height=23, color="#475569")
+    parts.append(f'<line x1="72" y1="{header_height - 12}" x2="1328" y2="{header_height - 12}" stroke="{palette["accent"]}" stroke-opacity="0.18" stroke-width="2"/>')
+    return parts, header_height, palette
+
+
+def _append_diagram_card(
+    parts: list[str],
+    node: dict[str, Any],
+    *,
+    x: float,
+    y: float,
+    width: float,
+    height: float,
+    index: int,
+    palette: dict[str, str],
+    label_chars: int,
+    detail_chars: int,
+) -> None:
+    parts.append(f'<rect x="{x}" y="{y}" width="{width}" height="{height}" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>')
+    parts.append(f'<rect x="{x}" y="{y}" width="8" height="{height}" rx="4" fill="url(#accent)"/>')
+    parts.append(f'<circle cx="{x + 34}" cy="{y + 34}" r="18" fill="{palette["soft"]}"/>')
+    parts.append(f'<text x="{x + 34}" y="{y + 40}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="{palette["accent"]}">{index}</text>')
+    kind = normalize_space(str(node.get("kind") or "boundary")).upper()[:18]
+    parts.append(f'<text x="{x + 64}" y="{y + 39}" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="{palette["accent"]}">{html.escape(kind)}</text>')
+    label_lines = _append_svg_text(parts, str(node.get("label", "")), x=x + 24, y=y + 78, max_chars=label_chars, max_lines=2, font_size=20, line_height=25, color="#0f172a", weight=700)
+    detail_y = y + 92 + label_lines * 25
+    available_detail_lines = max(0, min(3, int((y + height - 14 - detail_y) // 20) + 1))
+    if available_detail_lines:
+        _append_svg_text(parts, str(node.get("detail", "")), x=x + 24, y=detail_y, max_chars=detail_chars, max_lines=available_detail_lines, font_size=14, line_height=20, color="#475569")
+
+
+def _append_diagram_footer(parts: list[str], diagram: dict[str, Any], edges: list[dict[str, Any]], height: int, palette: dict[str, str]) -> None:
+    labels: list[str] = []
+    for edge in edges:
+        label = normalize_space(str(edge.get("label", "")))
+        if label and label not in labels:
+            labels.append(label)
+    transitions = " • ".join(labels[:5])
+    takeaway = normalize_space(str(diagram.get("takeaway", "")))
+    if transitions:
+        parts.append(f'<text x="72" y="{height - 72}" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="{palette["accent"]}">TRANSITIONS</text>')
+        _append_svg_text(parts, transitions, x=190, y=height - 72, max_chars=120, max_lines=1, font_size=14, line_height=18, color="#475569")
+    if takeaway:
+        parts.append(f'<text x="72" y="{height - 38}" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="{palette["accent"]}">TAKEAWAY</text>')
+        _append_svg_text(parts, takeaway, x=175, y=height - 38, max_chars=125, max_lines=1, font_size=15, line_height=18, color="#334155", weight=600)
+
+
+def _render_sequence_diagram(diagram: dict[str, Any], nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> tuple[list[str], int]:
+    width = 1400
+    columns = min(4, len(nodes)) if len(nodes) <= 4 else 3
+    rows = math.ceil(len(nodes) / columns)
+    card_gap = 30
+    margin = 70
+    card_width = (width - margin * 2 - card_gap * (columns - 1)) / columns
+    card_height = 218
+    row_gap = 72
+    height = 260 + rows * card_height + (rows - 1) * row_gap + 130
+    parts, header, palette = _diagram_canvas(diagram, width, height)
+    positions: list[tuple[float, float]] = []
+    start_y = header + 30
+    for index in range(len(nodes)):
+        row = index // columns
+        column = index % columns
+        if row % 2:
+            column = columns - 1 - column
+        positions.append((margin + column * (card_width + card_gap), start_y + row * (card_height + row_gap)))
+    for index in range(len(positions) - 1):
+        x1, y1 = positions[index]
+        x2, y2 = positions[index + 1]
+        if math.isclose(y1, y2):
+            start_x = x1 + card_width if x2 > x1 else x1
+            end_x = x2 if x2 > x1 else x2 + card_width
+            start_y_line = end_y_line = y1 + card_height / 2
+        else:
+            start_x = x1 + card_width / 2
+            end_x = x2 + card_width / 2
+            start_y_line = y1 + card_height
+            end_y_line = y2
+        parts.append(f'<path d="M {start_x} {start_y_line} C {start_x} {start_y_line + 34}, {end_x} {end_y_line - 34}, {end_x} {end_y_line}" fill="none" stroke="{palette["accent"]}" stroke-width="3" stroke-opacity="0.65" marker-end="url(#arrow)"/>')
+    for index, (node, (x, y)) in enumerate(zip(nodes, positions), start=1):
+        _append_diagram_card(parts, node, x=x, y=y, width=card_width, height=card_height, index=index, palette=palette, label_chars=max(18, int(card_width / 12)), detail_chars=max(24, int(card_width / 8)))
+    _append_diagram_footer(parts, diagram, edges, height, palette)
+    return parts, height
+
+
+def _render_architecture_diagram(diagram: dict[str, Any], nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> tuple[list[str], int]:
+    width = 1400
+    row_height = 124
+    gap = 34
+    height = 240 + len(nodes) * (row_height + gap) + 110
+    parts, header, palette = _diagram_canvas(diagram, width, height)
+    start_y = header + 24
+    for index in range(len(nodes) - 1):
+        connector_y1 = start_y + index * (row_height + gap) + row_height
+        connector_y2 = connector_y1 + gap - 8
+        parts.append(f'<line x1="700" y1="{connector_y1}" x2="700" y2="{connector_y2}" stroke="{palette["accent"]}" stroke-width="4" stroke-opacity="0.6" marker-end="url(#arrow)"/>')
+    for index, node in enumerate(nodes, start=1):
+        row_y = start_y + (index - 1) * (row_height + gap)
+        parts.append(f'<rect x="90" y="{row_y}" width="1220" height="{row_height}" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>')
+        parts.append(f'<rect x="90" y="{row_y}" width="150" height="{row_height}" rx="24" fill="{palette["soft"]}"/>')
+        parts.append(f'<text x="165" y="{row_y + 47}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="{palette["accent"]}">LAYER {index}</text>')
+        parts.append(f'<text x="165" y="{row_y + 82}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="{palette["accent"]}">{index:02d}</text>')
+        _append_svg_text(parts, str(node.get("label", "")), x=280, y=row_y + 47, max_chars=27, max_lines=2, font_size=20, line_height=25, color="#0f172a", weight=750)
+        _append_svg_text(parts, str(node.get("detail", "")), x=650, y=row_y + 43, max_chars=67, max_lines=3, font_size=14, line_height=21, color="#475569")
+    _append_diagram_footer(parts, diagram, edges, height, palette)
+    return parts, height
+
+
+def _render_decision_diagram(diagram: dict[str, Any], nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> tuple[list[str], int]:
+    width = 1400
+    card_width = 520
+    card_height = 190
+    gap = 42
+    height = 240 + len(nodes) * (card_height + gap) + 105
+    parts, header, palette = _diagram_canvas(diagram, width, height)
+    first_center = header + 28 + card_height / 2
+    last_center = first_center + (len(nodes) - 1) * (card_height + gap)
+    parts.append(f'<line x1="700" y1="{first_center}" x2="700" y2="{last_center}" stroke="{palette["accent"]}" stroke-width="5" stroke-opacity="0.24"/>')
+    for index, node in enumerate(nodes, start=1):
+        row_y = header + 28 + (index - 1) * (card_height + gap)
+        left_side = index % 2 == 1
+        x = 92 if left_side else 788
+        center_y = row_y + card_height / 2
+        edge_x = x + card_width if left_side else x
+        parts.append(f'<line x1="700" y1="{center_y}" x2="{edge_x}" y2="{center_y}" stroke="{palette["accent"]}" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>')
+        parts.append(f'<circle cx="700" cy="{center_y}" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>')
+        parts.append(f'<text x="700" y="{center_y + 6}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">{index}</text>')
+        _append_diagram_card(parts, node, x=x, y=row_y, width=card_width, height=card_height, index=index, palette=palette, label_chars=39, detail_chars=58)
+    _append_diagram_footer(parts, diagram, edges, height, palette)
+    return parts, height
+
+
+def _render_comparison_diagram(diagram: dict[str, Any], nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> tuple[list[str], int]:
+    width = 1400
+    lanes = [normalize_space(str(item)) for item in diagram.get("lanes", []) or []][:2]
+    if len(lanes) < 2:
+        lanes = ["Option A", "Option B"]
+    groups: list[list[dict[str, Any]]] = [[], []]
+    for index, node in enumerate(nodes):
+        group = normalize_space(str(node.get("group", ""))).lower()
+        lane_index = 1 if group == lanes[1].lower() else 0 if group == lanes[0].lower() else int(index >= math.ceil(len(nodes) / 2))
+        groups[lane_index].append(node)
+    max_rows = max(len(groups[0]), len(groups[1]), 1)
+    card_height = 190
+    card_gap = 24
+    height = 270 + max_rows * (card_height + card_gap) + 120
+    parts, header, palette = _diagram_canvas(diagram, width, height)
+    panel_y = header + 26
+    panel_height = 72 + max_rows * (card_height + card_gap)
+    for lane_index, (x, lane) in enumerate(zip((70, 735), lanes)):
+        parts.append(f'<rect x="{x}" y="{panel_y}" width="595" height="{panel_height}" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#cbd5e1" stroke-width="1.5"/>')
+        parts.append(f'<rect x="{x}" y="{panel_y}" width="595" height="58" rx="28" fill="{palette["soft"]}"/>')
+        parts.append(f'<text x="{x + 30}" y="{panel_y + 37}" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="{palette["accent"]}">{html.escape(lane)}</text>')
+        for row, node in enumerate(groups[lane_index], start=1):
+            card_y = panel_y + 74 + (row - 1) * (card_height + card_gap)
+            _append_diagram_card(parts, node, x=x + 18, y=card_y, width=559, height=card_height, index=row, palette=palette, label_chars=43, detail_chars=62)
+    parts.append(f'<circle cx="700" cy="{panel_y + 29}" r="26" fill="url(#accent)" stroke="#ffffff" stroke-width="4"/>')
+    parts.append(f'<text x="700" y="{panel_y + 35}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#ffffff">VS</text>')
+    _append_diagram_footer(parts, diagram, edges, height, palette)
+    return parts, height
+
+
+def _render_cycle_diagram(diagram: dict[str, Any], nodes: list[dict[str, Any]], edges: list[dict[str, Any]]) -> tuple[list[str], int]:
+    if len(nodes) > 5:
+        return _render_sequence_diagram(diagram, nodes, edges)
+    width = 1400
+    height = 1150
+    parts, header, palette = _diagram_canvas(diagram, width, height)
+    center_x = 700.0
+    center_y = header + 380.0
+    radius_x = 455.0
+    radius_y = 260.0
+    card_width = 300.0
+    card_height = 210.0
+    centers: list[tuple[float, float]] = []
+    for index in range(len(nodes)):
+        angle = math.radians(-90 + index * 360 / len(nodes))
+        centers.append((center_x + radius_x * math.cos(angle), center_y + radius_y * math.sin(angle)))
+    for start, end in zip(centers, centers[1:] + centers[:1]):
+        dx = end[0] - start[0]
+        dy = end[1] - start[1]
+        distance = max(1.0, math.hypot(dx, dy))
+        ux, uy = dx / distance, dy / distance
+        start_x, start_y = start[0] + ux * 155, start[1] + uy * 78
+        end_x, end_y = end[0] - ux * 165, end[1] - uy * 82
+        midpoint_x = (start_x + end_x) / 2 + (-uy * 42)
+        midpoint_y = (start_y + end_y) / 2 + (ux * 42)
+        parts.append(f'<path d="M {start_x:.1f} {start_y:.1f} Q {midpoint_x:.1f} {midpoint_y:.1f}, {end_x:.1f} {end_y:.1f}" fill="none" stroke="{palette["accent"]}" stroke-width="4" stroke-opacity="0.58" marker-end="url(#arrow)"/>')
+    parts.append(f'<circle cx="{center_x}" cy="{center_y}" r="118" fill="#ffffff" stroke="{palette["accent"]}" stroke-width="3" filter="url(#shadow)"/>')
+    parts.append(f'<circle cx="{center_x}" cy="{center_y}" r="100" fill="{palette["soft"]}"/>')
+    parts.append(f'<text x="{center_x}" y="{center_y - 34}" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="850" letter-spacing="1.4" fill="{palette["accent"]}">FEEDBACK LOOP</text>')
+    _append_svg_text(parts, str(diagram.get("center_label") or "Observe, decide, verify, and repeat"), x=center_x, y=center_y - 2, max_chars=25, max_lines=4, font_size=16, line_height=22, color="#334155", weight=650, anchor="middle")
+    for index, (node, (node_x, node_y)) in enumerate(zip(nodes, centers), start=1):
+        _append_diagram_card(parts, node, x=node_x - card_width / 2, y=node_y - card_height / 2, width=card_width, height=card_height, index=index, palette=palette, label_chars=22, detail_chars=30)
+    _append_diagram_footer(parts, diagram, edges, height, palette)
+    return parts, height
+
+
+def render_flowchart_svg(diagram: dict[str, Any], path: Path) -> None:
+    nodes = [item for item in diagram.get("nodes", []) or [] if isinstance(item, dict)]
+    edges = [item for item in diagram.get("edges", []) or [] if isinstance(item, dict)]
+    if not nodes:
+        nodes = [{"id": "concept", "label": diagram.get("title", "Concept"), "detail": diagram.get("subtitle", "The main article boundary."), "kind": "input"}]
+    layout = str(diagram.get("layout") or "sequence").lower()
+    renderers = {
+        "sequence": _render_sequence_diagram,
+        "architecture": _render_architecture_diagram,
+        "decision": _render_decision_diagram,
+        "comparison": _render_comparison_diagram,
+        "cycle": _render_cycle_diagram,
+    }
+    parts, _height = renderers.get(layout, _render_sequence_diagram)(diagram, nodes, edges)
     parts.append("</svg>")
     path.write_text("\n".join(parts), encoding="utf-8")
 

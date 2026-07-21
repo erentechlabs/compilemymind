@@ -72,6 +72,8 @@
     "required_diagrams": 1,
     "required_code_examples": 1,
     "require_contextual_visuals": true,
+    "required_diagram_detail_nodes": 3,
+    "allowed_diagram_layouts": ["sequence", "architecture", "decision", "comparison", "cycle"],
     "max_new_posts_per_run": 1
   },
   "cost_control": {

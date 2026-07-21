@@ -31,6 +31,11 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["required_diagrams"], 1)
         self.assertEqual(config["publishing"]["required_code_examples"], 1)
         self.assertTrue(config["publishing"]["require_contextual_visuals"])
+        self.assertEqual(config["publishing"]["required_diagram_detail_nodes"], 3)
+        self.assertEqual(
+            set(config["publishing"]["allowed_diagram_layouts"]),
+            {"sequence", "architecture", "decision", "comparison", "cycle"},
+        )
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
@@ -492,10 +497,12 @@ Record the observable outcome.
 
         self.assertEqual(len(normalized["diagrams"]), 1)
         self.assertIn("Accept work", [node["label"] for node in normalized["diagrams"][0]["nodes"]])
-        self.assertIn("![Reliable Queue Processing: practical flow](concept-flow.svg)", normalized["article_markdown"])
+        self.assertIn("![Reliable Queue Processing: practical model](concept-flow.svg)", normalized["article_markdown"])
         self.assertNotIn("Visual Summary", normalized["article_markdown"])
         self.assertLess(normalized["article_markdown"].index("## Accept work"), normalized["article_markdown"].index("concept-flow.svg"))
         self.assertLess(normalized["article_markdown"].index("concept-flow.svg"), normalized["article_markdown"].index("## Process safely"))
+        self.assertIn(normalized["diagrams"][0]["layout"], config["publishing"]["allowed_diagram_layouts"])
+        self.assertGreaterEqual(sum(bool(node["detail"]) for node in normalized["diagrams"][0]["nodes"]), 3)
         self.assertIn("diagram", autopublisher.enhanced_content_elements(normalized))
 
     def test_normalization_relocates_visual_summary_to_requested_explanation(self):
@@ -1676,6 +1683,69 @@ def process(value: int) -> int:
             self.assertIn("Watch Pod Events • Inspect Image &amp;", content)
             with patch.object(autopublisher, "ROOT", Path(directory)):
                 self.assertEqual(autopublisher.svg_text_overlap_issues(path), [])
+
+    def test_topic_aware_diagram_layouts_are_distinct_detailed_and_collision_free(self):
+        nodes = [
+            {"id": "capture", "label": "Capture the request boundary", "detail": "Record the exact input, owner, scope, and expected result.", "kind": "input", "group": "Current behavior"},
+            {"id": "inspect", "label": "Inspect the active mechanism", "detail": "Trace the request through the component that makes the decision.", "kind": "evidence", "group": "Current behavior"},
+            {"id": "compare", "label": "Compare the failure boundary", "detail": "Separate configuration, state, permissions, and availability.", "kind": "decision", "group": "Safer design"},
+            {"id": "validate", "label": "Validate the observable result", "detail": "Repeat the original test and preserve the confirming evidence.", "kind": "output", "group": "Safer design"},
+        ]
+        edges = [
+            {"from": "capture", "to": "inspect", "label": "capture evidence"},
+            {"from": "inspect", "to": "compare", "label": "interpret result"},
+            {"from": "compare", "to": "validate", "label": "verify safely"},
+        ]
+        rendered: dict[str, str] = {}
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for layout in ("sequence", "architecture", "decision", "comparison", "cycle"):
+                path = root / f"{layout}.svg"
+                autopublisher.render_flowchart_svg(
+                    {
+                        "title": f"Detailed {layout} model",
+                        "subtitle": "A precise model of ownership, evidence, decisions, and validation.",
+                        "layout": layout,
+                        "theme": "violet",
+                        "takeaway": "Change one bounded variable only after the evidence identifies its boundary.",
+                        "lanes": ["Current behavior", "Safer design"],
+                        "nodes": nodes,
+                        "edges": edges,
+                    },
+                    path,
+                )
+                rendered[layout] = path.read_text(encoding="utf-8")
+                with patch.object(autopublisher, "ROOT", root):
+                    self.assertEqual(autopublisher.svg_text_overlap_issues(path), [], layout)
+
+        self.assertEqual(len(set(rendered.values())), 5)
+        self.assertIn("FEEDBACK LOOP", rendered["cycle"])
+        self.assertIn("LAYER 1", rendered["architecture"])
+        self.assertIn(">VS<", rendered["comparison"])
+
+    def test_diagram_detail_gate_rejects_generic_undocumented_boxes(self):
+        config = {
+            "publishing": {
+                "required_diagram_detail_nodes": 3,
+                "allowed_diagram_layouts": ["sequence", "architecture", "decision", "comparison", "cycle"],
+            }
+        }
+        diagram = {
+            "title": "Generic flow",
+            "layout": "sequence",
+            "subtitle": "Short",
+            "nodes": [
+                {"id": "one", "label": "Step 1"},
+                {"id": "two", "label": "Check"},
+                {"id": "three", "label": "Result"},
+            ],
+        }
+
+        issues = autopublisher.diagram_detail_issues([diagram], config)
+
+        self.assertTrue(any("explains 0 nodes" in issue for issue in issues))
+        self.assertTrue(any("generic node label" in issue for issue in issues))
+        self.assertTrue(any("subtitle" in issue for issue in issues))
 
     def test_generated_chart_passes_text_collision_check(self):
         with tempfile.TemporaryDirectory() as directory:

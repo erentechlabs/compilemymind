@@ -1,7 +1,7 @@
 ---
 title: "Rust Ownership and Borrowing: A Practical Mental Model"
 date: "2026-07-21T11:47:15+03:00"
-lastmod: "2026-07-21T18:14:36+03:00"
+lastmod: "2026-07-21T18:36:07+03:00"
 description: "A practical Rust ownership model covering moves, borrowing, mutable references, and slices so compiler errors can be reasoned about instead of memorized."
 tags: ["storage", "rust"]
 categories: ["programming-languages", "software-engineering"]
