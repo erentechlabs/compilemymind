@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot GitHub Actions Cache Misses"
-date: "2026-07-21T02:14:55+03:00"
-lastmod: "2026-07-21T18:36:07+03:00"
+date: "2026-07-21T22:53:22+03:00"
+lastmod: "2026-07-21T22:53:22+03:00"
 description: "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely."
 tags: ["github", "troubleshooting", "configuration-management"]
 categories: ["developer-it-tools"]
@@ -10,10 +10,10 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-21"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T23:14:55.398756Z"
-verification_version: 1
+verification_date: "2026-07-21T19:53:22.432654Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-08-04"
+recheck_after: "2026-09-19"
 ---
 
 ## Direct answer
