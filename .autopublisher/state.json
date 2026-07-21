@@ -1672,6 +1672,69 @@
       },
       "quality_score": 0.9236,
       "path": "content/posts/swift-concurrency-async-await-tasks-actors/index.md"
+    },
+    {
+      "time": "2026-07-21T03:47:51.509965Z",
+      "title": "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies",
+      "slug": "rest-graphql-pagination-offset-cursor-link-strategies",
+      "categories": [
+        "software-engineering",
+        "web-development"
+      ],
+      "tags": [
+        "storage"
+      ],
+      "sources": [
+        {
+          "title": "Using pagination in the REST API",
+          "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api"
+        },
+        {
+          "title": "Using pagination in the GraphQL API",
+          "url": "https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api"
+        },
+        {
+          "title": "REST API best practices",
+          "url": "https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9268,
+          "components": {
+            "topic_relevance": 0.815,
+            "originality": 0.8327,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.625,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.8327,
+            "source_similarity": 0.658,
+            "existing_content_similarity": 0.8327,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9268,
+      "path": "content/posts/rest-graphql-pagination-offset-cursor-link-strategies/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1902,10 +1965,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-20T19:58:17.579429Z",
+      "time": "2026-07-21T03:47:51.509974Z",
       "result": "published",
       "source": "ready_queue",
-      "queue_depth": 2
+      "queue_depth": 3
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -2127,75 +2190,6 @@
   },
   "pending_publication": {},
   "ready_publications": [
-    {
-      "queued_at": "2026-07-20T14:33:31.744479Z",
-      "slug": "rest-graphql-pagination-offset-cursor-link-strategies",
-      "title": "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies",
-      "bundle_path": ".autopublisher/queue/ready/rest-graphql-pagination-offset-cursor-link-strategies",
-      "record": {
-        "time": "2026-07-20T14:33:31.744479Z",
-        "title": "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies",
-        "slug": "rest-graphql-pagination-offset-cursor-link-strategies",
-        "categories": [
-          "software-engineering",
-          "web-development"
-        ],
-        "tags": [
-          "storage"
-        ],
-        "sources": [
-          {
-            "title": "Using pagination in the REST API",
-            "url": "https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api"
-          },
-          {
-            "title": "Using pagination in the GraphQL API",
-            "url": "https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api"
-          },
-          {
-            "title": "REST API best practices",
-            "url": "https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.9268,
-            "components": {
-              "topic_relevance": 0.815,
-              "originality": 0.8327,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.625,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.8327,
-              "source_similarity": 0.658,
-              "existing_content_similarity": 0.8327,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.9268,
-        "path": "content/posts/rest-graphql-pagination-offset-cursor-link-strategies/index.md"
-      }
-    },
     {
       "queued_at": "2026-07-20T18:19:10.051266Z",
       "slug": "rust-ownership-borrowing-practical-mental-model",

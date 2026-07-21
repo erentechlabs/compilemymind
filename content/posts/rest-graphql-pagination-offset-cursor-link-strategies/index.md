@@ -1,19 +1,19 @@
 ---
 title: "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies"
-date: "2026-07-20T17:33:31+03:00"
-lastmod: "2026-07-20T17:33:31+03:00"
+date: "2026-07-21T06:47:50+03:00"
+lastmod: "2026-07-21T06:47:50+03:00"
 description: "A pagination contract guide comparing offset, cursor, and link traversal for REST and GraphQL APIs under changing datasets and client retries."
 tags: ["storage"]
 categories: ["software-engineering", "web-development"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-20"
+last_reviewed: "2026-07-21"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T14:33:31.070693Z"
-verification_version: 1
+verification_date: "2026-07-21T03:47:50.795252Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-09-18"
+recheck_after: "2026-09-19"
 ---
 
 Pagination is an API consistency contract, not merely a way to limit response size. A client needs to know how to request the next segment, which ordering is stable, whether inserts or deletes can create gaps or duplicates, and when traversal is complete. Offset, cursor, and link-based interfaces expose different parts of that contract, and the appropriate choice depends on dataset change rate, navigation needs, and what the backend can order reliably.
