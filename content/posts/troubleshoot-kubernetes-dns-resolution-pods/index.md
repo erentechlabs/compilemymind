@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Kubernetes DNS Resolution from Pods"
-date: "2026-07-21T00:32:43+03:00"
-lastmod: "2026-07-21T00:32:43+03:00"
+date: "2026-07-21T17:25:18+03:00"
+lastmod: "2026-07-21T17:25:18+03:00"
 description: "A safe Kubernetes DNS troubleshooting workflow that separates pod resolver configuration, CoreDNS health, Service records, and endpoint availability before changing the cluster."
 tags: ["dns", "kubernetes", "troubleshooting"]
 categories: ["networking", "developer-it-tools", "system-administration"]
@@ -10,10 +10,10 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-21"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T21:32:43.740679Z"
-verification_version: 1
+verification_date: "2026-07-21T14:25:18.057273Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-12-18"
+recheck_after: "2026-09-19"
 ---
 
 ## Direct answer

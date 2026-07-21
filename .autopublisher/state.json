@@ -1799,6 +1799,72 @@
       },
       "quality_score": 0.9304,
       "path": "content/posts/rust-ownership-borrowing-practical-mental-model/index.md"
+    },
+    {
+      "time": "2026-07-21T14:25:18.857227Z",
+      "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
+      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
+      "categories": [
+        "networking",
+        "developer-it-tools",
+        "system-administration"
+      ],
+      "tags": [
+        "dns",
+        "kubernetes",
+        "troubleshooting"
+      ],
+      "sources": [
+        {
+          "title": "Debugging DNS Resolution",
+          "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution"
+        },
+        {
+          "title": "DNS for Services and Pods",
+          "url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
+        },
+        {
+          "title": "Debug Services",
+          "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.886,
+          "components": {
+            "topic_relevance": 1.0,
+            "originality": 0.4626,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.9333,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.4626,
+            "source_similarity": 0.4584,
+            "existing_content_similarity": 0.4626,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.886,
+      "path": "content/posts/troubleshoot-kubernetes-dns-resolution-pods/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -2029,10 +2095,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-21T08:47:15.962559Z",
+      "time": "2026-07-21T14:25:18.857237Z",
       "result": "published",
       "source": "ready_queue",
-      "queue_depth": 2
+      "queue_depth": 1
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -2254,78 +2320,6 @@
   },
   "pending_publication": {},
   "ready_publications": [
-    {
-      "queued_at": "2026-07-20T21:32:44.513144Z",
-      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
-      "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
-      "bundle_path": ".autopublisher/queue/ready/troubleshoot-kubernetes-dns-resolution-pods",
-      "record": {
-        "time": "2026-07-20T21:32:44.513144Z",
-        "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
-        "slug": "troubleshoot-kubernetes-dns-resolution-pods",
-        "categories": [
-          "networking",
-          "developer-it-tools",
-          "system-administration"
-        ],
-        "tags": [
-          "dns",
-          "kubernetes",
-          "troubleshooting"
-        ],
-        "sources": [
-          {
-            "title": "Debugging DNS Resolution",
-            "url": "https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution"
-          },
-          {
-            "title": "DNS for Services and Pods",
-            "url": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service"
-          },
-          {
-            "title": "Debug Services",
-            "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-service"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.886,
-            "components": {
-              "topic_relevance": 1.0,
-              "originality": 0.4626,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.9333,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.4626,
-              "source_similarity": 0.4584,
-              "existing_content_similarity": 0.4626,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.886,
-        "path": "content/posts/troubleshoot-kubernetes-dns-resolution-pods/index.md"
-      }
-    },
     {
       "queued_at": "2026-07-20T23:14:56.090998Z",
       "slug": "troubleshoot-github-actions-cache-misses",
