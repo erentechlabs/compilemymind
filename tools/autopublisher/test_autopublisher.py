@@ -30,6 +30,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["required_enhanced_elements"], 1)
         self.assertEqual(config["publishing"]["required_diagrams"], 1)
         self.assertEqual(config["publishing"]["required_code_examples"], 1)
+        self.assertTrue(config["publishing"]["require_contextual_visuals"])
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
         self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
@@ -470,6 +471,10 @@ class AutopublisherTests(unittest.TestCase):
 
 Validate the message and record ownership.
 
+```python
+print("accepted")
+```
+
 ## Process safely
 
 Make the operation idempotent and bounded.
@@ -488,7 +493,80 @@ Record the observable outcome.
         self.assertEqual(len(normalized["diagrams"]), 1)
         self.assertIn("Accept work", [node["label"] for node in normalized["diagrams"][0]["nodes"]])
         self.assertIn("![Reliable Queue Processing: practical flow](concept-flow.svg)", normalized["article_markdown"])
+        self.assertNotIn("Visual Summary", normalized["article_markdown"])
+        self.assertLess(normalized["article_markdown"].index("## Accept work"), normalized["article_markdown"].index("concept-flow.svg"))
+        self.assertLess(normalized["article_markdown"].index("concept-flow.svg"), normalized["article_markdown"].index("## Process safely"))
         self.assertIn("diagram", autopublisher.enhanced_content_elements(normalized))
+
+    def test_normalization_relocates_visual_summary_to_requested_explanation(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Reliable Queue Processing",
+            "slug": "reliable-queue-processing",
+            "categories": ["software-engineering"],
+            "primary_category": "software-engineering",
+            "tags": ["software-engineering"],
+        }
+        article = {
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "description": "A detailed queue processing guide with explicit ownership, retry, failure, and verification boundaries for reliable software systems.",
+            "diagrams": [{
+                "filename": "concept-flow.svg",
+                "title": "Queue processing decision path",
+                "placement_heading": "Process safely",
+                "caption": "The worker acknowledges a message only after its bounded operation succeeds.",
+                "nodes": [{"id": "accept", "label": "Accept"}, {"id": "ack", "label": "Acknowledge"}],
+                "edges": [{"from": "accept", "to": "ack", "label": "success"}],
+            }],
+            "article_markdown": """Queue processing needs an explicit lifecycle.
+
+## Accept work
+
+Validate the message and record ownership.
+
+## Process safely
+
+Make the operation idempotent and bounded before acknowledging the message.
+
+## Verify completion
+
+Record the observable outcome.
+
+## Visual Summary
+
+![Queue processing decision path](concept-flow.svg)
+""",
+        }
+
+        normalized = autopublisher.normalize_article_payload(article, topic, config, [], posts=[])
+        markdown = normalized["article_markdown"]
+
+        self.assertNotIn("Visual Summary", markdown)
+        self.assertEqual(markdown.count("concept-flow.svg"), 1)
+        self.assertLess(markdown.index("## Process safely"), markdown.index("concept-flow.svg"))
+        self.assertLess(markdown.index("concept-flow.svg"), markdown.index("## Verify completion"))
+        self.assertIn("The worker acknowledges a message", markdown)
+        self.assertEqual(
+            autopublisher.contextual_visual_issues(markdown, normalized["diagrams"], normalized["charts"]),
+            [],
+        )
+
+    def test_contextual_visual_gate_rejects_closing_visual_summary(self):
+        diagram = {"filename": "concept-flow.svg", "title": "Queue flow"}
+        markdown = """## Processing model
+
+The worker owns the message until processing succeeds.
+
+## Visual Summary
+
+![Queue flow](concept-flow.svg)
+"""
+
+        issues = autopublisher.contextual_visual_issues(markdown, [diagram], [])
+
+        self.assertTrue(any("Visual Summary" in issue for issue in issues))
+        self.assertTrue(any("must appear inside" in issue for issue in issues))
 
     def test_code_example_is_preserved_and_required_diagram_is_added(self):
         config = autopublisher.load_config()
@@ -2589,6 +2667,21 @@ def process(value: int) -> int:
     def test_valid_code_and_kubernetes_manifest_pass(self):
         markdown = """## Examples\n\n```python\nprint(\"safe\")\n```\n\n```json\n{\"enabled\": true}\n```\n\n```kubernetes\napiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: example\n```\n"""
         self.assertEqual(autopublisher.code_block_issues(markdown), [])
+
+    def test_powershell_validator_retries_timeouts_without_rejecting_valid_content(self):
+        timeout = autopublisher.subprocess.TimeoutExpired(["/usr/bin/pwsh"], 20)
+        markdown = """## Evidence\n\n```powershell\nGet-NetFirewallProfile | Select-Object Name, Enabled\n```\n"""
+        with (
+            patch.object(autopublisher.shutil, "which", return_value="/usr/bin/pwsh"),
+            patch.object(autopublisher.subprocess, "run", side_effect=[timeout, timeout]) as run,
+        ):
+            self.assertEqual(autopublisher.code_block_issues(markdown), [])
+
+        self.assertEqual(run.call_count, 2)
+        self.assertNotIn("input", run.call_args.kwargs)
+        self.assertIn("ParseFile", run.call_args.args[0][-1])
+        source_path = Path(run.call_args.kwargs["env"]["AUTOPUBLISHER_POWERSHELL_SOURCE_PATH"])
+        self.assertFalse(source_path.exists())
 
     def test_invalid_nested_yaml_fence_becomes_repair_feedback(self):
         markdown = """## Workflow permissions

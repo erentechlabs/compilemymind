@@ -1,7 +1,7 @@
 ---
 title: "Rust Ownership and Borrowing: A Practical Mental Model"
 date: "2026-07-21T11:47:15+03:00"
-lastmod: "2026-07-21T11:47:15+03:00"
+lastmod: "2026-07-21T18:14:36+03:00"
 description: "A practical Rust ownership model covering moves, borrowing, mutable references, and slices so compiler errors can be reasoned about instead of memorized."
 tags: ["storage", "rust"]
 categories: ["programming-languages", "software-engineering"]
@@ -39,6 +39,10 @@ Use References and Borrowing for this boundary of the topic: Use the references 
 Use The Slice Type for this boundary of the topic: Use the slice chapter for string slices, range boundaries, and general slice types.
 
 ## Reason through rust ownership borrowing practical mental model
+
+The flow below connects the three questions to ask when the compiler rejects an access: whether ownership moved, which kind of borrow is still active, and whether a slice remains tied to its source. Use that sequence while tracing the concrete `String` example rather than treating each error as an isolated rule.
+
+![Ownership, borrowing, and slice reasoning sequence](concept-flow.svg)
 
 ### 1. Track ownership and moves through scope
 
@@ -102,10 +106,6 @@ The explanation follows the current stable edition of The Rust Programming Langu
 ## Summary
 
 Rust ownership errors become predictable when moves, last uses, and borrowed views are drawn explicitly. Borrow for temporary access, move when ownership should transfer, clone only when a real duplicate is needed, and let slices express non-owning views into sequences.
-
-## Visual Summary
-
-![Rust Ownership and Borrowing: A Practical Mental Model: practical flow](concept-flow.svg)
 
 ## Sources
 

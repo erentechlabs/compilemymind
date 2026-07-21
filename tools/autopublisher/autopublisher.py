@@ -30,6 +30,7 @@ import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import textwrap
 import time
 import unicodedata
@@ -2957,6 +2958,8 @@ Editorial style:
 - Optimize for search intent naturally, with a clear meta description.
 - Include at least one useful Markdown comparison or reference table in every article.
 - Include at least one useful, topic-specific architecture, process, decision, or diagnostic diagram in every article. A table, code block, or chart does not replace this diagram requirement.
+- Place every diagram, chart, or explanatory image inside the section where its concept is introduced, immediately after the paragraph that gives the visual meaning. Use visuals as part of the explanation, not as an end-of-article recap.
+- Never create a "Visual Summary", "Diagram Gallery", or similar media-only section, and never collect the article's visuals at the end.
 - Include at least one runnable, safe code or command example in every article. For portal-led or conceptual topics, use a read-only query, a minimal configuration or policy fragment, a small test harness, or a structured-data example that makes the article's boundary concrete.
 - Prefer examples readers can copy into an isolated test environment. Explain inputs, expected output, permissions, side effects, and version assumptions; never use destructive commands merely to satisfy the code requirement.
 - Never add decorative or unrelated media merely to satisfy the visual rule. Diagram labels must explain the article's actual components, decisions, or sequence.
@@ -3013,6 +3016,8 @@ Return JSON only with this shape:
     {{
       "filename": "concept-flow.svg",
       "title": "Diagram title",
+      "placement_heading": "Exact H2 or H3 heading whose explanation this diagram supports",
+      "caption": "One sentence telling the reader what relationship or decision to notice",
       "nodes": [{{"id": "a", "label": "First step"}}],
       "edges": [{{"from": "a", "to": "b", "label": "then"}}]
     }}
@@ -3526,25 +3531,156 @@ def normalize_code_fence_languages(markdown: str) -> str:
     return result + ("\n" if markdown.endswith("\n") else "")
 
 
+def _markdown_headings(markdown: str) -> list[re.Match[str]]:
+    pattern = re.compile(r"(?m)^(#{2,6})[ \t]+(.+?)[ \t]*\r?$")
+    headings: list[re.Match[str]] = []
+    fence_character: str | None = None
+    offset = 0
+    for line in markdown.splitlines(keepends=True):
+        marker = _fence_character(line)
+        if marker:
+            if fence_character is None:
+                fence_character = marker
+            elif marker == fence_character:
+                fence_character = None
+        elif fence_character is None:
+            match = pattern.match(markdown, offset, offset + len(line))
+            if match:
+                headings.append(match)
+        offset += len(line)
+    return headings
+
+
+def _contextual_visual_heading(heading: str) -> bool:
+    normalized = normalize_space(heading).strip("# :.-").lower()
+    return not re.match(
+        r"^(?:visual summary|diagram gallery|visuals?|summary|conclusion|sources?|related\b|version\b|"
+        r"practical checklist|final checklist|key takeaways?)",
+        normalized,
+    )
+
+
+def _visual_reference_pattern(filename: str) -> re.Pattern[str]:
+    return re.compile(
+        rf"(?m)^[ \t]*!\[[^\]\n]*\]\((?:\./)?{re.escape(filename)}(?:\s+['\"][^'\"]*['\"])?\)[ \t]*(?:\n|$)"
+    )
+
+
+def _visual_reference_is_contextual(markdown: str, position: int) -> bool:
+    headings = [match for match in _markdown_headings(markdown) if match.start() < position]
+    return bool(headings and _contextual_visual_heading(headings[-1].group(2)))
+
+
+def _visual_placement_heading(markdown: str, item: dict[str, Any]) -> re.Match[str] | None:
+    headings = [match for match in _markdown_headings(markdown) if _contextual_visual_heading(match.group(2))]
+    if not headings:
+        return None
+    requested = normalize_space(str(item.get("placement_heading", ""))).lower()
+    if requested:
+        for match in headings:
+            if normalize_space(match.group(2)).lower() == requested:
+                return match
+    keywords = {
+        word
+        for word in re.findall(
+            r"[a-z0-9+#.-]+",
+            " ".join(
+                [str(item.get("title", ""))]
+                + [str(node.get("label", "")) for node in item.get("nodes", []) if isinstance(node, dict)]
+            ).lower(),
+        )
+        if len(word) > 2 and word not in STOP_WORDS
+    }
+    ranked: list[tuple[int, int, re.Match[str]]] = []
+    for index, match in enumerate(headings):
+        heading = normalize_space(match.group(2)).lower()
+        heading_words = set(re.findall(r"[a-z0-9+#.-]+", heading))
+        score = len(keywords & heading_words) * 3
+        if re.search(r"\b(?:workflow|architecture|mechanism|model|reason|diagnos|implement|example|works?)\w*\b", heading):
+            score += 1
+        ranked.append((score, -index, match))
+    return max(ranked, key=lambda value: (value[0], value[1]))[2]
+
+
+def _insert_visual_in_section(markdown: str, visual: str, heading: re.Match[str] | None) -> str:
+    if heading is None:
+        sources_match = re.search(r"(?im)^##\s+Sources\b", markdown)
+        position = sources_match.start() if sources_match else len(markdown)
+    else:
+        section_start = heading.end()
+        next_heading = re.search(r"(?m)^#{2,6}[ \t]+.+$", markdown[section_start:])
+        section_end = section_start + next_heading.start() if next_heading else len(markdown)
+        section = markdown[section_start:section_end]
+        content_offset = len(section) - len(section.lstrip())
+        content = section[content_offset:]
+        paragraph_end = re.search(r"\n[ \t]*\n", content)
+        if content and not content.startswith(("#", "```", "~~~", "![")) and paragraph_end:
+            position = section_start + content_offset + paragraph_end.start()
+        elif content and not content.startswith(("#", "```", "~~~", "![")):
+            position = section_end
+        else:
+            position = section_start
+    return markdown[:position].rstrip() + "\n\n" + visual + "\n\n" + markdown[position:].lstrip()
+
+
 def ensure_asset_references(markdown: str, diagrams: list[dict[str, Any]], charts: list[dict[str, Any]]) -> str:
-    missing: list[str] = []
-    for item in diagrams:
-        filename = item.get("filename")
-        title = item.get("title") or "Diagram"
-        if filename and filename not in markdown:
-            missing.append(f"![{title}]({filename})")
-    for item in charts:
-        filename = item.get("filename")
-        title = item.get("title") or "Chart"
-        if filename and filename not in markdown:
-            missing.append(f"![{title}]({filename})")
-    if not missing:
-        return markdown
-    insertion = "## Visual Summary\n\n" + "\n\n".join(missing)
-    sources_match = re.search(r"(?im)^##\s+Sources\b", markdown)
-    if sources_match:
-        return markdown[: sources_match.start()].rstrip() + "\n\n" + insertion + "\n\n" + markdown[sources_match.start() :].lstrip()
-    return markdown.rstrip() + "\n\n" + insertion + "\n"
+    # Older recovery behavior created a media-only tail section. Remove that
+    # heading and relocate its asset into the section that explains it.
+    assets = [
+        *((item, "Diagram") for item in diagrams),
+        *((item, "Chart") for item in charts),
+    ]
+    forced_relocations: set[str] = set()
+    for item, _fallback_title in assets:
+        filename = normalize_space(str(item.get("filename", "")))
+        for reference in _visual_reference_pattern(filename).finditer(markdown) if filename else []:
+            headings = [match for match in _markdown_headings(markdown) if match.start() < reference.start()]
+            if headings and re.match(
+                r"(?i)^(?:visual summary|diagram gallery)$",
+                normalize_space(headings[-1].group(2)).strip("# :.-"),
+            ):
+                forced_relocations.add(filename)
+    markdown = re.sub(r"(?im)^#{2,6}[ \t]+(?:Visual Summary|Diagram Gallery)[ \t]*\n+", "", markdown)
+    for item, fallback_title in assets:
+        filename = normalize_space(str(item.get("filename", "")))
+        if not filename:
+            continue
+        references = list(_visual_reference_pattern(filename).finditer(markdown))
+        if filename not in forced_relocations and any(
+            _visual_reference_is_contextual(markdown, match.start()) for match in references
+        ):
+            continue
+        if references:
+            markdown = _visual_reference_pattern(filename).sub("", markdown)
+        title = normalize_space(str(item.get("title") or fallback_title))
+        visual = f"![{title}]({filename})"
+        caption = normalize_space(str(item.get("caption", "")))
+        if caption:
+            visual += f"\n\n*{caption}*"
+        markdown = _insert_visual_in_section(markdown, visual, _visual_placement_heading(markdown, item))
+    return markdown.rstrip() + "\n"
+
+
+def contextual_visual_issues(
+    markdown: str,
+    diagrams: list[dict[str, Any]],
+    charts: list[dict[str, Any]],
+) -> list[str]:
+    issues: list[str] = []
+    if re.search(r"(?im)^#{2,6}[ \t]+(?:Visual Summary|Diagram Gallery)\b", markdown):
+        issues.append("Visuals must explain concepts in context; a Visual Summary or Diagram Gallery is not allowed.")
+    for item in [*diagrams, *charts]:
+        filename = normalize_space(str(item.get("filename", "")))
+        if not filename:
+            continue
+        references = list(_visual_reference_pattern(filename).finditer(markdown))
+        if not references:
+            issues.append(f"Visual asset {filename} is not referenced in the article body.")
+        elif not any(_visual_reference_is_contextual(markdown, match.start()) for match in references):
+            issues.append(
+                f"Visual asset {filename} must appear inside the explanatory section it supports, not before the article structure or in a closing recap."
+            )
+    return issues
 
 
 def default_diagram_for_topic(topic: dict[str, Any], markdown: str = "") -> dict[str, Any]:
@@ -3578,6 +3714,14 @@ def default_diagram_for_topic(topic: dict[str, Any], markdown: str = "") -> dict
     return {
         "filename": "concept-flow.svg",
         "title": f"{title}: practical flow",
+        "placement_heading": next(
+            (
+                heading
+                for heading in article_sections
+                if re.search(r"(?i)\b(?:workflow|architecture|mechanism|model|reason|diagnos|implement|example|works?)\w*\b", heading)
+            ),
+            article_sections[0] if article_sections else "",
+        ),
         "nodes": nodes,
         "edges": [
             {"from": nodes[index]["id"], "to": nodes[index + 1]["id"], "label": "then"}
@@ -4081,18 +4225,41 @@ def validate_code_syntax(language: str, code: str) -> str | None:
                 return "PowerShell syntax validator is unavailable."
             parser_script = (
                 "$tokens=$null;$errors=$null;"
-                "[System.Management.Automation.Language.Parser]::ParseInput([Console]::In.ReadToEnd(),[ref]$tokens,[ref]$errors)|Out-Null;"
+                "$sourcePath=$env:AUTOPUBLISHER_POWERSHELL_SOURCE_PATH;"
+                "if(-not $sourcePath){Write-Error 'PowerShell parser source path is missing.';exit 2};"
+                "[System.Management.Automation.Language.Parser]::ParseFile($sourcePath,[ref]$tokens,[ref]$errors)|Out-Null;"
                 "if($errors.Count){$errors|ForEach-Object{$_.Message}|Write-Error;exit 1}"
             )
-            result = subprocess.run(
-                [shell, "-NoProfile", "-NonInteractive", "-Command", parser_script],
-                input=code,
-                text=True,
-                encoding="utf-8",
-                errors="replace",
-                capture_output=True,
-                timeout=12,
-            )
+            source_path: Path | None = None
+            try:
+                with tempfile.NamedTemporaryFile(
+                    mode="w", encoding="utf-8", suffix=".ps1", delete=False
+                ) as source_file:
+                    source_file.write(code)
+                    source_path = Path(source_file.name)
+                validator_env = os.environ.copy()
+                validator_env["AUTOPUBLISHER_POWERSHELL_SOURCE_PATH"] = str(source_path)
+                result = None
+                for attempt in range(2):
+                    try:
+                        result = subprocess.run(
+                            [shell, "-NoLogo", "-NoProfile", "-NonInteractive", "-Command", parser_script],
+                            text=True,
+                            encoding="utf-8",
+                            errors="replace",
+                            capture_output=True,
+                            timeout=20,
+                            env=validator_env,
+                        )
+                        break
+                    except subprocess.TimeoutExpired:
+                        if attempt == 1:
+                            return "PowerShell syntax validator is unavailable after repeated parser timeouts."
+                if result is None:  # pragma: no cover - the loop either returns or assigns a result.
+                    return "PowerShell syntax validator is unavailable."
+            finally:
+                if source_path is not None:
+                    source_path.unlink(missing_ok=True)
             if result.returncode:
                 return normalize_space(result.stderr or result.stdout or "PowerShell parser rejected the command block")
     except (
@@ -4343,7 +4510,10 @@ def calculate_quality_score(
         "structured_data_validity": 1.0,
         "code_validity": 1.0 if not code_block_issues(markdown) else 0.0,
         "version_confidence": version_confidence,
-        "media_relevance": 1.0 if not media_evidence_issues(article) else 0.0,
+        "media_relevance": 1.0 if not (
+            media_evidence_issues(article)
+            + contextual_visual_issues(markdown, article.get("diagrams", []) or [], article.get("charts", []) or [])
+        ) else 0.0,
         "editorial_specificity": 1.0 if not editorial_issues else 0.0,
     }
     score = round(sum(components.values()) / len(components), 4)
@@ -4364,6 +4534,14 @@ def deterministic_qa(
     issues.extend(heading_hierarchy_issues(markdown))
     issues.extend(introduction_issues(markdown))
     issues.extend(code_block_issues(markdown))
+    if config.get("publishing", {}).get("require_contextual_visuals", False):
+        issues.extend(
+            contextual_visual_issues(
+                markdown,
+                article.get("diagrams", []) or [],
+                article.get("charts", []) or [],
+            )
+        )
     if config.get("editorial_validation", {}).get("enabled", False):
         issues.extend(repetition_issues(markdown, config))
         issues.extend(generic_paragraph_issues(markdown, config))
@@ -4502,7 +4680,7 @@ Review the article for:
 - depth and educational value,
 - SEO clarity,
 - readable structure,
-- appropriate use of examples, tables, diagrams, and charts,
+- appropriate use of examples, tables, diagrams, and charts, with each visual embedded in the explanatory section it supports rather than collected in a closing visual-summary section,
 - broken formatting or missing sources.
 - exact or near-repeated sentences, paragraphs, warnings, transitions, or section endings,
 - generic paragraphs that do not name a product-specific field, command, result, interpretation, or next decision,
@@ -6464,6 +6642,7 @@ Rules:
 - Do not add unsupported claims.
 - Keep the Markdown body only; do not include YAML front matter.
 - Preserve useful diagrams, charts, and image references unless they are wrong.
+- Keep every visual inside the explanatory section it supports. Relocate visuals from any Visual Summary, Diagram Gallery, or end-of-article media section into the relevant concept, workflow, or example section.
 - Use only directly relevant official or primary sources.
 - Return at least the configured source count and a claim_evidence record for each material technical claim.
 - Every claim_evidence record must include claim, supporting_sources, confidence, verified_at, and version_context.

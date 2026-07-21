@@ -1,7 +1,7 @@
 ---
 title: "Troubleshooting Windows Event Logs with PowerShell"
 date: "2026-07-15T18:49:56+03:00"
-lastmod: "2026-07-15T18:49:56+03:00"
+lastmod: "2026-07-21T18:14:36+03:00"
 description: "Efficiently query, filter, and export Windows Event Logs using PowerShell's Get-WinEvent and wevtutil with safe, practical examples."
 summary: "This article guides system administrators on troubleshooting Windows Event Logs using PowerShell's Get-WinEvent and the wevtutil command-line tool, focusing on efficient, read-only queries, filtering, remote access, and safe export techniques."
 tags: ["powershell", "windows-server", "troubleshooting"]
@@ -136,6 +136,10 @@ This exports the Application log without modifying it. Avoid using the clear-log
 | Scripting integration   | Excellent (objects, pipelines)     | Good (text output)            |
 | Supported OS            | Windows Server 2008+               | Windows Server 2016+, Win10+  |
 
+The graphic below makes the command-choice boundary visible alongside the reference table. Read it as a capability map for choosing the next query or export path, not as a measured performance benchmark.
+
+![Get-WinEvent and wevtutil capability comparison](comparison-table.svg)
+
 ## Common Troubleshooting Scenarios
 
 ### Scenario 1: Diagnosing Service Failures
@@ -240,10 +244,6 @@ PowerShell's Get-WinEvent and the native wevtutil tool are essential for safe, e
 ## Related guidance
 
 - [DNS Explained: How Your Browser Finds a Website](/posts/dns-explained-how-your-browser-finds-a-website/) — supporting reference.
-
-## Visual Summary
-
-![Get-WinEvent vs wevtutil Feature Comparison](comparison-table.svg)
 
 ## Sources
 

@@ -1,7 +1,7 @@
 ---
 title: "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies"
 date: "2026-07-21T06:47:50+03:00"
-lastmod: "2026-07-21T06:47:50+03:00"
+lastmod: "2026-07-21T18:14:36+03:00"
 description: "A pagination contract guide comparing offset, cursor, and link traversal for REST and GraphQL APIs under changing datasets and client retries."
 tags: ["storage"]
 categories: ["software-engineering", "web-development"]
@@ -39,6 +39,10 @@ Use Using pagination in the GraphQL API for this boundary of the topic: Use GitH
 Use REST API best practices for this boundary of the topic: Use the REST best-practices reference for Link-header following, serial requests, conditional requests, and safe client behavior.
 
 ## Reason through rest graphql pagination offset cursor link strategies
+
+The diagram places the three decisions in implementation order: first decide whether positional drift is acceptable, then define a stable continuation boundary, and finally expose navigation that clients can follow safely. The sections below unpack each boundary and show where an apparently simple pagination API becomes inconsistent.
+
+![Pagination strategy decisions from offset drift to cursor navigation](concept-flow.svg)
 
 ### 1. Use offset only with explicit drift expectations
 
@@ -102,10 +106,6 @@ The comparison uses current GitHub REST and GraphQL pagination documentation as 
 ## Summary
 
 A pagination design is stable when ordering, continuation, mutation behavior, authorization, and termination are explicit. Use offset for workloads that accept positional drift, cursors for boundary-based traversal, and discoverable links or page information so clients follow the server's contract.
-
-## Visual Summary
-
-![REST and GraphQL Pagination: Offset, Cursor, and Link Strategies: practical flow](concept-flow.svg)
 
 ## Sources
 

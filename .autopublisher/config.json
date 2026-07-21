@@ -71,6 +71,7 @@
     "required_enhanced_elements": 1,
     "required_diagrams": 1,
     "required_code_examples": 1,
+    "require_contextual_visuals": true,
     "max_new_posts_per_run": 1
   },
   "cost_control": {

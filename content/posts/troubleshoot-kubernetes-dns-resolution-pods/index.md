@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot Kubernetes DNS Resolution from Pods"
 date: "2026-07-21T17:25:18+03:00"
-lastmod: "2026-07-21T17:25:18+03:00"
+lastmod: "2026-07-21T18:14:36+03:00"
 description: "A safe Kubernetes DNS troubleshooting workflow that separates pod resolver configuration, CoreDNS health, Service records, and endpoint availability before changing the cluster."
 tags: ["dns", "kubernetes", "troubleshooting"]
 categories: ["networking", "developer-it-tools", "system-administration"]
@@ -39,6 +39,10 @@ Use Debug Services to verify this specific part of the investigation: Use the Se
 ## Step-by-step workflow
 
 For each step, record the timestamp, affected actor or workload, exact result, and evidence scope before moving on. This keeps the investigation reproducible without repeating the same warning after every action.
+
+The diagram keeps resolver diagnosis separate from Service routing: reproduce the name lookup first, verify the record that Kubernetes should create, and inspect endpoints only after resolution succeeds. Following that order prevents an empty EndpointSlice or wrong target port from being misreported as a CoreDNS failure.
+
+![Kubernetes DNS and Service-routing diagnostic sequence](concept-flow.svg)
 
 ### 1. Reproduce the lookup from the affected namespace
 
@@ -107,10 +111,6 @@ This article is based on the official sources listed for this topic and was chec
 ## Summary
 
 Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator.
-
-## Visual Summary
-
-![Troubleshoot Kubernetes DNS Resolution from Pods: practical flow](concept-flow.svg)
 
 ## Sources
 

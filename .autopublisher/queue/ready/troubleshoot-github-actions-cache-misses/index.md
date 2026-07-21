@@ -1,7 +1,7 @@
 ---
 title: "Troubleshoot GitHub Actions Cache Misses"
 date: "2026-07-21T02:14:55+03:00"
-lastmod: "2026-07-21T02:14:55+03:00"
+lastmod: "2026-07-21T18:14:36+03:00"
 description: "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely."
 tags: ["github", "troubleshooting", "configuration-management"]
 categories: ["developer-it-tools"]
@@ -39,6 +39,10 @@ Use actions cache to verify this specific part of the investigation: Use the act
 ## Step-by-step workflow
 
 For each step, record the timestamp, affected actor or workload, exact result, and evidence scope before moving on. This keeps the investigation reproducible without repeating the same warning after every action.
+
+The diagnostic path below shows why cache-hit classification comes before inventory or configuration changes. An exact hit, a prefix restore, and a complete miss lead to different evidence, so preserve that result before comparing repository entries and action inputs.
+
+![GitHub Actions cache-miss diagnostic sequence](concept-flow.svg)
 
 ### 1. Classify exact hits, prefix restores, and misses
 
@@ -107,10 +111,6 @@ This article is based on the official sources listed for this topic and was chec
 ## Summary
 
 Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator.
-
-## Visual Summary
-
-![Troubleshoot GitHub Actions Cache Misses: practical flow](concept-flow.svg)
 
 ## Sources
 
