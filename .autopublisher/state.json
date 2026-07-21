@@ -1735,6 +1735,70 @@
       },
       "quality_score": 0.9268,
       "path": "content/posts/rest-graphql-pagination-offset-cursor-link-strategies/index.md"
+    },
+    {
+      "time": "2026-07-21T08:47:15.962553Z",
+      "title": "Rust Ownership and Borrowing: A Practical Mental Model",
+      "slug": "rust-ownership-borrowing-practical-mental-model",
+      "categories": [
+        "programming-languages",
+        "software-engineering"
+      ],
+      "tags": [
+        "storage",
+        "rust"
+      ],
+      "sources": [
+        {
+          "title": "What Is Ownership?",
+          "url": "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html"
+        },
+        {
+          "title": "References and Borrowing",
+          "url": "https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html"
+        },
+        {
+          "title": "The Slice Type",
+          "url": "https://doc.rust-lang.org/book/ch04-03-slices.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 0.9,
+        "technical_accuracy": 0.94,
+        "factual_confidence": 0.95,
+        "unsupported_claims": [],
+        "issues": [],
+        "required_fixes": [],
+        "reason": "Reviewed official-source offline recovery article.",
+        "quality": {
+          "score": 0.9304,
+          "components": {
+            "topic_relevance": 0.85,
+            "originality": 0.7777,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 0.94,
+            "search_intent_match": 0.8182,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7777,
+            "source_similarity": 0.6673,
+            "existing_content_similarity": 0.7777,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9304,
+      "path": "content/posts/rust-ownership-borrowing-practical-mental-model/index.md"
     }
   ],
   "maintenance_reviews": {},
@@ -1965,10 +2029,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-21T03:47:51.509974Z",
+      "time": "2026-07-21T08:47:15.962559Z",
       "result": "published",
       "source": "ready_queue",
-      "queue_depth": 3
+      "queue_depth": 2
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -2190,76 +2254,6 @@
   },
   "pending_publication": {},
   "ready_publications": [
-    {
-      "queued_at": "2026-07-20T18:19:10.051266Z",
-      "slug": "rust-ownership-borrowing-practical-mental-model",
-      "title": "Rust Ownership and Borrowing: A Practical Mental Model",
-      "bundle_path": ".autopublisher/queue/ready/rust-ownership-borrowing-practical-mental-model",
-      "record": {
-        "time": "2026-07-20T18:19:10.051266Z",
-        "title": "Rust Ownership and Borrowing: A Practical Mental Model",
-        "slug": "rust-ownership-borrowing-practical-mental-model",
-        "categories": [
-          "programming-languages",
-          "software-engineering"
-        ],
-        "tags": [
-          "storage",
-          "rust"
-        ],
-        "sources": [
-          {
-            "title": "What Is Ownership?",
-            "url": "https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html"
-          },
-          {
-            "title": "References and Borrowing",
-            "url": "https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html"
-          },
-          {
-            "title": "The Slice Type",
-            "url": "https://doc.rust-lang.org/book/ch04-03-slices.html"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 0.9,
-          "technical_accuracy": 0.94,
-          "factual_confidence": 0.95,
-          "unsupported_claims": [],
-          "issues": [],
-          "required_fixes": [],
-          "reason": "Reviewed official-source offline recovery article.",
-          "quality": {
-            "score": 0.9304,
-            "components": {
-              "topic_relevance": 0.85,
-              "originality": 0.7777,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 0.94,
-              "search_intent_match": 0.8182,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.7777,
-              "source_similarity": 0.6673,
-              "existing_content_similarity": 0.7777,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.9304,
-        "path": "content/posts/rust-ownership-borrowing-practical-mental-model/index.md"
-      }
-    },
     {
       "queued_at": "2026-07-20T21:32:44.513144Z",
       "slug": "troubleshoot-kubernetes-dns-resolution-pods",

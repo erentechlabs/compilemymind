@@ -1,19 +1,19 @@
 ---
 title: "Rust Ownership and Borrowing: A Practical Mental Model"
-date: "2026-07-20T21:19:09+03:00"
-lastmod: "2026-07-20T21:19:09+03:00"
+date: "2026-07-21T11:47:15+03:00"
+lastmod: "2026-07-21T11:47:15+03:00"
 description: "A practical Rust ownership model covering moves, borrowing, mutable references, and slices so compiler errors can be reasoned about instead of memorized."
 tags: ["storage", "rust"]
 categories: ["programming-languages", "software-engineering"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-20"
+last_reviewed: "2026-07-21"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T18:19:09.376715Z"
-verification_version: 1
+verification_date: "2026-07-21T08:47:15.500705Z"
+verification_version: "1"
 version_context: "Documentation current at verification time"
-recheck_after: "2026-09-18"
+recheck_after: "2026-09-19"
 ---
 
 Rust uses ownership rules to manage resources without requiring a garbage collector for ordinary memory safety. Each value has an owner, assignment or function calls can move ownership, and references let code borrow a value without taking ownership. The compiler checks these relationships, which means many errors are best understood as questions about who owns a value, how long a borrow lasts, and whether mutation could overlap another access.
