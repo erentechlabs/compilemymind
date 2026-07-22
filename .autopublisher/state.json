@@ -2171,7 +2171,7 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-22T17:42:03.678152Z",
+      "time": "2026-07-22T19:43:15.551458Z",
       "result": "retry_scheduled",
       "reason": "no_valid_topic",
       "queue_depth": 0
@@ -2395,12 +2395,12 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-22T17:42:03.672402Z",
-    "next_retry_at": "2026-07-22T23:42:03.672407Z",
+    "scheduled_at": "2026-07-22T19:43:15.545902Z",
+    "next_retry_at": "2026-07-23T01:43:15.545907Z",
     "reason": "no_valid_topic",
     "stage": "topic_selection",
     "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
-    "consecutive_attempts": 13,
+    "consecutive_attempts": 14,
     "topic_attempts": 0,
     "topic": {}
   }
