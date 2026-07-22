@@ -2159,10 +2159,11 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-21T19:53:23.200738Z",
-      "result": "published",
-      "source": "ready_queue",
-      "queue_depth": 0
+      "time": "2026-07-22T03:49:50.673171Z",
+      "result": "retry_scheduled",
+      "reason": "no_valid_topic",
+      "stage": "topic_selection",
+      "next_retry_at": "2026-07-22T09:49:50.673157Z"
     },
     "maintain": {
       "time": "2026-07-16T11:08:32.387580Z",
@@ -2382,7 +2383,16 @@
       "reason": "billing_credit_depleted"
     }
   },
-  "pending_publication": {},
+  "pending_publication": {
+    "scheduled_at": "2026-07-22T03:49:50.673152Z",
+    "next_retry_at": "2026-07-22T09:49:50.673157Z",
+    "reason": "no_valid_topic",
+    "stage": "topic_selection",
+    "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
+    "consecutive_attempts": 1,
+    "topic_attempts": 0,
+    "topic": {}
+  },
   "ready_publications": [],
   "preparation_pending_publication": {
     "scheduled_at": "2026-07-22T03:45:26.911900Z",
