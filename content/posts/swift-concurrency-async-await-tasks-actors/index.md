@@ -1,36 +1,132 @@
 ---
 title: "Swift Concurrency: async/await, Tasks, and Actors Explained"
 date: "2026-07-20T22:58:16+03:00"
-lastmod: "2026-07-20T22:58:16+03:00"
-description: "A practical model for Swift async/await, tasks, actors, and Swift 6 concurrency checks, with clear choices for isolation, cancellation, and migration."
-tags: ["swift"]
+lastmod: "2026-07-26T18:45:00+02:00"
+description: "Understand Swift concurrency through suspension, structured tasks, actor isolation, Sendable values, cancellation, and a production-style image loader."
+tags: ["swift", "ios", "concurrency", "actors"]
 categories: ["mobile-development", "programming-languages"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-20"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T19:58:16.885880Z"
-verification_version: "1"
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-18"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and Swift documentation reviewed"
+verification_date: "2026-07-26T16:45:00Z"
+verification_version: "2"
+version_context: "Swift language and Swift 6 migration documentation reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-Swift concurrency provides structured ways to suspend work, create concurrent child operations, and isolate mutable state. An async function describes work that may suspend; a task gives that work an execution context; and an actor protects actor-isolated state from unsynchronized access. These mechanisms solve different problems, so understanding their boundaries matters more than adding async keywords throughout a codebase.
+Swift concurrency is easier to reason about when four ideas remain separate:
 
-![Swift concurrency execution and actor-isolation flow](concept-flow.svg)
+- `async` marks a function that may suspend.
+- `await` marks a possible suspension point.
+- a `Task` gives asynchronous work a lifetime and priority context.
+- an `actor` isolates mutable state.
 
-## A working model for Swift Concurrency: async/await, Tasks, and Actors Explained
+None of these means “start a new thread.” The runtime schedules jobs on executors, and an asynchronous function can resume on an executor appropriate to its isolation.
 
-Choose one asynchronous flow such as loading a screen, saving a document, or refreshing cached data. Mark the values that cross concurrency boundaries, the state that can mutate, the lifetime that should own the work, and the point where cancellation should stop useful processing. Note the project's Swift language mode and deployment targets because migration diagnostics and available APIs depend on that context.
+![Swift structured task tree feeding results through an actor-isolated cache to the MainActor UI](concept-flow.svg)
 
-## Apply the model to a concrete case
+## Suspension is not blocking
 
-Take an image-loading feature that downloads bytes, decodes them, caches the result, and updates a view. The network and decode functions can be async and throw errors, while the screen starts a task owned by its presentation lifetime. If the screen disappears, cancellation should prevent unnecessary decoding and stop the final UI update. A cache actor can guard its mutable key-to-image storage, and UI-facing state can remain isolated to the main actor. Two independent thumbnail requests may run as child tasks under one parent that awaits both results. This layout separates suspension from parallelism, connects cancellation to ownership, and gives mutable cache and UI state explicit isolation domains.
+```swift
+func loadProfile(id: UUID) async throws -> Profile {
+    let (data, response) = try await URLSession.shared.data(
+        from: profileURL(id)
+    )
+    try validate(response)
+    return try JSONDecoder().decode(Profile.self, from: data)
+}
+```
 
-## Worked code example
+At `await`, `loadProfile` may suspend while the networking operation continues. The underlying thread can execute other work. Later, the function resumes and either receives a value or throws.
 
-### Keep mutable cache state inside an actor
+Three important consequences:
+
+1. Local state must remain valid across suspension.
+2. Other code may change shared state before this function resumes.
+3. Cancellation or errors must be part of the function's contract.
+
+`await` identifies where interleaving can occur; it does not guarantee that a suspension actually happens every time.
+
+## Prefer structured concurrency
+
+When child work belongs to the current operation, keep it in the task hierarchy:
+
+```swift
+func loadDashboard() async throws -> Dashboard {
+    async let profile = profileService.currentProfile()
+    async let messages = messageService.unreadMessages()
+
+    return try await Dashboard(
+        profile: profile,
+        messages: messages
+    )
+}
+```
+
+The two child tasks can make progress concurrently. Their lifetime remains bounded by `loadDashboard`; errors and cancellation propagate through the structure.
+
+For a dynamic number of children, use a task group:
+
+```swift
+func loadThumbnails(_ urls: [URL]) async throws -> [URL: Data] {
+    try await withThrowingTaskGroup(
+        of: (URL, Data).self,
+        returning: [URL: Data].self
+    ) { group in
+        for url in urls {
+            group.addTask {
+                (url, try await download(url))
+            }
+        }
+
+        var result: [URL: Data] = [:]
+        for try await (url, data) in group {
+            result[url] = data
+        }
+        return result
+    }
+}
+```
+
+Bound concurrency for very large inputs; launching thousands of network operations at once can overwhelm the client or server.
+
+## Unstructured and detached tasks
+
+`Task { ... }` starts an unstructured task that inherits useful context such as priority and actor isolation. It is appropriate for bridging a synchronous UI event into asynchronous work when you keep the handle or the task is deliberately tied to an owner.
+
+```swift
+@MainActor
+final class ProfileViewModel: ObservableObject {
+    @Published private(set) var state: State = .idle
+    private var loadingTask: Task<Void, Never>?
+
+    func load() {
+        loadingTask?.cancel()
+        loadingTask = Task {
+            state = .loading
+            do {
+                state = .loaded(try await service.loadCurrent())
+            } catch is CancellationError {
+                // A replacement request owns the UI now.
+            } catch {
+                state = .failed(error.localizedDescription)
+            }
+        }
+    }
+
+    deinit {
+        loadingTask?.cancel()
+    }
+}
+```
+
+`Task.detached` discards actor context and other inherited structure. Use it rarely, when the work genuinely should not inherit that context. It is not a general “background thread” button.
+
+## Actors protect mutable state
+
+An actor serializes access to its isolated state:
 
 ```swift
 actor ImageCache {
@@ -44,79 +140,136 @@ actor ImageCache {
         images[url] = data
     }
 }
+```
 
-func loadImage(from url: URL, cache: ImageCache) async throws -> Data {
-    if let cached = await cache.value(for: url) {
-        return cached
-    }
+Code outside the actor uses `await` to cross the isolation boundary:
 
-    let (data, _) = try await URLSession.shared.data(from: url)
-    try Task.checkCancellation()
-    await cache.insert(data, for: url)
+```swift
+let cache = ImageCache()
+
+if let data = await cache.value(for: url) {
     return data
 }
 ```
 
-The actor owns the mutable dictionary, while the async loader exposes suspension and cancellation explicitly. A screen-owned task can cancel this operation when the result is no longer needed.
+Actors prevent unsynchronized access; they do not make a multi-step operation automatically atomic across an `await`.
 
-## Source boundaries for mobile development
+### Actor reentrancy
 
-### Swift 5.5 Released!
+This loader can download the same URL twice:
 
-Use Swift 5.5 Released! for this boundary of the topic: Use the Swift 5.5 release material for the introduction of async/await and the structured-concurrency model.
-### Announcing Swift 6
+```swift
+actor Loader {
+    private var cache: [URL: Data] = [:]
 
-Use Announcing Swift 6 for this boundary of the topic: Use Apple's concurrency overview to connect tasks, async sequences, groups, and cancellation to application work.
-### Get started with Swift concurrency
+    func data(for url: URL) async throws -> Data {
+        if let cached = cache[url] { return cached }
 
-Use Get started with Swift concurrency for this boundary of the topic: Use the Swift 6 announcement for the evolution toward stronger data-race safety and migration behavior.
+        let downloaded = try await download(url) // actor may run other work
+        cache[url] = downloaded
+        return downloaded
+    }
+}
+```
 
-## Reason through swift concurrency async await tasks actors
+While `download` is suspended, another call can enter the actor, observe the same miss, and start another download. If deduplication matters, cache the in-flight task:
 
-### 1. Model suspension with async functions
+```swift
+actor ImageLoader {
+    private var values: [URL: Data] = [:]
+    private var inFlight: [URL: Task<Data, Error>] = [:]
 
-Use async to express a function that may suspend while waiting for another asynchronous operation. Await marks a potential suspension point, not a promise that another thread will run or that operations execute in parallel. Keep the state assumptions around each await visible because other work can make progress before the function resumes. Return typed values and errors through normal Swift control flow so callers can compose the operation without callback nesting.
-### 2. Choose task structure and cancellation deliberately
+    func data(for url: URL) async throws -> Data {
+        if let value = values[url] { return value }
+        if let task = inFlight[url] { return try await task.value }
 
-Prefer child tasks whose lifetime is tied to a parent operation when results belong to that operation. Use task groups when the number of child operations is dynamic and each result can be combined under one parent scope. Treat unstructured tasks as an explicit lifetime decision rather than a shortcut around isolation. Cancellation is cooperative: propagate it, check it where work is expensive, and make partial results or cleanup behavior part of the function contract.
-### 3. Protect shared state with actor isolation
+        let task = Task { try await Self.download(url) }
+        inFlight[url] = task
 
-Put mutable state behind an actor when that state must be accessed from concurrent tasks. Calls that cross into actor-isolated code may require await because the actor serializes access to its protected state. Isolation does not make every surrounding object safe and it does not remove reentrancy concerns across suspension points. Keep invariants small, avoid exposing mutable internals, and decide when UI state belongs on the main actor.
+        do {
+            let value = try await task.value
+            values[url] = value
+            inFlight[url] = nil
+            return value
+        } catch {
+            inFlight[url] = nil
+            throw error
+        }
+    }
 
-## Swift Concurrency: async/await, Tasks, and Actors Explained: decisions and tradeoffs
+    private nonisolated static func download(_ url: URL) async throws -> Data {
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return data
+    }
+}
+```
 
-| Situation or decision | Tradeoff or common failure mode | Validation question |
-| --- | --- | --- |
-| An await is assumed to create parallel execution | Suspension and concurrency are being treated as the same mechanism | Identify which task owns the work and whether multiple child operations are actually created |
-| An unstructured task outlives its screen | Task lifetime is not connected to feature lifetime | Move the work under a parent task or retain and cancel the explicit handle |
-| Swift 6 reports a value crossing an isolation boundary | Mutable or non-Sendable state is shared between concurrency domains | Clarify ownership, actor isolation, and whether the transferred value can be made safely Sendable |
+The exact cancellation policy needs a product decision: should one cancelled caller cancel the shared download for everyone? Often it should not.
 
-## Common mistakes in mobile development
+## `MainActor` is UI isolation
 
-Adding await until compiler errors disappear does not establish a safe concurrency design. A value observed before suspension may be stale after resumption, and an actor method can be re-entered while it awaits other work. Creating Task objects everywhere can detach lifetime from the feature that needs the result, producing updates after dismissal or work that cannot be cancelled coherently. Another migration mistake is marking types Sendable without proving that their stored state and mutation rules support transfer. Treat Swift 6 diagnostics as information about an ownership boundary: identify the value, the sending and receiving isolation domains, and whether copying, immutability, actor ownership, or a narrower API represents the real intent.
+Annotate UI-facing state with `@MainActor`:
 
-## Practical implementation checklist
+```swift
+@MainActor
+final class SearchViewModel: ObservableObject {
+    @Published private(set) var results: [Result] = []
 
-1. Mark every suspension point where previously observed mutable state could change before resumption.
-2. Tie child task lifetime to the operation that consumes its result whenever structured concurrency fits.
-3. Define cancellation behavior for network, parsing, persistence, and UI update stages.
-4. Keep actor-protected invariants inside the actor instead of returning mutable state to callers.
-5. Run concurrency diagnostics in the project's actual Swift language mode before planning migration work.
+    func search(_ query: String) async {
+        results = (try? await service.search(query)) ?? []
+    }
+}
+```
 
-## Related implementation context
+This expresses an isolation guarantee, not merely a dispatch convention. Do not wrap every line in `MainActor.run`; place the owning type or the methods that mutate UI state on the main actor.
 
-[What's New in Java 25 (JDK 25)](/posts/new-features-in-java-25/) and [C# vs Java: A Practical Comparison for 2025](/posts/csharp-vs-java/)
+## Sendable and Swift 6 checks
 
-## Version and verification boundary
+`Sendable` describes values that can safely cross concurrency isolation boundaries. Value types whose stored properties are themselves sendable often fit naturally. Mutable reference types require careful isolation or synchronization.
 
-Swift concurrency began shipping with Swift 5.5 and Swift 6 adds stronger compile-time data-race safety; diagnostics and migration behavior must be checked against the project's selected language mode and toolchain.
+Swift 6 language mode makes data-race safety checks stronger. Migration is usually clearer when done boundary by boundary:
 
-## Summary
+1. Enable warnings/checks for a module.
+2. Identify mutable state crossing isolation.
+3. Isolate UI state with `@MainActor`.
+4. Move shared mutable state into actors or synchronized owners.
+5. Make transferred value models `Sendable` where true.
+6. Treat `@unchecked Sendable` as a documented safety proof, not a way to silence the compiler.
 
-Predict Swift concurrency by naming the task lifetime, every suspension point, and the isolation owner of mutable state. Structured child tasks, cooperative cancellation, and actors are complementary tools; Swift 6 checks help verify that values cross those boundaries safely.
+## Cancellation is cooperative
+
+Cancelling a task sets cancellation state; your code and called APIs must observe it:
+
+```swift
+func transform(_ records: [Record]) async throws -> [Output] {
+    var output: [Output] = []
+    for record in records {
+        try Task.checkCancellation()
+        output.append(expensiveTransform(record))
+    }
+    return output
+}
+```
+
+Handle `CancellationError` separately from an ordinary user-visible failure. A cancelled search replaced by a newer query is not necessarily an error banner.
+
+## Review checklist
+
+- Does child work have a clear owner and lifetime?
+- Can cancellation propagate to expensive operations?
+- Is mutable shared state actor-isolated or otherwise synchronized?
+- Have invariants been rechecked after every `await`?
+- Is UI state isolated to `MainActor`?
+- Are values crossing isolation boundaries genuinely `Sendable`?
+- Is unstructured work retained and cancelled by its owner?
+- Is `Task.detached` used only with a specific reason?
+- Are concurrency limits explicit for fan-out work?
+
+Swift concurrency gives you vocabulary for lifetimes, suspension, and isolation. Use that vocabulary to make ownership visible; the compiler can then help detect designs that would otherwise become timing-dependent bugs.
 
 ## Sources
 
-- [Swift 5.5 Released!](https://swift.org/blog/swift-5.5-released)
-- [Announcing Swift 6](https://swift.org/blog/announcing-swift-6)
-- [Get started with Swift concurrency](https://developer.apple.com/news?id=o140tv24)
+- [Concurrency — The Swift Programming Language](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/)
+- [Swift 6 concurrency migration guide](https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/migrationstrategy/)
+- [Announcing Swift 6 — Swift.org](https://www.swift.org/blog/announcing-swift-6/)
+- [Get started with Swift concurrency — Apple Developer](https://developer.apple.com/news/?id=o140tv24)

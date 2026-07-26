@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Rewrite existing posts into readable, article-style Markdown with Gemini QA."""
+"""Rewrite existing posts into readable, article-style Markdown with AI QA."""
 
 from __future__ import annotations
 
@@ -74,7 +74,25 @@ def readability_signals(body: str) -> dict[str, int]:
     }
 
 
-def revision_priority(post: autopublisher.Post) -> tuple[int, int, str]:
+def cross_post_overlap(
+    post: autopublisher.Post,
+    posts: list[autopublisher.Post],
+) -> float:
+    return max(
+        (
+            autopublisher.ngram_overlap(post.body, candidate.body)
+            for candidate in posts
+            if candidate.slug != post.slug
+        ),
+        default=0.0,
+    )
+
+
+def revision_priority(
+    post: autopublisher.Post,
+    posts: list[autopublisher.Post] | None = None,
+    config: dict[str, Any] | None = None,
+) -> tuple[int, int, str]:
     signals = readability_signals(post.body)
     priority = 0
     if signals["prose_fence_bullets"]:
@@ -85,20 +103,29 @@ def revision_priority(post: autopublisher.Post) -> tuple[int, int, str]:
         priority += 25
     if signals["words"] > 2500 and signals["paragraphs"] < 12:
         priority += 20
+    overlap = cross_post_overlap(post, posts or [])
+    overlap_limit = float((config or {}).get("publishing", {}).get("max_ngram_overlap", 0.28))
+    if overlap > overlap_limit:
+        priority += 60
     return (-priority, -signals["words"], post.slug)
 
 
 def choose_post(
-    posts: list[autopublisher.Post], state: dict[str, Any], attempted_this_run: set[str] | None = None
+    posts: list[autopublisher.Post],
+    state: dict[str, Any],
+    attempted_this_run: set[str] | None = None,
+    config: dict[str, Any] | None = None,
 ) -> tuple[autopublisher.Post | None, dict[str, int]]:
     completed = set(state.get("completed", []) or [])
     attempted_this_run = attempted_this_run or set()
     pending = [post for post in posts if post.slug not in completed and post.slug not in attempted_this_run]
     if not pending:
         return None, {}
-    pending.sort(key=revision_priority)
+    pending.sort(key=lambda post: revision_priority(post, posts, config))
     post = pending[0]
-    return post, readability_signals(post.body)
+    signals = readability_signals(post.body)
+    signals["cross_post_ngram_overlap_milli"] = int(cross_post_overlap(post, posts) * 1000)
+    return post, signals
 
 
 def existing_sources(post: autopublisher.Post) -> list[dict[str, str]]:
@@ -126,6 +153,7 @@ Readability problems to correct:
 - Use bullet lists only when they improve scanning; do not make the article a wall of bullets.
 - Use tables for genuine comparisons, definitions, or structured reference data.
 - Retain useful diagrams, charts, statistics, examples, internal links, and source links.
+- Replace repeated house-template sentences with topic-specific explanations when the cross-post n-gram signal is high. Preserve the diagnostic method, but name this article's actual fields, commands, failure modes, and decisions.
 
 Editorial requirements:
 - Preserve the factual meaning and technical scope of the original.
@@ -245,7 +273,7 @@ def main() -> int:
     selected_any = False
 
     for _ in range(max(1, limit)):
-        post, signals = choose_post(posts, state, attempted_this_run)
+        post, signals = choose_post(posts, state, attempted_this_run, config)
         if not post:
             print("No eligible existing post remains for this revision run.")
             break

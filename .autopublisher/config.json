@@ -16,11 +16,11 @@
     "article_temperature": 0.35,
     "qa_temperature": 0.1,
     "max_output_tokens": 32768,
-    "enable_google_search_grounding": true,
+    "enable_google_search_grounding": false,
     "grounded_research_fallback_to_feeds": true,
     "enable_image_generation": false,
     "model_upgrade": {
-      "enabled": true,
+      "enabled": false,
       "family": "flash",
       "stable_only": true,
       "max_major_jump": 1,
@@ -28,16 +28,34 @@
       "min_output_token_limit": 8192
     }
   },
+  "openai": {
+    "enabled": false,
+    "endpoint": "https://api.openai.com/v1/responses",
+    "model": "gpt-5.6-sol",
+    "fallback_models": ["gpt-5.6-terra"],
+    "tasks": ["topic_selection", "article_generation", "quality_assurance", "metadata_enrichment", "maintenance_review", "revision"],
+    "required_tasks": ["article_generation", "quality_assurance", "maintenance_review", "revision"],
+    "max_output_tokens": 32768,
+    "max_input_characters": 60000,
+    "reasoning_effort": {
+      "topic_selection": "low",
+      "article_generation": "medium",
+      "quality_assurance": "medium",
+      "metadata_enrichment": "low",
+      "maintenance_review": "medium",
+      "revision": "medium"
+    }
+  },
   "github_models": {
     "enabled": true,
     "endpoint": "https://models.github.ai/inference/chat/completions",
     "model": "openai/gpt-4.1",
     "fallback_models": ["openai/gpt-4.1-mini"],
-    "lightweight_tasks": ["topic_selection", "article_generation", "quality_assurance", "metadata_enrichment"],
-    "max_output_tokens": 14000,
+    "lightweight_tasks": ["topic_selection", "article_generation", "quality_assurance", "metadata_enrichment", "maintenance_review", "revision"],
+    "max_output_tokens": 4000,
     "max_input_characters": 24000,
     "topic_selection_temperature": 0.1,
-    "topic_selection_max_output_tokens": 1800
+    "topic_selection_max_output_tokens": 1200
   },
   "publishing": {
     "min_words": 900,
@@ -54,12 +72,12 @@
     "max_slug_length": 72,
     "max_regeneration_attempts": 2,
     "max_stalled_repair_attempts": 2,
-    "max_topic_attempts": 3,
-    "max_evergreen_topic_attempts": 3,
+    "max_topic_attempts": 2,
+    "max_evergreen_topic_attempts": 1,
     "prefer_source_qualified_evergreen_first": false,
     "prefer_evergreen_after_quota": true,
-    "quality_min_score": 0.82,
-    "ai_qa_min_score": 0.8,
+    "quality_min_score": 0.88,
+    "ai_qa_min_score": 0.85,
     "topic_relevance_min_score": 0.78,
     "required_source_count": 3,
     "minimum_official_sources": 1,
@@ -67,19 +85,20 @@
     "require_table": true,
     "prefer_internal_links": 3,
     "minimum_internal_post_links": 2,
-    "minimum_practical_elements": 2,
-    "required_enhanced_elements": 1,
+    "minimum_practical_elements": 3,
+    "required_enhanced_elements": 2,
     "required_diagrams": 1,
     "required_code_examples": 1,
     "require_contextual_visuals": true,
     "required_diagram_detail_nodes": 3,
     "allowed_diagram_layouts": ["sequence", "architecture", "decision", "comparison", "cycle"],
-    "max_new_posts_per_run": 1
+    "max_new_posts_per_run": 1,
+    "allow_offline_fallback": false
   },
   "cost_control": {
-    "max_topic_selection_calls_per_run": 3,
+    "max_topic_selection_calls_per_run": 2,
     "require_source_qualified_topic": true,
-    "gemini_billing_cooldown_hours": 168
+    "provider_billing_cooldown_hours": 168
   },
   "retry": {
     "base_delay_hours": 6,
@@ -88,13 +107,18 @@
   },
   "publication_queue": {
     "enabled": true,
-    "target_depth": 12,
-    "minimum_depth": 4,
-    "max_age_days": 7
+    "target_depth": 4,
+    "minimum_depth": 2,
+    "max_age_days": 14
   },
   "source_validation": {
     "max_document_bytes": 1500000,
     "max_candidates_per_run": 18,
+    "enable_related_source_expansion": true,
+    "minimum_initial_topic_sources": 1,
+    "related_links_per_source": 6,
+    "related_link_min_similarity": 0.08,
+    "max_related_candidates_per_topic": 10,
     "min_title_similarity": 0.08,
     "min_relevance_similarity": 0.05,
     "min_claim_source_similarity": 0.12,
@@ -133,7 +157,7 @@
     "require_image_dimensions": true
   },
   "maintenance": {
-    "max_articles_per_run": 2,
+    "max_articles_per_run": 4,
     "review_after_days": 45,
     "link_timeout_seconds": 12,
     "treat_403_as_broken": false,

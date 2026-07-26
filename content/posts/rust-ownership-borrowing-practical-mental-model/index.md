@@ -1,114 +1,268 @@
 ---
 title: "Rust Ownership and Borrowing: A Practical Mental Model"
 date: "2026-07-21T11:47:15+03:00"
-lastmod: "2026-07-21T18:36:07+03:00"
-description: "A practical Rust ownership model covering moves, borrowing, mutable references, and slices so compiler errors can be reasoned about instead of memorized."
-tags: ["storage", "rust"]
+lastmod: "2026-07-26T18:50:00+02:00"
+description: "Learn Rust ownership by tracing values, moves, shared and mutable borrows, slices, and lifetimes through small compiler-checked examples."
+tags: ["rust", "ownership", "borrowing", "memory-safety"]
 categories: ["programming-languages", "software-engineering"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-21"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-21T08:47:15.500705Z"
-verification_version: "1"
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-19"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and Rust documentation reviewed"
+verification_date: "2026-07-26T16:50:00Z"
+verification_version: "2"
+version_context: "The Rust Programming Language ownership chapters reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-Rust uses ownership rules to manage resources without requiring a garbage collector for ordinary memory safety. Each value has an owner, assignment or function calls can move ownership, and references let code borrow a value without taking ownership. The compiler checks these relationships, which means many errors are best understood as questions about who owns a value, how long a borrow lasts, and whether mutation could overlap another access.
+Rust ownership is not a collection of arbitrary compiler restrictions. It is a static accounting system for three questions:
 
-## A working model for Rust Ownership and Borrowing: A Practical Mental Model
+1. Who is responsible for a value?
+2. Who may access it right now?
+3. How long is that access valid?
 
-For each short example, label the owner, every move, each immutable or mutable borrow, and the final use of each variable. Predict which line should compile before running the compiler. Use a String or Vec for resource-owning behavior and a simple Copy scalar as a contrast. Keep lifetime syntax out of the first pass; the goal is to understand the data flow that lifetime annotations later describe.
+If you trace those three facts instead of fighting individual error messages, moves, references, slices, and lifetimes become variations of one model.
 
-## Apply the model to a concrete case
+![Rust ownership diagram showing one owner, shared borrows or one mutable borrow, and the value being dropped at the end of its scope](concept-flow.svg)
 
-Consider a function that receives a line as String, finds the first word, and then needs the original line again. Taking String by value transfers ownership to the function unless it returns the value, which is unnecessary when only inspection is required. Taking &str lets the function accept a borrowed view and return a slice tied to the input. While that returned slice is used, the original String cannot be cleared through a mutable borrow because the slice would point into changed storage. Once the slice's last use is complete, mutation can proceed. The compiler error is therefore a useful statement about the relationship between the view and its owner, not an arbitrary restriction on strings.
+## The three ownership rules
 
-## Source boundaries for programming languages
+The Rust Book summarizes the model:
 
-### What Is Ownership?
-
-Use What Is Ownership? for this boundary of the topic: Use the ownership chapter for scope, moves, cloning, Copy behavior, function arguments, returns, and drop.
-### References and Borrowing
-
-Use References and Borrowing for this boundary of the topic: Use the references and borrowing chapter for shared references, mutable references, and dangling-reference prevention.
-### The Slice Type
-
-Use The Slice Type for this boundary of the topic: Use the slice chapter for string slices, range boundaries, and general slice types.
-
-## Reason through rust ownership borrowing practical mental model
-
-The flow below connects the three questions to ask when the compiler rejects an access: whether ownership moved, which kind of borrow is still active, and whether a slice remains tied to its source. Use that sequence while tracing the concrete `String` example rather than treating each error as an isolated rule.
-
-![Ownership, borrowing, and slice reasoning sequence](concept-flow.svg)
-
-### 1. Track ownership and moves through scope
-
-A value is dropped when its owner leaves scope unless ownership has moved elsewhere. For heap-owning values, a plain assignment normally transfers ownership rather than duplicating the allocation, so using the old binding afterward is rejected. Passing a value to a function follows the same ownership rules. Return ownership, borrow the value, or clone deliberately based on the required semantics; cloning is a data-copy decision, not a universal repair for a move error.
-### 2. Choose immutable or mutable borrowing
-
-An immutable reference permits access without transferring ownership, and multiple immutable references can coexist when their uses are compatible. A mutable reference permits mutation but must not overlap another active borrow that would make the access ambiguous. Modern borrow checking can end a borrow at its last use rather than only at the lexical block boundary. Read the error around the actual use sites and reduce the lifetime of a reference by restructuring work, not by scattering clones.
-### 3. Use slices as borrowed views into contiguous data
-
-A slice references a range of a collection without owning that collection. String slices and array slices keep the view connected to the borrowed source, which prevents code from clearing or replacing the source while the view is still used. Prefer a slice parameter when a function needs to inspect part or all of a sequence but does not require ownership. This broadens the caller contract and makes the non-owning relationship explicit.
-
-## Worked code example
-
-### Return a borrowed slice instead of taking ownership
+- Every value has an owner.
+- There can be only one owner at a time.
+- When the owner leaves scope, the value is dropped.
 
 ```rust
-fn first_word(text: &str) -> &str {
-    match text.as_bytes().iter().position(|byte| *byte == b' ') {
-        Some(index) => &text[..index],
-        None => text,
-    }
+fn main() {
+    let message = String::from("hello"); // message owns the String
+    println!("{message}");
+} // String::drop runs here
+```
+
+`String` owns heap-allocated data. The stack variable contains metadata such as a pointer, length, and capacity; the `String` value is responsible for releasing its allocation.
+
+## Assignment can move a value
+
+```rust
+let first = String::from("hello");
+let second = first;
+
+// println!("{first}"); // error: value borrowed after move
+println!("{second}");
+```
+
+Copying the small stack metadata while allowing both variables to free the same allocation would be unsafe. Rust instead treats the assignment as a **move**: `second` becomes the owner and `first` is no longer usable.
+
+This differs for types implementing `Copy`:
+
+```rust
+let first = 7;
+let second = first;
+println!("{first} {second}");
+```
+
+Integers are copied because duplicating their bits produces two independent valid values. You can request a deep duplication of a `String` explicitly:
+
+```rust
+let first = String::from("hello");
+let second = first.clone();
+```
+
+Use `clone()` when you truly need another owned value, not as a reflex to silence the borrow checker.
+
+## Functions make ownership visible
+
+```rust
+fn length_owned(text: String) -> usize {
+    text.len()
+} // text is dropped
+
+fn main() {
+    let name = String::from("Ada");
+    let size = length_owned(name);
+    // name is no longer available
+}
+```
+
+If the function only needs to inspect the string, taking ownership is unnecessarily strong. Borrow it:
+
+```rust
+fn length(text: &str) -> usize {
+    text.len()
 }
 
 fn main() {
-    let line = String::from("ownership made visible");
-    let word = first_word(&line);
+    let name = String::from("Ada");
+    let size = length(&name);
+    println!("{name}: {size}");
+}
+```
+
+`&str` also accepts string literals and slices of a `String`, making the API more flexible than `&String`.
+
+## Borrowing: access without ownership
+
+A reference temporarily grants access while the original owner remains responsible for the value.
+
+Rust's central borrowing rule is:
+
+> At a given time, you may have either many shared references or one mutable reference to a value.
+
+Shared borrows can coexist:
+
+```rust
+let text = String::from("read me");
+let left = &text;
+let right = &text;
+println!("{left} / {right}");
+```
+
+A mutable borrow needs exclusive access:
+
+```rust
+let mut text = String::from("hello");
+let edit = &mut text;
+edit.push_str(", Rust");
+println!("{edit}");
+```
+
+Exclusivity prevents a reader from observing a collection while another reference reallocates or mutates it.
+
+```rust
+let mut values = vec![10, 20, 30];
+let first = &values[0];
+// values.push(40); // could reallocate, invalidating first
+println!("{first}");
+```
+
+The compiler rejects the mutation while `first` is still used. The rule prevents a real dangling-reference bug.
+
+## Borrows end at their last use
+
+Modern Rust uses non-lexical lifetime analysis, so a borrow can end before the closing brace:
+
+```rust
+let mut text = String::from("hello");
+
+let shared = &text;
+println!("{shared}"); // last use of shared
+
+let exclusive = &mut text; // valid
+exclusive.push('!');
+```
+
+When a compiler error says a mutable and immutable borrow overlap, mark the last use of each reference. The issue is often narrower than the entire visual scope.
+
+## Slices are borrowed views
+
+A slice describes part of a collection without owning it:
+
+```rust
+fn first_word(text: &str) -> &str {
+    for (index, byte) in text.bytes().enumerate() {
+        if byte == b' ' {
+            return &text[..index];
+        }
+    }
+    text
+}
+
+fn main() {
+    let sentence = String::from("ownership made visible");
+    let word = first_word(&sentence);
     println!("{word}");
 }
 ```
 
-The caller retains ownership of the String, and the returned slice cannot outlive the borrowed input. The relationship is visible in the function signature without cloning the text.
+The returned `&str` is tied to the input borrow. Rust will not allow `sentence` to be dropped or mutably changed while `word` is later used.
 
-## Rust Ownership and Borrowing: A Practical Mental Model: decisions and tradeoffs
+This function searches for the ASCII space byte, so each returned boundary is valid UTF-8: ASCII space is one byte and cannot appear inside another UTF-8 code point. A production tokenizer still needs a deliberate definition of whitespace and words.
 
-| Situation or decision | Tradeoff or common failure mode | Validation question |
-| --- | --- | --- |
-| A binding cannot be used after assignment or a function call | Ownership of a non-Copy value moved to another binding or parameter | Decide whether the callee should borrow, return ownership, or intentionally receive a clone |
-| A second mutable or immutable access is rejected | An earlier mutable borrow is still used later | Locate the last use of each reference and shorten or reorder the overlapping work |
-| A collection cannot be mutated while a slice is used | The slice remains a live borrowed view into that collection | Finish using the slice before mutation or return owned data when independence is required |
+## Lifetimes describe relationships
 
-## Common mistakes in programming languages
+Most lifetimes are inferred. An annotation does not extend how long data lives; it tells the compiler how reference lifetimes relate.
 
-Cloning every value after a move error hides ownership decisions and can introduce allocations that the design never intended. Adding lifetime annotations before tracing actual borrows often makes signatures harder without changing the invalid data flow. Another mistake is assuming a reference's scope lasts to the closing brace even when its last use is earlier, or the reverse: assuming a borrow ended while a later println still uses it. Returning a reference to a local owned value is invalid because that owner is dropped at function exit. Prefer owned return values when data must outlive the source, and prefer slices or references when the caller retains ownership for the full use.
+```rust
+fn longer<'a>(left: &'a str, right: &'a str) -> &'a str {
+    if left.len() >= right.len() { left } else { right }
+}
+```
 
-## Practical implementation checklist
+The return value cannot outlive the shorter usable input lifetime because it may refer to either argument.
 
-1. Label the owner before deciding whether a function parameter should take, share, or mutate a value.
-2. Distinguish a move from a deep clone and explain the cost of the chosen operation.
-3. Find the last use of every reference when diagnosing an overlapping-borrow error.
-4. Prefer slice inputs for read-only sequence operations that do not need ownership.
-5. Verify predictions with a minimal compiler example before changing a larger design.
+This is invalid:
 
-## Related implementation context
+```rust
+fn dangling() -> &str {
+    let temporary = String::from("gone");
+    &temporary
+} // temporary is dropped here
+```
 
-[C# vs Java: A Practical Comparison for 2025](/posts/csharp-vs-java/) and [Why I Still Prefer Java Over Python](/posts/why-i-like-java-more-than-python/)
+There is no truthful lifetime annotation that can fix it. Return an owned `String`, or borrow data owned outside the function.
 
-## Version and verification boundary
+## A useful API decision table
 
-The explanation follows the current stable edition of The Rust Programming Language checked at publication time; compiler diagnostics and edition-specific ergonomics can evolve while the core ownership rules remain the reference boundary.
+| Parameter/return type | Meaning |
+| --- | --- |
+| `T` | Transfer or create ownership |
+| `&T` | Read a borrowed value |
+| `&mut T` | Mutate with exclusive borrowed access |
+| `String` | Owned growable UTF-8 string |
+| `&str` | Borrowed string view |
+| `Vec<T>` | Owned growable sequence |
+| `&[T]` | Borrowed sequence view |
 
-## Summary
+Prefer the weakest capability that satisfies the function. A parser that only reads input should usually accept `&str`, not `String`; a builder returning independent data should usually return an owned value.
 
-Rust ownership errors become predictable when moves, last uses, and borrowed views are drawn explicitly. Borrow for temporary access, move when ownership should transfer, clone only when a real duplicate is needed, and let slices express non-owning views into sequences.
+## Read borrow-checker errors systematically
+
+When code fails:
+
+1. Identify the value and its current owner.
+2. Mark every move.
+3. Mark shared and mutable borrows.
+4. Find the last use of each borrow.
+5. Ask whether the function really needs ownership or mutation.
+6. Change the data flow before reaching for `clone()`.
+
+Common design fixes include:
+
+- borrow instead of taking ownership;
+- return ownership when a caller still needs the value;
+- shorten a reference's useful scope;
+- split a struct into independently borrowable fields;
+- compute a result before taking a mutable borrow;
+- return owned data when it must outlive the input.
+
+## A compact worked refactor
+
+This version consumes its input:
+
+```rust
+fn normalize(mut name: String) -> String {
+    name.make_ascii_lowercase();
+    name
+}
+```
+
+That is excellent when transfer is intended. If the caller must retain the original, choose a different contract:
+
+```rust
+fn normalized(name: &str) -> String {
+    name.to_ascii_lowercase()
+}
+```
+
+The second function borrows the input and returns new owned output. Neither is universally better; ownership makes the cost and responsibility explicit at the call site.
+
+Ownership is Rust's vocabulary for resource lifetime. Borrowing is temporary access. Lifetimes are the compiler's proof that references cannot outlive their data. Once you track those relationships, many “borrow checker problems” reveal themselves as ordinary data-flow decisions.
 
 ## Sources
 
-- [What Is Ownership?](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
-- [References and Borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
-- [The Slice Type](https://doc.rust-lang.org/book/ch04-03-slices.html)
+- [What Is Ownership? — The Rust Programming Language](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
+- [References and Borrowing — The Rust Programming Language](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
+- [The Slice Type — The Rust Programming Language](https://doc.rust-lang.org/book/ch04-03-slices.html)
+- [Validating References with Lifetimes — The Rust Programming Language](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html)

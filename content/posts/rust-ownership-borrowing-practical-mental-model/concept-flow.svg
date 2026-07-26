@@ -1,61 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="608" viewBox="0 0 1400 608" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ecfdf5"/><stop offset="1" stop-color="#f8fafc"/></linearGradient>
-<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#059669"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
-<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
-<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#059669"/></marker>
-</defs>
-<rect width="1400" height="608" rx="32" fill="url(#bg)"/>
-<rect width="1400" height="608" rx="32" fill="url(#dots)"/>
-<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
-<title id="title">Trace a Rust value from ownership to safe reuse</title>
-<desc id="desc">A detailed sequence diagram explaining Trace a Rust value from ownership to safe reuse.</desc>
-<rect x="1190" y="34" width="150" height="34" rx="17" fill="#d1fae5"/>
-<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#059669">SEQUENCE</text>
-<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Trace a Rust value from ownership to safe reuse</text>
-<text x="72" y="106" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">A String can move, be borrowed as a view, and become mutable again only after the final borrow use.</text>
-<line x1="72" y1="125" x2="1328" y2="125" stroke="#059669" stroke-opacity="0.18" stroke-width="2"/>
-<path d="M 362.5 276.0 C 362.5 310.0, 392.5 242.0, 392.5 276.0" fill="none" stroke="#059669" stroke-width="3" stroke-opacity="0.65" marker-end="url(#arrow)"/>
-<path d="M 685.0 276.0 C 685.0 310.0, 715.0 242.0, 715.0 276.0" fill="none" stroke="#059669" stroke-width="3" stroke-opacity="0.65" marker-end="url(#arrow)"/>
-<path d="M 1007.5 276.0 C 1007.5 310.0, 1037.5 242.0, 1037.5 276.0" fill="none" stroke="#059669" stroke-width="3" stroke-opacity="0.65" marker-end="url(#arrow)"/>
-<rect x="70.0" y="167" width="292.5" height="218" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="70.0" y="167" width="8" height="218" rx="4" fill="url(#accent)"/>
-<circle cx="104.0" cy="201" r="18" fill="#d1fae5"/>
-<text x="104.0" y="207" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">1</text>
-<text x="134.0" y="206" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">OWNER</text>
-<text x="94.0" y="245" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Own the String value</text>
-<text x="94.0" y="284" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">line owns the heap allocation and is</text>
-<text x="94.0" y="304" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">responsible for its eventual drop.</text>
-<rect x="392.5" y="167" width="292.5" height="218" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="392.5" y="167" width="8" height="218" rx="4" fill="url(#accent)"/>
-<circle cx="426.5" cy="201" r="18" fill="#d1fae5"/>
-<text x="426.5" y="207" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">2</text>
-<text x="456.5" y="206" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">BORROW</text>
-<text x="416.5" y="245" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Borrow a read-only &amp;str</text>
-<text x="416.5" y="284" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">first_word inspects the bytes</text>
-<text x="416.5" y="304" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">without taking or duplicating</text>
-<text x="416.5" y="324" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">ownership.</text>
-<rect x="715.0" y="167" width="292.5" height="218" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="715.0" y="167" width="8" height="218" rx="4" fill="url(#accent)"/>
-<circle cx="749.0" cy="201" r="18" fill="#d1fae5"/>
-<text x="749.0" y="207" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">3</text>
-<text x="779.0" y="206" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">VIEW</text>
-<text x="739.0" y="245" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Use the returned slice</text>
-<text x="739.0" y="284" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">word remains a view into line, so</text>
-<text x="739.0" y="304" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">the source storage must stay valid.</text>
-<rect x="1037.5" y="167" width="292.5" height="218" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="1037.5" y="167" width="8" height="218" rx="4" fill="url(#accent)"/>
-<circle cx="1071.5" cy="201" r="18" fill="#d1fae5"/>
-<text x="1071.5" y="207" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">4</text>
-<text x="1101.5" y="206" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">OUTPUT</text>
-<text x="1061.5" y="245" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Mutate after the last</text>
-<text x="1061.5" y="270" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">use</text>
-<text x="1061.5" y="309" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Once word is no longer used, line</text>
-<text x="1061.5" y="329" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">can be cleared, moved, or borrowed</text>
-<text x="1061.5" y="349" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">mutably.</text>
-<text x="72" y="536" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#059669">TRANSITIONS</text>
-<text x="190" y="536" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">shared reference • slice tied to input • borrow ends at last use</text>
-<text x="72" y="570" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#059669">TAKEAWAY</text>
-<text x="175" y="570" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">Trace owner, borrow kind, and last use before adding clones or lifetime annotations.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">Rust ownership and borrowing</title>
+  <desc id="desc">One owner controls a value. The owner can grant multiple shared borrows or one exclusive mutable borrow. The value is dropped when its owner leaves scope.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#18120f"/><stop offset="1" stop-color="#59321f"/></linearGradient>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#fdba74"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".32"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="64" y="70" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#fff7ed">Rust tracks responsibility, access, and lifetime</text>
+  <text x="64" y="106" font-family="Inter,Arial,sans-serif" font-size="18" fill="#fed7aa">A reference borrows access. It never becomes responsible for dropping the value.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="64" y="195" width="244" height="180" rx="24" fill="#ffedd5"/>
+    <text x="186" y="243" text-anchor="middle" font-size="18" font-weight="700" fill="#9a3412">ONE OWNER</text>
+    <text x="186" y="290" text-anchor="middle" font-size="28" font-weight="700" fill="#431407">String</text>
+    <text x="186" y="330" text-anchor="middle" font-size="15" fill="#7c2d12">drops the allocation</text>
+
+    <rect x="425" y="158" width="312" height="252" rx="24" fill="#e0e7ff"/>
+    <text x="581" y="205" text-anchor="middle" font-size="18" font-weight="700" fill="#3730a3">CHOOSE ONE ACCESS MODE</text>
+    <rect x="457" y="236" width="118" height="116" rx="16" fill="#c7d2fe"/>
+    <text x="516" y="274" text-anchor="middle" font-size="24" font-weight="700" fill="#312e81">&amp;T</text>
+    <text x="516" y="306" text-anchor="middle" font-size="14" fill="#4338ca">many shared</text>
+    <text x="516" y="330" text-anchor="middle" font-size="14" fill="#4338ca">readers</text>
+    <text x="600" y="299" text-anchor="middle" font-size="24" font-weight="700" fill="#64748b">OR</text>
+    <rect x="618" y="236" width="87" height="116" rx="16" fill="#fecdd3"/>
+    <text x="662" y="274" text-anchor="middle" font-size="22" font-weight="700" fill="#9f1239">&amp;mut T</text>
+    <text x="662" y="306" text-anchor="middle" font-size="14" fill="#be123c">one</text>
+    <text x="662" y="330" text-anchor="middle" font-size="14" fill="#be123c">writer</text>
+
+    <rect x="860" y="195" width="274" height="180" rx="24" fill="#dcfce7"/>
+    <text x="997" y="243" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">BORROWED VIEW</text>
+    <text x="997" y="290" text-anchor="middle" font-size="28" font-weight="700" fill="#14532d">&amp;str / &amp;[T]</text>
+    <text x="997" y="330" text-anchor="middle" font-size="15" fill="#166534">cannot outlive the owner</text>
+  </g>
+
+  <path d="M308 285 H410" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M737 285 H845" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+
+  <rect x="64" y="482" width="1070" height="120" rx="22" fill="#ffffff" fill-opacity=".08" stroke="#9b6a50"/>
+  <text x="96" y="525" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#fdba74">END OF OWNER'S SCOPE</text>
+  <text x="96" y="568" font-family="Inter,Arial,sans-serif" font-size="23" fill="#fff7ed">drop(value) · all borrows must already be finished</text>
+  <text x="64" y="672" font-family="Inter,Arial,sans-serif" font-size="15" fill="#fed7aa">Moves transfer ownership. clone() creates independent owned data. Lifetime annotations describe relationships.</text>
 </svg>

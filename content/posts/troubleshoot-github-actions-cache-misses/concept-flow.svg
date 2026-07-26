@@ -1,73 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1150" viewBox="0 0 1400 1150" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#fffbeb"/><stop offset="1" stop-color="#fff7ed"/></linearGradient>
-<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#d97706"/><stop offset="1" stop-color="#ea580c"/></linearGradient>
-<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
-<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#d97706"/></marker>
-</defs>
-<rect width="1400" height="1150" rx="32" fill="url(#bg)"/>
-<rect width="1400" height="1150" rx="32" fill="url(#dots)"/>
-<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
-<title id="title">GitHub Actions cache restore and save lifecycle</title>
-<desc id="desc">A detailed cycle diagram explaining GitHub Actions cache restore and save lifecycle.</desc>
-<rect x="1190" y="34" width="150" height="34" rx="17" fill="#fef3c7"/>
-<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#d97706">CYCLE</text>
-<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">GitHub Actions cache restore and save lifecycle</text>
-<text x="72" y="106" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">A cache is useful only when the evaluated key, accessible scope, populated path, and successful save line up</text>
-<text x="72" y="129" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">across runs.</text>
-<line x1="72" y1="148" x2="1328" y2="148" stroke="#d97706" stroke-opacity="0.18" stroke-width="2"/>
-<path d="M 834.6 318.7 Q 902.3 445.5, 1011.7 499.3" fill="none" stroke="#d97706" stroke-width="4" stroke-opacity="0.58" marker-end="url(#arrow)"/>
-<path d="M 1020.4 578.7 Q 911.0 632.5, 843.3 759.3" fill="none" stroke="#d97706" stroke-width="4" stroke-opacity="0.58" marker-end="url(#arrow)"/>
-<path d="M 565.4 761.3 Q 497.7 634.5, 388.3 580.7" fill="none" stroke="#d97706" stroke-width="4" stroke-opacity="0.58" marker-end="url(#arrow)"/>
-<path d="M 379.6 501.3 Q 489.0 447.5, 556.7 320.7" fill="none" stroke="#d97706" stroke-width="4" stroke-opacity="0.58" marker-end="url(#arrow)"/>
-<circle cx="700.0" cy="540.0" r="118" fill="#ffffff" stroke="#d97706" stroke-width="3" filter="url(#shadow)"/>
-<circle cx="700.0" cy="540.0" r="100" fill="#fef3c7"/>
-<text x="700.0" y="506.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="850" letter-spacing="1.4" fill="#d97706">FEEDBACK LOOP</text>
-<text x="700.0" y="538.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="650" fill="#334155">One cache state carried</text>
-<text x="700.0" y="560.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="650" fill="#334155">across comparable</text>
-<text x="700.0" y="582.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="650" fill="#334155">workflow runs</text>
-<rect x="550.0" y="175.0" width="300.0" height="210.0" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="550.0" y="175.0" width="8" height="210.0" rx="4" fill="url(#accent)"/>
-<circle cx="584.0" cy="209.0" r="18" fill="#fef3c7"/>
-<text x="584.0" y="215.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#d97706">1</text>
-<text x="614.0" y="214.0" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#d97706">INPUT</text>
-<text x="574.0" y="253.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Evaluate key and scope</text>
-<text x="574.0" y="292.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">OS, lockfile hash, ref, and</text>
-<text x="574.0" y="312.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">event produce the key visible</text>
-<text x="574.0" y="332.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">to this run.</text>
-<rect x="1005.0" y="435.0" width="300.0" height="210.0" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="1005.0" y="435.0" width="8" height="210.0" rx="4" fill="url(#accent)"/>
-<circle cx="1039.0" cy="469.0" r="18" fill="#fef3c7"/>
-<text x="1039.0" y="475.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#d97706">2</text>
-<text x="1069.0" y="474.0" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#d97706">DECISION</text>
-<text x="1029.0" y="513.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Resolve restore</text>
-<text x="1029.0" y="538.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">outcome</text>
-<text x="1029.0" y="577.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Classify an exact hit, prefix</text>
-<text x="1029.0" y="597.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">restore, or complete miss from</text>
-<text x="1029.0" y="617.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">the action output.</text>
-<rect x="550.0" y="695.0" width="300.0" height="210.0" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="550.0" y="695.0" width="8" height="210.0" rx="4" fill="url(#accent)"/>
-<circle cx="584.0" cy="729.0" r="18" fill="#fef3c7"/>
-<text x="584.0" y="735.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#d97706">3</text>
-<text x="614.0" y="734.0" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#d97706">ACTION</text>
-<text x="574.0" y="773.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Run job and populate</text>
-<text x="574.0" y="798.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">path</text>
-<text x="574.0" y="837.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">The configured path must</text>
-<text x="574.0" y="857.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">contain dependency data before</text>
-<text x="574.0" y="877.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">the post-job phase.</text>
-<rect x="95.0" y="435.0" width="300.0" height="210.0" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="95.0" y="435.0" width="8" height="210.0" rx="4" fill="url(#accent)"/>
-<circle cx="129.0" cy="469.0" r="18" fill="#fef3c7"/>
-<text x="129.0" y="475.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#d97706">4</text>
-<text x="159.0" y="474.0" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#d97706">OUTPUT</text>
-<text x="119.0" y="513.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Save after successful</text>
-<text x="119.0" y="538.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">completion</text>
-<text x="119.0" y="577.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Successful jobs save the key</text>
-<text x="119.0" y="597.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">for future runs, subject to</text>
-<text x="119.0" y="617.0" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">scope and eviction.</text>
-<text x="72" y="1078" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#d97706">TRANSITIONS</text>
-<text x="190" y="1078" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">lookup • use or rebuild • post-job phase • next comparable run</text>
-<text x="72" y="1112" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#d97706">TAKEAWAY</text>
-<text x="175" y="1112" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">Preserve the evaluated key and cache-hit output before changing restore keys, paths, or repository inventory.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">GitHub Actions cache matching and save flow</title>
+  <desc id="desc">The workflow searches for an exact key and version in accessible branch scope, then restore-key prefixes, then saves a new immutable cache after a successful job.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#0b111b"/><stop offset="1" stop-color="#26344d"/></linearGradient>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#a5b4fc"/></marker>
+    <marker id="g" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#4ade80"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".32"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="64" y="70" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#f8fafc">A cache match has three coordinates</text>
+  <text x="64" y="106" font-family="Inter,Arial,sans-serif" font-size="18" fill="#cbd5e1">Visible key + internal version + accessible ref scope</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="64" y="184" width="242" height="156" rx="22" fill="#e0e7ff"/>
+    <text x="185" y="228" text-anchor="middle" font-size="17" font-weight="700" fill="#3730a3">LOOKUP INPUT</text>
+    <text x="96" y="268" font-size="16" fill="#312e81">key: npm-Linux-a81...</text>
+    <text x="96" y="296" font-size="16" fill="#312e81">path: ~/.npm</text>
+    <text x="96" y="324" font-size="16" fill="#312e81">ref: refs/heads/main</text>
+
+    <rect x="390" y="168" width="324" height="188" rx="22" fill="#f8fafc"/>
+    <text x="552" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#0f172a">MATCH ORDER</text>
+    <circle cx="431" cy="249" r="18" fill="#4f46e5"/><text x="431" y="255" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">1</text>
+    <text x="465" y="255" font-size="16" fill="#334155">exact key + version</text>
+    <circle cx="431" cy="292" r="18" fill="#4f46e5"/><text x="431" y="298" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">2</text>
+    <text x="465" y="298" font-size="16" fill="#334155">restore-key prefixes</text>
+    <circle cx="431" cy="335" r="18" fill="#4f46e5"/><text x="431" y="341" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">3</text>
+    <text x="465" y="341" font-size="16" fill="#334155">permitted default-branch scope</text>
+
+    <rect x="798" y="168" width="336" height="188" rx="22" fill="#ecfdf5"/>
+    <text x="966" y="212" text-anchor="middle" font-size="17" font-weight="700" fill="#047857">RESULT</text>
+    <rect x="832" y="239" width="126" height="70" rx="14" fill="#bbf7d0"/>
+    <text x="895" y="269" text-anchor="middle" font-size="16" font-weight="700" fill="#166534">EXACT</text>
+    <text x="895" y="293" text-anchor="middle" font-size="14" fill="#166534">cache-hit=true</text>
+    <rect x="974" y="239" width="126" height="70" rx="14" fill="#fef3c7"/>
+    <text x="1037" y="269" text-anchor="middle" font-size="16" font-weight="700" fill="#92400e">PREFIX</text>
+    <text x="1037" y="293" text-anchor="middle" font-size="14" fill="#92400e">not exact</text>
+    <text x="966" y="337" text-anchor="middle" font-size="14" fill="#047857">otherwise: complete miss</text>
+  </g>
+
+  <path d="M306 262 H375" stroke="#a5b4fc" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M714 262 H783" stroke="#a5b4fc" stroke-width="5" marker-end="url(#a)"/>
+
+  <rect x="64" y="475" width="1070" height="128" rx="22" fill="#ffffff" fill-opacity=".08" stroke="#607089"/>
+  <text x="96" y="516" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#86efac">MISS + SUCCESSFUL JOB</text>
+  <text x="96" y="559" font-family="Inter,Arial,sans-serif" font-size="22" fill="#f8fafc">Post-job save creates a new immutable key</text>
+  <text x="756" y="559" font-family="Inter,Arial,sans-serif" font-size="16" fill="#cbd5e1">failed/cancelled job → may not save</text>
+  <path d="M966 356 V460" stroke="#4ade80" stroke-width="5" marker-end="url(#g)"/>
+  <text x="64" y="672" font-family="Inter,Arial,sans-serif" font-size="15" fill="#cbd5e1">Expose the evaluated hash, ref, path, and inventory before deleting caches or changing keys.</text>
 </svg>

@@ -1,78 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1032" viewBox="0 0 1400 1032" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="1" stop-color="#fdf2f8"/></linearGradient>
-<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#db2777"/></linearGradient>
-<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
-<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#7c3aed"/></marker>
-</defs>
-<rect width="1400" height="1032" rx="32" fill="url(#bg)"/>
-<rect width="1400" height="1032" rx="32" fill="url(#dots)"/>
-<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
-<title id="title">Offset positions versus stable cursor boundaries</title>
-<desc id="desc">A detailed comparison diagram explaining Offset positions versus stable cursor boundaries.</desc>
-<rect x="1190" y="34" width="150" height="34" rx="17" fill="#ede9fe"/>
-<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#7c3aed">COMPARISON</text>
-<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Offset positions versus stable cursor boundaries</text>
-<text x="72" y="106" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">The continuation contract determines how inserts, filters, ordering, retries, and discoverable navigation</text>
-<text x="72" y="129" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">behave.</text>
-<line x1="72" y1="148" x2="1328" y2="148" stroke="#7c3aed" stroke-opacity="0.18" stroke-width="2"/>
-<rect x="70" y="186" width="595" height="714" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="70" y="186" width="595" height="58" rx="28" fill="#ede9fe"/>
-<text x="100" y="223" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#7c3aed">Offset / limit</text>
-<rect x="88" y="260" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="88" y="260" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="122" cy="294" r="18" fill="#ede9fe"/>
-<text x="122" y="300" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">1</text>
-<text x="152" y="299" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">REQUEST</text>
-<text x="112" y="338" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Continue by row position</text>
-<text x="112" y="377" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">The client sends an offset and limit, which makes numbered-</text>
-<text x="112" y="397" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">page access straightforward.</text>
-<rect x="88" y="474" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="88" y="474" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="122" cy="508" r="18" fill="#ede9fe"/>
-<text x="122" y="514" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">2</text>
-<text x="152" y="513" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">NAVIGATION</text>
-<text x="112" y="552" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Support direct page jumps</text>
-<text x="112" y="591" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">A client can request page 20 directly, but the position has</text>
-<text x="112" y="611" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">meaning only for the current ordering.</text>
-<rect x="88" y="688" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="88" y="688" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="122" cy="722" r="18" fill="#ede9fe"/>
-<text x="122" y="728" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">3</text>
-<text x="152" y="727" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">RISK</text>
-<text x="112" y="766" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Earlier writes shift later pages</text>
-<text x="112" y="805" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Inserts or deletes before the offset can duplicate or skip</text>
-<text x="112" y="825" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">records during traversal.</text>
-<rect x="735" y="186" width="595" height="714" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#cbd5e1" stroke-width="1.5"/>
-<rect x="735" y="186" width="595" height="58" rx="28" fill="#ede9fe"/>
-<text x="765" y="223" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#7c3aed">Cursor / links</text>
-<rect x="753" y="260" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="753" y="260" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="787" cy="294" r="18" fill="#ede9fe"/>
-<text x="787" y="300" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">1</text>
-<text x="817" y="299" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">BOUNDARY</text>
-<text x="777" y="338" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Continue after a stable key</text>
-<text x="777" y="377" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">A timestamp plus unique ID defines the exact ordered boundary</text>
-<text x="777" y="397" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">already observed.</text>
-<rect x="753" y="474" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="753" y="474" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="787" cy="508" r="18" fill="#ede9fe"/>
-<text x="787" y="514" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">2</text>
-<text x="817" y="513" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">CONTRACT</text>
-<text x="777" y="552" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Bind token to query context</text>
-<text x="777" y="591" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">The opaque token carries filter, sort, direction,</text>
-<text x="777" y="611" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">authorization scope, and expiry.</text>
-<rect x="753" y="688" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="753" y="688" width="8" height="190" rx="4" fill="url(#accent)"/>
-<circle cx="787" cy="722" r="18" fill="#ede9fe"/>
-<text x="787" y="728" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">3</text>
-<text x="817" y="727" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">OUTPUT</text>
-<text x="777" y="766" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Publish the next request</text>
-<text x="777" y="805" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">REST Link relations or GraphQL pageInfo let clients follow</text>
-<text x="777" y="825" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">server-defined navigation.</text>
-<circle cx="700" cy="215" r="26" fill="url(#accent)" stroke="#ffffff" stroke-width="4"/>
-<text x="700" y="221" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#ffffff">VS</text>
-<text x="72" y="994" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#7c3aed">TAKEAWAY</text>
-<text x="175" y="994" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">Choose the boundary from mutation behavior and navigation needs, then make ordering and termination explicit.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">Offset, cursor, and link pagination</title>
+  <desc id="desc">Offset pagination can drift after an insertion, while a composite cursor continues after a stable ordering boundary and a next link makes navigation discoverable.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#101729"/><stop offset="1" stop-color="#28356d"/></linearGradient>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#a5b4fc"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".3"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="64" y="70" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#eef2ff">Pagination defines continuity</text>
+  <text x="64" y="106" font-family="Inter,Arial,sans-serif" font-size="18" fill="#c7d2fe">Positions drift. A cursor remembers an ordering boundary. Links expose how to continue.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="64" y="170" width="496" height="220" rx="22" fill="#fff1f2"/>
+    <text x="96" y="214" font-size="18" font-weight="700" fill="#be123c">OFFSET: POSITION MOVES</text>
+    <text x="96" y="253" font-size="15" fill="#881337">Page 1</text>
+    <g text-anchor="middle" font-size="18" font-weight="700" fill="#4c0519">
+      <rect x="178" y="228" width="62" height="48" rx="9" fill="#fecdd3"/><text x="209" y="258">100</text>
+      <rect x="250" y="228" width="62" height="48" rx="9" fill="#fecdd3"/><text x="281" y="258">99</text>
+      <rect x="322" y="228" width="62" height="48" rx="9" fill="#fecdd3"/><text x="353" y="258">98</text>
+    </g>
+    <text x="96" y="323" font-size="15" fill="#881337">Insert 101, then OFFSET 3</text>
+    <g text-anchor="middle" font-size="18" font-weight="700" fill="#4c0519">
+      <rect x="300" y="300" width="62" height="48" rx="9" fill="#fda4af"/><text x="331" y="330">98</text>
+      <rect x="372" y="300" width="62" height="48" rx="9" fill="#fecdd3"/><text x="403" y="330">97</text>
+      <rect x="444" y="300" width="62" height="48" rx="9" fill="#fecdd3"/><text x="475" y="330">96</text>
+    </g>
+    <text x="96" y="371" font-size="14" font-weight="700" fill="#be123c">98 is duplicated</text>
+
+    <rect x="640" y="170" width="496" height="220" rx="22" fill="#ecfdf5"/>
+    <text x="672" y="214" font-size="18" font-weight="700" fill="#047857">CURSOR: CONTINUE AFTER BOUNDARY</text>
+    <rect x="672" y="242" width="432" height="70" rx="14" fill="#d1fae5"/>
+    <text x="888" y="272" text-anchor="middle" font-size="16" font-weight="700" fill="#065f46">(published_at, id) &lt; (:time, :id)</text>
+    <text x="888" y="297" text-anchor="middle" font-size="14" fill="#047857">ORDER BY published_at DESC, id DESC</text>
+    <text x="672" y="351" font-size="15" fill="#065f46">Tie-breaker makes the boundary unique.</text>
+    <text x="672" y="375" font-size="15" fill="#065f46">Opaque token binds filters + version.</text>
+  </g>
+
+  <rect x="64" y="485" width="1072" height="118" rx="22" fill="#ffffff" fill-opacity=".09" stroke="#7281bf"/>
+  <text x="96" y="527" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#a5b4fc">DISCOVERABLE NAVIGATION</text>
+  <text x="96" y="570" font-family="ui-monospace,Consolas,monospace" font-size="20" fill="#f8fafc">Link: &lt;/articles?first=20&amp;after=abc&gt;; rel="next"</text>
+  <path d="M560 280 H625" stroke="#a5b4fc" stroke-width="5" marker-end="url(#a)"/>
+  <text x="64" y="672" font-family="Inter,Arial,sans-serif" font-size="15" fill="#c7d2fe">Cursor pagination stabilizes continuation; it does not create a snapshot unless the API says so.</text>
 </svg>

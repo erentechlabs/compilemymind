@@ -1,111 +1,205 @@
 ---
 title: "JavaScript Event Loop: Tasks, Microtasks, and Rendering"
 date: "2026-07-20T16:17:58+03:00"
-lastmod: "2026-07-20T18:45:00+03:00"
-description: "A browser-and-Node.js event-loop model for predicting synchronous work, tasks, microtasks, timers, and rendering without mixing runtime-specific rules."
-tags: ["javascript"]
+lastmod: "2026-07-26T18:35:00+02:00"
+description: "Predict browser JavaScript execution by tracing the call stack, tasks, microtasks, and rendering opportunities—and keep Node.js rules separate."
+tags: ["javascript", "event-loop", "browser-performance", "nodejs"]
 categories: ["web-development", "programming-languages"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-20"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-20T13:17:58.559083Z"
-verification_version: "1"
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-18"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and specifications reviewed"
+verification_date: "2026-07-26T16:35:00Z"
+verification_version: "2"
+version_context: "WHATWG HTML, MDN, and Node.js documentation reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-JavaScript execution order is predictable when three layers are kept separate: synchronous execution on the current stack, work queued by the host environment, and the checkpoints where queued callbacks become eligible to run. Browser event loops distinguish tasks from microtasks and coordinate rendering opportunities, while Node.js organizes host callbacks into event-loop phases with additional queue behavior. The language and each host runtime therefore contribute different parts of the result.
+JavaScript timing becomes much easier when you stop imagining one callback queue. In a browser, the useful model is:
 
-![JavaScript event loop task and microtask reasoning flow](concept-flow.svg)
+1. Run the current JavaScript job to completion.
+2. At the event loop's checkpoint, drain microtasks.
+3. The browser may update rendering.
+4. Select another eligible task and repeat.
 
-## A working model for JavaScript Event Loop: Tasks, Microtasks, and Rendering
+Node.js also runs JavaScript to completion, but its host loop has phases and Node-specific queues. A browser prediction should not be copied blindly into a Node.js program.
 
-Reduce an ordering question to a small example and label every operation as synchronous code, a task or phase callback, or a microtask. Record whether the example runs in a browser, Node.js, a worker, or a test runner because host APIs and scheduling rules differ. Predict the output before executing it, then run the exact runtime and version rather than inferring browser behavior from Node.js or the reverse.
+![Browser event-loop timeline showing a task, its microtask checkpoint, rendering opportunity, and the next task](concept-flow.svg)
 
-## Apply the model to a concrete case
+## The four moving parts
 
-Imagine browser code that logs A, registers a zero-delay timer to log B, schedules a resolved-promise reaction to log C, and then logs D. The current script task runs to completion, so A and D appear first. At the following microtask checkpoint, the promise reaction logs C. Only after that checkpoint can the timer task log B, subject to timer eligibility and other queued work. If the promise reaction queues another microtask, that new microtask can run in the same drain before the timer. Moving the example to Node.js requires a new model because timers, poll, check, process.nextTick, and promise reactions interact under Node's documented event-loop behavior rather than browser rendering steps.
+### Call stack
 
-## Worked code example
+The current function and everything it calls execute before another queued callback starts on the same JavaScript agent. This is **run-to-completion**. A timer becoming eligible does not interrupt a running function.
 
-### Predict task and microtask output
+### Tasks
+
+The browser queues work from sources such as the initial script, timers, user interaction, and network events. Specifications define task sources and ordering constraints; “the task queue” is a useful simplification, not a complete description of every queue.
+
+### Microtasks
+
+Promise reactions and callbacks passed to `queueMicrotask()` are microtasks. After the current task's JavaScript stack is empty, the browser performs a microtask checkpoint. It keeps processing until the microtask queue is empty—even when a microtask adds more microtasks.
+
+### Rendering opportunities
+
+Rendering is coordinated by the browser. It is not guaranteed after every task, and it cannot happen while long-running JavaScript occupies the main thread. `requestAnimationFrame()` schedules work for a rendering update, not for the microtask queue.
+
+## Predict the output before running it
 
 ```javascript
-console.log("A: current task");
+console.log("1: script");
 
-setTimeout(() => {
-  console.log("D: timer task");
-}, 0);
+setTimeout(() => console.log("5: timer"), 0);
 
-Promise.resolve().then(() => {
-  console.log("C: promise microtask");
+queueMicrotask(() => {
+  console.log("3: microtask");
+  queueMicrotask(() => console.log("4: nested microtask"));
 });
 
-console.log("B: current task");
+console.log("2: script end");
 ```
 
-In a browser, the current task prints A and B before the promise microtask prints C; the timer task becomes eligible afterward and prints D. Node.js examples must be reasoned about using Node's phase and queue rules instead of browser rendering checkpoints.
+The browser output is:
 
-## Source boundaries for web development
+```text
+1: script
+2: script end
+3: microtask
+4: nested microtask
+5: timer
+```
 
-### MDN JavaScript execution model
+Why:
 
-Use MDN JavaScript execution model for this boundary of the topic: Use MDN's execution model for agents, jobs, stacks, queues, and run-to-completion behavior.
-### HTML event loops
+- The script is the current task, so both synchronous logs run first.
+- The microtask checkpoint drains the first microtask and the nested one it adds.
+- A zero-millisecond timer means “eligible after the timer threshold,” not “run immediately.”
 
-Use HTML event loops for this boundary of the topic: Use the HTML event-loop specification for task queues, microtask checkpoints, and rendering update steps.
-### Node.js event loop
+This reasoning is stronger than memorizing “promises beat timers.” It identifies the current task boundary and the checkpoint.
 
-Use Node.js event loop for this boundary of the topic: Use the Node.js event-loop guide for phases, timers, poll, setImmediate, and nextTick distinctions.
+## DOM changes and rendering
 
-## Reason through javascript event loop tasks microtasks rendering
+This example separates mutation, observation, and paint:
 
-### 1. Finish the current job before dequeuing callbacks
+```javascript
+const box = document.querySelector(".box");
 
-A running JavaScript job executes to completion before another queued callback begins on the same agent. Function calls add execution contexts to the stack and returns remove them. APIs such as timers, I/O, or DOM events are provided by the host; calling them registers work but does not interrupt the current stack with their callback. This explains why synchronous output appears before a zero-delay timer and why a long computation can delay user-visible work.
-### 2. Place microtask checkpoints in the browser model
+box.textContent = "updated";
 
-After a task finishes and the stack is empty, the browser performs a microtask checkpoint before selecting another task; promise reactions and queueMicrotask callbacks use the microtask queue. New microtasks queued while draining can run in that same checkpoint, so an unbounded chain can postpone tasks and rendering. Rendering is an opportunity controlled by the browser event loop, not an action after every callback. Keep DOM updates, observer callbacks, and frame timing in that host context.
-### 3. Reason about Node.js by phase and version context
+queueMicrotask(() => {
+  console.log("DOM text:", box.textContent);
+});
 
-Node.js processes groups of callbacks in event-loop phases such as timers, poll, and check, while process.nextTick and promise microtasks have their own scheduling behavior around callbacks. A timer threshold says when a callback may become eligible, not the exact wall-clock instant it must run. I/O readiness, callback duration, and runtime changes can affect observed order. When order is part of correctness, test the supported Node.js versions and avoid depending on incidental timing between unrelated sources.
+requestAnimationFrame(() => {
+  console.log("next rendering update");
+});
+```
 
-## JavaScript Event Loop: Tasks, Microtasks, and Rendering: decisions and tradeoffs
+The DOM object changes synchronously, so the microtask reads `"updated"`. That does **not** prove the pixels were already painted. The animation-frame callback participates in a rendering update, but exact painting still belongs to the browser's rendering pipeline.
 
-| Situation or decision | Tradeoff or common failure mode | Validation question |
-| --- | --- | --- |
-| A zero-delay timer runs after synchronous logging | The timer callback cannot run until the current job completes | Separate registration time from the later task or timers-phase callback |
-| A promise reaction runs before a queued timer | The runtime drains relevant microtasks before selecting the next task | Mark the end of the current callback and identify the host's microtask checkpoint |
-| Browser and Node.js output differs | The example depends on host-specific queues, phases, or APIs | Model each host separately and verify the exact supported runtime versions |
+Use:
 
-## Common mistakes in web development
+- `queueMicrotask()` to normalize a small piece of follow-up logic at the current checkpoint;
+- `requestAnimationFrame()` for visual work synchronized with a rendering update;
+- a task or scheduler/yielding mechanism when work must give rendering and input a chance to proceed;
+- a Web Worker for substantial CPU work that should leave the main thread.
 
-The phrase single-threaded is often stretched into the false claim that nothing happens concurrently around JavaScript; hosts can perform I/O and enqueue callbacks while one job runs. A zero timer is also mistaken for immediate execution even though it only establishes an eligibility threshold. Treating every callback queue as one FIFO list hides the distinction between browser tasks and microtasks or between Node.js phases and its additional queues. Recursive microtasks can starve task and rendering opportunities, so replacing a loop with promise chaining does not automatically make work cooperative. Always name the host, queue class, current callback boundary, and supported runtime version before asserting an order.
+## Microtask starvation
 
-## Practical implementation checklist
+Microtasks added during a checkpoint are processed before the browser moves on. An unbounded chain can block timers, input, and rendering:
 
-1. Label synchronous statements, host API registration, tasks or phase callbacks, and microtasks separately.
-2. Apply run-to-completion before reasoning about any queued callback.
-3. Check microtasks at the host-defined checkpoint and watch for recursively queued microtasks.
-4. Do not treat a timer delay as an exact execution deadline.
-5. Test ordering assumptions in each browser or Node.js version the application supports.
+```javascript
+function starveThePage() {
+  queueMicrotask(starveThePage);
+}
 
-## Related implementation context
+starveThePage();
+```
 
-[Understanding HTTP Status Codes: What They Mean and How to Use Them](/posts/http-status-codes/) and [DNS Explained: How Your Browser Finds a Website](/posts/dns-explained-how-your-browser-finds-a-website/)
+This code does not grow the synchronous call stack, but it can still freeze the page. “Asynchronous” does not automatically mean “cooperative.”
 
-## Version and verification boundary
+A simple chunking strategy yields through tasks:
 
-ECMAScript jobs interact with host scheduling rules; the HTML Standard and current Node.js guide were checked at publication time, and runtime-specific ordering should be verified on supported browser and Node.js versions.
+```javascript
+async function processInChunks(items, chunkSize = 500) {
+  for (let start = 0; start < items.length; start += chunkSize) {
+    const chunk = items.slice(start, start + chunkSize);
+    chunk.forEach(processItem);
 
-## Summary
+    // Yield. Pick a scheduling API appropriate to supported browsers.
+    await new Promise(resolve => setTimeout(resolve, 0));
+  }
+}
+```
 
-Predict event-loop output by finishing synchronous work, applying the host's microtask checkpoint, and only then selecting eligible task or phase callbacks. Keep browser rendering rules separate from Node.js phases, and test any correctness-sensitive ordering on supported runtimes.
+The timer delay is not a deadline, and chunk size should be measured on representative devices.
+
+## `async`/`await` uses the same machinery
+
+An `async` function runs synchronously until it reaches an `await` whose value requires suspension. Its continuation is scheduled through promise-job behavior:
+
+```javascript
+async function demo() {
+  console.log("A");
+  await null;
+  console.log("C");
+}
+
+demo();
+console.log("B");
+```
+
+Output:
+
+```text
+A
+B
+C
+```
+
+`await` does not move the rest of the function to another thread. It splits the function at a suspension point so other work can run before its continuation.
+
+## Browser and Node.js: share concepts, not schedules
+
+Node.js organizes callbacks into phases such as timers, poll, and check. `setImmediate()` is Node-specific, and `process.nextTick()` uses a queue with behavior distinct from ordinary promise microtasks. Node has also changed timer processing details across libuv/runtime versions.
+
+Use this rule:
+
+| Code uses | Reason with |
+| --- | --- |
+| DOM, `requestAnimationFrame`, browser timers | WHATWG browser event loop |
+| Node I/O, `setImmediate`, `process.nextTick` | Supported Node.js version |
+| Only promises and synchronous code | ECMAScript jobs plus the actual host |
+| Test-runner fake timers | That runner's documented scheduler |
+
+Do not rely on incidental order between unrelated I/O operations. If correctness requires an order, express it with `await`, a queue, a stream, or another explicit dependency.
+
+## A debugging method that scales
+
+When output surprises you:
+
+1. Name the host: browser window, worker, Node.js, or test runner.
+2. Mark the current synchronous job.
+3. Label every scheduled callback as a task/phase callback, microtask, or rendering callback.
+4. Trace what each callback queues while running.
+5. Place microtask checkpoints at host-defined boundaries.
+6. Test on the runtime versions you support.
+7. Use the browser Performance panel or Node.js diagnostics for timing; console output can perturb observations.
+
+## Common misconceptions
+
+- **“JavaScript is single-threaded, so nothing else happens.”** The host can perform I/O and prepare callbacks while one agent runs JavaScript.
+- **“`setTimeout(fn, 0)` runs next.”** It establishes a minimum eligibility threshold; queued work and runtime rules still decide when it runs.
+- **“Promises make CPU work non-blocking.”** Promise callbacks still execute JavaScript on their agent.
+- **“The browser paints after every callback.”** Rendering occurs at browser-selected opportunities.
+- **“Node and Chrome have the same loop.”** They share JavaScript language semantics, not identical host scheduling.
+
+The event loop is not magic. Finish the current job, drain the appropriate microtasks, account for a possible rendering update, and then move to the next eligible task—using the rules of the host actually running the code.
 
 ## Sources
 
-- [MDN JavaScript execution model](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Execution_model)
-- [HTML event loops](https://html.spec.whatwg.org/multipage/webappapis.html)
-- [Node.js event loop](https://nodejs.org/learn/asynchronous-work/event-loop-timers-and-nexttick)
+- [Event loops — WHATWG HTML Living Standard](https://html.spec.whatwg.org/multipage/webappapis.html#event-loops)
+- [In-depth microtask guide — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide/In_depth)
+- [Using microtasks in JavaScript — MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide)
+- [The Node.js event loop — Node.js documentation](https://nodejs.org/en/learn/asynchronous-work/event-loop-timers-and-nexttick)

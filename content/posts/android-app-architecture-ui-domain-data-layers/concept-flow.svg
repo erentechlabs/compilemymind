@@ -1,41 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="830" viewBox="0 0 1200 830" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
-</defs>
-<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>
-<title id="title">Android App Architecture: UI, Domain, and Data Layers: practical flow</title>
-<desc id="desc">A flowchart for Android App Architecture: UI, Domain, and Data Layers: practical flow</desc>
-<text x="600.0" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Android App Architecture: UI, Domain, and Data Layers:</text>
-<text x="600.0" y="86" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">practical flow</text>
-<rect x="220" y="148" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="189.0" r="22" fill="#2563eb"/>
-<text x="264" y="196.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
-<text x="306" y="180" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Apply the model to a concrete case</text>
-<line x1="600" y1="238" x2="600" y2="264" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="276" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="317.0" r="22" fill="#2563eb"/>
-<text x="264" y="324.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
-<text x="306" y="308" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Worked code example</text>
-<line x1="600" y1="366" x2="600" y2="392" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="404" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="445.0" r="22" fill="#2563eb"/>
-<text x="264" y="452.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
-<text x="306" y="436" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Reason through android app architecture ui domain</text>
-<text x="306" y="458" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">data layers</text>
-<line x1="600" y1="494" x2="600" y2="520" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="532" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="573.0" r="22" fill="#2563eb"/>
-<text x="264" y="580.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
-<text x="306" y="564" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Android App Architecture: UI, Domain, and Data</text>
-<text x="306" y="586" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Layers: decisions and tradeoffs</text>
-<line x1="600" y1="622" x2="600" y2="648" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="660" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="701.0" r="22" fill="#2563eb"/>
-<text x="264" y="708.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
-<text x="306" y="692" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Common mistakes in mobile development</text>
-<text x="626.0" y="258.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="386.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="514.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="642.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">Android unidirectional architecture</title>
+  <desc id="desc">State flows from data sources through a repository and optional use case to a ViewModel and Compose UI. User events flow in the opposite direction.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071a2b"/>
+      <stop offset="1" stop-color="#123b46"/>
+    </linearGradient>
+    <marker id="up" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#5eead4"/></marker>
+    <marker id="down" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#fbbf24"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-opacity=".25"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="70" y="72" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#f8fafc">Android state has one direction</text>
+  <text x="70" y="108" font-family="Inter,Arial,sans-serif" font-size="18" fill="#b7d7dc">Layers communicate through stable interfaces; lifecycle-bound UI does not own application data.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="180" width="210" height="150" rx="20" fill="#f8fafc"/>
+    <text x="175" y="222" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700" fill="#0f172a">Data sources</text>
+    <rect x="98" y="250" width="68" height="42" rx="10" fill="#dbeafe"/><text x="132" y="277" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#1e3a8a">Room</text>
+    <rect x="178" y="250" width="74" height="42" rx="10" fill="#dbeafe"/><text x="215" y="277" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#1e3a8a">API</text>
+
+    <rect x="355" y="180" width="210" height="150" rx="20" fill="#ecfeff"/>
+    <text x="460" y="222" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700" fill="#0f172a">Repository</text>
+    <text x="460" y="258" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">source of truth</text>
+    <text x="460" y="284" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">sync + data policy</text>
+
+    <rect x="640" y="180" width="210" height="150" rx="20" fill="#fef3c7" stroke="#fbbf24" stroke-width="2" stroke-dasharray="8 7"/>
+    <text x="745" y="222" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700" fill="#0f172a">Use case</text>
+    <text x="745" y="258" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">optional boundary</text>
+    <text x="745" y="284" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">for shared complexity</text>
+
+    <rect x="925" y="180" width="205" height="150" rx="20" fill="#f8fafc"/>
+    <text x="1028" y="222" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="23" font-weight="700" fill="#0f172a">ViewModel</text>
+    <text x="1028" y="258" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">immutable UI state</text>
+    <text x="1028" y="284" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="15" fill="#334155">event handling</text>
+  </g>
+
+  <path d="M280 230 H340 M565 230 H625 M850 230 H910" stroke="#5eead4" stroke-width="5" fill="none" marker-end="url(#up)"/>
+  <text x="600" y="155" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#5eead4">STATE FLOWS TOWARD THE UI</text>
+
+  <rect x="825" y="445" width="305" height="135" rx="22" fill="#dbeafe" filter="url(#shadow)"/>
+  <text x="978" y="490" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="24" font-weight="700" fill="#172554">Compose screen</text>
+  <text x="978" y="526" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" fill="#1e3a8a">render(state)</text>
+  <text x="978" y="552" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" fill="#1e3a8a">emit(user event)</text>
+  <path d="M1028 330 V430" stroke="#5eead4" stroke-width="5" fill="none" marker-end="url(#up)"/>
+  <path d="M915 445 C780 390 520 400 460 345" stroke="#fbbf24" stroke-width="5" fill="none" marker-end="url(#down)"/>
+  <text x="633" y="432" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="16" font-weight="700" fill="#fbbf24">EVENTS FLOW TO THE OWNER</text>
+
+  <rect x="70" y="472" width="590" height="118" rx="18" fill="#ffffff" fill-opacity=".08" stroke="#5b8790"/>
+  <text x="98" y="508" font-family="Inter,Arial,sans-serif" font-size="18" font-weight="700" fill="#f8fafc">Boundary test</text>
+  <text x="98" y="540" font-family="Inter,Arial,sans-serif" font-size="16" fill="#c7e4e7">Can the screen render from a plain state value?</text>
+  <text x="98" y="570" font-family="Inter,Arial,sans-serif" font-size="16" fill="#c7e4e7">Can behavior run against a fake repository?</text>
+  <text x="70" y="658" font-family="Inter,Arial,sans-serif" font-size="15" fill="#8fb9bf">UI + data are the baseline. Add domain only when it removes real complexity.</text>
 </svg>

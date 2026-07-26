@@ -1,114 +1,249 @@
 ---
 title: "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies"
 date: "2026-07-21T06:47:50+03:00"
-lastmod: "2026-07-21T18:36:07+03:00"
-description: "A pagination contract guide comparing offset, cursor, and link traversal for REST and GraphQL APIs under changing datasets and client retries."
-tags: ["storage"]
+lastmod: "2026-07-26T18:55:00+02:00"
+description: "Design stable REST and GraphQL pagination with explicit ordering, keyset cursors, link relations, retry behavior, and mutation-aware tests."
+tags: ["api-design", "rest", "graphql", "pagination", "databases"]
 categories: ["software-engineering", "web-development"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-21"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-21T03:47:50.795252Z"
-verification_version: "1"
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-19"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and specifications reviewed"
+verification_date: "2026-07-26T16:55:00Z"
+verification_version: "2"
+version_context: "Web Linking, GraphQL connection, and GitHub API documentation reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-Pagination is an API consistency contract, not merely a way to limit response size. A client needs to know how to request the next segment, which ordering is stable, whether inserts or deletes can create gaps or duplicates, and when traversal is complete. Offset, cursor, and link-based interfaces expose different parts of that contract, and the appropriate choice depends on dataset change rate, navigation needs, and what the backend can order reliably.
+Pagination is a consistency contract disguised as a performance feature. Splitting 100,000 records into pages is easy; defining what “the next page” means while records are inserted, deleted, or reordered is the real design work.
 
-## A working model for REST and GraphQL Pagination: Offset, Cursor, and Link Strategies
+Choose a strategy from the user experience and data model:
 
-Define the workload: the collection's stable sort fields, uniqueness tie-breaker, maximum page size, authorization boundary, and expected mutation rate while a client traverses results. Decide whether users need random page jumps or only forward and backward traversal. Specify how filters and sort parameters bind to a continuation token, what an expired or malformed token returns, and whether total counts are exact, approximate, or omitted.
+- **Offset** for simple, bounded, mostly stable lists and direct page numbers.
+- **Cursor/keyset** for large or rapidly changing ordered feeds.
+- **Links** to make navigation discoverable and decouple clients from URL construction.
+- **GraphQL connections** when the schema should expose edges, cursors, and page metadata consistently.
 
-## Apply the model to a concrete case
+![Pagination comparison showing offset drift, a stable composite cursor, and link-based navigation](concept-flow.svg)
 
-Consider an audit-event API ordered by occurred_at descending and id descending. An offset request for page three can drift if newer events arrive before the client requests it. A cursor can encode the last event's timestamp and unique id, plus a protected representation of the filter and direction, so the next query continues strictly after that boundary. The REST response can expose the next request through a Link relation, while a GraphQL connection can publish an end cursor and hasNextPage. Neither interface automatically creates snapshot consistency: if an existing event's sort value changes or authorization removes an item, the contract must say what clients can observe. The opaque token also needs validation and expiry behavior.
+## Offset pagination: simple but position-dependent
 
-## Source boundaries for software engineering
+```http
+GET /articles?limit=20&offset=40
+```
 
-### Using pagination in the REST API
+```sql
+SELECT id, published_at, title
+FROM articles
+ORDER BY published_at DESC, id DESC
+LIMIT 20 OFFSET 40;
+```
 
-Use Using pagination in the REST API for this boundary of the topic: Use GitHub REST pagination behavior to explain page sizing, traversal, and response links in a concrete production API.
-### Using pagination in the GraphQL API
+Offset is readable and supports “jump to page 7.” It has two costs:
 
-Use Using pagination in the GraphQL API for this boundary of the topic: Use GitHub GraphQL pagination for cursor concepts, first or last limits, and pageInfo traversal state.
-### REST API best practices
+1. The database may still need to walk or discard earlier rows for deep offsets.
+2. Positions drift when rows change between requests.
 
-Use REST API best practices for this boundary of the topic: Use the REST best-practices reference for Link-header following, serial requests, conditional requests, and safe client behavior.
+Imagine descending IDs:
 
-## Reason through rest graphql pagination offset cursor link strategies
+```text
+Page 1: 100 99 98
+```
 
-The diagram contrasts what each strategy treats as the continuation boundary. Read the offset lane as a position that can shift under writes, and the cursor lane as a stable ordered key whose token also carries query context. The sections below connect those mechanics to discoverable REST links and GraphQL page information.
+A new record `101` is inserted before the client requests `OFFSET 3`:
 
-![Pagination strategy decisions from offset drift to cursor navigation](concept-flow.svg)
+```text
+Current order: 101 100 99 98 ...
+Page 2:              98 97 96
+```
 
-### 1. Use offset only with explicit drift expectations
+The client sees `98` twice. Deletions can make a record disappear between pages. Offset is not wrong; it simply defines pages by current positions rather than stable boundaries.
 
-Offset and limit are easy to understand and can support page-number navigation, but positions shift when earlier rows are inserted or removed. Under a changing dataset, a client can receive a duplicate or skip an item between requests. Make the ordering deterministic with a unique tie-breaker, cap requested size, and state whether consistency across the full traversal is provided. Offset can remain reasonable for small or relatively stable collections where random access is a real requirement.
-### 2. Bind cursors to a stable ordering boundary
+## Cursor pagination: continue after a boundary
 
-A cursor should represent the continuation boundary for a specific ordering and filter set rather than expose an editable database offset. Keyset-style traversal can continue after the last seen sort key and unique identifier, reducing positional drift as earlier records change. Treat the token as opaque to clients, validate its scope and direction, and define expiry. If sort values themselves can change, explain the resulting consistency behavior instead of promising a snapshot that the service does not create.
-### 3. Make navigation discoverable and retry-safe
+A cursor represents the last ordering position already delivered:
 
-REST responses can publish next, previous, first, or last navigation through links so clients do not construct URLs from undocumented assumptions. GraphQL connections commonly return edge cursors and page information beside nodes. Preserve filters and ordering in every continuation, and ensure authorization is re-evaluated on each request. For retryable clients, return a deterministic order and make the terminal condition unambiguous so a transient failure does not restart the collection silently.
+```http
+GET /articles?first=20&after=eyJwdWJsaXNoZWRfYXQiOiIuLi4iLCJpZCI6OTg...
+```
 
-## Worked code example
+For ordering `(published_at DESC, id DESC)`, the next query uses both fields:
 
-### Return an opaque continuation contract
+```sql
+SELECT id, published_at, title
+FROM articles
+WHERE (published_at, id) < ($1, $2)
+ORDER BY published_at DESC, id DESC
+LIMIT 21;
+```
+
+Fetch `limit + 1` rows. Return only `limit`; the extra row tells you whether `has_next_page` is true without a full count.
+
+The `id` tie-breaker is essential. Timestamps are not guaranteed unique, so a cursor containing only `published_at` can skip or duplicate records with equal timestamps.
+
+## Treat cursors as opaque API tokens
+
+Clients should store and return a cursor, not parse or modify it. A cursor payload might contain:
 
 ```json
 {
-  "items": [
-    {
-      "id": "evt_1042",
-      "occurred_at": "2026-07-20T08:30:00Z"
+  "version": 1,
+  "published_at": "2026-07-21T08:30:00Z",
+  "id": 9821,
+  "filter_hash": "sha256:..."
+}
+```
+
+Encode and authenticate the payload—commonly with URL-safe base64 plus an HMAC or authenticated encryption. Base64 alone prevents neither tampering nor information disclosure.
+
+Binding the cursor to filters and sort order avoids mistakes such as reusing a “published articles” cursor with a new query for drafts. Version the payload so the server can reject or migrate old formats deliberately.
+
+```python
+def page_articles(*, first: int, after: str | None, status: str):
+    limit = min(max(first, 1), 100)
+    boundary = decode_and_verify(after, expected_filter={"status": status})
+
+    rows = repository.fetch_after(
+        status=status,
+        published_at=boundary.published_at if boundary else None,
+        article_id=boundary.id if boundary else None,
+        limit=limit + 1,
+    )
+
+    has_next = len(rows) > limit
+    page = rows[:limit]
+    end_cursor = encode_cursor(page[-1], status=status) if page else None
+
+    return {
+        "items": page,
+        "page_info": {
+            "has_next_page": has_next,
+            "end_cursor": end_cursor,
+        },
     }
-  ],
-  "page": {
-    "next_cursor": "opaque-signed-token",
-    "has_more": true
+```
+
+Validate maximum page size server-side. A cursor must not become a way to bypass authorization or inject query fragments.
+
+## What cursors do—and do not—stabilize
+
+A keyset cursor prevents newly inserted records *before* the boundary from shifting later pages. It does not create a database snapshot across multiple HTTP requests.
+
+If an already-seen record's sort key changes so it moves beyond the boundary, it may appear again. If an unseen record moves before the boundary, it may be missed. For a fully frozen export, use a snapshot identifier, an immutable dataset version, or a server-side export job.
+
+Document which contract you offer:
+
+- **Live traversal:** reflects changes, with boundary-based continuity.
+- **Snapshot traversal:** all pages come from one logical version.
+- **Best effort:** duplicates or omissions are acceptable and clients should deduplicate.
+
+## REST navigation should be discoverable
+
+RFC 8288 defines typed links between resources. A REST response can expose navigation in the `Link` header:
+
+```http
+Link: </articles?first=20&after=abc>; rel="next",
+      </articles?first=20&before=xyz>; rel="prev"
+```
+
+Or use links in the representation:
+
+```json
+{
+  "items": [],
+  "links": {
+    "next": "/articles?first=20&after=abc",
+    "prev": null
+  },
+  "page_info": {
+    "has_next_page": true
   }
 }
 ```
 
-Clients receive a continuation token without depending on its storage representation. The server binds that token to the original ordering, filters, direction, authorization scope, and expiry policy.
+Clients should follow the supplied link rather than reconstructing server URLs. That lets the server change cursor syntax or add parameters without breaking traversal.
 
-## REST and GraphQL Pagination: Offset, Cursor, and Link Strategies: decisions and tradeoffs
+Do not rely on parsing GitHub-style `Link` URLs to invent page numbers when the documentation says to use the link relations. The next URL is authoritative.
 
-| Situation or decision | Tradeoff or common failure mode | Validation question |
-| --- | --- | --- |
-| Items repeat or disappear between offset pages | Rows before the current offset changed between requests | Measure collection churn and evaluate cursor traversal over a unique deterministic ordering |
-| Two records share a sort value and page order changes | The ordering lacks a unique tie-breaker | Append an immutable unique key to the order and encode the complete boundary in the cursor |
-| A continuation token works with different filters | Token scope is not bound to the original query contract | Validate filter, sort, direction, authorization scope, and expiry when decoding the token |
+## GraphQL connection design
 
-## Common mistakes in software engineering
+The Relay Cursor Connections specification defines a familiar shape:
 
-Encoding a raw database offset in something called a cursor preserves the drift problem while making the contract harder to inspect. Ordering only by a non-unique timestamp allows records with equal values to move across page boundaries. Letting clients edit decoded token fields can change filters or tenant scope unless the server validates integrity and authorization again. Returning an exact total count on every request may add substantial work that the user experience does not need. Clients also fail when they build the next URL manually and discard server-provided links, caps, or cursors. Test continuation as a protocol across mutation and retry, not as one successful database query.
+```graphql
+type ArticleConnection {
+  edges: [ArticleEdge!]!
+  pageInfo: PageInfo!
+}
 
-## Practical implementation checklist
+type ArticleEdge {
+  node: Article!
+  cursor: String!
+}
 
-1. Define a deterministic order with a unique tie-breaker before selecting pagination mechanics.
-2. Document mutation behavior, token expiry, invalid-token errors, and the traversal completion signal.
-3. Cap page size and preserve filters, ordering, and authorization on every continuation request.
-4. Test inserts, deletes, equal sort values, retry after failure, and permission changes between pages.
-5. Avoid promising exact total counts or snapshot consistency unless the backend contract actually provides them.
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+```
 
-## Related implementation context
+A query requests a bounded slice:
 
-[Understanding HTTP Status Codes: What They Mean and How to Use Them](/posts/http-status-codes/) and [Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples](/posts/copilot-code-review-customization-and-configurability-improvements/)
+```graphql
+query LatestArticles($first: Int!, $after: String) {
+  articles(first: $first, after: $after) {
+    edges {
+      cursor
+      node { id title publishedAt }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+```
 
-## Version and verification boundary
+Use `edges` when relationship metadata matters—for example, a member's role in an organization. Exposing `nodes` as a convenience can reduce nesting, but page cursors still need a defined home.
 
-The comparison uses current GitHub REST and GraphQL pagination documentation as concrete contracts; other APIs may expose different link relations, cursor formats, limits, and consistency guarantees.
+Backward pagination (`last`/`before`) is not just forward SQL with names reversed. Implement and test ordering reversal carefully so the response remains in the documented order.
 
-## Summary
+## Counts, retries, and errors
 
-A pagination design is stable when ordering, continuation, mutation behavior, authorization, and termination are explicit. Use offset for workloads that accept positional drift, cursors for boundary-based traversal, and discoverable links or page information so clients follow the server's contract.
+### Total counts
+
+An exact `totalCount` may require an expensive count and can change before the next page. Return it only when the product needs it and the cost is acceptable. Alternatives include estimates, a separately cached count, or no count.
+
+### Retries
+
+A page request should be safe to retry. The same cursor and filters should describe the same boundary, even if a live dataset produces a slightly different page after mutation. Avoid one-time cursors unless stateful traversal is an explicit contract.
+
+### Invalid cursors
+
+Return a clear client error for malformed, tampered, expired, filter-mismatched, or unsupported-version cursors. Do not silently restart at page one; that creates duplicates that look like valid data.
+
+## Test the contract under mutation
+
+Automated tests should:
+
+- insert a new first record between page requests;
+- delete a previously delivered record;
+- create several records with the same primary sort value;
+- change a record's sort field;
+- retry the same cursor;
+- switch filters while reusing a cursor;
+- tamper with a cursor;
+- request zero, negative, and excessive page sizes;
+- traverse forward and backward to the boundary.
+
+Choose offset when its simplicity matches the experience. Choose keyset cursors when stable continuation and deep-page performance matter. In both cases, make ordering unique, navigation explicit, and mutation semantics part of the public API.
 
 ## Sources
 
-- [Using pagination in the REST API](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)
-- [Using pagination in the GraphQL API](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)
-- [REST API best practices](https://docs.github.com/en/rest/using-the-rest-api/best-practices-for-using-the-rest-api)
+- [Web Linking — RFC 8288](https://www.rfc-editor.org/rfc/rfc8288.html)
+- [GraphQL Cursor Connections Specification — Relay](https://relay.dev/graphql/connections.htm)
+- [Pagination — GraphQL documentation](https://graphql.org/learn/pagination/)
+- [Using pagination in the REST API — GitHub Docs](https://docs.github.com/en/rest/using-the-rest-api/using-pagination-in-the-rest-api)
+- [Using pagination in the GraphQL API — GitHub Docs](https://docs.github.com/en/graphql/guides/using-pagination-in-the-graphql-api)

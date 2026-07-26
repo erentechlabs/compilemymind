@@ -35,7 +35,7 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 
 ## Autonomous publishing
 
-The site can publish and maintain its own technical content through Gemini and GitHub Actions. The automation researches trusted current sources, avoids duplicate reader intent, maps material claims to evidence, generates long-form Hugo page bundles with useful visuals, applies deterministic and Gemini quality gates, checks links and stale facts, and pushes only validated changes.
+The site can publish and maintain technical content without a user-supplied AI API key. GitHub Actions uses its automatic `GITHUB_TOKEN` with OpenAI GPT-4.1 through the free, rate-limited GitHub Models service. The automation researches trusted current sources, avoids duplicate reader intent, maps material claims to evidence, generates long-form Hugo page bundles with useful visuals, applies deterministic and AI quality gates, checks links and stale facts, and pushes only validated changes.
 
 See [docs/AUTONOMOUS_PUBLISHING.md](docs/AUTONOMOUS_PUBLISHING.md) for setup, schedules, safety gates, monitoring, and local validation commands.
 

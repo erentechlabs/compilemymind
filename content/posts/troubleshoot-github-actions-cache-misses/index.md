@@ -1,119 +1,254 @@
 ---
 title: "Troubleshoot GitHub Actions Cache Misses"
 date: "2026-07-21T22:53:22+03:00"
-lastmod: "2026-07-21T22:53:22+03:00"
-description: "A practical GitHub Actions cache troubleshooting workflow for comparing evaluated keys, restore-key scope, paths, workflow events, and repository cache inventory safely."
-tags: ["github", "troubleshooting", "configuration-management"]
+lastmod: "2026-07-26T19:05:00+02:00"
+description: "Diagnose GitHub Actions cache misses by exposing evaluated keys, cache versions, branch scope, paths, save conditions, and repository inventory."
+tags: ["github-actions", "ci-cd", "caching", "troubleshooting"]
 categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-21"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-21T19:53:22.432654Z"
-verification_version: "1"
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-19"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and GitHub documentation reviewed"
+verification_date: "2026-07-26T17:05:00Z"
+verification_version: "2"
+version_context: "Current GitHub Actions dependency-cache documentation reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-## Direct answer
+A GitHub Actions cache “miss” is not one condition. It can mean:
 
-A cache miss is expected when the evaluated key has no exact match, and a restored prefix is not the same as an exact hit. Repeated misses can also result from changing lockfiles, operating-system boundaries, branch and event scope, a path that is never populated, a job that does not complete successfully, eviction, or an old action configuration. Preserve the evaluated workflow context before changing keys or deleting cache entries. Start with evidence already available to the operator and use the referenced documentation to verify the behavior of the component in scope.
+- no entry has the requested key;
+- a prefix restore succeeded, but the exact-key output is not `true`;
+- the key exists in an inaccessible branch scope;
+- the key text matches, but the cache **version** differs;
+- the previous job never saved the cache;
+- the cache was evicted.
 
-## Prepare a safe investigation
+The reliable way to diagnose it is to expose the evaluated key, scope, version inputs, and save path—then compare them with the repository's cache inventory.
 
-Record the repository, workflow and run, event, ref, runner operating system, action version, evaluated primary key, restore keys, cached paths, cache-hit output, dependency lockfile hash inputs, and whether the job completed successfully. Do not delete repository caches or weaken key specificity during the first evidence pass. Before changing policy, access, networking, or application settings, capture a small reproducible record of the failure. Include the affected identity, workload, tenant or environment, time zone, correlation identifier when available, and the action that produced the result. Mask secrets and personal data in any ticket or shared export. A narrow record is safer to review and lets another administrator test the same hypothesis without repeating a disruptive change.
+![GitHub Actions cache lookup flow covering exact key and version, restore-key prefixes, branch scope, and post-job save](concept-flow.svg)
 
-## Verify the official references
+## Understand the lookup before changing YAML
 
-### Dependency caching reference
+For `actions/cache`, GitHub searches using the key and an internal cache version. At a high level:
 
-Use Dependency caching reference to verify this specific part of the investigation: Use the dependency caching reference for exact and partial matching, restore-key order, cache-hit output, save timing, access scope, limits, and security guidance. Match the field names, permissions, and interface labels for Dependency caching reference before changing the affected service.
-### Managing caches
+1. Look for an exact key and version in the current branch scope.
+2. Look for prefix matches.
+3. Try each `restore-keys` prefix in order.
+4. If needed, repeat the permitted search against the default branch.
+5. On a miss, save a new cache after a successful job.
 
-Use Managing caches to verify this specific part of the investigation: Use Managing caches for the supported repository inventory and cache-management interfaces. Match the field names, permissions, and interface labels for Managing caches before changing the affected service.
-### actions cache
+The cache version incorporates metadata about the cached paths and compression tool. The same visible key can therefore miss when those inputs are incompatible.
 
-Use actions cache to verify this specific part of the investigation: Use the actions/cache repository documentation for maintained inputs, outputs, examples, compatibility, and migration notes. Match the field names, permissions, and interface labels for actions cache before changing the affected service.
+Caches are also scope-restricted. A workflow can generally restore entries from its current branch and default branch, plus the base branch for pull-request runs. It cannot freely read sibling or child branch caches. A cache created by a `pull_request` run belongs to the pull request merge ref and is not a general cache for `main`.
 
-## Step-by-step workflow
+## Start with an observable workflow
 
-For each step, record the timestamp, affected actor or workload, exact result, and evidence scope before moving on. This keeps the investigation reproducible without repeating the same warning after every action.
+Prefer the package manager's setup action when it supports your ecosystem:
 
-The lifecycle below shows where a cache can miss, partially restore, or fail to be saved for the next run. Classify the restore result first, then follow the same key and path through job execution and the post-job save boundary before changing repository inventory or action inputs.
+```yaml
+- uses: actions/checkout@v6
 
-![GitHub Actions cache restore and save lifecycle](concept-flow.svg)
+- uses: actions/setup-node@v6
+  with:
+    node-version: 24
+    cache: npm
+    cache-dependency-path: package-lock.json
 
-### 1. Classify exact hits, prefix restores, and misses
-
-Capture the evaluated primary key and ordered restore keys from the same workflow run, then interpret the cache-hit output according to exact-match behavior. Confirm that the path exists and contains the intended dependency data before the post-job save phase.
-### 2. Compare the repository cache inventory
-
-Review the existing cache entries and compare their key, ref or scope, creation time, last use, and size with the failing run. Treat deletion as a maintenance action only after the evidence proves that an obsolete entry is interfering with the intended policy.
-### 3. Verify the action inputs and supported behavior
-
-Compare the workflow's action version, path, key, restore keys, lookup behavior, and optional cross-OS settings with the maintained action documentation. Avoid caching credentials, generated secrets, or a path readable by untrusted workflow contexts.
-
-
-
-## Worked code example
-
-### Structured evidence record
-
-```json
-{
-  "topic": "troubleshoot-github-actions-cache-misses",
-  "scope": "replace-with-one-bounded-user-resource-or-request",
-  "observedAtUtc": "2026-01-01T00:00:00Z",
-  "expected": "replace-with-the-documented-expected-result",
-  "observed": "replace-with-the-actual-result",
-  "correlationId": "redacted-or-not-available",
-  "nextReadOnlyCheck": "replace-with-one-evidence-gathering-step"
-}
+- run: npm ci
 ```
 
-Replace every placeholder with observed, non-secret values. This local structured-data example makes the investigation boundary reproducible without changing the affected service.
+For custom paths, make every key component visible:
 
-## Troubleshoot by symptom
+```yaml
+- name: Compute cache inputs
+  id: cache-inputs
+  shell: bash
+  run: |
+    echo "lock_hash=${{ hashFiles('**/package-lock.json') }}"
+    echo "runner_os=${{ runner.os }}"
+    echo "ref=${{ github.ref }}"
+    echo "base_ref=${{ github.base_ref }}"
 
-Use the observed result to choose the next check instead of changing several controls at once. The following table is a decision aid, not a list of automatic fixes. Confirm the product-specific behavior in the cited documentation before applying a remediation.
+- name: Restore npm download cache
+  id: npm-cache
+  uses: actions/cache@v4
+  with:
+    path: ~/.npm
+    key: npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+    restore-keys: |
+      npm-${{ runner.os }}-
 
-| Symptom | Likely boundary | Next safe check |
-| --- | --- | --- |
-| The key changes on every run | Unstable key input, generated file, timestamp, or changing lockfile | Print the non-secret evaluated components and compare the exact key across two runs. |
-| A restore key finds data but cache-hit is not true | Partial prefix match rather than an exact primary-key match | Compare the restored key with the full primary key and decide whether a new cache should be saved. |
-| No cache is saved after a miss | Job failure, empty or incorrect path, scope restriction, limit, or action configuration | Verify job completion, populated paths, action output, and repository cache inventory. |
+- name: Explain cache result
+  shell: bash
+  run: |
+    echo "exact_hit=${{ steps.npm-cache.outputs.cache-hit }}"
+    echo "primary_key=npm-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}"
+```
 
-## Common mistakes to avoid
+Do not print secrets or dump the entire context. Print only the values needed to reproduce the lookup.
 
-Do not treat an isolated success as proof that the underlying configuration is correct. Different users, applications, devices, networks, and token states can follow different paths. Do not remove a security control merely to make one test pass; first identify the exact condition that produced the failure and verify whether a narrower, approved adjustment exists. Avoid copying commands, policy values, or portal labels from old runbooks without checking the current official reference.
+## Exact hit, prefix restore, or complete miss?
 
-Keep the investigation read-only until the evidence identifies a change boundary. If a temporary exception is approved, define who authorized it, when it expires, how it will be monitored, and how the original state will be restored. A reversible experiment is useful; an undocumented workaround creates a second incident to diagnose later.
+The `cache-hit` output is `true` only for an exact key match. A restored prefix is useful, but it is not an exact hit:
 
-## Practical checklist
+```yaml
+- if: steps.npm-cache.outputs.cache-hit != 'true'
+  run: npm ci
+```
 
-1. Capture run event, ref, runner OS, action version, primary key, restore keys, paths, and cache-hit output.
-2. Compare the exact evaluated key and its stable inputs across two runs.
-3. Confirm the cached path exists and is populated before the save phase.
-4. Review existing cache entries and access scope without deleting evidence.
-5. Apply one reviewed key or path change and verify both restore and save behavior on the next comparable run.
+This condition runs for both a partial restore and a complete miss, which is usually correct for dependency installation: restored package downloads accelerate `npm ci`, while the lockfile still determines the installed tree.
 
-## Preserve the result and follow up
+Do not skip a deterministic install merely because a broad prefix restored old dependencies.
 
-After the immediate issue is understood, record the conclusion in language that separates facts, inferences, and remaining unknowns. Attach only the necessary evidence and link the relevant official reference rather than pasting a long, unversioned screenshot. If the same pattern returns, compare the new record with the earlier timestamp, scope, and configuration state before making another change. This turns a one-off troubleshooting session into a dependable operating procedure.
+## Inspect the actual cache inventory
 
-For related background, see [How to Audit GitHub Actions Token Permissions](/posts/audit-github-actions-token-permissions/) and [Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples](/posts/copilot-code-review-customization-and-configurability-improvements/). These internal articles provide context, but the cited official documents remain the source of truth for the configuration or diagnostic details in this workflow.
+With GitHub CLI:
 
-## Version and verification notes
+```bash
+gh cache list \
+  --repo OWNER/REPOSITORY \
+  --limit 100 \
+  --json id,key,ref,sizeInBytes,createdAt,lastAccessedAt
+```
 
-This article is based on the official sources listed for this topic and was checked at publication time. Cloud services, identity behavior, product labels, and administrative interfaces can change. Recheck the cited documentation before automating a command, relying on a default, or applying the same procedure to a different tenant, subscription, cluster, or operating-system release.
+Filter by key:
 
-## Summary
+```bash
+gh cache list \
+  --repo OWNER/REPOSITORY \
+  --key "npm-Linux-" \
+  --limit 100
+```
 
-Start with a small evidence record, use the documented diagnostic path for the affected service, and make one reversible change only after the evidence supports it. That approach protects availability and security while producing a clear handoff for the next operator.
+Compare:
+
+- fully evaluated key;
+- `ref` scope;
+- creation and last-access time;
+- size;
+- expected operating system and architecture markers.
+
+The Actions UI and REST API can also list caches. Inventory is stronger evidence than “another workflow used the same YAML.”
+
+## The seven common causes
+
+### 1. `hashFiles()` evaluated to an empty string
+
+A wrong path or different checkout directory can produce:
+
+```text
+npm-Linux-
+```
+
+That key is valid but much broader than intended. Confirm checkout happened before key evaluation and that the lockfile exists with the same case:
+
+```yaml
+- shell: bash
+  run: |
+    pwd
+    find . -name package-lock.json -print
+    echo "hash=${{ hashFiles('**/package-lock.json') }}"
+```
+
+### 2. The cached path is wrong
+
+For npm, cache the package-manager download cache (`~/.npm`) rather than `node_modules` unless you have a measured reason to cache the installed tree. Verify the path after the install:
+
+```bash
+npm config get cache
+du -sh ~/.npm || true
+```
+
+An empty or nonexistent path creates little value and may produce a save warning.
+
+### 3. The job did not reach the post-job save
+
+`actions/cache` restores during its step and saves in a post-job phase after a successful job. If tests fail, a runner is cancelled, or the process is terminated, the new cache may never be written. Inspect the end of the job log for the cache save.
+
+For advanced workflows, `actions/cache/restore` and `actions/cache/save` make save placement explicit, but you must preserve security and correctness yourself.
+
+### 4. Branch or pull-request scope differs
+
+Print:
+
+```yaml
+- run: |
+    echo "event=${{ github.event_name }}"
+    echo "ref=${{ github.ref }}"
+    echo "base_ref=${{ github.base_ref }}"
+```
+
+A pull request cache often belongs to `refs/pull/.../merge`. A later `push` to `main` should not be expected to restore that PR-scoped entry.
+
+### 5. Version inputs changed
+
+Changing `path`, compression compatibility, or operating system can change cache compatibility even when `key` looks identical. Include platform details in cross-platform keys, and use `enableCrossOsArchive` only after reviewing its prerequisites and tradeoffs.
+
+### 6. The key changes too often—or not often enough
+
+A commit SHA guarantees misses on every commit:
+
+```yaml
+key: build-${{ github.sha }}
+```
+
+A static key never saves new content because caches are immutable:
+
+```yaml
+key: build-v1
+```
+
+Keys should change when the cached content becomes incompatible. Dependency lock hashes, toolchain versions, OS, architecture, and a manual schema version are common inputs.
+
+### 7. Eviction and cache thrashing
+
+GitHub applies repository storage and retention policies. Large, highly unique caches can evict one another. Inspect total sizes and last-access times; remove low-value caches or reduce key cardinality before increasing storage.
+
+## Design restore keys deliberately
+
+```yaml
+key: gradle-${{ runner.os }}-jdk21-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+restore-keys: |
+  gradle-${{ runner.os }}-jdk21-
+  gradle-${{ runner.os }}-
+```
+
+Each line broadens compatibility. Ask what stale content it may restore. The install/build step must validate or replace restored entries.
+
+Avoid a prefix so broad that unrelated toolchain or platform artifacts become inputs to privileged build steps.
+
+## Cache security is part of correctness
+
+GitHub warns that people able to open pull requests may be able to read caches available to the base branch. Never cache:
+
+- tokens, credentials, signing material, or `.env` secrets;
+- authenticated configuration files;
+- private user data;
+- untrusted executable output that a privileged workflow later runs without validation.
+
+Low-trust triggers also have restricted cache-write behavior to reduce cache poisoning. Do not work around those boundaries simply to remove a warning.
+
+Pin third-party actions to trusted revisions according to your supply-chain policy, minimize token permissions, and treat restored executable artifacts as inputs requiring provenance.
+
+## A five-minute triage sequence
+
+1. Print the exact evaluated primary key and lockfile hash.
+2. Print event, ref, base ref, OS, and architecture.
+3. Confirm the cached path exists and contains the expected data.
+4. Classify `cache-hit` as exact, partial, or absent.
+5. List repository caches and compare key plus ref.
+6. Inspect the end of the producer job for a successful save.
+7. Check recent path/action/runner changes that affect cache version.
+8. Check size, eviction, and overly unique keys.
+
+Change one variable at a time. Deleting every cache may temporarily hide a bad key and removes the evidence needed to diagnose it.
 
 ## Sources
 
-- [Dependency caching reference](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching)
-- [Managing caches](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches)
-- [actions cache](https://github.com/actions/cache)
+- [Dependency caching reference — GitHub Docs](https://docs.github.com/en/actions/reference/workflows-and-actions/dependency-caching)
+- [Managing caches — GitHub Docs](https://docs.github.com/en/actions/how-tos/manage-workflow-runs/manage-caches)
+- [REST API endpoints for GitHub Actions cache — GitHub Docs](https://docs.github.com/en/rest/actions/cache)
+- [actions/cache — official GitHub repository](https://github.com/actions/cache)
+- [GitHub CLI `gh cache` manual](https://cli.github.com/manual/gh_cache)

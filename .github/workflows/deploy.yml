@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - ".autopublisher/state.json"
+      - ".autopublisher/model-state.json"
+      - ".autopublisher/revision-state.json"
+      - ".autopublisher/queue/**"
+      - ".autopublisher/reports/**"
+      - ".autopublisher/logs/**"
   workflow_dispatch:
 
 permissions:
@@ -13,6 +20,7 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -30,6 +38,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/autopublisher/requirements.txt
 
       - name: Run deterministic repository tests
         run: |
@@ -50,12 +60,12 @@ jobs:
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/hugo/hugo" version
 
-      - name: Synchronize Hugo version with Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
-        run: python3 tools/maintenance/sync_cloudflare_hugo.py
-
       - name: Run shared release gate
         run: python3 tools/ci/release_gate.py --mode validate
+
+      - name: Synchronize validated Hugo version with Cloudflare Pages
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        run: python3 tools/maintenance/sync_cloudflare_hugo.py
 
       - name: Report deployment configuration
         if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == ''

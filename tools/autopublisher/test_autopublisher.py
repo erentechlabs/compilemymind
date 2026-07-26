@@ -20,27 +20,49 @@ class AutopublisherTests(unittest.TestCase):
     def test_production_model_fallback_covers_publication_critical_tasks(self):
         config = autopublisher.load_config()
         github_models = config["github_models"]
+        self.assertEqual(config["openai"]["model"], "gpt-5.6-sol")
+        self.assertFalse(config["openai"]["enabled"])
+        self.assertFalse(config["gemini"]["enable_google_search_grounding"])
+        self.assertFalse(config["gemini"]["model_upgrade"]["enabled"])
+        self.assertTrue(
+            {"article_generation", "quality_assurance", "maintenance_review", "revision"}.issubset(
+                config["openai"]["required_tasks"]
+            )
+        )
         self.assertEqual(github_models["model"], "openai/gpt-4.1")
         self.assertIn("openai/gpt-4.1-mini", github_models["fallback_models"])
-        self.assertTrue({"article_generation", "quality_assurance"}.issubset(github_models["lightweight_tasks"]))
-        self.assertGreaterEqual(github_models["max_output_tokens"], 12000)
+        self.assertTrue(
+            {"article_generation", "quality_assurance", "maintenance_review", "revision"}.issubset(
+                github_models["lightweight_tasks"]
+            )
+        )
+        self.assertEqual(github_models["max_output_tokens"], 4000)
         self.assertTrue(config["publishing"]["prefer_evergreen_after_quota"])
         self.assertFalse(config["publishing"]["prefer_source_qualified_evergreen_first"])
-        self.assertEqual(config["publishing"]["max_topic_attempts"], 3)
-        self.assertEqual(config["publishing"]["required_enhanced_elements"], 1)
+        self.assertEqual(config["publishing"]["max_topic_attempts"], 2)
+        self.assertEqual(config["publishing"]["target_words"], 1500)
+        self.assertEqual(config["publishing"]["max_regeneration_attempts"], 2)
+        self.assertGreaterEqual(config["publishing"]["quality_min_score"], 0.88)
+        self.assertGreaterEqual(config["publishing"]["ai_qa_min_score"], 0.85)
+        self.assertEqual(config["publishing"]["minimum_practical_elements"], 3)
+        self.assertEqual(config["publishing"]["required_enhanced_elements"], 2)
         self.assertEqual(config["publishing"]["required_diagrams"], 1)
         self.assertEqual(config["publishing"]["required_code_examples"], 1)
         self.assertTrue(config["publishing"]["require_contextual_visuals"])
+        self.assertFalse(config["publishing"]["allow_offline_fallback"])
         self.assertEqual(config["publishing"]["required_diagram_detail_nodes"], 3)
         self.assertEqual(
             set(config["publishing"]["allowed_diagram_layouts"]),
             {"sequence", "architecture", "decision", "comparison", "cycle"},
         )
         self.assertTrue(config["cost_control"]["require_source_qualified_topic"])
-        self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 3)
+        self.assertEqual(config["cost_control"]["max_topic_selection_calls_per_run"], 2)
         self.assertEqual(config["github_models"]["max_input_characters"], 24000)
-        self.assertEqual(config["publication_queue"]["target_depth"], 12)
+        self.assertEqual(config["publication_queue"]["target_depth"], 4)
+        self.assertEqual(config["maintenance"]["max_articles_per_run"], 4)
         self.assertEqual(config["research"]["topic_source_min_anchor_overlap"], 2)
+        self.assertTrue(config["source_validation"]["enable_related_source_expansion"])
+        self.assertEqual(config["source_validation"]["minimum_initial_topic_sources"], 1)
         self.assertEqual(config["taxonomy"]["preferred_tags_per_article"], 3)
         self.assertTrue(config["taxonomy"]["allow_new_tags"])
 
@@ -111,6 +133,8 @@ class AutopublisherTests(unittest.TestCase):
         self.assertIn("schedule:", trigger_block)
         self.assertIn("workflow_dispatch:", trigger_block)
         self.assertIn("python -m unittest discover -s tools/autopublisher", deploy_workflow)
+        self.assertIn('paths-ignore:', deploy_workflow)
+        self.assertIn('".autopublisher/state.json"', deploy_workflow)
         preparation_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-prepare.yml").read_text(encoding="utf-8")
         self.assertIn('".autopublisher/prepare-now"', preparation_workflow)
         self.assertIn("--mode prepare", preparation_workflow)
@@ -126,10 +150,51 @@ class AutopublisherTests(unittest.TestCase):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
             self.assertIn("group: repository-write-${{ github.ref }}", workflow)
             self.assertIn("cancel-in-progress: false", workflow)
+        for workflow_name in (
+            "autonomous-publish.yml",
+            "autonomous-prepare.yml",
+            "autonomous-maintenance.yml",
+            "revise-existing-posts.yml",
+            "infrastructure-maintenance.yml",
+        ):
+            workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
+            self.assertIn("models: read", workflow)
+            self.assertIn("GITHUB_MODELS_TOKEN: ${{ github.token }}", workflow)
+            self.assertNotIn("OPENAI_API_KEY:", workflow)
+            self.assertNotIn("GEMINI_API_KEY:", workflow)
         for workflow_name in ("autonomous-maintenance.yml", "revise-existing-posts.yml"):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
             self.assertIn("Synchronize with the latest main revision", workflow)
             self.assertIn('git checkout --detach "origin/$branch"', workflow)
+        self.assertIn('- cron: "17 1 * * *"', preparation_workflow)
+        self.assertIn('- cron: "17 5 * * 1,3,5"', publisher_workflow)
+        maintenance_workflow = (
+            autopublisher.ROOT / ".github/workflows/autonomous-maintenance.yml"
+        ).read_text(encoding="utf-8")
+        revision_workflow = (
+            autopublisher.ROOT / ".github/workflows/revise-existing-posts.yml"
+        ).read_text(encoding="utf-8")
+        gemini_workflow = (
+            autopublisher.ROOT / ".github/workflows/gemini-model-maintenance.yml"
+        ).read_text(encoding="utf-8")
+        self.assertIn('- cron: "31 2 * * 1,4"', maintenance_workflow)
+        self.assertIn('- cron: "47 3 * * 2"', revision_workflow)
+        self.assertNotIn("schedule:", gemini_workflow)
+        self.assertLess(
+            deploy_workflow.index("Run shared release gate"),
+            deploy_workflow.index("Synchronize validated Hugo version with Cloudflare Pages"),
+        )
+        infrastructure_workflow = (
+            autopublisher.ROOT / ".github/workflows/infrastructure-maintenance.yml"
+        ).read_text(encoding="utf-8")
+        self.assertLess(
+            infrastructure_workflow.index("Commit validated automatic updates"),
+            infrastructure_workflow.index("Synchronize validated Hugo version with Cloudflare Pages"),
+        )
+        self.assertIn(
+            "if: steps.infra.outputs.manual_review != 'true'",
+            infrastructure_workflow,
+        )
 
     def test_publish_retry_does_not_stage_an_absent_ready_queue(self):
         publisher_workflow = (autopublisher.ROOT / ".github/workflows/autonomous-publish.yml").read_text(encoding="utf-8")
@@ -256,7 +321,7 @@ class AutopublisherTests(unittest.TestCase):
                 )
             )
 
-    def test_publish_uses_configured_offline_fallback_without_model_generation(self):
+    def test_publish_uses_model_before_configured_offline_fallback(self):
         config = autopublisher.load_config()
         config["publishing"]["prefer_source_qualified_evergreen_first"] = True
         topic = dict(next(item for item in config["research"]["evergreen_topics"] if item.get("offline_fallback")))
@@ -280,27 +345,37 @@ class AutopublisherTests(unittest.TestCase):
         ]
         state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
 
-        class NoModelClient:
+        class ModelClient:
             def require_key(self):
                 return None
-
-            def generate_json(self, *_args, **_kwargs):
-                raise AssertionError("configured offline fallback must not call a model")
 
         with patch.object(autopublisher, "load_config", return_value=config), \
             patch.object(autopublisher, "load_state", return_value=state), \
             patch.object(autopublisher, "load_posts", return_value=posts), \
             patch.object(autopublisher, "collect_research", return_value=sources), \
             patch.object(autopublisher, "validate_research_items", return_value=sources), \
-            patch.object(autopublisher, "GeminiClient", return_value=NoModelClient()), \
+            patch.object(autopublisher, "GeminiClient", return_value=ModelClient()), \
             patch.object(autopublisher, "choose_evergreen_topic", return_value=topic), \
             patch.object(autopublisher, "collect_topic_research", return_value=sources), \
+            patch.object(
+                autopublisher,
+                "generate_approved_article",
+                return_value=autopublisher.deterministic_evergreen_fallback(
+                    topic, sources, posts, config, autopublisher.EventLog()
+                ),
+            ) as generate, \
+            patch.object(
+                autopublisher,
+                "deterministic_evergreen_fallback",
+                side_effect=AssertionError("offline fallback must not replace an approved model article"),
+            ), \
             patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / f"content/posts/{topic['slug']}/index.md"), \
             patch.object(autopublisher, "save_state"), \
             patch.object(autopublisher, "write_publish_result"):
             result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
 
         self.assertEqual(result, 0)
+        generate.assert_called_once()
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
         self.assertEqual(state["generated_posts"][-1]["slug"], topic["slug"])
 
@@ -750,6 +825,43 @@ def process(value: int) -> int:
         self.assertEqual(request.call_args.kwargs["headers"]["Authorization"], "Bearer github-token")
         self.assertEqual(request.call_args.kwargs["payload"]["response_format"], {"type": "json_object"})
 
+    def test_openai_responses_api_is_primary_when_key_is_available(self):
+        response = {
+            "output": [
+                {
+                    "type": "message",
+                    "content": [{"type": "output_text", "text": '{"topics": []}'}],
+                }
+            ]
+        }
+        config = {
+            "openai": {
+                "enabled": True,
+                "model": "gpt-5.6-sol",
+                "tasks": ["topic_selection"],
+                "reasoning_effort": {"topic_selection": "low"},
+            },
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {"enabled": False},
+        }
+        with patch.dict(
+            os.environ,
+            {"OPENAI_API_KEY": "openai-key", "GEMINI_API_KEY": "", "GITHUB_MODELS_TOKEN": ""},
+            clear=False,
+        ), patch.object(
+            autopublisher,
+            "http_request",
+            return_value=(200, json.dumps(response).encode(), {}),
+        ) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json("Choose a topic", task="topic_selection")
+
+        self.assertEqual(result, {"topics": []})
+        self.assertEqual(request.call_args.args[0], "https://api.openai.com/v1/responses")
+        self.assertEqual(request.call_args.kwargs["payload"]["model"], "gpt-5.6-sol")
+        self.assertEqual(request.call_args.kwargs["payload"]["reasoning"], {"effort": "low"})
+        self.assertEqual(request.call_args.kwargs["headers"]["Authorization"], "Bearer openai-key")
+
     def test_github_models_falls_back_to_gemini_when_rate_limited(self):
         github_response = (429, b"rate limited", {})
         gemini_response = (
@@ -774,6 +886,101 @@ def process(value: int) -> int:
             result = client.generate_json("Choose a topic", task="topic_selection")
 
         self.assertEqual(result, {"topics": []})
+
+    def test_article_generation_never_falls_back_to_gemini(self):
+        config = {
+            "openai": {
+                "enabled": False,
+                "required_tasks": ["article_generation"],
+            },
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "openai/gpt-5",
+                "fallback_models": [],
+                "lightweight_tasks": ["article_generation"],
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {
+                "OPENAI_API_KEY": "",
+                "GEMINI_API_KEY": "gemini-key",
+                "GITHUB_MODELS_TOKEN": "github-token",
+                "GITHUB_TOKEN": "",
+            },
+            clear=False,
+        ), patch.object(
+            autopublisher,
+            "http_request",
+            return_value=(429, b"rate limited", {}),
+        ) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiQuotaError):
+                client.generate_json("Write the article", task="article_generation")
+
+        self.assertEqual(request.call_count, 1)
+        self.assertIn("models.github.ai", request.call_args.args[0])
+
+    def test_non_openai_github_model_is_skipped_for_article_generation(self):
+        config = {
+            "openai": {
+                "enabled": False,
+                "required_tasks": ["article_generation"],
+            },
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "deepseek/DeepSeek-V3",
+                "fallback_models": [],
+                "lightweight_tasks": ["article_generation"],
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {
+                "OPENAI_API_KEY": "",
+                "GEMINI_API_KEY": "gemini-key",
+                "GITHUB_MODELS_TOKEN": "github-token",
+                "GITHUB_TOKEN": "",
+            },
+            clear=False,
+        ), patch.object(autopublisher, "http_request") as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiTransientError):
+                client.generate_json("Write the article", task="article_generation")
+
+        request.assert_not_called()
+
+    def test_failed_github_model_does_not_call_gemini_without_a_gemini_key(self):
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "github_models": {
+                "enabled": True,
+                "model": "openai/gpt-5",
+                "lightweight_tasks": ["topic_selection"],
+            },
+        }
+        with patch.dict(
+            os.environ,
+            {
+                "OPENAI_API_KEY": "",
+                "GEMINI_API_KEY": "",
+                "GITHUB_MODELS_TOKEN": "github-token",
+                "GITHUB_TOKEN": "",
+            },
+            clear=False,
+        ), patch.object(
+            autopublisher,
+            "http_request",
+            return_value=(404, b"model unavailable", {}),
+        ) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            with self.assertRaises(autopublisher.GeminiTransientError):
+                client.generate_json("Choose a topic", task="topic_selection")
+
+        self.assertEqual(request.call_count, 1)
+        self.assertNotIn("temperature", request.call_args.kwargs["payload"])
 
     def test_github_models_falls_back_when_json_output_is_malformed(self):
         github_response = (
@@ -1266,6 +1473,8 @@ def process(value: int) -> int:
         )
 
         class GroundedClient:
+            api_key = "gemini-key"
+
             def grounded_research(self, _prompt):
                 return {
                     "text": "Focused documentation",
@@ -1552,6 +1761,107 @@ def process(value: int) -> int:
         }
         selected = autopublisher.choose_topic(TopicClient(), sources, None, [], config, autopublisher.EventLog())
         self.assertEqual(selected["slug"], "secure-serverless-cloud-function-endpoints")
+
+    def test_choose_topic_accepts_one_source_only_when_related_expansion_is_available(self):
+        source = autopublisher.ResearchItem(
+            "Official",
+            "Kubernetes DNS debugging",
+            "https://kubernetes.io/docs/dns-debugging",
+            "Kubernetes DNS troubleshooting documentation.",
+            "",
+            ["networking"],
+            2.0,
+            validated=True,
+            validation={
+                "related_links": [
+                    {
+                        "title": "DNS for Services and Pods",
+                        "url": "https://kubernetes.io/docs/dns-services-pods",
+                        "similarity": 0.7,
+                    }
+                ]
+            },
+        )
+
+        class TopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                return {
+                    "topics": [
+                        {
+                            "title": "Debug Kubernetes DNS Resolution from Pods",
+                            "slug": "debug-kubernetes-dns-resolution-pods",
+                            "primary_category": "networking",
+                            "categories": ["networking"],
+                            "tags": ["dns", "kubernetes"],
+                            "search_intent": "Diagnose Kubernetes DNS failures from application pods.",
+                            "source_urls": [source.url],
+                        }
+                    ]
+                }
+
+        config = {
+            "publishing": {"required_source_count": 3, "topic_relevance_min_score": 0.0},
+            "cost_control": {"require_source_qualified_topic": True},
+            "source_validation": {
+                "trusted_domains": ["kubernetes.io"],
+                "enable_related_source_expansion": True,
+                "minimum_initial_topic_sources": 1,
+            },
+            "research": {
+                "topic_source_min_similarity": 0.1,
+                "topic_source_min_token_overlap": 2,
+                "topic_source_min_anchor_overlap": 1,
+            },
+            "topic_scope": {
+                "approved_categories": ["networking"],
+                "category_keywords": {"networking": ["dns", "network"]},
+            },
+            "taxonomy": {
+                "allowed_categories": ["networking"],
+                "controlled_tags": ["dns", "kubernetes"],
+            },
+        }
+
+        selected = autopublisher.choose_topic(
+            TopicClient(), [source], None, [], config, autopublisher.EventLog()
+        )
+
+        self.assertEqual(selected["slug"], "debug-kubernetes-dns-resolution-pods")
+        self.assertEqual(selected["source_urls"], [source.url])
+
+    def test_related_source_link_extraction_keeps_relevant_same_site_docs(self):
+        item = autopublisher.ResearchItem(
+            "Kubernetes Blog",
+            "Debugging DNS Resolution",
+            "https://kubernetes.io/blog/dns-debugging",
+            "Diagnose Kubernetes DNS resolution from Pods and Services.",
+            "",
+            ["networking"],
+            2.0,
+        )
+        document = """
+        <a href="/docs/tasks/administer-cluster/dns-debugging-resolution/">
+          Debugging DNS Resolution
+        </a>
+        <a href="https://example.com/unrelated">Unrelated external page</a>
+        <a href="/community/">Community</a>
+        """
+        config = {
+            "source_validation": {
+                "trusted_domains": ["kubernetes.io"],
+                "related_links_per_source": 6,
+                "related_link_min_similarity": 0.05,
+            }
+        }
+
+        links = autopublisher.extract_related_source_links(
+            document, item.url, item, config
+        )
+
+        self.assertEqual(
+            [link["url"] for link in links],
+            ["https://kubernetes.io/docs/tasks/administer-cluster/dns-debugging-resolution"],
+        )
 
     def test_generate_approved_article_retries_with_repair_context(self):
         prompts = []
@@ -2413,6 +2723,56 @@ def process(value: int) -> int:
         self.assertEqual(generate.call_args.args[1], evergreen_topic)
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
+    def test_quality_first_policy_retries_instead_of_using_offline_article(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {
+                "required_source_count": 1,
+                "max_topic_attempts": 1,
+                "max_evergreen_topic_attempts": 0,
+                "allow_offline_fallback": False,
+            },
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        research = [
+            autopublisher.ResearchItem(
+                "Official", "Source", "https://trusted.example/one", "One", "", ["technology"], 1.0
+            )
+        ]
+        topic = {
+            "title": "Evidence-backed topic",
+            "slug": "evidence-backed-topic",
+            "categories": ["technology"],
+        }
+
+        class Client:
+            def require_key(self):
+                return None
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=research), \
+            patch.object(autopublisher, "enrich_research_snippets"), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_topic", return_value=topic), \
+            patch.object(autopublisher, "collect_topic_research", return_value=research), \
+            patch.object(
+                autopublisher,
+                "generate_approved_article",
+                return_value=(None, None, "model draft failed quality review"),
+            ), \
+            patch.object(autopublisher, "deterministic_evergreen_fallback") as offline_fallback, \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=False))
+
+        self.assertEqual(result, 0)
+        offline_fallback.assert_not_called()
+        self.assertEqual(state["last_runs"]["publish"]["result"], "retry_scheduled")
+        self.assertEqual(state["pending_publication"]["topic"]["slug"], topic["slug"])
+
     def test_publish_uses_evergreen_when_dynamic_selection_returns_none(self):
         config = {
             "gemini": {"enable_google_search_grounding": False},
@@ -2461,13 +2821,13 @@ def process(value: int) -> int:
             patch.object(autopublisher, "collect_topic_research", return_value=research), \
             patch.object(
                 autopublisher,
-                "deterministic_evergreen_fallback",
+                "generate_approved_article",
                 return_value=(article, {"approved": True}, ""),
-            ) as fallback, \
+            ) as generate, \
             patch.object(
                 autopublisher,
-                "generate_approved_article",
-                side_effect=AssertionError("the configured offline fallback must bypass model generation"),
+                "deterministic_evergreen_fallback",
+                side_effect=AssertionError("offline fallback must not replace an approved model article"),
             ), \
             patch.object(autopublisher, "write_article_bundle", return_value=autopublisher.ROOT / "content/posts/evergreen-topic/index.md"), \
             patch.object(autopublisher, "save_state"), \
@@ -2477,8 +2837,8 @@ def process(value: int) -> int:
         self.assertEqual(result, 0)
         choose_dynamic.assert_called_once()
         choose_evergreen.assert_called_once()
-        fallback.assert_called_once()
-        self.assertEqual(fallback.call_args.args[0], evergreen_topic)
+        generate.assert_called_once()
+        self.assertEqual(generate.call_args.args[1], evergreen_topic)
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
 
     def test_publish_result_marker_records_explicit_result(self):
@@ -2490,12 +2850,61 @@ def process(value: int) -> int:
         self.assertEqual(payload["result"], "rejected")
         self.assertEqual(payload["reason"], "qa_failed")
 
-    def test_maintenance_stops_cleanly_when_grounded_research_is_quota_limited(self):
+    def test_repeated_empty_retry_is_coalesced_without_state_commit_churn(self):
+        state = {
+            "last_runs": {
+                "publish": {
+                    "time": "2026-07-26T00:00:00Z",
+                    "result": "retry_scheduled",
+                    "reason": "no_valid_topic",
+                    "stage": "topic_selection",
+                }
+            },
+            "pending_publication": {
+                "scheduled_at": "2026-07-26T00:00:00Z",
+                "next_retry_at": "2026-07-26T06:00:00Z",
+                "reason": "no_valid_topic",
+                "stage": "topic_selection",
+                "detail": "No source-qualified topic was available.",
+                "consecutive_attempts": 19,
+                "topic_attempts": 0,
+                "topic": {},
+            },
+        }
+        original = deepcopy(state)
+
+        with patch.object(autopublisher, "save_state") as save_state, \
+            patch.object(autopublisher, "write_publish_result") as write_result:
+            autopublisher.schedule_publish_retry(
+                state,
+                {"retry": {"base_delay_hours": 6}},
+                autopublisher.EventLog(),
+                reason="no_valid_topic",
+                stage="topic_selection",
+                detail="No source-qualified topic was available again.",
+            )
+
+        self.assertEqual(state, original)
+        save_state.assert_not_called()
+        self.assertTrue(write_result.call_args.kwargs["coalesced"])
+
+    def test_maintenance_falls_back_when_grounded_research_is_quota_limited(self):
         state = {"maintenance_reviews": {}, "last_runs": {}}
-        post = SimpleNamespace(slug="test-post", title="Test post", date="2026-01-01", body="A readable article body.")
+        post = autopublisher.Post(
+            path=Path("test-post.md"),
+            slug="test-post",
+            title="Test post",
+            description="A readable test article.",
+            date="2026-01-01",
+            body="A readable article body.",
+            tags=["testing"],
+            categories=["software-engineering"],
+            frontmatter={"title": "Test post", "description": "A readable test article."},
+        )
 
         class QuotaClient:
             text_model = "test"
+            api_key = "gemini-key"
 
             def require_key(self):
                 return None
@@ -2504,7 +2913,7 @@ def process(value: int) -> int:
                 raise autopublisher.GeminiQuotaError("quota")
 
             def generate_json(self, *_args, **_kwargs):
-                raise AssertionError("maintenance must not generate after a quota response")
+                return {"action": "none", "reason": "No supported change is required."}
 
         with tempfile.TemporaryDirectory() as directory:
             report_path = Path(directory) / "maintenance-latest.json"
@@ -2520,8 +2929,9 @@ def process(value: int) -> int:
             report = json.loads(report_path.read_text(encoding="utf-8"))
 
         self.assertEqual(result, 0)
-        self.assertEqual(state["last_runs"]["maintain"]["result"], "quota_limited")
-        self.assertEqual(report["failed_repairs"][0]["slug"], "test-post")
+        self.assertEqual(state["last_runs"]["maintain"]["result"], "completed")
+        self.assertEqual(report["failed_repairs"], [])
+        self.assertEqual(state["maintenance_reviews"]["test-post"]["action"], "none")
         save_state.assert_called_once_with(state)
 
     def test_topic_relevance_accepts_approved_cluster_and_rejects_disallowed_topic(self):
@@ -2822,6 +3232,38 @@ Continue with prose.
         self.assertGreater(result["heading"], 0.9)
         self.assertGreater(result["intent"], 0.7)
 
+    def test_detailed_duplicate_detection_keeps_independent_metric_maxima(self):
+        semantic_post = autopublisher.Post(
+            Path("semantic.md"), "semantic-match", "Kubernetes Policy Guide",
+            "A broad guide to Kubernetes policy.", "2026-01-01", ["kubernetes"], ["policy"],
+            "Kubernetes policy controls admission and authorization across a cluster.",
+            {},
+        )
+        repeated = (
+            "verify the exact runtime state before changing production configuration "
+            "and preserve the evidence for the incident timeline "
+        ) * 8
+        template_post = autopublisher.Post(
+            Path("template.md"), "template-match", "Unrelated Operations Guide",
+            "A different reader intent.", "2026-01-01", ["operations"], ["operations"],
+            repeated,
+            {},
+        )
+        result = autopublisher.detailed_existing_similarity(
+            title="Kubernetes Policy Guide",
+            slug="kubernetes-policy-guide",
+            search_intent="understand Kubernetes policy controls",
+            body=repeated,
+            categories=["kubernetes"],
+            tags=["policy"],
+            source_urls=[],
+            posts=[semantic_post, template_post],
+        )
+        self.assertGreater(result["title"], 0.9)
+        self.assertGreater(result["ngram"], 0.9)
+        self.assertEqual(result["metric_posts"]["title"].slug, semantic_post.slug)
+        self.assertEqual(result["metric_posts"]["ngram"].slug, template_post.slug)
+
     def test_internal_links_reject_missing_and_noncanonical_targets(self):
         post = autopublisher.Post(Path("dns.md"), "dns-basics", "DNS basics", "DNS", "2026-01-01", ["dns"], ["networking"], "body", {})
         issues = autopublisher.internal_link_issues(
@@ -2935,6 +3377,46 @@ Continue with prose.
         self.assertEqual(updated["lastmod"], frontmatter["lastmod"])
         self.assertEqual(updated["verification_date"], frontmatter["verification_date"])
         self.assertEqual(int(updated["verification_version"]), 2)
+
+    def test_source_backed_review_updates_verification_without_changing_lastmod(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "index.md"
+            frontmatter = {
+                "title": "DNS",
+                "date": "2026-01-01T00:00:00+00:00",
+                "lastmod": "2026-02-01T00:00:00+00:00",
+                "verification_date": "2026-02-01T00:00:00Z",
+                "verification_version": 2,
+                "categories": ["networking"],
+                "tags": ["networking"],
+            }
+            body = "## Existing\n\nDNS resolver behavior and diagnostic commands."
+            path.write_text(autopublisher.compose_markdown(frontmatter, body), encoding="utf-8")
+            post = autopublisher.Post(
+                path,
+                "dns",
+                "DNS",
+                "Description",
+                frontmatter["date"],
+                ["networking"],
+                ["networking"],
+                body,
+                frontmatter,
+            )
+            autopublisher.mark_post_reviewed(
+                post,
+                {
+                    "site": {"timezone": "UTC"},
+                    "revalidation_intervals": {"default_days": 60, "stable_protocol_days": 150},
+                },
+                source_count=3,
+            )
+            updated, _body = autopublisher.split_frontmatter(path.read_text(encoding="utf-8"))
+
+        self.assertEqual(updated["lastmod"], frontmatter["lastmod"])
+        self.assertEqual(updated["verification_status"], "Source reviewed")
+        self.assertEqual(int(updated["verification_version"]), 3)
+        self.assertIn("3 current trusted source pages", updated["version_context"])
 
     def test_repeated_paragraph_under_three_headings_is_flagged(self):
         repeated = "Inspect the Conditional Access result and correlation ID before changing the affected policy scope."
@@ -3092,6 +3574,25 @@ Interpret the Conditional Access result: if it reports failure, the next check i
             accepted = autopublisher.validate_research_items([first, second], {"source_validation": {}}, autopublisher.EventLog())
         self.assertEqual([item.title for item in accepted], ["One"])
         self.assertEqual(second.validation["reason"], "duplicate_source_content")
+
+    def test_link_check_confirms_head_failure_with_get(self):
+        with patch.object(
+            autopublisher,
+            "http_request",
+            side_effect=[
+                (404, b"", {}),
+                (200, b"healthy", {"content-type": "text/html"}),
+            ],
+        ) as request:
+            ok, detail = autopublisher.check_link(
+                "https://docs.example.test/current",
+                {"maintenance": {"link_timeout_seconds": 2}},
+            )
+
+        self.assertTrue(ok)
+        self.assertEqual(detail, "HTTP 200")
+        self.assertEqual(request.call_args_list[0].kwargs["method"], "HEAD")
+        self.assertEqual(request.call_args_list[1].kwargs["method"], "GET")
 
     def test_recent_category_balance_prefers_neglected_cluster(self):
         now = autopublisher.parse_date("2026-07-17T00:00:00Z")

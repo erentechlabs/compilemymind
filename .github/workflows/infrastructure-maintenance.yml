@@ -13,6 +13,7 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  models: read
 
 jobs:
   maintain-infrastructure:
@@ -20,10 +21,7 @@ jobs:
     timeout-minutes: 30
     env:
       GITHUB_TOKEN: ${{ github.token }}
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-      GEMINI_TEXT_MODEL: ${{ vars.GEMINI_TEXT_MODEL }}
-      GEMINI_QA_MODEL: ${{ vars.GEMINI_QA_MODEL }}
-      GEMINI_GROUNDED_RESEARCH_MODEL: ${{ vars.GEMINI_GROUNDED_RESEARCH_MODEL }}
+      GITHUB_MODELS_TOKEN: ${{ github.token }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
@@ -42,6 +40,8 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+          cache: pip
+          cache-dependency-path: tools/autopublisher/requirements.txt
 
       - name: Install validators and run repository regression tests
         run: |
@@ -127,12 +127,12 @@ jobs:
 
       - name: Exercise autonomous publisher in dry-run mode
         id: publisher_dry_run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY != ''
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GITHUB_MODELS_TOKEN != ''
         run: python tools/autopublisher/autopublisher.py --mode publish --dry-run
 
       - name: Record unavailable provider dry run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY == ''
-        run: echo "Publisher compatibility is covered by deterministic tests; the live-provider dry run was skipped because GEMINI_API_KEY is unavailable."
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GITHUB_MODELS_TOKEN == ''
+        run: echo "Publisher compatibility is covered by deterministic tests; the live-provider dry run was skipped because no generation provider is configured."
 
       - name: Upload infrastructure report
         if: always()
@@ -148,10 +148,6 @@ jobs:
       - name: Stop after a failed regression test
         if: always() && (steps.infra.outcome == 'failure' || steps.hugo_candidate.outcome == 'failure' || steps.release_gate.outcome == 'failure' || steps.publisher_dry_run.outcome == 'failure')
         run: exit 1
-
-      - name: Synchronize Hugo version with Cloudflare Pages
-        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
-        run: python tools/maintenance/sync_cloudflare_hugo.py
 
       - name: Prepare a draft review PR for risky updates
         if: steps.infra.outputs.manual_review == 'true'
@@ -189,3 +185,7 @@ jobs:
           fi
           git commit -m "chore(infra): apply validated maintenance updates"
           git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Synchronize validated Hugo version with Cloudflare Pages
+        if: steps.infra.outputs.manual_review != 'true' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        run: python tools/maintenance/sync_cloudflare_hugo.py

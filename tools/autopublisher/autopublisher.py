@@ -171,6 +171,14 @@ class GitHubModelsTransientError(GeminiTransientError):
     """Raised when GitHub Models is temporarily unavailable."""
 
 
+class OpenAIQuotaError(GeminiQuotaError):
+    """Raised when the OpenAI API reports a rate or usage limit."""
+
+
+class OpenAITransientError(GeminiTransientError):
+    """Raised when the OpenAI API is temporarily unavailable."""
+
+
 def utc_now() -> dt.datetime:
     return dt.datetime.now(dt.timezone.utc)
 
@@ -494,7 +502,10 @@ def is_permanent_billing_quota(error: Exception | str) -> bool:
         for marker in (
             "prepayment credits are depleted",
             "prepaid credits are depleted",
+            "insufficient_quota",
+            "exceeded your current quota",
             "billing account",
+            "billing details",
             "manage your project and billing",
         )
     )
@@ -523,7 +534,16 @@ def open_provider_circuit(
     """Persist a cooldown for non-transient provider billing failures."""
     if state is None or not is_permanent_billing_quota(error):
         return False
-    hours = max(1, int(config.get("cost_control", {}).get("gemini_billing_cooldown_hours", 168)))
+    cost_config = config.get("cost_control", {})
+    hours = max(
+        1,
+        int(
+            cost_config.get(
+                "provider_billing_cooldown_hours",
+                cost_config.get("gemini_billing_cooldown_hours", 168),
+            )
+        ),
+    )
     state.setdefault("provider_cooldowns", {})[provider] = {
         "opened_at": iso_z(),
         "until": iso_z(utc_now() + dt.timedelta(hours=hours)),
@@ -599,6 +619,29 @@ def schedule_publish_retry(
     same_topic = bool(candidate.get("slug") and candidate.get("slug") == previous_topic.get("slug"))
     topic_attempts = int(previous.get("topic_attempts", 0) or 0) + 1 if same_topic else (1 if candidate else 0)
     consecutive_attempts = int(previous.get("consecutive_attempts", 0) or 0) + 1
+    same_empty_retry = bool(
+        not candidate
+        and not previous_topic
+        and previous.get("reason") == reason
+        and previous.get("stage") == stage
+    )
+    if same_empty_retry:
+        next_retry_at = str(previous.get("next_retry_at", ""))
+        write_publish_result(
+            "retry_scheduled",
+            reason=reason,
+            stage=stage,
+            next_retry_at=next_retry_at,
+            coalesced=True,
+        )
+        log.log(
+            "publish_retry_coalesced",
+            reason=reason,
+            stage=stage,
+            next_retry_at=next_retry_at,
+            consecutive_attempts=int(previous.get("consecutive_attempts", 0) or 0),
+        )
+        return
     retry_config = config.get("retry", {})
     delay_hours = max(1, int(retry_config.get("base_delay_hours", 6)))
     pending = {
@@ -1003,6 +1046,48 @@ class GeminiClient:
         self.log = log
         self.state = state
         self.api_key = os.environ.get("GEMINI_API_KEY", "").strip()
+        openai_config = config.get("openai", {})
+        self.openai_enabled = bool(openai_config.get("enabled", True))
+        self.openai_api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+        self.openai_endpoint = str(
+            openai_config.get("endpoint", "https://api.openai.com/v1/responses")
+        ).strip()
+        self.openai_model = (
+            os.environ.get("OPENAI_MODEL", "").strip()
+            or str(openai_config.get("model", "gpt-5.6-sol")).strip()
+        )
+        self.openai_models = [self.openai_model] + [
+            str(candidate).strip()
+            for candidate in openai_config.get("fallback_models", []) or []
+            if str(candidate).strip() and str(candidate).strip() != self.openai_model
+        ]
+        self.openai_tasks = {
+            str(task).strip()
+            for task in openai_config.get(
+                "tasks",
+                [
+                    "topic_selection",
+                    "article_generation",
+                    "quality_assurance",
+                    "metadata_enrichment",
+                    "maintenance_review",
+                    "revision",
+                ],
+            )
+            if str(task).strip()
+        }
+        self.openai_required_tasks = {
+            str(task).strip()
+            for task in openai_config.get("required_tasks", [])
+            if str(task).strip()
+        }
+        self.openai_max_output_tokens = int(openai_config.get("max_output_tokens", 32768))
+        self.openai_max_input_characters = int(openai_config.get("max_input_characters", 60000))
+        self.openai_reasoning_effort = {
+            str(task): str(effort)
+            for task, effort in (openai_config.get("reasoning_effort", {}) or {}).items()
+            if str(task).strip() and str(effort).strip()
+        }
         github_models = config.get("github_models", {})
         self.github_models_enabled = bool(github_models.get("enabled", True))
         self.github_models_token = (
@@ -1052,8 +1137,15 @@ class GeminiClient:
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
 
     def require_key(self) -> None:
-        if not self.api_key:
-            raise SystemExit("GEMINI_API_KEY is required for autonomous publishing and maintenance.")
+        if not (
+            (self.openai_enabled and self.openai_api_key)
+            or (self.github_models_enabled and self.github_models_token)
+            or self.api_key
+        ):
+            raise SystemExit(
+                "A generation provider is required. Configure OPENAI_API_KEY, "
+                "GITHUB_MODELS_TOKEN/GITHUB_TOKEN, or GEMINI_API_KEY."
+            )
 
     def generate_json(
         self,
@@ -1064,8 +1156,36 @@ class GeminiClient:
         max_output_tokens: int | None = None,
         task: str | None = None,
     ) -> dict[str, Any]:
+        provider_errors: list[Exception] = []
+        if self._use_openai(task):
+            for openai_model in self.openai_models:
+                try:
+                    return self._openai_generate_json(
+                        prompt,
+                        max_output_tokens=max_output_tokens,
+                        task=task or "",
+                        openai_model=openai_model,
+                    )
+                except Exception as error:
+                    provider_errors.append(error)
+                    self.log.log(
+                        "model_provider_fallback",
+                        provider="openai",
+                        task=task or "unknown",
+                        model=openai_model,
+                        error=str(error),
+                    )
         if self._use_lightweight_model(task):
             for github_model in self.github_models_models:
+                if not self._github_model_allowed_for_task(task, github_model):
+                    self.log.log(
+                        "model_provider_skipped",
+                        provider="github_models",
+                        task=task or "unknown",
+                        model=github_model,
+                        reason="openai_model_required",
+                    )
+                    continue
                 try:
                     return self._github_models_generate_json(
                         prompt,
@@ -1075,14 +1195,23 @@ class GeminiClient:
                         github_model=github_model,
                     )
                 except Exception as error:
+                    provider_errors.append(error)
                     self.log.log(
                         "lightweight_model_fallback",
                         task=task or "unknown",
                         model=github_model,
                         error=str(error),
                     )
+        if self._requires_openai_model(task):
+            self.log.log(
+                "gemini_fallback_skipped",
+                task=task or "unknown",
+                reason="openai_model_required",
+            )
+            self._raise_generation_unavailable(task, provider_errors)
         selected_model = model or self.text_model
-        self.require_key()
+        if not self.api_key:
+            self._raise_generation_unavailable(task, provider_errors)
         config = {
             "temperature": temperature
             if temperature is not None
@@ -1108,8 +1237,36 @@ class GeminiClient:
         max_output_tokens: int | None = None,
         task: str | None = None,
     ) -> str:
+        provider_errors: list[Exception] = []
+        if self._use_openai(task):
+            for openai_model in self.openai_models:
+                try:
+                    return self._openai_generate_text(
+                        prompt,
+                        max_output_tokens=max_output_tokens,
+                        task=task or "",
+                        openai_model=openai_model,
+                    )
+                except Exception as error:
+                    provider_errors.append(error)
+                    self.log.log(
+                        "model_provider_fallback",
+                        provider="openai",
+                        task=task or "unknown",
+                        model=openai_model,
+                        error=str(error),
+                    )
         if self._use_lightweight_model(task):
             for github_model in self.github_models_models:
+                if not self._github_model_allowed_for_task(task, github_model):
+                    self.log.log(
+                        "model_provider_skipped",
+                        provider="github_models",
+                        task=task or "unknown",
+                        model=github_model,
+                        reason="openai_model_required",
+                    )
+                    continue
                 try:
                     return self._github_models_generate_text(
                         prompt,
@@ -1119,14 +1276,23 @@ class GeminiClient:
                         github_model=github_model,
                     )
                 except Exception as error:
+                    provider_errors.append(error)
                     self.log.log(
                         "lightweight_model_fallback",
                         task=task or "unknown",
                         model=github_model,
                         error=str(error),
                     )
+        if self._requires_openai_model(task):
+            self.log.log(
+                "gemini_fallback_skipped",
+                task=task or "unknown",
+                reason="openai_model_required",
+            )
+            self._raise_generation_unavailable(task, provider_errors)
         selected_model = model or self.text_model
-        self.require_key()
+        if not self.api_key:
+            self._raise_generation_unavailable(task, provider_errors)
         config = {
             "temperature": temperature
             if temperature is not None
@@ -1135,6 +1301,173 @@ class GeminiClient:
         }
         response = self._generate_content(selected_model, prompt, config)
         return self._extract_text(response)
+
+    @staticmethod
+    def _raise_generation_unavailable(
+        task: str | None,
+        provider_errors: list[Exception],
+    ) -> None:
+        if provider_errors and isinstance(
+            provider_errors[-1],
+            (GeminiQuotaError, GeminiTransientError),
+        ):
+            raise provider_errors[-1]
+        detail = str(provider_errors[-1]) if provider_errors else "no eligible provider credential"
+        raise GeminiTransientError(
+            f"No generation provider completed task {task or 'unknown'}: {detail}"
+        )
+
+    def _use_openai(self, task: str | None) -> bool:
+        return bool(
+            task
+            and self.openai_enabled
+            and self.openai_api_key
+            and task in self.openai_tasks
+            and not provider_circuit_open(self.state, "openai_generation")
+        )
+
+    def _requires_openai_model(self, task: str | None) -> bool:
+        return bool(task and task in self.openai_required_tasks)
+
+    def _github_model_allowed_for_task(
+        self,
+        task: str | None,
+        github_model: str,
+    ) -> bool:
+        if not self._requires_openai_model(task):
+            return True
+        return github_model.strip().lower().startswith("openai/")
+
+    def _openai_generate_json(
+        self,
+        prompt: str,
+        *,
+        max_output_tokens: int | None,
+        task: str,
+        openai_model: str,
+    ) -> dict[str, Any]:
+        response = self._openai_request(
+            prompt,
+            max_output_tokens=max_output_tokens,
+            task=task,
+            openai_model=openai_model,
+            json_mode=True,
+        )
+        parsed = parse_model_json(self._extract_openai_text(response))
+        self.log.log("model_provider_used", provider="openai", task=task, model=openai_model)
+        return parsed
+
+    def _openai_generate_text(
+        self,
+        prompt: str,
+        *,
+        max_output_tokens: int | None,
+        task: str,
+        openai_model: str,
+    ) -> str:
+        response = self._openai_request(
+            prompt,
+            max_output_tokens=max_output_tokens,
+            task=task,
+            openai_model=openai_model,
+        )
+        text = self._extract_openai_text(response)
+        self.log.log("model_provider_used", provider="openai", task=task, model=openai_model)
+        return text
+
+    def _openai_request(
+        self,
+        prompt: str,
+        *,
+        max_output_tokens: int | None,
+        task: str,
+        openai_model: str,
+        json_mode: bool = False,
+    ) -> dict[str, Any]:
+        compacted_prompt = compact_model_prompt(prompt, self.openai_max_input_characters)
+        if compacted_prompt != prompt:
+            self.log.log(
+                "model_prompt_compacted",
+                provider="openai",
+                task=task,
+                model=openai_model,
+                original_characters=len(prompt),
+                compacted_characters=len(compacted_prompt),
+            )
+        instructions = (
+            "Return only valid JSON matching the requested shape. Do not wrap it in Markdown."
+            if json_mode
+            else "Return only the requested final answer."
+        )
+        payload: dict[str, Any] = {
+            "model": openai_model,
+            "instructions": instructions,
+            "input": compacted_prompt,
+            "max_output_tokens": min(
+                max_output_tokens or self.openai_max_output_tokens,
+                self.openai_max_output_tokens,
+            ),
+        }
+        if re.search(r"(?i)^gpt-5(?:$|[-.])", openai_model):
+            payload["reasoning"] = {
+                "effort": self.openai_reasoning_effort.get(task, "medium"),
+            }
+            payload["text"] = {
+                "verbosity": "high" if task in {"article_generation", "revision"} else "medium",
+            }
+        status, body, _headers = http_request(
+            self.openai_endpoint,
+            method="POST",
+            payload=payload,
+            headers={
+                "Authorization": f"Bearer {self.openai_api_key}",
+                "Accept": "application/json",
+            },
+            timeout=180,
+            retries=3,
+        )
+        if status == 429:
+            error = OpenAIQuotaError(
+                f"OpenAI quota exceeded for {openai_model}: HTTP {status}: {body[:800]!r}"
+            )
+            if open_provider_circuit(self.state, "openai_generation", error, self.config):
+                self.log.log(
+                    "provider_circuit_opened",
+                    provider="openai_generation",
+                    reason="billing_credit_depleted",
+                )
+            raise error
+        if status in {500, 502, 503, 504}:
+            raise OpenAITransientError(
+                f"OpenAI temporarily unavailable for {openai_model}: HTTP {status}: {body[:800]!r}"
+            )
+        if status >= 400:
+            raise RuntimeError(
+                f"OpenAI request failed for {openai_model}: HTTP {status}: {body[:800]!r}"
+            )
+        return json.loads(body.decode("utf-8"))
+
+    @staticmethod
+    def _extract_openai_text(response: dict[str, Any]) -> str:
+        direct = response.get("output_text")
+        if isinstance(direct, str) and direct.strip():
+            return direct.strip()
+        parts: list[str] = []
+        for output in response.get("output", []) or []:
+            if not isinstance(output, dict):
+                continue
+            for content in output.get("content", []) or []:
+                if not isinstance(content, dict):
+                    continue
+                text = content.get("text")
+                if content.get("type") in {"output_text", "text"} and isinstance(text, str):
+                    parts.append(text)
+        text = "\n".join(parts).strip()
+        if not text:
+            raise RuntimeError(
+                f"OpenAI response did not contain output text: {json.dumps(response)[:800]}"
+            )
+        return text
 
     def _use_lightweight_model(self, task: str | None) -> bool:
         return bool(
@@ -1226,6 +1559,11 @@ class GeminiClient:
                 self.github_models_max_output_tokens,
             ),
         }
+        # GPT-5 reasoning deployments can reject non-default sampling controls.
+        # Omitting temperature lets the selected deployment use its supported
+        # default instead of needlessly falling through to an older model.
+        if re.search(r"(?i)(?:^|/)gpt-5(?:$|[-.])", github_model):
+            payload.pop("temperature", None)
         if json_mode:
             payload["response_format"] = {"type": "json_object"}
         status, body, _headers = http_request(
@@ -1293,7 +1631,11 @@ class GeminiClient:
         return text
 
     def grounded_research(self, prompt: str) -> dict[str, Any]:
-        self.require_key()
+        if not self.api_key:
+            raise GeminiQuotaError(
+                "GEMINI_API_KEY is required for grounded research; trusted feeds and linked "
+                "official documentation remain available."
+            )
         if provider_circuit_open(self.state, "gemini_grounded_research"):
             raise GeminiQuotaError(
                 "Gemini grounded research is paused because the billing-credit circuit is open; "
@@ -1346,7 +1688,9 @@ class GeminiClient:
         return {"text": "\n\n".join(text_parts).strip(), "citations": dedupe_sources(citations)}
 
     def generate_image(self, prompt: str, output_path: Path) -> bool:
-        self.require_key()
+        if not self.api_key:
+            self.log.log("gemini_image_error", error="GEMINI_API_KEY is not configured")
+            return False
         config = {
             "temperature": 0.8,
             "responseModalities": ["TEXT", "IMAGE"],
@@ -1859,6 +2203,61 @@ def merge_research_items(*groups: list[ResearchItem]) -> list[ResearchItem]:
     return merged
 
 
+def related_topic_source_candidates(
+    topic: dict[str, Any],
+    research: list[ResearchItem],
+    config: dict[str, Any],
+) -> list[ResearchItem]:
+    """Build topic-scoped candidates from links found on validated sources."""
+    source_config = config.get("source_validation", {})
+    if not source_config.get("enable_related_source_expansion", True):
+        return []
+    selected_urls = {
+        canonical_url(str(url))
+        for url in topic.get("source_urls", []) or []
+        if canonical_url(str(url))
+    }
+    bases = sorted(
+        research,
+        key=lambda item: (
+            canonical_url(item.url) in selected_urls,
+            research_item_topic_similarity(topic, item),
+            item.score,
+        ),
+        reverse=True,
+    )
+    maximum = max(0, int(source_config.get("max_related_candidates_per_topic", 10)))
+    existing_urls = {canonical_url(item.url) for item in research}
+    candidates: list[ResearchItem] = []
+    for base in bases:
+        for related in base.validation.get("related_links", []) or []:
+            if not isinstance(related, dict):
+                continue
+            url = canonical_url(str(related.get("url", "")))
+            title = normalize_space(str(related.get("title", "")))
+            if not url or not title or url in existing_urls:
+                continue
+            candidate = ResearchItem(
+                source=f"Official documentation linked from {base.source}",
+                title=title,
+                url=url,
+                summary=(
+                    f"{title}. Official documentation linked from {base.title} "
+                    f"for the article topic {topic.get('title', '')}."
+                ),
+                published="",
+                categories=list(topic.get("categories", []) or base.categories),
+                score=float(base.score) + float(related.get("similarity", 0.0)),
+            )
+            if not topic_source_is_directly_relevant(topic, candidate, config):
+                continue
+            existing_urls.add(url)
+            candidates.append(candidate)
+            if len(candidates) >= maximum:
+                return candidates
+    return candidates
+
+
 def collect_topic_research(
     client: "GeminiClient",
     topic: dict[str, Any],
@@ -1909,8 +2308,25 @@ def collect_topic_research(
     exact_seed_sources = [item for item in scoped if canonical_url(item.url) in seed_urls]
     if len(exact_seed_sources) >= required:
         scoped = exact_seed_sources[:required]
+    if len(scoped) < required:
+        related_candidates = related_topic_source_candidates(topic, research, config)
+        if related_candidates:
+            validated_related = validate_research_items(related_candidates, config, log)
+            research = merge_research_items(research, validated_related)
+            scoped = research_items_for_topic(topic, research, limit=limit, config=config)
+            log.log(
+                "topic_related_sources_expanded",
+                title=topic.get("title"),
+                candidates=len(related_candidates),
+                validated=len(validated_related),
+                selected=len(scoped),
+            )
     grounding_enabled = config.get("gemini", {}).get("enable_google_search_grounding", True)
-    grounding_available = grounding_enabled and not provider_circuit_open(state, "gemini_grounded_research")
+    grounding_available = (
+        grounding_enabled
+        and bool(getattr(client, "api_key", ""))
+        and not provider_circuit_open(state, "gemini_grounded_research")
+    )
     if len(scoped) < required and grounding_enabled and not grounding_available:
         log.log(
             "topic_grounded_research_skipped",
@@ -2066,6 +2482,7 @@ def detailed_existing_similarity(
 ) -> dict[str, Any]:
     best: dict[str, Any] = {
         "post": None,
+        "metric_posts": {},
         "semantic": 0.0,
         "title": 0.0,
         "intent": 0.0,
@@ -2076,6 +2493,7 @@ def detailed_existing_similarity(
         "tag_overlap": 0.0,
         "slug": 0.0,
     }
+    strongest_single_metric = 0.0
     candidate_intro = re.split(r"(?m)^##\s+", body, maxsplit=1)[0]
     candidate_conclusion = body[-1200:]
     candidate_sources = {canonical_url(url) for url in source_urls if url}
@@ -2096,8 +2514,13 @@ def detailed_existing_similarity(
             "tag_overlap": len(set(tags) & set(post.tags)) / max(1, min(len(set(tags)), len(set(post.tags)))),
             "slug": jaccard_similarity(slug.replace("-", " "), post.slug.replace("-", " ")),
         }
-        if max(metrics.values()) > max(value for key, value in best.items() if key != "post"):
-            best = {"post": post, **metrics}
+        for metric, value in metrics.items():
+            if value > best[metric]:
+                best[metric] = value
+                best["metric_posts"][metric] = post
+        if max(metrics.values()) > strongest_single_metric:
+            strongest_single_metric = max(metrics.values())
+            best["post"] = post
     return best
 
 
@@ -2244,6 +2667,7 @@ Hard requirements:
 - Mobile means Android/iOS application development, SDKs, architecture, testing, and platform APIs—not consumer phone-launch coverage.
 - Release coverage must explain developer impact, compatibility, migration, and concrete new capabilities instead of paraphrasing an announcement.
 - Use titles that answer a concrete intent, including "What's New in X", "How X Works", "Build X", "System Design: X", "LeetCode X", "X vs. Y", and troubleshooting only when the evidence describes a real failure mode. Never copy a source title.
+- Reject source-title-plus-suffix formulas such as ": Practical Guide for Developers" or ": Real-World Examples". State the distinct reader problem, comparison, mechanism, or migration outcome in the title.
 - Consider seasonal focus: {json.dumps(seasonal, ensure_ascii=False)}.
 - Return exactly 4 concise candidate topics, ranked best to worst.
 - Include candidates across at least 3 approved categories and 3 editorial formats so processing can continue after a rejection.
@@ -2338,6 +2762,13 @@ def choose_topic(
     available_sources = {canonical_url(item.url) for item in research if item.validated or not config.get("source_validation", {}).get("trusted_domains")}
     required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
     require_source_qualified = bool(config.get("cost_control", {}).get("require_source_qualified_topic", False))
+    source_expansion_enabled = bool(
+        config.get("source_validation", {}).get("enable_related_source_expansion", True)
+    )
+    minimum_initial_sources = max(
+        1,
+        int(config.get("source_validation", {}).get("minimum_initial_topic_sources", 1)),
+    )
     for topic in candidates:
         title = normalize_space(str(topic.get("title", "")))
         if not title:
@@ -2367,7 +2798,13 @@ def choose_topic(
             if canonical_url(item.url) in requested_sources
             and topic_source_is_directly_relevant(topic, item, config)
         ]
-        rejected_source_count = len(requested_sources) - len({canonical_url(item.url) for item in matched_source_items})
+        matched_source_urls = {canonical_url(item.url) for item in matched_source_items}
+        expandable_source_bundle = bool(
+            source_expansion_enabled
+            and len(matched_source_urls) >= minimum_initial_sources
+            and any(item.validation.get("related_links") for item in matched_source_items)
+        )
+        rejected_source_count = len(requested_sources) - len(matched_source_urls)
         topic["source_titles"] = [item.title for item in matched_source_items]
         topic["source_domains"] = [normalized_url_host(item.url) for item in matched_source_items]
         if slug in excluded_slugs:
@@ -2382,7 +2819,7 @@ def choose_topic(
         if available_sources and (not requested_sources or not requested_sources <= available_sources):
             log.log("topic_rejected", title=title, reason="topic_uses_unvalidated_source")
             continue
-        if rejected_source_count:
+        if rejected_source_count and not expandable_source_bundle:
             log.log(
                 "topic_rejected",
                 title=title,
@@ -2391,15 +2828,35 @@ def choose_topic(
                 directly_relevant_source_count=len(matched_source_items),
             )
             continue
-        if require_source_qualified and len({canonical_url(item.url) for item in matched_source_items}) < required_sources:
+        if rejected_source_count:
+            topic["source_urls"] = [item.url for item in matched_source_items]
+            log.log(
+                "topic_source_bundle_trimmed",
+                title=title,
+                requested_source_count=len(requested_sources),
+                directly_relevant_source_count=len(matched_source_urls),
+            )
+        if (
+            require_source_qualified
+            and len(matched_source_urls) < required_sources
+            and not expandable_source_bundle
+        ):
             log.log(
                 "topic_rejected",
                 title=title,
                 reason="insufficient_prevalidated_sources",
-                source_count=len({canonical_url(item.url) for item in matched_source_items}),
+                source_count=len(matched_source_urls),
                 required=required_sources,
             )
             continue
+        if require_source_qualified and len(matched_source_urls) < required_sources:
+            topic["source_urls"] = [item.url for item in matched_source_items]
+            log.log(
+                "topic_selected_for_source_expansion",
+                title=title,
+                source_count=len(matched_source_urls),
+                required=required_sources,
+            )
         relevance = topic_relevance_score(topic, config)
         min_relevance = float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0))
         if not relevance["approved"] or relevance["score"] < min_relevance:
@@ -2534,7 +2991,15 @@ def fallback_topic_from_research(
                     limit=max(required_sources, int(config.get("research", {}).get("topic_source_max_items", 6))),
                     config=config,
                 )
-                if len(scoped) < required_sources:
+                can_expand = bool(
+                    config.get("source_validation", {}).get("enable_related_source_expansion", True)
+                    and len(scoped) >= max(
+                        1,
+                        int(config.get("source_validation", {}).get("minimum_initial_topic_sources", 1)),
+                    )
+                    and any(source.validation.get("related_links") for source in scoped)
+                )
+                if len(scoped) < required_sources and not can_expand:
                     log.log(
                         "fallback_topic_rejected",
                         title=title,
@@ -2546,6 +3011,13 @@ def fallback_topic_from_research(
                 topic["source_urls"] = [source.url for source in scoped]
                 topic["source_titles"] = [source.title for source in scoped]
                 topic["source_domains"] = [normalized_url_host(source.url) for source in scoped]
+                if len(scoped) < required_sources:
+                    log.log(
+                        "fallback_topic_selected_for_source_expansion",
+                        title=title,
+                        source_count=len(scoped),
+                        required=required_sources,
+                    )
             relevance = topic_relevance_score(topic, config)
             if relevance["score"] < float(config.get("publishing", {}).get("topic_relevance_min_score", 0.0)):
                 log.log("fallback_topic_rejected", title=title, reason="topic_relevance_too_low", relevance=relevance)
@@ -2951,6 +3423,9 @@ Editorial style:
 - Practical, technically accurate, readable, and educational.
 - Explain concepts with concrete examples.
 - Avoid hype, filler, and shallow news recap.
+- Write with a cohesive senior-engineer voice, not a generated checklist voice. Vary the opening, section plan, examples, and conclusion to fit this exact topic instead of reusing a house template.
+- Do not pad the article with generic evidence-record JSON, replace-me placeholders, fake incident fields, or abstract "verify the official references" sections. Every example must use the actual product, API, command, data structure, or failure mode in this article.
+- Use paragraphs for the main explanation. Tables, lists, warnings, code, and diagrams should clarify a specific decision or mechanism rather than becoming the bulk of the article.
 - Choose an article-specific structure. Troubleshooting pieces must form a diagnostic decision process; tutorials need requirements, commands or configuration, expected results, validation, and rollback when relevant; comparisons must define the workload and assumptions before conditional recommendations; conceptual pieces should explain components and a practical scenario without forcing a generic checklist.
 - Every paragraph must contain topic-specific detail. Reject standalone reminders such as "check the documentation", "follow best practices", "review the logs", "use a test account", or "document the result" unless the same paragraph names the concrete field, command, condition, interpretation, or next decision.
 - Do not repeat sentences, paragraphs, warnings, section endings, rollback reminders, or formulaic transitions. Consolidate an operational principle in the one section where it belongs.
@@ -3233,6 +3708,81 @@ def extract_html_canonical(document: str, base_url: str) -> str:
     return urllib.parse.urljoin(base_url, html.unescape(value)) if value else ""
 
 
+def extract_related_source_links(
+    document: str,
+    base_url: str,
+    item: ResearchItem,
+    config: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Retain a small set of relevant same-site documentation links.
+
+    Feed discovery normally yields one announcement at a time. The linked
+    official documentation can turn that announcement into a coherent
+    multi-source article without depending on a paid search provider.
+    """
+    base_host = normalized_url_host(base_url)
+    maximum = max(
+        0,
+        int(config.get("source_validation", {}).get("related_links_per_source", 6)),
+    )
+    if not base_host or maximum == 0:
+        return []
+    source_text = f"{item.title} {item.summary}"
+    candidates: dict[str, dict[str, Any]] = {}
+    for match in re.finditer(
+        r"""(?is)<a\b[^>]*\bhref\s*=\s*(["'])(.*?)\1[^>]*>(.*?)</a>""",
+        document,
+    ):
+        href = html.unescape(match.group(2).strip())
+        title = strip_html(match.group(3))
+        if not href or href.startswith(("#", "mailto:", "javascript:", "tel:")):
+            continue
+        resolved = canonical_url(urllib.parse.urljoin(base_url, href))
+        resolved_parts = urllib.parse.urlsplit(resolved)
+        base_parts = urllib.parse.urlsplit(base_url)
+        if (
+            base_parts.scheme.lower() == "https"
+            and resolved_parts.scheme.lower() == "http"
+            and normalized_url_host(resolved) == base_host
+        ):
+            resolved = urllib.parse.urlunsplit(
+                ("https", resolved_parts.netloc, resolved_parts.path, resolved_parts.query, "")
+            )
+        if (
+            not resolved
+            or resolved == canonical_url(base_url)
+            or normalized_url_host(resolved) != base_host
+            or not is_publishable_source_url(resolved)
+            or not is_trusted_source_url(resolved, config)
+        ):
+            continue
+        if len(tokenize(title)) < 2:
+            continue
+        path_text = urllib.parse.unquote(urllib.parse.urlsplit(resolved).path).replace("-", " ")
+        similarity = max(
+            cosine_similarity(source_text, f"{title} {path_text}"),
+            jaccard_similarity(source_text, f"{title} {path_text}"),
+        )
+        minimum = float(
+            config.get("source_validation", {}).get("related_link_min_similarity", 0.08)
+        )
+        if similarity < minimum:
+            continue
+        current = candidates.get(resolved)
+        payload = {
+            "title": title[:240],
+            "url": resolved,
+            "similarity": round(similarity, 4),
+        }
+        if current is None or float(current.get("similarity", 0.0)) < similarity:
+            candidates[resolved] = payload
+    return sorted(
+        candidates.values(),
+        key=lambda candidate: float(candidate.get("similarity", 0.0)),
+        reverse=True,
+    )[:maximum]
+
+
 def extract_primary_page_text(document: str) -> str:
     """Prefer documentation body text over headers, navigation, and footers."""
     # Documentation sites can embed HTML-looking template strings inside
@@ -3360,6 +3910,7 @@ def validate_research_item(item: ResearchItem, config: dict[str, Any], log: Even
             "final_url": final_url,
             "canonical_url": declared_canonical or final_url,
             "content_fingerprint": hashlib.sha256(normalize_space(page_text).lower().encode("utf-8")).hexdigest(),
+            "related_links": extract_related_source_links(document, final_url, item, config),
         }
     )
     if title_similarity < float(config.get("source_validation", {}).get("min_title_similarity", 0.08)):
@@ -6614,12 +7165,25 @@ def run_prepare(args: argparse.Namespace) -> int:
     )
     restored["failures"] = state_after.get("failures", restored.get("failures", []))
     failure = state_after.get("last_runs", {}).get("publish", {}) or {}
-    restored.setdefault("last_runs", {})["prepare"] = {
+    prepare_result = {
         "time": iso_z(),
         "result": "retry_scheduled",
         "reason": failure.get("reason", failure.get("result", "no_approved_candidate")),
         "queue_depth": depth,
     }
+    previous_prepare = (state_before.get("last_runs", {}) or {}).get("prepare", {}) or {}
+    if (
+        previous_prepare.get("result") == prepare_result["result"]
+        and previous_prepare.get("reason") == prepare_result["reason"]
+        and int(previous_prepare.get("queue_depth", 0) or 0) == depth
+        and restored.get("preparation_pending_publication", {})
+        == state_before.get("preparation_pending_publication", {})
+        and restored.get("provider_cooldowns", {}) == state_before.get("provider_cooldowns", {})
+        and restored.get("rejected_articles", []) == state_before.get("rejected_articles", [])
+        and restored.get("failures", []) == state_before.get("failures", [])
+    ):
+        prepare_result = copy.deepcopy(previous_prepare)
+    restored.setdefault("last_runs", {})["prepare"] = prepare_result
     save_state(restored)
     write_prepare_result(
         "retry_scheduled",
@@ -6676,9 +7240,16 @@ def run_publish(args: argparse.Namespace) -> int:
     grounding_circuit_open = provider_circuit_open(state, "gemini_grounded_research")
     if not prioritize_evergreen and grounding_circuit_open:
         log.log("grounded_research_skipped", stage="grounded_research", reason="provider_circuit_open")
+    elif (
+        not prioritize_evergreen
+        and config.get("gemini", {}).get("enable_google_search_grounding", True)
+        and not getattr(client, "api_key", "")
+    ):
+        log.log("grounded_research_skipped", stage="grounded_research", reason="missing_gemini_key")
     if (
         not prioritize_evergreen
         and not grounding_circuit_open
+        and bool(getattr(client, "api_key", ""))
         and config.get("gemini", {}).get("enable_google_search_grounding", True)
     ):
         try:
@@ -6871,24 +7442,14 @@ def run_publish(args: argparse.Namespace) -> int:
                     feedback=feedback,
                 )
                 continue
-            if isinstance(topic.get("offline_fallback"), dict):
-                final_article, final_qa, feedback = deterministic_evergreen_fallback(
-                    topic, topic_research, posts, config, log
-                )
-                log.log(
-                    "offline_recovery_attempted_before_model",
-                    title=topic.get("title"),
-                    approved=bool(final_article),
-                )
-            else:
-                final_article, final_qa, feedback = generate_approved_article(
-                    client,
-                    topic,
-                    topic_research,
-                    posts,
-                    config,
-                    log,
-                )
+            final_article, final_qa, feedback = generate_approved_article(
+                client,
+                topic,
+                topic_research,
+                posts,
+                config,
+                log,
+            )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="article_generation", attempt=topic_attempt, error=str(error))
             feedback = str(error)
@@ -6936,19 +7497,9 @@ def run_publish(args: argparse.Namespace) -> int:
                 )
                 log.log("evergreen_recovery_failed", attempt=evergreen_attempt, title=topic.get("title"), feedback=feedback)
                 continue
-            if isinstance(topic.get("offline_fallback"), dict):
-                final_article, final_qa, feedback = deterministic_evergreen_fallback(
-                    topic, topic_research, posts, config, log
-                )
-                log.log(
-                    "offline_recovery_attempted_before_model",
-                    title=topic.get("title"),
-                    approved=bool(final_article),
-                )
-            else:
-                final_article, final_qa, feedback = generate_approved_article(
-                    client, topic, topic_research, posts, config, log
-                )
+            final_article, final_qa, feedback = generate_approved_article(
+                client, topic, topic_research, posts, config, log
+            )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="evergreen_article_generation", attempt=evergreen_attempt, error=str(error))
             feedback = str(error)
@@ -6960,13 +7511,23 @@ def run_publish(args: argparse.Namespace) -> int:
         if not final_article:
             log.log("evergreen_recovery_failed", attempt=evergreen_attempt, title=topic.get("title"), feedback=feedback)
 
-    if not final_article:
+    if (
+        not final_article
+        and config.get("publishing", {}).get("allow_offline_fallback", True)
+    ):
         fallback_article, fallback_qa, fallback_feedback = deterministic_evergreen_fallback(
             topic, topic_research or research, posts, config, log
         )
         if fallback_article:
             final_article, final_qa, feedback = fallback_article, fallback_qa, ""
             log.log("offline_recovery_selected", title=topic.get("title"), slug=topic.get("slug"))
+    elif not final_article:
+        log.log(
+            "offline_recovery_skipped",
+            title=topic.get("title"),
+            slug=topic.get("slug"),
+            reason="quality_first_policy",
+        )
 
     if not final_article:
         record_rejection(
@@ -7085,7 +7646,10 @@ def check_link(url: str, config: dict[str, Any]) -> tuple[bool, str]:
     timeout = int(config.get("maintenance", {}).get("link_timeout_seconds", 12))
     try:
         status, _body, _headers = http_request(url, method="HEAD", timeout=timeout, retries=1)
-        if status in {405, 501}:
+        # Some healthy documentation sites do not implement HEAD consistently
+        # and return 404/405/501 even though a normal GET succeeds. Confirm any
+        # hard HEAD failure with GET before marking a citation as broken.
+        if status >= 400 and status not in {403, 429}:
             status, _body, _headers = http_request(url, method="GET", timeout=timeout, retries=1)
         if status in {403, 429} and not config.get("maintenance", {}).get("treat_403_as_broken", False):
             return True, f"HTTP {status} (not treated as broken)"
@@ -7113,6 +7677,67 @@ def select_posts_for_maintenance(posts: list[Post], state: dict[str, Any], confi
         return (stale_bonus, -age, post_date.isoformat())
 
     return sorted(posts, key=priority)[:limit]
+
+
+def refresh_existing_post_sources(
+    post: Post,
+    links: list[str],
+    config: dict[str, Any],
+    log: EventLog,
+) -> list[ResearchItem]:
+    """Fetch current text from an existing post's trusted citations."""
+    candidates: list[ResearchItem] = []
+    for url in links:
+        if not is_trusted_source_url(url, config):
+            continue
+        path_hint = urllib.parse.unquote(urllib.parse.urlsplit(url).path).strip("/").rsplit("/", 1)[-1]
+        title_hint = normalize_space(re.sub(r"[-_.]+", " ", path_hint)) or post.title
+        candidates.append(
+            ResearchItem(
+                source=normalized_url_host(url),
+                title=title_hint,
+                url=url,
+                summary=f"Current official source used by {post.title}.",
+                published="",
+                categories=post.categories,
+                score=1.0,
+            )
+        )
+    return validate_research_items(candidates, config, log)
+
+
+def maintenance_recheck_days(post: Post, config: dict[str, Any]) -> int:
+    intervals = config.get("revalidation_intervals", {})
+    volatility_text = f"{post.title} {' '.join(post.categories)} {post.body[:1500]}".lower()
+    if re.search(r"\b(price|pricing|cost)\b", volatility_text):
+        return int(intervals.get("pricing_days", 7))
+    if re.search(r"\b(release|version|current)\b", volatility_text):
+        return int(intervals.get("release_days", 14))
+    if "cloud-certifications" in post.categories:
+        return int(intervals.get("certification_days", 21))
+    if any(category in post.categories for category in ("azure", "entra-id")):
+        return int(intervals.get("cloud_configuration_days", 35))
+    if "networking" in post.categories and re.search(r"\b(rfc|protocol|tcp|udp|dns)\b", volatility_text):
+        return int(intervals.get("stable_protocol_days", 150))
+    return int(intervals.get("default_days", 60))
+
+
+def mark_post_reviewed(post: Post, config: dict[str, Any], source_count: int) -> None:
+    """Record a source-backed review without changing the public updated date."""
+    frontmatter = dict(post.frontmatter)
+    now = local_now(config)
+    frontmatter["last_reviewed"] = now.date().isoformat()
+    frontmatter["verification_date"] = iso_z(now)
+    frontmatter["verification_status"] = "Source reviewed"
+    frontmatter["verification_version"] = int(frontmatter.get("verification_version", 0) or 0) + 1
+    frontmatter["version_context"] = (
+        f"{source_count} current trusted source pages were fetched and reviewed; "
+        "no substantive correction was required."
+    )
+    frontmatter["recheck_after"] = (
+        now + dt.timedelta(days=maintenance_recheck_days(post, config))
+    ).date().isoformat()
+    post.path.write_text(compose_markdown(frontmatter, post.body), encoding="utf-8")
 
 
 def maintenance_prompt(post: Post, broken_links: list[dict[str, str]], grounded: dict[str, Any], config: dict[str, Any]) -> str:
@@ -7338,6 +7963,7 @@ def existing_content_audit(config: dict[str, Any], *, apply_noindex: bool, log: 
     for post in posts:
         markdown = post.body
         sources = extract_links(markdown)
+        other_posts = [candidate for candidate in posts if candidate.slug != post.slug]
         scope_result = topic_relevance_score(
             {
                 "title": post.title,
@@ -7366,10 +7992,41 @@ def existing_content_audit(config: dict[str, Any], *, apply_noindex: bool, log: 
         issues.extend(f"code:{issue}" for issue in code_issues)
         issues.extend(f"internal_link:{issue}" for issue in link_issues)
         issues.extend(f"introduction:{issue}" for issue in intro_issues)
+        duplicate = detailed_existing_similarity(
+            title=post.title,
+            slug=post.slug,
+            search_intent=post.description,
+            body=post.body,
+            categories=post.categories,
+            tags=post.tags,
+            source_urls=sources,
+            posts=other_posts,
+        )
+        metric_posts = duplicate.get("metric_posts", {})
+        duplicate_post = metric_posts.get("intent") or duplicate.get("post")
+        duplicate_slug = duplicate_post.slug if isinstance(duplicate_post, Post) else ""
+        same_reader_intent = duplicate["intent"] > float(
+            config.get("publishing", {}).get("max_search_intent_similarity", 1.0)
+        )
+        template_overlap = duplicate["ngram"] > float(
+            config.get("publishing", {}).get("max_ngram_overlap", 1.0)
+        )
+        if same_reader_intent:
+            issues.append(f"same_reader_intent:{duplicate_slug}:{duplicate['intent']:.3f}")
+        elif template_overlap:
+            ngram_post = metric_posts.get("ngram") or duplicate.get("post")
+            ngram_slug = ngram_post.slug if isinstance(ngram_post, Post) else duplicate_slug
+            issues.append(f"template_overlap:{ngram_slug}:{duplicate['ngram']:.3f}")
         outdated_model_identifier = bool(re.search(r"(?i)\b(?:gemini\s*3|gpt-4(?:\.0)?|text-davinci|azure ad graph)\b", f"{post.title} {post.slug}"))
         if outdated_model_identifier:
             issues.append("potentially_outdated_model_or_api_identifier")
-        high_risk = out_of_scope or bool(code_issues) or outdated_model_identifier or bool(high_risk_pattern.search(f"{post.title} {post.slug}")) and numeric_claims > 0
+        high_risk = (
+            out_of_scope
+            or bool(code_issues)
+            or outdated_model_identifier
+            or same_reader_intent
+            or bool(high_risk_pattern.search(f"{post.title} {post.slug}")) and numeric_claims > 0
+        )
         high_risk = high_risk or (numeric_claims >= 5 and len(sources) < required_sources)
         action = "noindex_pending_repair" if high_risk else ("revalidate" if issues else "none")
         if apply_noindex and high_risk and not post.frontmatter.get("noindex"):
@@ -7440,21 +8097,57 @@ def run_maintain(args: argparse.Namespace) -> int:
             ok, detail = check_link(link, config)
             if not ok:
                 broken.append({"url": link, "status": detail})
-        grounded: dict[str, Any] = {"text": "", "citations": []}
-        try:
-            grounded = client.grounded_research(
-                f"Find current, trustworthy updates relevant to this technical article: {post.title}. "
-                f"Focus on facts that may have changed since {post.date}. Include citations."
+        refreshed_sources = refresh_existing_post_sources(post, links, config, log)
+        existing_citations = [
+            {
+                "title": source.validation.get("page_title") or source.title,
+                "url": source.url,
+                "snippet": source.snippet[:1600],
+            }
+            for source in refreshed_sources
+        ]
+        grounded: dict[str, Any] = {
+            "text": (
+                "Current text was fetched from the article's existing trusted sources. Compare the "
+                "article only against these excerpts and preserve supported facts:\n\n"
+                + "\n\n".join(
+                    f"{source['title']}: {source.get('snippet', '')}"
+                    for source in existing_citations
+                )[:12000]
+            ),
+            "citations": dedupe_sources(existing_citations),
+        }
+        grounding_available = bool(
+            getattr(client, "api_key", "")
+            and not provider_circuit_open(state, "gemini_grounded_research")
+        )
+        if grounding_available:
+            try:
+                grounded = client.grounded_research(
+                    f"Find current, trustworthy updates relevant to this technical article: {post.title}. "
+                    f"Focus on facts that may have changed since {post.date}. Include citations."
+                )
+            except GeminiQuotaError as error:
+                log.log(
+                    "maintenance_grounded_research_fallback",
+                    slug=post.slug,
+                    fallback="existing_trusted_sources",
+                    error=str(error),
+                )
+            except Exception as error:
+                log.log(
+                    "maintenance_grounded_research_fallback",
+                    slug=post.slug,
+                    fallback="existing_trusted_sources",
+                    error=str(error),
+                )
+        else:
+            log.log(
+                "maintenance_grounded_research_skipped",
+                slug=post.slug,
+                reason="provider_unavailable_or_circuit_open",
+                fallback="existing_trusted_sources",
             )
-        except GeminiQuotaError as error:
-            log.log("maintenance_quota_limited", slug=post.slug, stage="grounded_research", error=str(error))
-            quota_limited = True
-            failed_repairs.append({"slug": post.slug, "reason": "grounded_research_quota_limited"})
-            break
-        except Exception as error:
-            log.log("maintenance_grounded_research_failed", slug=post.slug, error=str(error))
-            failed_repairs.append({"slug": post.slug, "reason": "grounded_research_failed"})
-            continue
         try:
             payload = client.generate_json(
                 maintenance_prompt(post, broken, grounded, config),
@@ -7473,13 +8166,26 @@ def run_maintain(args: argparse.Namespace) -> int:
             continue
         action = str(payload.get("action", "none")).lower()
         if action != "update":
+            required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+            review_verified = not broken and len(refreshed_sources) >= required_sources
+            if review_verified and not args.dry_run:
+                mark_post_reviewed(post, config, len(refreshed_sources))
             state.setdefault("maintenance_reviews", {})[post.slug] = {
                 "time": iso_z(),
                 "action": "none",
                 "reason": payload.get("reason", ""),
                 "broken_links": broken,
+                "validated_sources": len(refreshed_sources),
+                "verification_recorded": review_verified,
             }
-            log.log("maintenance_no_update", slug=post.slug, reason=payload.get("reason", ""), broken_count=len(broken))
+            log.log(
+                "maintenance_no_update",
+                slug=post.slug,
+                reason=payload.get("reason", ""),
+                broken_count=len(broken),
+                validated_sources=len(refreshed_sources),
+                verification_recorded=review_verified,
+            )
             continue
         updated = str(payload.get("updated_markdown", ""))
         grounded_urls = {

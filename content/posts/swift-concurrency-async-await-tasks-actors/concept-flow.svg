@@ -1,41 +1,47 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="830" viewBox="0 0 1200 830" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#eef2ff"/></linearGradient>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto"><path d="M2,2 L10,6 L2,10 z" fill="#475569"/></marker>
-</defs>
-<rect width="1200" height="100%" rx="28" fill="url(#bg)"/>
-<title id="title">Swift Concurrency: async/await, Tasks, and Actors Explained: practical flow</title>
-<desc id="desc">A flowchart for Swift Concurrency: async/await, Tasks, and Actors Explained: practical flow</desc>
-<text x="600.0" y="48" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">Swift Concurrency: async/await, Tasks, and Actors Explained:</text>
-<text x="600.0" y="86" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#0f172a">practical flow</text>
-<rect x="220" y="148" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="189.0" r="22" fill="#2563eb"/>
-<text x="264" y="196.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
-<text x="306" y="180" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Apply the model to a concrete case</text>
-<line x1="600" y1="238" x2="600" y2="264" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="276" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="317.0" r="22" fill="#2563eb"/>
-<text x="264" y="324.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
-<text x="306" y="308" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Worked code example</text>
-<line x1="600" y1="366" x2="600" y2="392" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="404" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="445.0" r="22" fill="#2563eb"/>
-<text x="264" y="452.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
-<text x="306" y="436" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Reason through swift concurrency async await tasks</text>
-<text x="306" y="458" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">actors</text>
-<line x1="600" y1="494" x2="600" y2="520" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="532" width="760" height="82" rx="18" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="573.0" r="22" fill="#2563eb"/>
-<text x="264" y="580.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">4</text>
-<text x="306" y="564" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Swift Concurrency: async/await, Tasks, and Actors</text>
-<text x="306" y="586" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Explained: decisions and tradeoffs</text>
-<line x1="600" y1="622" x2="600" y2="648" stroke="#475569" stroke-width="3" marker-end="url(#arrow)"/>
-<rect x="220" y="660" width="760" height="82" rx="18" fill="#ffffff" stroke="#cbd5e1" stroke-width="2"/>
-<circle cx="264" cy="701.0" r="22" fill="#2563eb"/>
-<text x="264" y="708.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">5</text>
-<text x="306" y="692" font-family="Inter, Arial, sans-serif" font-size="21" fill="#0f172a">Common mistakes in mobile development</text>
-<text x="626.0" y="258.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="386.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="514.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
-<text x="626.0" y="642.0" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">then</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">Swift structured concurrency and actor isolation</title>
+  <desc id="desc">A parent task owns child tasks, which suspend at await points and send results through an actor-isolated cache to a MainActor-bound user interface.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#2a0b12"/><stop offset="1" stop-color="#7c2d12"/></linearGradient>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#fdba74"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".3"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="64" y="70" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#fff7ed">Swift concurrency: lifetime + isolation</text>
+  <text x="64" y="106" font-family="Inter,Arial,sans-serif" font-size="18" fill="#fed7aa">Structured tasks bound lifetime; actors protect mutable state; await marks interleaving.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="64" y="178" width="240" height="110" rx="20" fill="#ffedd5"/>
+    <text x="184" y="220" text-anchor="middle" font-size="18" font-weight="700" fill="#9a3412">PARENT TASK</text>
+    <text x="184" y="254" text-anchor="middle" font-size="15" fill="#7c2d12">owns cancellation + errors</text>
+
+    <rect x="390" y="152" width="230" height="100" rx="18" fill="#fef3c7"/>
+    <text x="505" y="194" text-anchor="middle" font-size="17" font-weight="700" fill="#92400e">CHILD: PROFILE</text>
+    <text x="505" y="225" text-anchor="middle" font-size="15" fill="#78350f">await network</text>
+
+    <rect x="390" y="278" width="230" height="100" rx="18" fill="#fef3c7"/>
+    <text x="505" y="320" text-anchor="middle" font-size="17" font-weight="700" fill="#92400e">CHILD: MESSAGES</text>
+    <text x="505" y="351" text-anchor="middle" font-size="15" fill="#78350f">await database</text>
+
+    <rect x="735" y="178" width="230" height="200" rx="26" fill="#e0e7ff" stroke="#a5b4fc" stroke-width="3"/>
+    <text x="850" y="223" text-anchor="middle" font-size="18" font-weight="700" fill="#3730a3">ACTOR</text>
+    <text x="850" y="259" text-anchor="middle" font-size="23" font-weight="700" fill="#1e1b4b">isolated cache</text>
+    <rect x="779" y="291" width="142" height="48" rx="12" fill="#c7d2fe"/>
+    <text x="850" y="321" text-anchor="middle" font-size="15" fill="#312e81">one mutation at a time</text>
+
+    <rect x="735" y="480" width="400" height="105" rx="20" fill="#dcfce7"/>
+    <text x="935" y="521" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">@MainActor</text>
+    <text x="935" y="557" text-anchor="middle" font-size="22" font-weight="700" fill="#14532d">UI state + rendering</text>
+  </g>
+
+  <path d="M304 220 C340 220 348 202 375 202" fill="none" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M304 246 C340 246 348 328 375 328" fill="none" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M620 202 H720 M620 328 H720" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+  <path d="M850 378 V465" stroke="#fdba74" stroke-width="5" marker-end="url(#a)"/>
+
+  <rect x="64" y="470" width="565" height="115" rx="20" fill="#ffffff" fill-opacity=".08" stroke="#c67c5b"/>
+  <text x="96" y="511" font-family="Inter,Arial,sans-serif" font-size="17" font-weight="700" fill="#fdba74">RECHECK AFTER AWAIT</text>
+  <text x="96" y="548" font-family="Inter,Arial,sans-serif" font-size="16" fill="#fff7ed">An actor can run other work while a method is suspended.</text>
+  <text x="96" y="574" font-family="Inter,Arial,sans-serif" font-size="16" fill="#fff7ed">Isolation prevents races, not logical reentrancy mistakes.</text>
+  <text x="64" y="672" font-family="Inter,Arial,sans-serif" font-size="15" fill="#fed7aa">Cancellation is cooperative. Sendable values make cross-isolation transfer explicit.</text>
 </svg>

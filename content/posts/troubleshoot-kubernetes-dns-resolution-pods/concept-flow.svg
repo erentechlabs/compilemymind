@@ -1,64 +1,51 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1140" viewBox="0 0 1400 1140" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
-<defs>
-<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#eff6ff"/><stop offset="1" stop-color="#f8fafc"/></linearGradient>
-<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#2563eb"/><stop offset="1" stop-color="#0891b2"/></linearGradient>
-<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
-<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
-<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#2563eb"/></marker>
-</defs>
-<rect width="1400" height="1140" rx="32" fill="url(#bg)"/>
-<rect width="1400" height="1140" rx="32" fill="url(#dots)"/>
-<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
-<title id="title">Kubernetes DNS resolution and Service routing boundaries</title>
-<desc id="desc">A detailed architecture diagram explaining Kubernetes DNS resolution and Service routing boundaries.</desc>
-<rect x="1190" y="34" width="150" height="34" rx="17" fill="#dbeafe"/>
-<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#2563eb">ARCHITECTURE</text>
-<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Kubernetes DNS resolution and Service routing</text>
-<text x="72" y="102" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">boundaries</text>
-<text x="72" y="144" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">Follow the request from the Pod resolver through CoreDNS, then separate name resolution from backend</text>
-<text x="72" y="167" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">routing.</text>
-<line x1="72" y1="186" x2="1328" y2="186" stroke="#2563eb" stroke-opacity="0.18" stroke-width="2"/>
-<line x1="700" y1="346" x2="700" y2="372" stroke="#2563eb" stroke-width="4" stroke-opacity="0.6" marker-end="url(#arrow)"/>
-<line x1="700" y1="504" x2="700" y2="530" stroke="#2563eb" stroke-width="4" stroke-opacity="0.6" marker-end="url(#arrow)"/>
-<line x1="700" y1="662" x2="700" y2="688" stroke="#2563eb" stroke-width="4" stroke-opacity="0.6" marker-end="url(#arrow)"/>
-<line x1="700" y1="820" x2="700" y2="846" stroke="#2563eb" stroke-width="4" stroke-opacity="0.6" marker-end="url(#arrow)"/>
-<rect x="90" y="222" width="1220" height="124" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="90" y="222" width="150" height="124" rx="24" fill="#dbeafe"/>
-<text x="165" y="269" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">LAYER 1</text>
-<text x="165" y="304" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#2563eb">01</text>
-<text x="280" y="269" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="750" fill="#0f172a">Diagnostic Pod</text>
-<text x="650" y="265" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Reproduce the short, namespace-qualified, and fully qualified</text>
-<text x="650" y="286" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">lookup from the affected namespace.</text>
-<rect x="90" y="380" width="1220" height="124" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="90" y="380" width="150" height="124" rx="24" fill="#dbeafe"/>
-<text x="165" y="427" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">LAYER 2</text>
-<text x="165" y="462" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#2563eb">02</text>
-<text x="280" y="427" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="750" fill="#0f172a">Pod resolver configuration</text>
-<text x="650" y="423" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Inspect nameserver, search suffixes, ndots, and dnsPolicy before</text>
-<text x="650" y="444" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">changing the application hostname.</text>
-<rect x="90" y="538" width="1220" height="124" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="90" y="538" width="150" height="124" rx="24" fill="#dbeafe"/>
-<text x="165" y="585" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">LAYER 3</text>
-<text x="165" y="620" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#2563eb">03</text>
-<text x="280" y="585" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="750" fill="#0f172a">Cluster DNS Service</text>
-<text x="650" y="581" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Confirm the kube-dns ClusterIP and endpoints are reachable from the</text>
-<text x="650" y="602" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">same Pod network path.</text>
-<rect x="90" y="696" width="1220" height="124" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="90" y="696" width="150" height="124" rx="24" fill="#dbeafe"/>
-<text x="165" y="743" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">LAYER 4</text>
-<text x="165" y="778" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#2563eb">04</text>
-<text x="280" y="743" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="750" fill="#0f172a">CoreDNS record lookup</text>
-<text x="650" y="739" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Check CoreDNS health and logs only after preserving the client-side</text>
-<text x="650" y="760" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">timeout or NXDOMAIN evidence.</text>
-<rect x="90" y="854" width="1220" height="124" rx="24" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
-<rect x="90" y="854" width="150" height="124" rx="24" fill="#dbeafe"/>
-<text x="165" y="901" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">LAYER 5</text>
-<text x="165" y="936" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="800" fill="#2563eb">05</text>
-<text x="280" y="901" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="750" fill="#0f172a">Service and EndpointSlices</text>
-<text x="650" y="897" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">After resolution succeeds, verify ports, selectors, readiness, and</text>
-<text x="650" y="918" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">backend addresses as a separate boundary.</text>
-<text x="72" y="1068" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">TRANSITIONS</text>
-<text x="190" y="1068" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">lookup request • nameserver route • DNS query • resolved address</text>
-<text x="72" y="1102" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#2563eb">TAKEAWAY</text>
-<text x="175" y="1102" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">A resolved name proves DNS returned an address; it does not prove the Service has ready endpoints.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+  <title id="title">Kubernetes DNS troubleshooting ladder</title>
+  <desc id="desc">Troubleshooting moves from the pod resolver to the DNS Service and CoreDNS, then to the application Service, EndpointSlices, and backend pods.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#07182f"/><stop offset="1" stop-color="#123e77"/></linearGradient>
+    <marker id="a" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto"><path d="M0 0 L12 6 L0 12 Z" fill="#93c5fd"/></marker>
+    <filter id="shadow"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-opacity=".3"/></filter>
+  </defs>
+  <rect width="1200" height="720" rx="28" fill="url(#bg)"/>
+  <text x="64" y="70" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700" fill="#eff6ff">Find the first broken Kubernetes boundary</text>
+  <text x="64" y="106" font-family="Inter,Arial,sans-serif" font-size="18" fill="#bfdbfe">DNS success does not prove Service routing or application health.</text>
+
+  <g font-family="Inter,Arial,sans-serif" filter="url(#shadow)">
+    <rect x="64" y="190" width="180" height="140" rx="20" fill="#eff6ff"/>
+    <text x="154" y="232" text-anchor="middle" font-size="17" font-weight="700" fill="#1d4ed8">1 · POD</text>
+    <text x="154" y="267" text-anchor="middle" font-size="15" fill="#1e3a8a">resolv.conf</text>
+    <text x="154" y="293" text-anchor="middle" font-size="15" fill="#1e3a8a">short + FQDN</text>
+
+    <rect x="286" y="190" width="180" height="140" rx="20" fill="#e0e7ff"/>
+    <text x="376" y="232" text-anchor="middle" font-size="17" font-weight="700" fill="#3730a3">2 · DNS VIP</text>
+    <text x="376" y="267" text-anchor="middle" font-size="15" fill="#4338ca">UDP + TCP 53</text>
+    <text x="376" y="293" text-anchor="middle" font-size="15" fill="#4338ca">NetworkPolicy</text>
+
+    <rect x="508" y="190" width="180" height="140" rx="20" fill="#cffafe"/>
+    <text x="598" y="232" text-anchor="middle" font-size="17" font-weight="700" fill="#0e7490">3 · COREDNS</text>
+    <text x="598" y="267" text-anchor="middle" font-size="15" fill="#155e75">ready replicas</text>
+    <text x="598" y="293" text-anchor="middle" font-size="15" fill="#155e75">logs + upstream</text>
+
+    <rect x="730" y="190" width="180" height="140" rx="20" fill="#fef3c7"/>
+    <text x="820" y="232" text-anchor="middle" font-size="17" font-weight="700" fill="#92400e">4 · SERVICE</text>
+    <text x="820" y="267" text-anchor="middle" font-size="15" fill="#78350f">selector + ports</text>
+    <text x="820" y="293" text-anchor="middle" font-size="15" fill="#78350f">cluster IP</text>
+
+    <rect x="952" y="190" width="182" height="140" rx="20" fill="#dcfce7"/>
+    <text x="1043" y="232" text-anchor="middle" font-size="17" font-weight="700" fill="#166534">5 · BACKEND</text>
+    <text x="1043" y="267" text-anchor="middle" font-size="15" fill="#166534">EndpointSlice</text>
+    <text x="1043" y="293" text-anchor="middle" font-size="15" fill="#166534">readiness + app</text>
+  </g>
+
+  <path d="M244 260 H271 M466 260 H493 M688 260 H715 M910 260 H937" stroke="#93c5fd" stroke-width="5" marker-end="url(#a)"/>
+
+  <rect x="64" y="455" width="1070" height="150" rx="22" fill="#ffffff" fill-opacity=".08" stroke="#5c86b0"/>
+  <g font-family="Inter,Arial,sans-serif">
+    <text x="96" y="497" font-size="17" font-weight="700" fill="#93c5fd">SYMPTOM → NEXT BOUNDARY</text>
+    <text x="96" y="539" font-size="16" fill="#f8fafc">NXDOMAIN → name, namespace, Service object</text>
+    <text x="96" y="570" font-size="16" fill="#f8fafc">Timeout → pod-to-DNS path, policy, DNS health</text>
+    <text x="610" y="539" font-size="16" fill="#f8fafc">Resolves + timeout → Service routing or policy</text>
+    <text x="610" y="570" font-size="16" fill="#f8fafc">Resolves + HTTP 5xx → backend application</text>
+  </g>
+  <text x="64" y="672" font-family="Inter,Arial,sans-serif" font-size="15" fill="#bfdbfe">Compare a failing pod with a working pod before changing cluster-wide DNS configuration.</text>
 </svg>

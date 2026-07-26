@@ -1,117 +1,277 @@
 ---
 title: "Android App Architecture: UI, Domain, and Data Layers"
 date: "2026-07-19T23:35:17+03:00"
-lastmod: "2026-07-20T18:45:00+03:00"
-description: "A source-grounded Android architecture guide to separating UI, domain, and data responsibilities while keeping state flow and testing boundaries explicit."
-tags: ["android", "mobile-architecture"]
+lastmod: "2026-07-26T18:20:00+02:00"
+description: "Build a maintainable Android app with unidirectional data flow, ViewModels, repositories, optional use cases, and testable Kotlin boundaries."
+tags: ["android", "kotlin", "jetpack-compose", "mobile-architecture"]
 categories: ["mobile-development", "software-engineering"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-20"
-verification_status: "Documentation reviewed"
-verification_date: "2026-07-19T20:35:17.576985Z"
-verification_version: 1
-version_context: "Documentation current at verification time"
-recheck_after: "2026-09-17"
+last_reviewed: "2026-07-26"
+verification_status: "Rewritten and documentation reviewed"
+verification_date: "2026-07-26T16:20:00Z"
+verification_version: "2"
+version_context: "Android architecture guidance reviewed on 2026-07-26"
+recheck_after: "2026-10-24"
 ---
 
-A maintainable Android app does not need the maximum number of layers; it needs clear ownership and predictable data flow. The UI layer presents application data and turns user actions into events, the data layer owns business data and access rules, and an optional domain layer holds reusable or complex business operations. The important design test is whether each responsibility has one understandable home and whether state moves through the system in a way that can be observed and tested.
+An Android architecture is useful when it answers three ordinary questions without a team meeting:
 
-![Android UI, domain, and data layer architecture flow](concept-flow.svg)
+1. **Where does this state come from?**
+2. **Who is allowed to change it?**
+3. **How can I test the behavior without starting an emulator?**
 
-## A working model for Android App Architecture: UI, Domain, and Data Layers
+The practical answer is usually a UI layer backed by a data layer, with a domain layer only where reusable or complex business rules justify it. The point is not to collect `Repository`, `UseCase`, and `ViewModel` classes. The point is to make state ownership and dependency direction obvious.
 
-Start from one real feature and draw its read path and write path. Name the screen state, the events the user can produce, the repository contract, the local or remote data sources, and any business operation shared by more than one screen. Also record lifecycle, offline, error, and concurrency requirements. This feature slice is a better architecture input than a package diagram because it exposes where ownership and transformations actually occur.
+![Android architecture showing state flowing from data sources through a repository and ViewModel to Compose, with user events flowing back down](concept-flow.svg)
 
-## Apply the model to a concrete case
+## The architecture in one picture
 
-Consider an offline-capable task screen. The screen renders a TaskListUiState containing items, a loading flag, and a user-facing error. A TaskListViewModel accepts refresh and completion events, then calls a task repository. The repository exposes a stream from the local database as the readable source of truth and synchronizes remote changes into that database. A completion event writes locally first and queues synchronization according to the product's conflict policy. If sorting rules are reused by the list, widget, and search feature, a focused SortTasks use case can hold that rule. This example makes the direction of dependencies visible: UI code knows a repository contract, the repository knows its concrete data sources, and database or HTTP models are transformed before becoming UI state.
+| Layer | Owns | Should not own |
+| --- | --- | --- |
+| UI | Rendering, screen state, user events, presentation logic | Network clients, SQL queries, cross-screen business rules |
+| Domain *(optional)* | Reusable or complex operations expressed as use cases | Android UI types or data-source details |
+| Data | Application data, repositories, synchronization policy, business rules close to data | Compose state or navigation |
+| Data source | One external mechanism: API, Room, file, sensor, or DataStore | Decisions spanning multiple sources |
 
-## Worked code example
+Android's official guidance recommends at least a UI and data layer. The domain layer is optional. That detail matters: a three-layer diagram is not a command to create a use case for every repository function.
 
-### Expose repository data as immutable UI state
+## Follow one feature from screen to storage
+
+Consider a task list that works offline:
+
+- Room is the source of truth for visible tasks.
+- A repository exposes a stream from Room and refreshes it from the network.
+- A `ViewModel` converts repository data into immutable screen state.
+- Compose renders that state and sends user events back to the `ViewModel`.
+
+This creates unidirectional data flow:
+
+```text
+Room/API -> TaskRepository -> TasksViewModel -> TasksScreen
+                 ^                  |
+                 |------ events ----|
+```
+
+The arrows are more important than the package names. UI state moves toward the screen; events move toward the owner that can apply them.
+
+### Model the UI as a complete state
+
+Avoid several unrelated booleans such as `isLoading`, `hasError`, and `isEmpty` that can form impossible combinations. A sealed model makes the valid states explicit:
 
 ```kotlin
-data class TaskListUiState(
-    val items: List<Task> = emptyList(),
-    val isLoading: Boolean = false,
-    val errorMessage: String? = null,
-)
-
-class TaskListViewModel(
-    repository: TaskRepository,
-) : ViewModel() {
-    val state = repository.observeTasks()
-        .map { tasks -> TaskListUiState(items = tasks) }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = TaskListUiState(isLoading = true),
-        )
+sealed interface TasksUiState {
+    data object Loading : TasksUiState
+    data class Ready(
+        val tasks: List<TaskUiModel>,
+        val isRefreshing: Boolean
+    ) : TasksUiState
+    data class Error(val message: String) : TasksUiState
 }
 ```
 
-The UI observes one immutable state object while the repository remains the data boundary. Loading and error transitions can be added to the same state model and tested with controlled repository emissions.
+For screens that must retain old data during refresh, use one data class with explicit fields instead. The right shape is the one that prevents contradictory states while representing the experience you actually want.
 
-## Source boundaries for mobile development
+## A complete Kotlin example
 
-### Guide to app architecture
+The repository is the public boundary of the data layer. Callers do not need to know whether data came from Room, HTTP, or both.
 
-Use Guide to app architecture for this boundary of the topic: Use the architecture guide for separation of concerns, UI state, state holders, and unidirectional data flow.
-### Android architecture recommendations
+```kotlin
+data class Task(val id: Long, val title: String, val completed: Boolean)
 
-Use Android architecture recommendations for this boundary of the topic: Use the Android data-layer reference for repository responsibilities, data sources, and source-of-truth decisions.
-### Android data layer
+interface TaskRepository {
+    fun observeTasks(): Flow<List<Task>>
+    suspend fun refresh()
+    suspend fun setCompleted(id: Long, completed: Boolean)
+}
 
-Use Android data layer for this boundary of the topic: Use the recommendations page to evaluate optional domain-layer use cases, dependency direction, coroutines, and testability.
+class OfflineFirstTaskRepository(
+    private val api: TaskApi,
+    private val dao: TaskDao,
+    private val io: CoroutineDispatcher
+) : TaskRepository {
 
-## Reason through android app architecture ui domain data layers
+    override fun observeTasks(): Flow<List<Task>> =
+        dao.observeAll().map { rows -> rows.map(TaskEntity::asExternalModel) }
 
-### 1. Give the UI layer one observable state model
+    override suspend fun refresh() = withContext(io) {
+        val remoteTasks = api.getTasks()
+        dao.replaceAll(remoteTasks.map(NetworkTask::asEntity))
+    }
 
-Represent what the screen can render as explicit UI state and keep transient platform callbacks from becoming hidden sources of business state. A state holder such as a ViewModel can receive events, invoke the required use case or repository operation, and expose state for the UI to observe. The UI should render from that state rather than reconstructing application rules across composables, fragments, or activities. This boundary makes configuration changes, recomposition, loading, and error paths visible in tests.
-### 2. Make repositories the public boundary of the data layer
+    override suspend fun setCompleted(id: Long, completed: Boolean) =
+        withContext(io) {
+            dao.setCompleted(id, completed)
+            // Queue or attempt remote synchronization according to product policy.
+        }
+}
+```
 
-A repository should expose the data and operations needed by the rest of the app while coordinating its data sources. Callers should not need to know whether a value came from a network request, database, cache, or device API. Define which source is authoritative, how updates are synchronized, and how errors are represented. That keeps storage and transport decisions from leaking into UI code and gives tests a stable contract to replace with a controlled implementation.
-### 3. Add a domain layer only when it earns its boundary
+Notice two deliberate choices:
 
-Move an operation into a use case when it contains reusable business logic, combines multiple repositories, or would otherwise make a state holder difficult to understand. Do not create pass-through use cases merely to satisfy a diagram; an extra abstraction has a navigation and maintenance cost. Give each use case a focused input and output, keep platform types outside when practical, and test the business rule without an Android component. The result should reduce coupling, not just relocate a method.
+- The repository, not the `ViewModel`, decides how local and remote sources interact.
+- The type performing blocking work makes itself safe to call from the main thread.
 
-## Android App Architecture: UI, Domain, and Data Layers: decisions and tradeoffs
+The `ViewModel` owns screen-level presentation state and accepts UI events:
 
-| Situation or decision | Tradeoff or common failure mode | Validation question |
-| --- | --- | --- |
-| A screen reads a database or HTTP client directly | UI code now owns transport, caching, and presentation concerns | Define the repository operation and decide which data source is authoritative |
-| The same rule is copied into several ViewModels | Reusable business logic has no domain boundary | Extract one focused use case and test it independently of Android UI types |
-| Every repository call is wrapped by a one-line use case | The domain layer adds ceremony without reducing coupling | Keep the direct repository dependency until orchestration or reuse justifies another layer |
+```kotlin
+class TasksViewModel(
+    private val repository: TaskRepository
+) : ViewModel() {
 
-## Common mistakes in mobile development
+    val uiState: StateFlow<TasksUiState> =
+        repository.observeTasks()
+            .map<List<Task>, TasksUiState> { tasks ->
+                TasksUiState.Ready(
+                    tasks = tasks.map { it.toUiModel() },
+                    isRefreshing = false
+                )
+            }
+            .catch { emit(TasksUiState.Error("Could not load tasks")) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = TasksUiState.Loading
+            )
 
-A frequent Android architecture mistake is naming packages ui, domain, and data while allowing dependencies to cross those boundaries freely. The labels do not help if a composable calls Retrofit, a repository returns a mutable database entity, or a use case imports an Activity. Another mistake is representing navigation messages or one-time work as permanently replayed state without defining consumption behavior. Teams also over-abstract small applications by adding interfaces and use cases that have only one pass-through method. Review the feature's data flow and tests: each abstraction should isolate a volatile dependency, express a real rule, or make state ownership clearer. If removing a layer leaves the same coupling and behavior, that layer was probably ceremony.
+    fun onTaskChecked(id: Long, checked: Boolean) {
+        viewModelScope.launch {
+            repository.setCompleted(id, checked)
+        }
+    }
 
-## Practical implementation checklist
+    fun refresh() {
+        viewModelScope.launch {
+            runCatching { repository.refresh() }
+                .onFailure { /* expose a user-visible transient error */ }
+        }
+    }
+}
+```
 
-1. Trace one feature from user event to persisted or remote data and back to rendered UI state.
-2. Confirm the UI cannot bypass the repository to reach a concrete data source.
-3. Write down the source of truth and the behavior during stale data, network failure, and retry.
-4. Test state-holder transitions with controlled repository results, including loading and error cases.
-5. Keep a domain use case only when it represents reusable logic or meaningful orchestration.
+Compose remains intentionally boring:
 
-## Related implementation context
+```kotlin
+@Composable
+fun TasksRoute(
+    viewModel: TasksViewModel = hiltViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-[Spring Boot Layered Architecture: Controller, Service, and Repository](/posts/spring-boot-layered-architecture/) and [@Component vs @Bean in Spring: When to Use Each](/posts/component-vs-bean/)
+    TasksScreen(
+        state = state,
+        onTaskChecked = viewModel::onTaskChecked,
+        onRefresh = viewModel::refresh
+    )
+}
+```
 
-## Version and verification boundary
+`TasksScreen` can now be previewed and tested with plain values and callbacks. It does not reach into a repository or launch its own network request.
 
-The article follows the current Android Developers architecture guide, recommendations, and data-layer guidance checked at publication time; library APIs and recommended integrations can evolve.
+## When a domain layer earns its place
 
-## Summary
+Add a use case when the operation:
 
-Use Android layers to make ownership and data flow reviewable: render explicit UI state, expose data through repositories, and introduce domain use cases only for meaningful reusable logic. Validate the design on a real feature, including offline and error paths, before expanding the pattern across the app.
+- is shared by multiple `ViewModel`s;
+- coordinates multiple repositories;
+- contains a meaningful rule that deserves an independent name and tests; or
+- would otherwise make a `ViewModel` difficult to read.
+
+For example:
+
+```kotlin
+class CompleteTaskAndAwardPoints(
+    private val tasks: TaskRepository,
+    private val rewards: RewardsRepository
+) {
+    suspend operator fun invoke(taskId: Long) {
+        tasks.setCompleted(taskId, true)
+        rewards.awardForCompletedTask(taskId)
+    }
+}
+```
+
+Do not add a class that only forwards `repository.getTasks()` and call that architecture. Indirection has a reading and maintenance cost.
+
+## Choose the source of truth explicitly
+
+The single source of truth is the component allowed to authoritatively mutate a particular data type. In an offline-first task app, it is often the local database:
+
+1. UI observes Room.
+2. Refresh fetches the API.
+3. The repository writes the response to Room.
+4. Room emits the new state to the UI.
+
+Writing the API response directly into UI state creates two competing truths. The screen can then disagree with local storage after process recreation or while offline.
+
+Not every value belongs in a database. A search query may live in a `ViewModel`; an authentication token may live in secure storage; a short-lived animation flag may live in Compose. Define ownership per data type, not once for the entire application.
+
+## Test the boundaries, not the framework
+
+Each layer should have a focused test:
+
+```kotlin
+@Test
+fun completed_task_is_forwarded_to_repository() = runTest {
+    val repository = FakeTaskRepository()
+    val viewModel = TasksViewModel(repository)
+
+    viewModel.onTaskChecked(id = 42, checked = true)
+    advanceUntilIdle()
+
+    assertEquals(42 to true, repository.lastCompletion)
+}
+```
+
+Use:
+
+- pure unit tests for use cases and mapping functions;
+- fake repositories for `ViewModel` tests;
+- fake data sources or an in-memory database for repository tests;
+- Compose UI tests for rendering and interaction contracts.
+
+An interface is valuable when it creates a meaningful boundary or alternate implementation. Creating an interface for every class by habit can make navigation harder without improving tests.
+
+## Failure patterns worth catching in review
+
+### The ViewModel becomes a second data layer
+
+If it parses DTOs, chooses retry policy, runs SQL, and merges remote and local records, move those responsibilities behind a repository.
+
+### Composables perform business operations
+
+A composable can be recomposed many times. It should describe UI, not initiate an uncontrolled request from its function body. Use event callbacks and lifecycle-aware effects deliberately.
+
+### Mutable state leaks across layers
+
+Expose immutable models or read-only flows. Keep `MutableStateFlow`, mutable collections, and database entities private to their owner.
+
+### A domain layer exists only for symmetry
+
+Delete pass-through use cases. Add the layer later when behavior becomes reusable or complex; architecture can evolve.
+
+### Android types spread everywhere
+
+Keeping most domain and data logic free of `Activity`, `Fragment`, `Context`, and UI widgets makes it faster to test and harder to misuse lifecycle-bound objects.
+
+## A review checklist
+
+- Can a new contributor draw the state and event directions?
+- Does each data type have one named source of truth?
+- Does the UI render immutable state and emit events?
+- Do repositories hide data-source and synchronization details?
+- Is the domain layer present only where it reduces complexity or duplication?
+- Are long-running operations main-safe and cancellable?
+- Can the core behavior be tested without an emulator?
+- Does process recreation recover persistent state correctly?
+- Are failures, loading, empty data, and refresh represented deliberately?
+
+Architecture succeeds when a feature can change without unrelated layers knowing how it changed. Start with UI and data, make ownership explicit, and let real complexity—not a diagram—decide whether you need more.
 
 ## Sources
 
-- [Guide to app architecture](https://developer.android.com/topic/architecture)
-- [Android architecture recommendations](https://developer.android.com/topic/architecture/recommendations)
-- [Android data layer](https://developer.android.com/topic/architecture/data-layer)
+- [Guide to app architecture — Android Developers](https://developer.android.com/topic/architecture)
+- [Recommendations for Android architecture — Android Developers](https://developer.android.com/topic/architecture/recommendations)
+- [UI layer — Android Developers](https://developer.android.com/topic/architecture/ui-layer)
+- [Data layer — Android Developers](https://developer.android.com/topic/architecture/data-layer)
