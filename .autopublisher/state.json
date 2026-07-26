@@ -2171,7 +2171,7 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-26T17:15:22.806168Z",
+      "time": "2026-07-26T19:34:07.579343Z",
       "result": "retry_scheduled",
       "reason": "no_valid_topic",
       "queue_depth": 0
@@ -2378,8 +2378,8 @@
       "reason": "billing_credit_depleted"
     },
     "gemini_grounded_research": {
-      "opened_at": "2026-07-19T17:15:34.412168Z",
-      "until": "2026-07-26T17:15:34.412185Z",
+      "opened_at": "2026-07-26T19:33:55.777051Z",
+      "until": "2026-08-02T19:33:55.777070Z",
       "reason": "billing_credit_depleted"
     }
   },
@@ -2395,12 +2395,12 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-26T17:15:22.802133Z",
-    "next_retry_at": "2026-07-26T23:15:22.802136Z",
+    "scheduled_at": "2026-07-26T19:34:07.574548Z",
+    "next_retry_at": "2026-07-27T01:34:07.574552Z",
     "reason": "no_valid_topic",
     "stage": "topic_selection",
     "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
-    "consecutive_attempts": 50,
+    "consecutive_attempts": 51,
     "topic_attempts": 0,
     "topic": {}
   }
