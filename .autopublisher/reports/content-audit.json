@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-07-17T18:52:03.886528Z",
-  "articles_checked": 42,
+  "generated_at": "2026-07-27T06:05:30.787325Z",
+  "articles_checked": 58,
   "summary": {
     "high_risk": 0,
-    "medium_risk": 33,
-    "low_risk": 9,
+    "medium_risk": 42,
+    "low_risk": 16,
     "noindexed": 0,
-    "unresolved": 33
+    "unresolved": 42
   },
   "corrected_articles": [],
   "noindexed_articles": [],
@@ -36,18 +36,37 @@
     "new-features-in-java-25",
     "operating-ai-ml-workloads-kubernetes",
     "postgres-pgvector-vs-specialized-vector-databases",
+    "postgresql-indexes-types-tradeoffs-query-verification",
     "remove-duplicates-from-sorted-array",
+    "rest-graphql-pagination-offset-cursor-link-strategies",
     "sc-900-security-compliance-identity-fundamentals-cheatsheet",
     "securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr",
     "siem-vs-xdr-vs-soar",
     "spring-annotations-scheduling-async-component-service-configuration-bean",
     "spring-boot-layered-architecture",
     "tcp-vs-udp-explained-with-examples",
+    "troubleshoot-docker-container-health-checks",
+    "troubleshoot-docker-volume-mounts-safely",
+    "troubleshoot-entra-conditional-access-what-if",
+    "troubleshoot-microsoft-entra-sign-in-errors",
+    "troubleshoot-powershell-remoting-winrm-connections",
+    "troubleshoot-windows-scheduled-tasks-powershell",
+    "troubleshoot-windows-time-synchronization-w32tm",
     "why-i-like-java-more-than-python",
     "why-identity-security-matters-more-ai-era",
     "zero-trust-explained-real-world-examples"
   ],
   "articles": [
+    {
+      "slug": "android-app-architecture-ui-domain-data-layers",
+      "title": "Android App Architecture: UI, Domain, and Data Layers",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 4,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
     {
       "slug": "audit-github-actions-token-permissions",
       "title": "How to Audit GitHub Actions Token Permissions",
@@ -79,7 +98,7 @@
       "issues": [
         "missing_technical_verification_date"
       ],
-      "source_count": 3,
+      "source_count": 4,
       "numeric_claim_count": 0,
       "noindex": false
     },
@@ -133,6 +152,16 @@
       ],
       "source_count": 1,
       "numeric_claim_count": 4,
+      "noindex": false
+    },
+    {
+      "slug": "copilot-code-review-customization-and-configurability-improvements",
+      "title": "Copilot Code Review Customization and Configurability Improvements: Practical Guide and Real-World Examples",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
       "noindex": false
     },
     {
@@ -260,6 +289,16 @@
       "noindex": false
     },
     {
+      "slug": "javascript-event-loop-tasks-microtasks-rendering",
+      "title": "JavaScript Event Loop: Tasks, Microtasks, and Rendering",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 4,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
       "slug": "jpa-vs-hibernate-vs-jdbc-what-is-the-difference",
       "title": "JPA vs Hibernate vs JDBC: What Is the Difference?",
       "risk": "medium",
@@ -274,6 +313,16 @@
     {
       "slug": "kubernetes-probe-misconfigurations-fixes",
       "title": "Common Kubernetes Probe Misconfigurations and Fixes",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "leetcode-two-sum-brute-force-hash-map",
+      "title": "LeetCode Two Sum: From Brute Force to a Hash Map",
       "risk": "low",
       "action": "none",
       "issues": [],
@@ -381,6 +430,18 @@
       "noindex": false
     },
     {
+      "slug": "postgresql-indexes-types-tradeoffs-query-verification",
+      "title": "PostgreSQL Indexes: Types, Tradeoffs, and Query Verification",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "numeric_claims:1"
+      ],
+      "source_count": 6,
+      "numeric_claim_count": 1,
+      "noindex": false
+    },
+    {
       "slug": "remove-duplicates-from-sorted-array",
       "title": "Remove Duplicates from a Sorted Array - The Two-Pointer Technique",
       "risk": "medium",
@@ -390,6 +451,28 @@
         "missing_technical_verification_date"
       ],
       "source_count": 0,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "rest-graphql-pagination-offset-cursor-link-strategies",
+      "title": "REST and GraphQL Pagination: Offset, Cursor, and Link Strategies",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "numeric_claims:2"
+      ],
+      "source_count": 5,
+      "numeric_claim_count": 2,
+      "noindex": false
+    },
+    {
+      "slug": "rust-ownership-borrowing-practical-mental-model",
+      "title": "Rust Ownership and Borrowing: A Practical Mental Model",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 4,
       "numeric_claim_count": 0,
       "noindex": false
     },
@@ -456,6 +539,26 @@
       "noindex": false
     },
     {
+      "slug": "swift-concurrency-async-await-tasks-actors",
+      "title": "Swift Concurrency: async/await, Tasks, and Actors Explained",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 4,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "system-design-caching-cache-aside-expiration-invalidation",
+      "title": "System Design Caching: Cache-Aside, Expiration, and Invalidation",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 5,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
       "slug": "tcp-vs-udp-explained-with-examples",
       "title": "TCP vs UDP Explained With Examples",
       "risk": "medium",
@@ -469,11 +572,81 @@
       "noindex": false
     },
     {
-      "slug": "troubleshoot-microsoft-entra-sign-in-errors",
-      "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+      "slug": "troubleshoot-docker-container-health-checks",
+      "title": "Troubleshoot Docker Container Health Checks",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-docker-volume-mounts-safely:0.771"
+      ],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-docker-volume-mounts-safely",
+      "title": "Troubleshoot Docker Volume Mounts Safely",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-docker-container-health-checks:0.771"
+      ],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-entra-conditional-access-what-if",
+      "title": "Troubleshoot Microsoft Entra Conditional Access with What If",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-powershell-remoting-winrm-connections:0.389"
+      ],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-github-actions-cache-misses",
+      "title": "Troubleshoot GitHub Actions Cache Misses",
       "risk": "low",
       "action": "none",
       "issues": [],
+      "source_count": 5,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-kubernetes-dns-resolution-pods",
+      "title": "Troubleshoot Kubernetes DNS Resolution from Pods",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 5,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-microsoft-entra-sign-in-errors",
+      "title": "Troubleshoot Microsoft Entra Sign-in Errors with Sign-in Diagnostics",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-windows-scheduled-tasks-powershell:0.449"
+      ],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-powershell-remoting-winrm-connections",
+      "title": "Troubleshoot PowerShell Remoting and WinRM Connections",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-windows-scheduled-tasks-powershell:0.688"
+      ],
       "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false
@@ -481,9 +654,23 @@
     {
       "slug": "troubleshoot-windows-scheduled-tasks-powershell",
       "title": "Troubleshoot Windows Scheduled Tasks with PowerShell",
-      "risk": "low",
-      "action": "none",
-      "issues": [],
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-docker-container-health-checks:0.719"
+      ],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "troubleshoot-windows-time-synchronization-w32tm",
+      "title": "Troubleshoot Windows Time Synchronization with w32tm",
+      "risk": "medium",
+      "action": "revalidate",
+      "issues": [
+        "template_overlap:troubleshoot-windows-scheduled-tasks-powershell:0.646"
+      ],
       "source_count": 3,
       "numeric_claim_count": 0,
       "noindex": false

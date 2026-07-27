@@ -1931,7 +1931,40 @@
       "path": "content/posts/troubleshoot-github-actions-cache-misses/index.md"
     }
   ],
-  "maintenance_reviews": {},
+  "maintenance_reviews": {
+    "csharp-vs-java": {
+      "time": "2026-07-27T06:05:33.278335Z",
+      "action": "none",
+      "reason": "The article remains accurate for 2025, with no outdated facts and no broken links. All claims are supported by current, grounded research and official sources. No meaningful updates are needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "why-i-like-java-more-than-python": {
+      "time": "2026-07-27T06:05:36.821593Z",
+      "action": "none",
+      "reason": "The article's content remains accurate, with no outdated facts or broken links. All claims are consistent with the latest grounded research, and no updates are necessary.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "spring-boot-layered-architecture": {
+      "time": "2026-07-27T06:05:42.528136Z",
+      "action": "none",
+      "reason": "The article is still accurate, and the broken link list is empty. All technical claims and explanations remain supported by current Spring Boot documentation and conventions. No update is needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "spring-annotations-scheduling-async-component-service-configuration-bean": {
+      "time": "2026-07-27T06:05:44.669007Z",
+      "action": "none",
+      "reason": "The article is still accurate, and the broken link list is empty. All technical claims are consistent with current Spring Framework documentation and best practices. No update is needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    }
+  },
   "failures": [
     {
       "time": "2026-07-12T20:57:20.990039Z",
@@ -2175,9 +2208,9 @@
       "next_retry_at": "2026-07-27T01:36:41.266445Z"
     },
     "maintain": {
-      "time": "2026-07-16T11:08:32.387580Z",
-      "result": "quota_limited",
-      "taxonomy_changes": 4
+      "time": "2026-07-27T06:05:44.669077Z",
+      "result": "completed",
+      "taxonomy_changes": 0
     },
     "prepare": {
       "time": "2026-07-27T04:56:08.906152Z",
