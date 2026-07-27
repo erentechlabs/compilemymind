@@ -2155,6 +2155,15 @@
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
       "attempts": 6
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-27T04:56:08.900452Z",
+      "title": "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Source list contains URLs that are not mapped to an article claim: https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 3
     }
   ],
   "last_runs": {
@@ -2171,9 +2180,9 @@
       "taxonomy_changes": 4
     },
     "prepare": {
-      "time": "2026-07-26T21:11:50.318522Z",
+      "time": "2026-07-27T04:56:08.906152Z",
       "result": "retry_scheduled",
-      "reason": "no_valid_topic",
+      "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
     }
   },
@@ -2369,6 +2378,14 @@
       "reason": "qa_failed",
       "detail": "Claim is not directly supported by its referenced source text: Dependency caching reference",
       "attempts": 6
+    },
+    {
+      "time": "2026-07-27T04:56:08.900452Z",
+      "title": "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Source list contains URLs that are not mapped to an article claim: https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -2395,13 +2412,51 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-26T21:11:50.312703Z",
-    "next_retry_at": "2026-07-27T03:11:50.312709Z",
-    "reason": "no_valid_topic",
-    "stage": "topic_selection",
-    "detail": "No source-qualified, in-scope, non-duplicate topic was available in this run.",
-    "consecutive_attempts": 52,
-    "topic_attempts": 0,
-    "topic": {}
+    "scheduled_at": "2026-07-27T04:56:08.900690Z",
+    "next_retry_at": "2026-07-27T10:56:08.900695Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "Source list contains URLs that are not mapped to an article claim: https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+    "consecutive_attempts": 53,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "primary_category": "mobile-development",
+      "categories": [
+        "mobile-development",
+        "programming-languages"
+      ],
+      "tags": [
+        "android",
+        "ai-engineering",
+        "inference",
+        "cloud",
+        "mobile-development"
+      ],
+      "search_intent": "Developers want to understand how to integrate AI inference into Android apps, choosing between cloud, hybrid, and on-device approaches for performance, privacy, and scalability.",
+      "why_now": "Recent Android developer posts highlight new capabilities and best practices for intelligent app design, with durable demand for practical AI integration guidance.",
+      "source_urls": [
+        "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html",
+        "https://android-developers.googleblog.com/2026/07/android-on-device-inference.html",
+        "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud"
+      ],
+      "needs_diagram": true,
+      "needs_chart": false,
+      "seed_sources": [
+        {
+          "title": "Build intelligent Android apps: Cloud and hybrid inference",
+          "url": "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html"
+        },
+        {
+          "title": "Build intelligent Android apps: On-device inference",
+          "url": "https://android-developers.googleblog.com/2026/07/android-on-device-inference.html"
+        },
+        {
+          "title": "What’s new with Google Cloud",
+          "url": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud"
+        }
+      ]
+    }
   }
 }
