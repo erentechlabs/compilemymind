@@ -141,8 +141,17 @@ def existing_sources(post: autopublisher.Post) -> list[dict[str, str]]:
     return sources
 
 
-def revision_prompt(post: autopublisher.Post, signals: dict[str, int], config: dict[str, Any]) -> str:
+def revision_prompt(
+    post: autopublisher.Post,
+    signals: dict[str, int],
+    config: dict[str, Any],
+    feedback: str = "",
+) -> str:
     sources = existing_sources(post)
+    current_words = int(signals.get("words", 0) or 0)
+    preserved_ratio = float(config.get("revision", {}).get("min_preserved_length_ratio", 0.72))
+    minimum_words = max(500, int(current_words * preserved_ratio))
+    target_words = max(minimum_words + 100, int(current_words * 0.9))
     return f"""
 You are the senior technical editor for Compile My Mind. Rewrite this existing technical blog post into a readable, standard long-form article.
 
@@ -163,6 +172,8 @@ Editorial requirements:
 - Keep actual code examples complete and correctly fenced with a language identifier.
 - Do not add YAML front matter, a top-level H1, featured images, thumbnails, or hero images.
 - Use Markdown body only.
+- The revised Markdown must contain at least {minimum_words} words; target about {target_words} words. Preserve useful technical depth instead of compressing the article into a summary.
+- Before returning JSON, count updated_markdown itself and expand undersized sections with topic-specific explanation until it exceeds the minimum.
 
 Current readability signals:
 {json.dumps(signals, ensure_ascii=False, indent=2)}
@@ -175,6 +186,9 @@ Existing source URLs:
 
 Current Markdown:
 {post.body[:50000]}
+
+Previous validation feedback to fix:
+{feedback or "No previous feedback. Return the complete revision on the first attempt."}
 
 Return JSON only:
 {{
@@ -280,16 +294,50 @@ def main() -> int:
         attempted_this_run.add(post.slug)
         selected_any = True
         log.log("revision_started", slug=post.slug, title=post.title, signals=signals)
-        try:
-            payload = client.generate_json(revision_prompt(post, signals, config), task="revision")
-        except Exception as error:
-            record_attempt(state, post.slug, "generation_failed", error=str(error))
-            log.log("revision_generation_failed", slug=post.slug, error=str(error))
-            continue
+        payload: dict[str, Any] = {}
+        action = "update"
+        updated = ""
+        issues: list[str] = []
+        generation_error: Exception | None = None
+        feedback = ""
+        attempts = 1 + max(
+            0,
+            int(config.get("revision", {}).get("max_regeneration_attempts", 1)),
+        )
+        for attempt in range(1, attempts + 1):
+            try:
+                payload = client.generate_json(
+                    revision_prompt(post, signals, config, feedback),
+                    task="revision",
+                )
+            except Exception as error:
+                generation_error = error
+                log.log(
+                    "revision_generation_failed",
+                    slug=post.slug,
+                    attempt=attempt,
+                    error=str(error),
+                )
+                break
 
-        action = str(payload.get("action", "update")).lower()
-        updated = autopublisher.remove_accidental_frontmatter(str(payload.get("updated_markdown", "")))
-        issues = validate_revision(post, updated, payload, config) if action == "update" else []
+            action = str(payload.get("action", "update")).lower()
+            updated = autopublisher.remove_accidental_frontmatter(
+                str(payload.get("updated_markdown", ""))
+            )
+            issues = validate_revision(post, updated, payload, config) if action == "update" else []
+            if not issues or attempt >= attempts:
+                break
+            feedback = "\n".join(issues)
+            log.log(
+                "revision_repair_started",
+                slug=post.slug,
+                attempt=attempt + 1,
+                issues=issues,
+            )
+
+        if generation_error is not None:
+            record_attempt(state, post.slug, "generation_failed", error=str(generation_error))
+            continue
         if issues:
             record_attempt(state, post.slug, "rejected", issues=issues)
             log.log("revision_rejected", slug=post.slug, issues=issues)

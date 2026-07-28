@@ -14,6 +14,7 @@ from unittest.mock import patch
 os.environ.setdefault("AUTOPUBLISHER_LOG_STDOUT", "0")
 sys.path.insert(0, str(Path(__file__).parent))
 import autopublisher  # noqa: E402
+import revise_posts  # noqa: E402
 
 
 class AutopublisherTests(unittest.TestCase):
@@ -61,8 +62,11 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publication_queue"]["target_depth"], 4)
         self.assertEqual(config["maintenance"]["max_articles_per_run"], 4)
         self.assertEqual(config["research"]["topic_source_min_anchor_overlap"], 2)
+        self.assertEqual(config["research"]["topic_source_min_identity_anchor_overlap"], 1)
+        self.assertEqual(config["research"]["topic_source_target_items"], 3)
         self.assertTrue(config["source_validation"]["enable_related_source_expansion"])
         self.assertEqual(config["source_validation"]["minimum_initial_topic_sources"], 1)
+        self.assertEqual(config["revision"]["max_regeneration_attempts"], 1)
         self.assertEqual(config["taxonomy"]["preferred_tags_per_article"], 3)
         self.assertTrue(config["taxonomy"]["allow_new_tags"])
 
@@ -579,6 +583,58 @@ Record the observable outcome.
         self.assertIn(normalized["diagrams"][0]["layout"], config["publishing"]["allowed_diagram_layouts"])
         self.assertGreaterEqual(sum(bool(node["detail"]) for node in normalized["diagrams"][0]["nodes"]), 3)
         self.assertIn("diagram", autopublisher.enhanced_content_elements(normalized))
+
+    def test_normalization_rewrites_a_source_headline_without_changing_the_topic_slug(self):
+        source_title = "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained"
+        source = autopublisher.ResearchItem(
+            "Android Developers",
+            source_title,
+            "https://android-developers.googleblog.com/2026/07/android-inference.html",
+            "Android inference architecture guidance.",
+            "",
+            ["mobile-development"],
+            2.0,
+            validated=True,
+        )
+        topic = {
+            "title": source_title,
+            "slug": "android-inference-architecture",
+            "article_type": "conceptual",
+            "categories": ["mobile-development"],
+        }
+        config = {
+            "publishing": {
+                "max_source_title_similarity": 0.7,
+                "required_source_count": 0,
+                "required_diagrams": 0,
+                "required_enhanced_elements": 0,
+            },
+            "taxonomy": {"allowed_categories": ["mobile-development"]},
+        }
+        article = {
+            "title": source_title,
+            "slug": topic["slug"],
+            "article_markdown": "Opening explanation.\n\n## Architecture\n\nConcrete Android inference boundaries.",
+            "sources": [],
+            "claim_evidence": [],
+        }
+
+        normalized = autopublisher.normalize_article_payload(
+            article,
+            topic,
+            config,
+            [source],
+        )
+
+        self.assertNotEqual(normalized["title"], source_title)
+        self.assertFalse(
+            autopublisher.title_is_too_similar_to_sources(
+                normalized["title"],
+                [source],
+                config,
+            )
+        )
+        self.assertEqual(normalized["slug"], topic["slug"])
 
     def test_normalization_relocates_visual_summary_to_requested_explanation(self):
         config = autopublisher.load_config()
@@ -1302,6 +1358,57 @@ def process(value: int) -> int:
         self.assertIn(relevant, scoped)
         self.assertNotIn(adjacent, scoped)
 
+    def test_topic_research_rejects_broad_hubs_from_failed_publication_bundle(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Automate Custom PII Detection at Scale with Amazon Macie and Step Functions",
+            "search_intent": "Automate scalable custom PII detection workflows with Macie and Step Functions",
+            "categories": ["systems-design"],
+            "tags": ["pii-detection"],
+        }
+        broad_urls = [
+            ("AWS Security", "https://aws.amazon.com/security"),
+            ("AWS Security Blog", "https://aws.amazon.com/blogs/security"),
+            ("AWS Security Hub", "https://aws.amazon.com/security-hub"),
+            ("Amazon Macie", "https://aws.amazon.com/macie"),
+            ("Google Cloud", "https://cloud.google.com/"),
+        ]
+        broad = [
+            autopublisher.ResearchItem(
+                "Official",
+                title,
+                url,
+                title,
+                "",
+                ["systems-design"],
+                1.0,
+                snippet=title,
+                validated=True,
+            )
+            for title, url in broad_urls
+        ]
+        specific = autopublisher.ResearchItem(
+            "AWS Architecture Blog",
+            topic["title"],
+            "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions",
+            "Custom PII detection workflow using Amazon Macie and Step Functions.",
+            "",
+            ["systems-design"],
+            2.0,
+            snippet="Custom PII detection workflow using Amazon Macie and Step Functions.",
+            validated=True,
+        )
+
+        self.assertTrue(
+            autopublisher.topic_source_is_directly_relevant(topic, specific, config)
+        )
+        self.assertTrue(
+            all(
+                not autopublisher.topic_source_is_directly_relevant(topic, item, config)
+                for item in broad
+            )
+        )
+
     def test_github_model_request_compacts_and_retries_http_413(self):
         oversized = "A" * 30000
         responses = [
@@ -1501,6 +1608,50 @@ def process(value: int) -> int:
             )
         self.assertEqual(len(scoped), 3)
         self.assertTrue(all(item.validated for item in scoped))
+
+    def test_collect_topic_research_caps_the_article_bundle_at_the_configured_target(self):
+        topic = {
+            "title": "Debug Kubernetes DNS Resolution",
+            "search_intent": "Diagnose Kubernetes DNS failures from pods",
+            "categories": ["networking"],
+            "tags": ["kubernetes", "dns"],
+        }
+        sources = [
+            autopublisher.ResearchItem(
+                "Kubernetes Docs",
+                f"Kubernetes DNS diagnostic command {index}",
+                f"https://kubernetes.io/docs/tasks/network/dns-diagnostic-{index}/",
+                "Kubernetes DNS failure diagnostics for application pods.",
+                "",
+                ["networking"],
+                2.0,
+                validated=True,
+            )
+            for index in range(5)
+        ]
+        topic["source_urls"] = [source.url for source in sources]
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {"required_source_count": 3},
+            "research": {
+                "topic_source_min_similarity": 0.1,
+                "topic_source_min_token_overlap": 2,
+                "topic_source_min_anchor_overlap": 1,
+                "topic_source_min_identity_anchor_overlap": 1,
+                "topic_source_target_items": 3,
+                "topic_source_max_items": 6,
+            },
+        }
+
+        scoped = autopublisher.collect_topic_research(
+            SimpleNamespace(),
+            topic,
+            sources,
+            config,
+            autopublisher.EventLog(),
+        )
+
+        self.assertEqual(len(scoped), 3)
 
     def test_collect_topic_research_validates_configured_evergreen_sources(self):
         topic = {
@@ -1761,6 +1912,80 @@ def process(value: int) -> int:
         }
         selected = autopublisher.choose_topic(TopicClient(), sources, None, [], config, autopublisher.EventLog())
         self.assertEqual(selected["slug"], "secure-serverless-cloud-function-endpoints")
+
+    def test_choose_topic_rejects_a_source_headline_before_article_generation(self):
+        source = autopublisher.ResearchItem(
+            "Android Developers",
+            "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained",
+            "https://android-developers.googleblog.com/2026/07/android-inference.html",
+            "Android cloud, hybrid, and on-device inference architecture guidance.",
+            "",
+            ["mobile-development"],
+            2.0,
+            validated=True,
+        )
+
+        class TopicClient:
+            def generate_json(self, *_args, **_kwargs):
+                return {
+                    "topics": [
+                        {
+                            "title": source.title,
+                            "slug": "copied-source-headline",
+                            "primary_category": "mobile-development",
+                            "categories": ["mobile-development"],
+                            "tags": ["android"],
+                            "search_intent": "Choose Android cloud hybrid or on-device inference",
+                            "article_type": "conceptual",
+                            "source_urls": [source.url],
+                        },
+                        {
+                            "title": "Choosing Android Inference Boundaries for Offline and Connected Workloads",
+                            "slug": "android-inference-offline-connected-workloads",
+                            "primary_category": "mobile-development",
+                            "categories": ["mobile-development"],
+                            "tags": ["android"],
+                            "search_intent": "Choose Android inference boundaries for offline and connected workloads",
+                            "article_type": "conceptual",
+                            "source_urls": [source.url],
+                        },
+                    ]
+                }
+
+        config = {
+            "publishing": {
+                "required_source_count": 1,
+                "topic_relevance_min_score": 0.0,
+                "max_source_title_similarity": 0.7,
+            },
+            "cost_control": {"require_source_qualified_topic": True},
+            "source_validation": {"trusted_domains": ["android-developers.googleblog.com"]},
+            "research": {
+                "topic_source_min_similarity": 0.1,
+                "topic_source_min_token_overlap": 2,
+                "topic_source_min_anchor_overlap": 1,
+                "topic_source_min_identity_anchor_overlap": 1,
+            },
+            "topic_scope": {
+                "approved_categories": ["mobile-development"],
+                "category_keywords": {"mobile-development": ["android", "mobile"]},
+            },
+            "taxonomy": {
+                "allowed_categories": ["mobile-development"],
+                "controlled_tags": ["android"],
+            },
+        }
+
+        selected = autopublisher.choose_topic(
+            TopicClient(),
+            [source],
+            None,
+            [],
+            config,
+            autopublisher.EventLog(),
+        )
+
+        self.assertEqual(selected["slug"], "android-inference-offline-connected-workloads")
 
     def test_choose_topic_accepts_one_source_only_when_related_expansion_is_available(self):
         source = autopublisher.ResearchItem(
@@ -2225,10 +2450,46 @@ def process(value: int) -> int:
             research,
             self.config,
         )
-        self.assertEqual([source["url"] for source in sources], [
-            "https://trusted.example/article",
-            "https://trusted.example/second",
-        ])
+        self.assertEqual(
+            [source["url"] for source in sources],
+            ["https://trusted.example/article"],
+        )
+
+    def test_source_normalization_recovers_only_validated_evidence_references(self):
+        research = [
+            autopublisher.ResearchItem(
+                "Trusted",
+                title,
+                url,
+                "Directly relevant documentation.",
+                "",
+                ["technology"],
+                1.0,
+            )
+            for title, url in [
+                ("First source", "https://trusted.example/first"),
+                ("Second source", "https://trusted.example/second"),
+                ("Unused source", "https://trusted.example/unused"),
+            ]
+        ]
+        sources = autopublisher.supplement_article_sources(
+            [{"title": "First source", "url": research[0].url}],
+            {"source_urls": [item.url for item in research]},
+            research,
+            self.config,
+            claim_evidence=[
+                {
+                    "claim": "The second source supports this claim.",
+                    "supporting_sources": [research[1].url],
+                }
+            ],
+        )
+
+        self.assertEqual(
+            [source["url"] for source in sources],
+            [research[0].url, research[1].url],
+        )
+        self.assertNotIn(research[2].url, [source["url"] for source in sources])
 
     def test_ai_qa_failure_is_fail_closed(self):
         class BrokenClient:
@@ -3377,6 +3638,29 @@ Continue with prose.
         self.assertEqual(updated["lastmod"], frontmatter["lastmod"])
         self.assertEqual(updated["verification_date"], frontmatter["verification_date"])
         self.assertEqual(int(updated["verification_version"]), 2)
+
+    def test_revision_prompt_sets_a_safe_length_floor_and_includes_repair_feedback(self):
+        post = autopublisher.Post(
+            Path("scheduled-tasks.md"),
+            "scheduled-tasks",
+            "Troubleshoot Windows Scheduled Tasks with PowerShell",
+            "Description",
+            "2026-01-01",
+            ["powershell"],
+            ["system-administration"],
+            "## Existing\n\nOriginal technical material.",
+            {},
+        )
+        prompt = revise_posts.revision_prompt(
+            post,
+            {"words": 1350},
+            {"revision": {"min_preserved_length_ratio": 0.72}},
+            "The rewrite is too short: 946 words versus 1350 original words.",
+        )
+
+        self.assertIn("at least 972 words", prompt)
+        self.assertIn("target about 1215 words", prompt)
+        self.assertIn("946 words versus 1350", prompt)
 
     def test_source_backed_review_updates_verification_without_changing_lastmod(self):
         with tempfile.TemporaryDirectory() as directory:

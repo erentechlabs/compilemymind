@@ -298,6 +298,85 @@ def jaccard_similarity(left: str, right: str) -> float:
     return len(a & b) / len(a | b)
 
 
+def title_is_too_similar_to_sources(
+    title: str,
+    research: list["ResearchItem"],
+    config: dict[str, Any],
+) -> bool:
+    """Return whether a proposed headline is effectively a source headline."""
+    threshold = float(config.get("publishing", {}).get("max_source_title_similarity", 1.0))
+    return any(
+        item.title and jaccard_similarity(title, item.title) > threshold
+        for item in research
+    )
+
+
+def source_distinct_article_title(
+    title: str,
+    topic: dict[str, Any],
+    research: list["ResearchItem"],
+    config: dict[str, Any],
+) -> str:
+    """Deterministically recover a source-distinct headline.
+
+    Topic-selection models occasionally return an official post title verbatim
+    and article models then preserve it through every expensive regeneration.
+    Keep the technical subject, but add an article-specific reader angle and
+    remove announcement-style wording before deterministic QA runs.
+    """
+    title = normalize_space(title)
+    if not title or not title_is_too_similar_to_sources(title, research, config):
+        return title
+
+    article_type = normalize_space(str(topic.get("article_type", ""))).lower()
+    if article_type not in {"troubleshooting", "tutorial", "comparison", "conceptual"}:
+        if re.search(r"(?i)\b(troubleshoot|diagnos|debug|fix)\w*\b", title):
+            article_type = "troubleshooting"
+        elif re.search(r"(?i)\b(?:vs\.?|versus|compare|comparison)\b", title):
+            article_type = "comparison"
+        elif re.search(r"(?i)\b(?:explained|architecture|concept|how .+ works)\b", title):
+            article_type = "conceptual"
+        else:
+            article_type = "tutorial"
+
+    def clean(value: str) -> str:
+        value = re.sub(
+            r"(?i)^(?:how\s+to\s+|build(?:ing)?\s+|automat(?:e|ing)\s+|"
+            r"configur(?:e|ing)\s+|creat(?:e|ing)\s+|implement(?:ing)?\s+)",
+            "",
+            normalize_space(value),
+        )
+        value = re.sub(r"(?i)\s+explained\s*$", "", value)
+        value = re.sub(r"(?i)\s+at scale\b", "", value)
+        value = re.sub(r"(?i)\bAmazon\s+(?=Macie\b)", "", value)
+        return normalize_space(value).strip(" :-")
+
+    candidates: list[str] = []
+    if ":" in title:
+        left, right = (clean(part) for part in title.split(":", 1))
+        if left and right:
+            candidates.append(
+                f"{right} for {left}: Architecture Trade-offs and Validation"
+            )
+
+    subject = clean(title)
+    templates = {
+        "troubleshooting": f"Diagnosing {subject}: Evidence, Remediation, and Validation",
+        "tutorial": f"A Practical Workflow for {subject}: Setup, Validation, and Recovery",
+        "comparison": f"{subject} for Real Workloads: Constraints, Trade-offs, and Selection",
+        "conceptual": f"{subject}: Architecture Choices, Trade-offs, and Decision Criteria",
+    }
+    candidates.append(templates[article_type])
+    candidates.append(
+        f"{subject}: Design Boundaries, Failure Modes, and Operational Validation"
+    )
+    for candidate in candidates:
+        candidate = normalize_space(candidate)
+        if candidate and not title_is_too_similar_to_sources(candidate, research, config):
+            return candidate
+    return title
+
+
 def parse_date(value: str | None) -> dt.datetime | None:
     if not value:
         return None
@@ -577,6 +656,7 @@ def retry_topic_payload(topic: dict[str, Any] | None, sources: list[ResearchItem
         "tags",
         "search_intent",
         "why_now",
+        "article_type",
         "source_urls",
         "needs_diagram",
         "needs_chart",
@@ -2063,6 +2143,32 @@ def research_item_topic_similarity(topic: dict[str, Any], item: ResearchItem) ->
     return cosine_similarity(topic_text, f"{item.title} {item.summary}")
 
 
+def article_evidence_url_is_specific(url: str) -> bool:
+    """Reject homepages and broad product/category hubs as claim evidence."""
+    path = urllib.parse.unquote(urllib.parse.urlsplit(url).path).strip("/")
+    if not path:
+        return False
+    segments = [segment for segment in path.split("/") if segment]
+    generic_terminal = {
+        "article",
+        "blog",
+        "blogs",
+        "docs",
+        "documentation",
+        "macie",
+        "news",
+        "products",
+        "resources",
+        "security",
+        "security-hub",
+        "solutions",
+        "topics",
+    }
+    if segments[-1].lower() in generic_terminal:
+        return False
+    return True
+
+
 def is_configured_seed_source(topic: dict[str, Any], item: ResearchItem) -> bool:
     """Return whether an item is one of this evergreen topic's fixed sources."""
     source_url = canonical_url(item.url)
@@ -2093,6 +2199,8 @@ def topic_source_is_directly_relevant(
         return True
     if not config or "research" not in config:
         return True
+    if not article_evidence_url_is_specific(item.url):
+        return False
     research_config = config.get("research", {})
     topic_tokens = set(
         tokenize(
@@ -2108,17 +2216,32 @@ def topic_source_is_directly_relevant(
     if not topic_tokens:
         return False
     source_tokens = set(tokenize(f"{item.title} {item.summary} {item.snippet}"))
+    source_identity_tokens = set(
+        tokenize(
+            f"{item.title} "
+            f"{urllib.parse.unquote(urllib.parse.urlsplit(item.url).path).replace('/', ' ')}"
+        )
+    )
     shared_tokens = topic_tokens & source_tokens
     anchor_tokens = topic_tokens - TOPIC_SOURCE_GENERIC_TOKENS
     shared_anchor_tokens = anchor_tokens & source_tokens
+    shared_identity_anchors = anchor_tokens & source_identity_tokens
     minimum_overlap = int(research_config.get("topic_source_min_token_overlap", 2))
     minimum_anchor_overlap = int(research_config.get("topic_source_min_anchor_overlap", 2))
+    minimum_identity_overlap = int(
+        research_config.get("topic_source_min_identity_anchor_overlap", 1)
+    )
     minimum_similarity = float(research_config.get("topic_source_min_similarity", 0.16))
     category_overlap = bool(set(topic.get("categories", []) or []) & set(item.categories))
     similarity = research_item_topic_similarity(topic, item)
-    return len(shared_tokens) >= minimum_overlap and len(shared_anchor_tokens) >= minimum_anchor_overlap and (
+    return (
+        len(shared_tokens) >= minimum_overlap
+        and len(shared_anchor_tokens) >= minimum_anchor_overlap
+        and len(shared_identity_anchors) >= minimum_identity_overlap
+        and (
         similarity >= minimum_similarity
         or (category_overlap and similarity >= minimum_similarity * 0.75)
+        )
     )
 
 
@@ -2268,7 +2391,9 @@ def collect_topic_research(
 ) -> list[ResearchItem]:
     """Build and validate a coherent source bundle for one article topic."""
     required = int(config.get("publishing", {}).get("required_source_count", 1))
-    limit = int(config.get("research", {}).get("topic_source_max_items", 6))
+    configured_limit = int(config.get("research", {}).get("topic_source_max_items", required))
+    target_items = int(config.get("research", {}).get("topic_source_target_items", required))
+    limit = max(required, min(configured_limit, target_items))
     existing_urls = {canonical_url(item.url) for item in research}
     seed_candidates = [
         ResearchItem(
@@ -2836,6 +2961,13 @@ def choose_topic(
                 requested_source_count=len(requested_sources),
                 directly_relevant_source_count=len(matched_source_urls),
             )
+        if title_is_too_similar_to_sources(title, matched_source_items, config):
+            log.log(
+                "topic_rejected",
+                title=title,
+                reason="title_too_similar_to_source",
+            )
+            continue
         if (
             require_source_qualified
             and len(matched_source_urls) < required_sources
@@ -3105,17 +3237,20 @@ def is_roundup_research_item(item: ResearchItem) -> bool:
 def fallback_topic_title(item: ResearchItem, primary_category: str) -> str:
     base = re.sub(r"\s*[-|]\s*(Google Cloud|AWS|Microsoft|GitHub|Cloudflare).*$", "", item.title).strip()
     base = base.rstrip(".")
+    topic = {
+        "title": base,
+        "article_type": (
+            "conceptual"
+            if primary_category in {"systems-design", "programming-languages"}
+            else "tutorial"
+        ),
+    }
+    config = {"publishing": {"max_source_title_similarity": 0.7}}
     if primary_category == "cybersecurity":
-        return f"{base}: Practical Security Lessons for IT Teams"
-    if primary_category == "networking":
-        return f"{base}: What It Means for Modern Network Operations"
-    if primary_category in {"cloud", "microsoft-cloud"}:
-        return f"{base}: Practical Cloud Architecture Guide"
-    if primary_category in {"software-engineering", "ai-engineering", "programming-languages", "systems-design", "developer-tools"}:
-        return f"{base}: Practical Guide for Developers"
-    if primary_category == "hardware":
-        return f"{base}: Practical Hardware Buying and Performance Guide"
-    return f"{base}: Practical Guide and Real-World Examples"
+        topic["article_type"] = "troubleshooting"
+    elif primary_category == "networking":
+        topic["article_type"] = "conceptual"
+    return source_distinct_article_title(base, topic, [item], config)
 
 
 def sanitize_categories(values: Any, primary: Any, config: dict[str, Any]) -> list[str]:
@@ -3456,6 +3591,8 @@ Editorial style:
 - A comparison must never declare a universal winner. Define the workload, assumptions, query/read/write behavior, operational constraints, security, maintenance, migration, and cost factors that actually affect the recommendation.
 - Do not include YAML front matter or any top-level H1 in article_markdown. Start section headings at H2 (##).
 - Never refer to yourself, the prompt, or limitations of being an AI system.
+- Create a final article title that expresses the reader's decision, workflow, failure mode, or implementation outcome. Do not copy the topic title or any supplied source title verbatim.
+- Keep the final title's token overlap with every research title below {float(config.get("publishing", {}).get("max_source_title_similarity", 1.0)):.2f}; preserve necessary product names while changing announcement wording and editorial angle.
 - The sources array must include at least {required_sources} URLs selected from the research snippets.
 - If the topic involves AI agents, code reviewers, or machine learning systems, discuss them as technical systems, not as yourself.
 - For software topics, include runnable examples, architecture explanations, trade-offs, version context, and testing guidance when appropriate.
@@ -4484,28 +4621,31 @@ def supplement_article_sources(
     topic: dict[str, Any],
     research: list[ResearchItem],
     config: dict[str, Any],
+    claim_evidence: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, str]]:
-    required = int(config.get("publishing", {}).get("required_source_count", 3))
     trusted_research = [
         item for item in research
         if item.validated or not config.get("source_validation", {}).get("trusted_domains")
     ]
-    researched_urls = {canonical_url(item.url) for item in trusted_research}
-    sources = [
-        source
-        for source in (article_sources or [])
-        if isinstance(source, dict)
-        if canonical_url(str(source.get("url", "")).strip()) in researched_urls
-    ]
-    sources.extend(
-        {"url": url, "title": ""}
-        for url in topic.get("source_urls", []) or []
-        if canonical_url(str(url).strip()) in researched_urls
-    )
-    for item in research_items_for_topic(topic, trusted_research, limit=8, config=config):
-        sources.append({"title": item.title, "url": item.url})
-        if len(dedupe_sources(sources)) >= required:
-            break
+    research_by_url = {canonical_url(item.url): item for item in trusted_research}
+    sources: list[dict[str, Any]] = []
+    for source in article_sources or []:
+        if not isinstance(source, dict):
+            continue
+        key = canonical_url(str(source.get("url", "")).strip())
+        if key in research_by_url:
+            sources.append(source)
+    # A model can correctly cite a validated URL in claim_evidence while
+    # accidentally omitting it from sources. Recover that internally
+    # consistent source, but never pad the list with unrelated topic URLs.
+    for evidence in claim_evidence or []:
+        if not isinstance(evidence, dict):
+            continue
+        for url in evidence.get("supporting_sources", evidence.get("source_urls", [])) or []:
+            key = canonical_url(str(url).strip())
+            item = research_by_url.get(key)
+            if item:
+                sources.append({"title": item.title, "url": item.url})
     return dedupe_sources(sources)
 
 
@@ -4517,6 +4657,7 @@ def normalize_article_payload(
     posts: list[Post] | None = None,
 ) -> dict[str, Any]:
     title = normalize_space(str(article.get("title") or topic.get("title", "")))
+    title = source_distinct_article_title(title, topic, research, config)
     slug = slugify(
         str(article.get("slug") or topic.get("slug") or title),
         int(config.get("publishing", {}).get("max_slug_length", 82)),
@@ -4536,12 +4677,20 @@ def normalize_article_payload(
     article["tags"] = sanitize_tags(article.get("tags", topic.get("tags", [])), topic, config)
     if posts is not None:
         article["tags"] = reconcile_article_tags(article, topic, posts, config)
-    article["sources"] = supplement_article_sources(article.get("sources", []), topic, research, config)
+    raw_claim_evidence = [
+        item for item in article.get("claim_evidence", []) or []
+        if isinstance(item, dict)
+    ]
+    article["sources"] = supplement_article_sources(
+        article.get("sources", []),
+        topic,
+        research,
+        config,
+        raw_claim_evidence,
+    )
     allowed_source_urls = {canonical_url(str(source.get("url", ""))) for source in article["sources"]}
     evidence: list[dict[str, Any]] = []
-    for item in article.get("claim_evidence", []) or []:
-        if not isinstance(item, dict):
-            continue
+    for item in raw_claim_evidence:
         claim = normalize_space(str(item.get("claim", "")))
         raw_source_urls = item.get("supporting_sources", item.get("source_urls", [])) or []
         source_urls = [
@@ -5383,8 +5532,7 @@ def deterministic_qa(
         issues.append(f"Title is too similar to existing post '{post.title if post else ''}' ({similarity['title_score']:.2f}).")
     if research:
         issues.extend(source_similarity_issues(article, research, config))
-        max_source_title_similarity = float(config.get("publishing", {}).get("max_source_title_similarity", 1.0))
-        if any(jaccard_similarity(str(article.get("title", "")), item.title) > max_source_title_similarity for item in research):
+        if title_is_too_similar_to_sources(str(article.get("title", "")), research, config):
             issues.append("Article title is too similar to a source title.")
     duplicate = detailed_existing_similarity(
         title=str(article.get("title", "")),
