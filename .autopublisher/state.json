@@ -2224,15 +2224,24 @@
       "reason": "qa_failed",
       "detail": "Add version-specific API fields, commands, and result interpretation for Gemini Nano, ML Kit Prompt API, and Firebase AI Logic. Provide hands-on test metadata and verification_status for example code, including expected and failure results. Expand security guidance with Android-specific fields, commands, and evidence of implementation. Add troubleshooting workflow for hybrid inference routing failures, including roles, permissions, evidence fields, expected/failure results, interpretation, and rollback steps. Qualify architecture trade-off claims with benchmark context, units, and limitations. Revise example code to show actual Firebase AI Logic usage, including version and result interpretation. Define comparison workloads and assumptions, and qualify recommendations with benchmark context. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 1071, \"headings\": [\"The Developer’s Dilemma: Where Should Android AI Features Run?\", \"Understanding Inference Location: Cloud, On-Device, and Hybrid\", \"Why Inference Location Matters: Real-World Scenarios\", \"Core Architecture Trade-offs\", \"Hybrid Inference in Practice: Firebase AI Logic\", \"Example: Dynamic Routing with Firebase AI Logic\", \"Validating Inference Architecture Choices\", \"Latency and Throughput Testing\", \"Accuracy and Model Consistency\", \"Privacy Compliance Verification\", \"Cost and Resource Monitoring\", \"User Experience Testing\", \"Common Pitfalls and How to Avoid Them\", \"Security Considerations\", \"Decision Workflow for Selecting Inference Architecture\", \"Architecture Diagram: Hybrid Inference Flow\"]}",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-28T20:59:16.011785Z",
+      "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
+      "attempts": 1
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-28T20:01:57.700534Z",
+      "time": "2026-07-28T20:59:16.012358Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "stage": "article_quality",
-      "next_retry_at": "2026-07-29T02:01:57.700458Z"
+      "next_retry_at": "2026-07-29T02:59:16.012090Z"
     },
     "maintain": {
       "time": "2026-07-27T06:05:44.669077Z",
@@ -2470,6 +2479,14 @@
       "reason": "qa_failed",
       "detail": "Add version-specific API fields, commands, and result interpretation for Gemini Nano, ML Kit Prompt API, and Firebase AI Logic. Provide hands-on test metadata and verification_status for example code, including expected and failure results. Expand security guidance with Android-specific fields, commands, and evidence of implementation. Add troubleshooting workflow for hybrid inference routing failures, including roles, permissions, evidence fields, expected/failure results, interpretation, and rollback steps. Qualify architecture trade-off claims with benchmark context, units, and limitations. Revise example code to show actual Firebase AI Logic usage, including version and result interpretation. Define comparison workloads and assumptions, and qualify recommendations with benchmark context. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 1071, \"headings\": [\"The Developer’s Dilemma: Where Should Android AI Features Run?\", \"Understanding Inference Location: Cloud, On-Device, and Hybrid\", \"Why Inference Location Matters: Real-World Scenarios\", \"Core Architecture Trade-offs\", \"Hybrid Inference in Practice: Firebase AI Logic\", \"Example: Dynamic Routing with Firebase AI Logic\", \"Validating Inference Architecture Choices\", \"Latency and Throughput Testing\", \"Accuracy and Model Consistency\", \"Privacy Compliance Verification\", \"Cost and Resource Monitoring\", \"User Experience Testing\", \"Common Pitfalls and How to Avoid Them\", \"Security Considerations\", \"Decision Workflow for Selecting Inference Architecture\", \"Architecture Diagram: Hybrid Inference Flow\"]}",
       "attempts": 3
+    },
+    {
+      "time": "2026-07-28T20:59:16.011785Z",
+      "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
+      "attempts": 1
     }
   ],
   "provider_cooldowns": {
@@ -2485,55 +2502,49 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-07-28T20:01:57.700454Z",
-    "next_retry_at": "2026-07-29T02:01:57.700458Z",
+    "scheduled_at": "2026-07-28T20:59:16.012084Z",
+    "next_retry_at": "2026-07-29T02:59:16.012090Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "Add version-specific API fields, commands, and result interpretation for Gemini Nano, ML Kit Prompt API, and Firebase AI Logic. Provide hands-on test metadata and verification_status for example code, including expected and failure results. Expand security guidance with Android-specific fields, commands, and evidence of implementation. Add troubleshooting workflow for hybrid inference routing failures, including roles, permissions, evidence fields, expected/failure results, interpretation, and rollback steps. Qualify architecture trade-off claims with benchmark context, units, and limitations. Revise example code to show actual Firebase AI Logic usage, including version and result interpretation. Define comparison workloads and assumptions, and qualify recommendations with benchmark context. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 1071, \"headings\": [\"The Developer’s Dilemma: Where Should Android AI Features Run?\", \"Understanding Inference Location: Cloud, On-Device, and Hybrid\", \"Why Inference Location Matters: Real-World Scenarios\", \"Core Architecture Trade-offs\", \"Hybrid Inference in Practice: Firebase AI Logic\", \"Example: Dynamic Routing with Firebase AI Logic\", \"Validating Inference Architecture Choices\", \"Latency and Throughput Testing\", \"Accuracy and Model Consistency\", \"Privacy Compliance Verification\", \"Cost and Resource Monitoring\", \"User Experience Testing\", \"Common Pitfalls and How to Avoid Them\", \"Security Considerations\", \"Decision Workflow for Selecting Inference Architecture\", \"Architecture Diagram: Hybrid Inference Flow\"]}",
-    "consecutive_attempts": 22,
+    "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
+    "consecutive_attempts": 23,
     "topic_attempts": 1,
     "topic": {
-      "title": "Cloud and hybrid inference for intelligent Android apps: Architecture Trade-offs and Validation",
-      "slug": "cloud-and-hybrid-inference-for-intelligent-android-apps-architecture",
-      "primary_category": "mobile-development",
+      "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
       "categories": [
         "mobile-development",
-        "programming-languages"
+        "ai-engineering"
       ],
+      "primary_category": "mobile-development",
       "tags": [
-        "mobile-development",
-        "android-developers-blog",
-        "build",
-        "intelligent",
-        "android"
+        "android",
+        "ai-engineering",
+        "mobile-architecture"
       ],
-      "search_intent": "Readers want a practical explanation of Build intelligent Android apps: Cloud and hybrid inference and what it changes for technical teams.",
-      "why_now": "Based on a recent item from Android Developers Blog: Build intelligent Android apps: Cloud and hybrid inference",
-      "source_urls": [
-        "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html",
-        "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-introduction-jetpack.html",
-        "https://azure.microsoft.com/en-us/solutions/ai"
-      ],
+      "search_intent": "Choose an on-device, cloud, or hybrid inference architecture for an Android AI feature based on privacy, connectivity, compatibility, and model capability.",
+      "article_type": "comparison",
       "needs_diagram": true,
       "needs_chart": false,
-      "series": {
-        "name": "",
-        "part": null,
-        "total_estimate": null,
-        "planned_next_parts": []
-      },
+      "generation_constraints": "Define a concrete Android feature workload before comparing routes. Use current Android inference modes from the cited documentation, explain device compatibility and offline failure behavior, and do not discuss unrelated AI providers.",
+      "source_urls": [
+        "https://developer.android.com/ai/overview",
+        "https://developer.android.com/ai/hybrid",
+        "https://developer.android.com/blog/posts/build-intelligent-android-apps-on-device-inference"
+      ],
+      "recovery_backlog": true,
       "seed_sources": [
         {
-          "title": "Build intelligent Android apps: Cloud and hybrid inference",
-          "url": "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html"
+          "title": "Find the right AI/ML solution for your app",
+          "url": "https://developer.android.com/ai/overview"
         },
         {
-          "title": "Build intelligent Android apps",
-          "url": "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-introduction-jetpack.html"
+          "title": "Hybrid inference",
+          "url": "https://developer.android.com/ai/hybrid"
         },
         {
-          "title": "AI apps and agents",
-          "url": "https://azure.microsoft.com/en-us/solutions/ai"
+          "title": "Build intelligent Android apps: On-device inference",
+          "url": "https://developer.android.com/blog/posts/build-intelligent-android-apps-on-device-inference"
         }
       ]
     }
@@ -2601,5 +2612,10 @@
         }
       ]
     }
-  }
+  },
+  "recovery_backlog_attempts": {
+    "android-intelligent-apps-cloud-hybrid-on-device-inference": 1
+  },
+  "recovery_backlog_queued": [],
+  "recovery_backlog_completed": []
 }
