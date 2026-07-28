@@ -96,6 +96,87 @@ class AutopublisherTests(unittest.TestCase):
         }.issubset(feed_urls))
         self.assertFalse(config["retry"]["retain_quality_failed_topic"])
 
+    def test_production_recovery_backlog_covers_viable_unpublished_topics(self):
+        config = autopublisher.load_config()
+        topics = config["research"]["recovery_topics"]
+        self.assertTrue(config["recovery_backlog"]["enabled"])
+        self.assertEqual(len(topics), 4)
+        required = config["publishing"]["required_source_count"]
+        historical_slugs = {
+            slug
+            for topic in topics
+            for slug in topic.get("historical_slugs", [])
+        }
+        self.assertEqual(
+            historical_slugs,
+            {
+                "android-intelligent-apps-cloud-hybrid-on-device-inference",
+                "automate-pii-detection-amazon-macie-step-functions",
+                "automate-custom-pii-detection-amazon-macie-step-functions",
+                "custom-metrics-exporter-kubernetes-guide",
+                "harden-exposed-cloud-functions-security-guide",
+                "practical-guide-securing-serverless-cloud-functions",
+            },
+        )
+        for topic in topics:
+            sources = topic["seed_sources"]
+            self.assertEqual(len(autopublisher.dedupe_sources(sources)), required)
+            self.assertTrue(
+                all(
+                    autopublisher.is_trusted_source_url(item["url"], config)
+                    for item in sources
+                )
+            )
+            self.assertTrue(
+                all(
+                    autopublisher.article_evidence_url_is_specific(item["url"])
+                    for item in sources
+                )
+            )
+            source_items = [
+                autopublisher.ResearchItem(
+                    "Recovery source",
+                    item["title"],
+                    item["url"],
+                    "",
+                    "",
+                    topic["categories"],
+                    1.0,
+                )
+                for item in sources
+            ]
+            self.assertFalse(
+                autopublisher.title_is_too_similar_to_sources(
+                    topic["title"],
+                    source_items,
+                    config,
+                ),
+                topic["slug"],
+            )
+            scoped_topic = dict(topic)
+            scoped_topic["source_urls"] = [item["url"] for item in sources]
+            scoped_topic["categories"] = autopublisher.sanitize_categories(
+                topic["categories"],
+                topic["primary_category"],
+                config,
+            )
+            scoped_topic["tags"] = autopublisher.sanitize_tags(
+                topic["tags"],
+                scoped_topic,
+                config,
+            )
+            relevance = autopublisher.topic_relevance_score(scoped_topic, config)
+            self.assertGreaterEqual(
+                relevance["score"],
+                config["publishing"]["topic_relevance_min_score"],
+                topic["slug"],
+            )
+        retired = config["research"]["retired_recovery_topics"]
+        self.assertEqual(
+            [item["slug"] for item in retired],
+            ["google-is-a-leader-and-positioned-furthest-in-vision-and-highest-in"],
+        )
+
     def test_production_diverse_topic_prompt_fits_model_budget(self):
         config = autopublisher.load_config()
         limit = config["research"]["topic_selection_max_items"]
@@ -1712,6 +1793,59 @@ def process(value: int) -> int:
         selected = autopublisher.choose_evergreen_topic([existing], config, autopublisher.EventLog())
         self.assertEqual(selected["slug"], "fresh-evergreen")
 
+    def test_recovery_backlog_is_ordered_and_skips_exhausted_or_published_topics(self):
+        config = autopublisher.load_config()
+        posts = autopublisher.load_posts(config)
+        selected = autopublisher.choose_recovery_topic(
+            posts,
+            {},
+            config,
+            autopublisher.EventLog(),
+        )
+        self.assertEqual(
+            selected["slug"],
+            "android-intelligent-apps-cloud-hybrid-on-device-inference",
+        )
+        attempts = {
+            "recovery_backlog_attempts": {
+                selected["slug"]: config["recovery_backlog"]["max_attempts_per_topic"],
+            }
+        }
+        next_topic = autopublisher.choose_recovery_topic(
+            posts,
+            attempts,
+            config,
+            autopublisher.EventLog(),
+        )
+        self.assertEqual(
+            next_topic["slug"],
+            "automate-pii-detection-amazon-macie-step-functions",
+        )
+
+        published_alias = autopublisher.Post(
+            Path("published-alias/index.md"),
+            "automate-custom-pii-detection-amazon-macie-step-functions",
+            "Published PII pipeline",
+            "",
+            "2026-01-01",
+            ["amazon-macie"],
+            ["systems-design"],
+            "## Published\n\nExisting recovered topic.",
+            {},
+        )
+        fixture = deepcopy(config)
+        fixture["research"]["recovery_topics"] = [
+            deepcopy(config["research"]["recovery_topics"][1])
+        ]
+        self.assertIsNone(
+            autopublisher.choose_recovery_topic(
+                [*posts, published_alias],
+                {},
+                fixture,
+                autopublisher.EventLog(),
+            )
+        )
+
     def test_evergreen_selection_rotates_to_an_underrepresented_category(self):
         recent_mobile = autopublisher.Post(
             Path("mobile/index.md"), "mobile", "Android Architecture", "",
@@ -2881,6 +3015,83 @@ def process(value: int) -> int:
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
         self.assertEqual(state["pending_publication"], {})
 
+    def test_publish_prioritizes_recovery_backlog_before_new_discovery(self):
+        config = autopublisher.load_config()
+        topic = {
+            "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+            "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+            "primary_category": "mobile-development",
+            "categories": ["mobile-development", "ai-engineering"],
+            "tags": ["android", "ai-inference"],
+            "search_intent": "Choose an Android AI inference architecture.",
+            "recovery_backlog": True,
+        }
+        state = {
+            "generated_posts": [],
+            "maintenance_reviews": {},
+            "failures": [],
+            "last_runs": {},
+            "pending_publication": {},
+            "recovery_backlog_attempts": {},
+            "recovery_backlog_queued": [],
+            "recovery_backlog_completed": [],
+        }
+        sources = [
+            autopublisher.ResearchItem(
+                "Android Developers",
+                f"Android AI architecture source {index}",
+                f"https://developer.android.com/ai/source-{index}",
+                "Android AI inference architecture guidance",
+                "",
+                ["mobile-development", "ai-engineering"],
+                2.0,
+                "Android AI inference architecture guidance",
+                True,
+            )
+            for index in range(3)
+        ]
+        article = {
+            **topic,
+            "description": "A practical comparison of Android AI inference architectures.",
+            "sources": [{"title": item.title, "url": item.url} for item in sources],
+            "article_markdown": "## Architecture guide\n\nValidated Android AI guidance.",
+        }
+
+        class Client:
+            api_key = ""
+
+        with patch.object(autopublisher, "load_config", return_value=config), \
+            patch.object(autopublisher, "load_state", return_value=state), \
+            patch.object(autopublisher, "load_posts", return_value=[]), \
+            patch.object(autopublisher, "collect_research", return_value=sources), \
+            patch.object(autopublisher, "validate_research_items", return_value=sources), \
+            patch.object(autopublisher, "GeminiClient", return_value=Client()), \
+            patch.object(autopublisher, "choose_recovery_topic", return_value=topic), \
+            patch.object(autopublisher, "choose_topic") as choose_topic, \
+            patch.object(autopublisher, "choose_evergreen_topic") as choose_evergreen_topic, \
+            patch.object(autopublisher, "collect_topic_research", return_value=sources), \
+            patch.object(
+                autopublisher,
+                "generate_approved_article",
+                return_value=(article, {"approved": True}, ""),
+            ) as generate, \
+            patch.object(
+                autopublisher,
+                "write_article_bundle",
+                return_value=autopublisher.ROOT
+                / "content/posts/android-intelligent-apps-cloud-hybrid-on-device-inference/index.md",
+            ) as write_bundle, \
+            patch.object(autopublisher, "save_state"), \
+            patch.object(autopublisher, "write_publish_result"):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        choose_topic.assert_not_called()
+        choose_evergreen_topic.assert_not_called()
+        self.assertEqual(generate.call_args.args[1], topic)
+        self.assertTrue(write_bundle.call_args.args[0]["recovery_backlog"])
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
     def test_publish_continues_with_fresh_topic_when_sources_are_insufficient(self):
         config = {
             "gemini": {"enable_google_search_grounding": False},
@@ -3148,6 +3359,48 @@ def process(value: int) -> int:
         self.assertEqual(state, original)
         save_state.assert_not_called()
         self.assertTrue(write_result.call_args.kwargs["coalesced"])
+
+    def test_recovery_backlog_counts_topic_failures_but_not_provider_quota(self):
+        config = {
+            "retry": {"base_delay_hours": 6},
+            "recovery_backlog": {"max_attempts_per_topic": 3},
+        }
+        topic = {
+            "title": "Recovered article",
+            "slug": "recovered-article",
+            "recovery_backlog": True,
+        }
+        state = {"last_runs": {}, "pending_publication": {}}
+        with patch.object(autopublisher, "save_state"), patch.object(
+            autopublisher,
+            "write_publish_result",
+        ):
+            autopublisher.schedule_publish_retry(
+                state,
+                config,
+                autopublisher.EventLog(),
+                reason="all_drafts_failed_quality_gates",
+                stage="article_quality",
+                detail="Article is too short.",
+                topic=topic,
+            )
+        self.assertEqual(state["recovery_backlog_attempts"]["recovered-article"], 1)
+
+        quota_state = {"last_runs": {}, "pending_publication": {}}
+        with patch.object(autopublisher, "save_state"), patch.object(
+            autopublisher,
+            "write_publish_result",
+        ):
+            autopublisher.schedule_publish_retry(
+                quota_state,
+                config,
+                autopublisher.EventLog(),
+                reason="all_drafts_failed_quality_gates",
+                stage="article_quality",
+                detail="GitHub Models quota exceeded: too many requests.",
+                topic=topic,
+            )
+        self.assertEqual(quota_state.get("recovery_backlog_attempts", {}), {})
 
     def test_maintenance_falls_back_when_grounded_research_is_quota_limited(self):
         state = {"maintenance_reviews": {}, "last_runs": {}}

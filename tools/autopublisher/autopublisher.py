@@ -540,6 +540,9 @@ def load_state() -> dict[str, Any]:
             "pending_publication": {},
             "preparation_pending_publication": {},
             "ready_publications": [],
+            "recovery_backlog_attempts": {},
+            "recovery_backlog_queued": [],
+            "recovery_backlog_completed": [],
         },
     )
     if not isinstance(state, dict):
@@ -556,6 +559,9 @@ def load_state() -> dict[str, Any]:
         "pending_publication": {},
         "preparation_pending_publication": {},
         "ready_publications": [],
+        "recovery_backlog_attempts": {},
+        "recovery_backlog_queued": [],
+        "recovery_backlog_completed": [],
     }.items():
         state.setdefault(key, default)
     return state
@@ -663,6 +669,7 @@ def retry_topic_payload(topic: dict[str, Any] | None, sources: list[ResearchItem
         "series",
         "generation_constraints",
         "offline_fallback",
+        "recovery_backlog",
     }
     payload = {key: value for key, value in topic.items() if key in allowed_fields}
     retry_sources = [
@@ -734,6 +741,18 @@ def schedule_publish_retry(
         "topic_attempts": topic_attempts,
         "topic": candidate,
     }
+    topic_specific_failure = reason in {
+        "all_drafts_failed_quality_gates",
+        "asset_validation_failed",
+        "build_failed",
+    } and not re.search(
+        r"(?i)\b(quota|rate limit|too many requests|temporar|provider circuit|billing credit)\b",
+        detail,
+    )
+    if candidate.get("recovery_backlog") and topic_specific_failure:
+        slug = str(candidate.get("slug", ""))
+        recovery_attempts = state.setdefault("recovery_backlog_attempts", {})
+        recovery_attempts[slug] = int(recovery_attempts.get(slug, 0) or 0) + 1
     state["pending_publication"] = pending
     state["last_runs"]["publish"] = {
         "time": iso_z(),
@@ -3251,6 +3270,140 @@ def fallback_topic_title(item: ResearchItem, primary_category: str) -> str:
     elif primary_category == "networking":
         topic["article_type"] = "conceptual"
     return source_distinct_article_title(base, topic, [item], config)
+
+
+def choose_recovery_topic(
+    posts: list[Post],
+    state: dict[str, Any],
+    config: dict[str, Any],
+    log: EventLog,
+    *,
+    excluded_slugs: set[str] | None = None,
+) -> dict[str, Any] | None:
+    """Choose an explicitly sourced historical topic before new discovery."""
+    recovery_config = config.get("recovery_backlog", {})
+    configured_topics = config.get("research", {}).get("recovery_topics", []) or []
+    if not recovery_config.get("enabled", True) or not configured_topics:
+        return None
+    excluded_slugs = excluded_slugs or set()
+    existing_slugs = {post.slug for post in posts}
+    attempts = state.get("recovery_backlog_attempts", {}) or {}
+    maximum_attempts = max(1, int(recovery_config.get("max_attempts_per_topic", 3)))
+    required_sources = int(config.get("publishing", {}).get("required_source_count", 1))
+    max_title_similarity = float(config.get("publishing", {}).get("max_title_similarity", 0.55))
+    max_intent_similarity = float(
+        config.get("publishing", {}).get("max_search_intent_similarity", 1.0)
+    )
+    for configured in configured_topics:
+        if not isinstance(configured, dict):
+            continue
+        topic = dict(configured)
+        title = normalize_space(str(topic.get("title", "")))
+        slug = slugify(
+            str(topic.get("slug") or title),
+            int(config.get("publishing", {}).get("max_slug_length", 82)),
+        )
+        historical_slugs = {
+            slugify(str(value))
+            for value in topic.get("historical_slugs", []) or []
+            if str(value).strip()
+        }
+        known_slugs = {slug, *historical_slugs}
+        if not title or known_slugs & (existing_slugs | excluded_slugs):
+            continue
+        if int(attempts.get(slug, 0) or 0) >= maximum_attempts:
+            log.log(
+                "recovery_topic_exhausted",
+                slug=slug,
+                attempts=attempts.get(slug, 0),
+            )
+            continue
+        seed_sources = [
+            source
+            for source in topic.get("seed_sources", []) or []
+            if isinstance(source, dict) and source.get("title") and source.get("url")
+        ]
+        if len(dedupe_sources(seed_sources)) < required_sources:
+            log.log(
+                "recovery_topic_rejected",
+                slug=slug,
+                reason="insufficient_configured_sources",
+                source_count=len(dedupe_sources(seed_sources)),
+                required=required_sources,
+            )
+            continue
+        source_titles = [
+            ResearchItem(
+                "Recovery source",
+                str(source["title"]),
+                str(source["url"]),
+                "",
+                "",
+                [],
+                1.0,
+            )
+            for source in seed_sources
+        ]
+        if title_is_too_similar_to_sources(title, source_titles, config):
+            log.log(
+                "recovery_topic_rejected",
+                slug=slug,
+                reason="title_too_similar_to_source",
+            )
+            continue
+        topic["slug"] = slug
+        topic["categories"] = sanitize_categories(
+            topic.get("categories", []),
+            topic.get("primary_category"),
+            config,
+        )
+        topic["tags"] = sanitize_tags(topic.get("tags", []), topic, config)
+        topic["source_urls"] = [str(source["url"]).strip() for source in seed_sources]
+        topic["recovery_backlog"] = True
+        relevance = topic_relevance_score(topic, config)
+        if not relevance.get("approved") or relevance.get("score", 0.0) < float(
+            config.get("publishing", {}).get("topic_relevance_min_score", 0.0)
+        ):
+            log.log(
+                "recovery_topic_rejected",
+                slug=slug,
+                reason="topic_relevance_too_low",
+                relevance=relevance,
+            )
+            continue
+        duplicate = detailed_existing_similarity(
+            title=title,
+            slug=slug,
+            search_intent=str(topic.get("search_intent", "")),
+            body="",
+            categories=topic["categories"],
+            tags=topic["tags"],
+            source_urls=topic["source_urls"],
+            posts=posts,
+        )
+        if (
+            duplicate["title"] > max_title_similarity
+            or duplicate["slug"] > max_title_similarity
+            or duplicate["intent"] > max_intent_similarity
+        ):
+            similar_post = duplicate["post"]
+            log.log(
+                "recovery_topic_rejected",
+                slug=slug,
+                reason="duplicate_search_intent",
+                similar_post=similar_post.title if similar_post else "",
+            )
+            continue
+        log.log(
+            "recovery_topic_selected",
+            title=title,
+            slug=slug,
+            source_count=len(seed_sources),
+            historical_slugs=sorted(historical_slugs),
+        )
+        return topic
+    log.log("recovery_backlog_exhausted", configured_topics=len(configured_topics))
+    return None
 
 
 def sanitize_categories(values: Any, primary: Any, config: dict[str, Any]) -> list[str]:
@@ -7132,6 +7285,7 @@ def queue_approved_publication(
         "title": article.get("title", ""),
         "bundle_path": str(target_dir.relative_to(ROOT)),
         "record": record,
+        "recovery_backlog": bool(article.get("recovery_backlog")),
     }
     state.setdefault("ready_publications", []).append(entry)
     state["ready_publications"] = state["ready_publications"][-100:]
@@ -7248,6 +7402,15 @@ def publish_ready_publication(
         publication_record = dict(record)
         publication_record["time"] = iso_z()
         state.setdefault("generated_posts", []).append(publication_record)
+        if entry.get("recovery_backlog"):
+            completed = state.setdefault("recovery_backlog_completed", [])
+            if slug not in completed:
+                completed.append(slug)
+            state["recovery_backlog_queued"] = [
+                value
+                for value in state.get("recovery_backlog_queued", []) or []
+                if value != slug
+            ]
         state.setdefault("last_runs", {})["publish"] = {
             "time": iso_z(),
             "result": "published",
@@ -7312,6 +7475,18 @@ def run_prepare(args: argparse.Namespace) -> int:
         "rejected_articles", restored.get("rejected_articles", [])
     )
     restored["failures"] = state_after.get("failures", restored.get("failures", []))
+    restored["recovery_backlog_attempts"] = state_after.get(
+        "recovery_backlog_attempts",
+        restored.get("recovery_backlog_attempts", {}),
+    )
+    restored["recovery_backlog_queued"] = state_after.get(
+        "recovery_backlog_queued",
+        restored.get("recovery_backlog_queued", []),
+    )
+    restored["recovery_backlog_completed"] = state_after.get(
+        "recovery_backlog_completed",
+        restored.get("recovery_backlog_completed", []),
+    )
     failure = state_after.get("last_runs", {}).get("publish", {}) or {}
     prepare_result = {
         "time": iso_z(),
@@ -7464,11 +7639,17 @@ def run_publish(args: argparse.Namespace) -> int:
     topic = pending_publication_topic(state, posts, config, log)
     retrying_pending_topic = bool(topic)
     initial_topic_is_evergreen = False
+    initial_topic_is_recovery = bool(topic and topic.get("recovery_backlog"))
+    if not topic:
+        topic = choose_recovery_topic(posts, state, config, log)
+        if topic:
+            initial_topic_is_recovery = True
+            initial_topic_is_evergreen = True
     if not topic and prioritize_evergreen:
         topic = choose_evergreen_topic(posts, config, log)
         initial_topic_is_evergreen = bool(topic)
     if topic:
-        if not retrying_pending_topic:
+        if not retrying_pending_topic and not initial_topic_is_recovery:
             log.log("evergreen_quota_recovery_started", title=topic.get("title"), slug=topic.get("slug"))
     else:
         try:
@@ -7540,7 +7721,9 @@ def run_publish(args: argparse.Namespace) -> int:
     )
     # Prefer an evergreen topic when one exists, but do not suppress alternate
     # dynamic-topic attempts merely because the evergreen catalog is exhausted.
-    max_topic_attempts = 1 if (initial_topic_is_evergreen and not retrying_pending_topic) else min(
+    max_topic_attempts = 1 if initial_topic_is_recovery or (
+        initial_topic_is_evergreen and not retrying_pending_topic
+    ) else min(
         topic_call_budget,
         configured_topic_attempts,
     )
@@ -7620,7 +7803,10 @@ def run_publish(args: argparse.Namespace) -> int:
     if not final_article:
         excluded_slugs.add(str(topic.get("slug", "")))
 
-    evergreen_attempts = max(0, int(config.get("publishing", {}).get("max_evergreen_topic_attempts", 0)))
+    evergreen_attempts = 0 if initial_topic_is_recovery else max(
+        0,
+        int(config.get("publishing", {}).get("max_evergreen_topic_attempts", 0)),
+    )
     for evergreen_attempt in range(1, evergreen_attempts + 1):
         if final_article:
             break
@@ -7700,6 +7886,8 @@ def run_publish(args: argparse.Namespace) -> int:
         )
         return 0
 
+    if topic.get("recovery_backlog"):
+        final_article["recovery_backlog"] = True
     try:
         index_path = write_article_bundle(final_article, topic, config, log, dry_run=args.dry_run)
     except ValueError as error:
@@ -7736,6 +7924,11 @@ def run_publish(args: argparse.Namespace) -> int:
 
     if prepare_only and not args.dry_run:
         if queue_approved_publication(index_path, final_article, final_qa, state, config, log):
+            if topic.get("recovery_backlog"):
+                queued = state.setdefault("recovery_backlog_queued", [])
+                if final_article["slug"] not in queued:
+                    queued.append(final_article["slug"])
+                save_state(state)
             return 0
         if index_path.parent.exists():
             shutil.rmtree(index_path.parent)
@@ -7764,6 +7957,10 @@ def run_publish(args: argparse.Namespace) -> int:
             "path": str(index_path.relative_to(ROOT)),
         }
     )
+    if topic.get("recovery_backlog") and not args.dry_run:
+        completed = state.setdefault("recovery_backlog_completed", [])
+        if final_article["slug"] not in completed:
+            completed.append(final_article["slug"])
     state["last_runs"]["publish"] = {"time": iso_z(), "result": "published" if not args.dry_run else "dry_run"}
     state["pending_publication"] = {}
     save_state(state)

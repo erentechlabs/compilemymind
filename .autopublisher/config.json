@@ -111,6 +111,10 @@
     "minimum_depth": 2,
     "max_age_days": 14
   },
+  "recovery_backlog": {
+    "enabled": true,
+    "max_attempts_per_topic": 3
+  },
   "source_validation": {
     "max_document_bytes": 1500000,
     "max_candidates_per_run": 18,
@@ -281,6 +285,128 @@
     "article_prompt_snippet_characters": 900,
     "topic_source_target_items": 3,
     "topic_source_max_items": 6,
+    "recovery_topics": [
+      {
+        "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+        "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+        "historical_slugs": ["android-intelligent-apps-cloud-hybrid-on-device-inference"],
+        "categories": ["mobile-development", "ai-engineering"],
+        "primary_category": "mobile-development",
+        "tags": ["android", "ai-engineering", "mobile-architecture"],
+        "search_intent": "Choose an on-device, cloud, or hybrid inference architecture for an Android AI feature based on privacy, connectivity, compatibility, and model capability.",
+        "article_type": "comparison",
+        "needs_diagram": true,
+        "needs_chart": false,
+        "generation_constraints": "Define a concrete Android feature workload before comparing routes. Use current Android inference modes from the cited documentation, explain device compatibility and offline failure behavior, and do not discuss unrelated AI providers.",
+        "seed_sources": [
+          {
+            "title": "Find the right AI/ML solution for your app",
+            "url": "https://developer.android.com/ai/overview"
+          },
+          {
+            "title": "Hybrid inference",
+            "url": "https://developer.android.com/ai/hybrid"
+          },
+          {
+            "title": "Build intelligent Android apps: On-device inference",
+            "url": "https://developer.android.com/blog/posts/build-intelligent-android-apps-on-device-inference"
+          }
+        ]
+      },
+      {
+        "title": "System Design for Event-Driven PII Detection with Macie and Step Functions",
+        "slug": "automate-pii-detection-amazon-macie-step-functions",
+        "historical_slugs": [
+          "automate-pii-detection-amazon-macie-step-functions",
+          "automate-custom-pii-detection-amazon-macie-step-functions"
+        ],
+        "categories": ["systems-design", "cybersecurity", "software-engineering"],
+        "primary_category": "systems-design",
+        "tags": ["amazon-macie", "step-functions", "pii-detection"],
+        "search_intent": "Apply system design and software architecture principles to an event-driven S3 workflow that uses Amazon Macie custom identifiers and AWS Step Functions to classify organization-specific PII.",
+        "article_type": "tutorial",
+        "needs_diagram": true,
+        "needs_chart": false,
+        "generation_constraints": "Scope the workflow to Amazon S3. Explain custom identifier criteria, Macie finding types, Step Functions orchestration, IAM boundaries, retries, and validation without claiming that detection alone guarantees compliance.",
+        "seed_sources": [
+          {
+            "title": "Automate custom PII detection at scale with Amazon Macie and Step Functions",
+            "url": "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions/"
+          },
+          {
+            "title": "Building custom data identifiers - Amazon Macie",
+            "url": "https://docs.aws.amazon.com/macie/latest/user/custom-data-identifiers.html"
+          },
+          {
+            "title": "Types of Macie findings",
+            "url": "https://docs.aws.amazon.com/macie/latest/user/findings-types.html"
+          }
+        ]
+      },
+      {
+        "title": "Expose Application Metrics to Kubernetes HPA with Prometheus Adapter",
+        "slug": "custom-metrics-exporter-kubernetes-guide",
+        "historical_slugs": ["custom-metrics-exporter-kubernetes-guide"],
+        "categories": ["developer-it-tools", "software-engineering", "systems-design"],
+        "primary_category": "developer-it-tools",
+        "tags": ["kubernetes", "prometheus", "autoscaling"],
+        "search_intent": "Expose an application metric, map it through Prometheus Adapter, and verify that a Kubernetes autoscaling/v2 HorizontalPodAutoscaler can consume it.",
+        "article_type": "tutorial",
+        "needs_diagram": true,
+        "needs_chart": false,
+        "generation_constraints": "Include a minimal Python exporter, an adapter rule, an autoscaling/v2 HPA manifest, and read-only discovery commands for custom.metrics.k8s.io. Explain RBAC, API aggregation, expected results, and disappearing-metric diagnostics.",
+        "seed_sources": [
+          {
+            "title": "Horizontal Pod Autoscaling",
+            "url": "https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale/"
+          },
+          {
+            "title": "Prometheus Adapter for Kubernetes Metrics APIs",
+            "url": "https://github.com/kubernetes-sigs/prometheus-adapter"
+          },
+          {
+            "title": "Prometheus Python client library",
+            "url": "https://github.com/prometheus/client_python"
+          }
+        ]
+      },
+      {
+        "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+        "slug": "harden-exposed-cloud-functions-security-guide",
+        "historical_slugs": [
+          "harden-exposed-cloud-functions-security-guide",
+          "practical-guide-securing-serverless-cloud-functions"
+        ],
+        "categories": ["cybersecurity", "software-engineering", "developer-it-tools"],
+        "primary_category": "cybersecurity",
+        "tags": ["cloud-run-functions", "iam", "serverless-security"],
+        "search_intent": "Secure second-generation Cloud Run functions by separating IAM authorization, invocation authentication, and network ingress restrictions.",
+        "article_type": "tutorial",
+        "needs_diagram": true,
+        "needs_chart": false,
+        "generation_constraints": "Scope the article to functions created with the Cloud Functions v2 API. Distinguish who may invoke from which network paths may reach the endpoint, use non-destructive gcloud inspection examples, and explain validation and rollback boundaries.",
+        "seed_sources": [
+          {
+            "title": "Authorize access with IAM - Cloud Run functions",
+            "url": "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam"
+          },
+          {
+            "title": "Authenticate for invocation - Cloud Run functions",
+            "url": "https://docs.cloud.google.com/functions/docs/securing/authenticating"
+          },
+          {
+            "title": "Restrict network endpoint ingress for Cloud Run services",
+            "url": "https://docs.cloud.google.com/run/docs/securing/ingress"
+          }
+        ]
+      }
+    ],
+    "retired_recovery_topics": [
+      {
+        "slug": "google-is-a-leader-and-positioned-furthest-in-vision-and-highest-in",
+        "reason": "Promotional analyst-ranking headline does not satisfy the site's technical search-intent and source-originality requirements."
+      }
+    ],
     "evergreen_topics": [
       {
         "title": "Android App Architecture: UI, Domain, and Data Layers",
