@@ -2206,6 +2206,15 @@
       "reason": "qa_failed",
       "detail": "Source list contains URLs that are not mapped to an article claim: https://aws.amazon.com/macie Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-28T04:31:36.558908Z",
+      "title": "Automate Custom PII Detection at Scale with Amazon Macie and Step Functions",
+      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "reason": "qa_failed",
+      "detail": "Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 3
     }
   ],
   "last_runs": {
@@ -2222,7 +2231,7 @@
       "taxonomy_changes": 0
     },
     "prepare": {
-      "time": "2026-07-27T04:56:08.906152Z",
+      "time": "2026-07-28T04:31:36.565782Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
@@ -2436,6 +2445,14 @@
       "reason": "qa_failed",
       "detail": "Source list contains URLs that are not mapped to an article claim: https://aws.amazon.com/macie Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
       "attempts": 3
+    },
+    {
+      "time": "2026-07-28T04:31:36.558908Z",
+      "title": "Automate Custom PII Detection at Scale with Amazon Macie and Step Functions",
+      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "reason": "qa_failed",
+      "detail": "Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -2514,49 +2531,64 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-27T04:56:08.900690Z",
-    "next_retry_at": "2026-07-27T10:56:08.900695Z",
+    "scheduled_at": "2026-07-28T04:31:36.559296Z",
+    "next_retry_at": "2026-07-28T10:31:36.559305Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "Source list contains URLs that are not mapped to an article claim: https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
-    "consecutive_attempts": 53,
+    "detail": "Article title is too similar to a source title. Discard the previous draft completely. Write from a clean slate using only the supplied topic-specific research snippets. Do not reuse claims, headings, examples, or phrasing from the rejected draft.",
+    "consecutive_attempts": 54,
     "topic_attempts": 1,
     "topic": {
-      "title": "Build Intelligent Android Apps: Cloud, Hybrid, and On-Device Inference Explained",
-      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
-      "primary_category": "mobile-development",
+      "title": "Automate Custom PII Detection at Scale with Amazon Macie and Step Functions",
+      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "primary_category": "systems-design",
       "categories": [
-        "mobile-development",
-        "programming-languages"
+        "systems-design",
+        "software-engineering"
       ],
       "tags": [
-        "android",
-        "ai-engineering",
-        "inference",
-        "cloud",
-        "mobile-development"
+        "aws",
+        "macie",
+        "step-functions",
+        "pii-detection",
+        "automation"
       ],
-      "search_intent": "Developers want to understand how to integrate AI inference into Android apps, choosing between cloud, hybrid, and on-device approaches for performance, privacy, and scalability.",
-      "why_now": "Recent Android developer posts highlight new capabilities and best practices for intelligent app design, with durable demand for practical AI integration guidance.",
+      "search_intent": "Organizations seek scalable workflows for identifying and managing PII in large datasets using AWS tools.",
+      "why_now": "Regulatory pressure and recent AWS architecture guidance make automated PII detection a timely concern for cloud architects.",
       "source_urls": [
-        "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html",
-        "https://android-developers.googleblog.com/2026/07/android-on-device-inference.html",
-        "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud"
+        "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions",
+        "https://aws.amazon.com/security",
+        "https://aws.amazon.com/blogs/security",
+        "https://aws.amazon.com/security-hub",
+        "https://aws.amazon.com/macie",
+        "https://cloud.google.com/"
       ],
       "needs_diagram": true,
       "needs_chart": false,
       "seed_sources": [
         {
-          "title": "Build intelligent Android apps: Cloud and hybrid inference",
-          "url": "https://android-developers.googleblog.com/2026/07/build-intelligent-android-apps-cloud-hybrid-inference.html"
+          "title": "Automate custom PII detection at scale with Amazon Macie and Step Functions",
+          "url": "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions"
         },
         {
-          "title": "Build intelligent Android apps: On-device inference",
-          "url": "https://android-developers.googleblog.com/2026/07/android-on-device-inference.html"
+          "title": "AWS Cloud Security",
+          "url": "https://aws.amazon.com/security"
         },
         {
-          "title": "What’s new with Google Cloud",
-          "url": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud"
+          "title": "AWS Security Blog",
+          "url": "https://aws.amazon.com/blogs/security"
+        },
+        {
+          "title": "AWS Security Hub",
+          "url": "https://aws.amazon.com/security-hub"
+        },
+        {
+          "title": "Amazon Macie",
+          "url": "https://aws.amazon.com/macie"
+        },
+        {
+          "title": "Google Cloud",
+          "url": "https://cloud.google.com/"
         }
       ]
     }
