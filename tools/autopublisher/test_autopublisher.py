@@ -2253,6 +2253,97 @@ def process(value: int) -> int:
         self.assertIn("Short draft", prompts[1][0])
         self.assertEqual(prompts[0][1]["temperature"], 0.4)
 
+    def test_recovery_article_generation_prompt_is_compact_and_body_first(self):
+        config = autopublisher.load_config()
+        topic = deepcopy(config["research"]["recovery_topics"][0])
+        topic["recovery_backlog"] = True
+        research = [
+            autopublisher.ResearchItem(
+                "Official",
+                source["title"],
+                source["url"],
+                "Official Android inference architecture guidance.",
+                "",
+                topic["categories"],
+                3.0,
+                "Official Android inference architecture guidance.",
+                True,
+            )
+            for source in topic["seed_sources"]
+        ]
+
+        prompt = autopublisher.recovery_article_generation_prompt(
+            topic,
+            research,
+            config,
+        )
+
+        self.assertLess(len(prompt), 12000)
+        self.assertIn("The article body is the primary deliverable", prompt)
+        self.assertIn('"article_markdown"', prompt)
+        self.assertIn("at least 900 words", prompt)
+        for source in topic["seed_sources"]:
+            self.assertIn(source["url"], prompt)
+
+    def test_generate_approved_article_retries_empty_recovery_payload(self):
+        prompts = []
+        complete_body = "## Complete architecture guide\n\n" + (
+            "Android inference workload evidence and validation guidance. " * 80
+        )
+        good_article = {"article_markdown": complete_body}
+
+        class ArticleClient:
+            def generate_json(self, prompt, **kwargs):
+                prompts.append((prompt, kwargs))
+                if len(prompts) == 1:
+                    return {"title": "Metadata without a body"}
+                return {"body": complete_body}
+
+        topic = {
+            "title": "Choosing Android AI Inference",
+            "slug": "choosing-android-ai-inference",
+            "categories": ["mobile-development"],
+            "recovery_backlog": True,
+        }
+        with patch.object(
+            autopublisher,
+            "normalize_article_payload",
+            return_value=good_article,
+        ) as normalize, \
+            patch.object(autopublisher, "enrich_article_metadata"), \
+            patch.object(autopublisher, "deterministic_qa", return_value=[]), \
+            patch.object(
+                autopublisher,
+                "ai_qa",
+                return_value={"approved": True, "score": 0.9},
+            ):
+            article, qa, feedback = autopublisher.generate_approved_article(
+                ArticleClient(),
+                topic,
+                [],
+                [],
+                {
+                    "publishing": {
+                        "max_regeneration_attempts": 1,
+                        "min_words": 900,
+                    },
+                    "gemini": {"article_temperature": 0.4},
+                },
+                autopublisher.EventLog(),
+            )
+
+        self.assertEqual(article, good_article)
+        self.assertEqual(qa["score"], 0.9)
+        self.assertEqual(feedback, "")
+        self.assertEqual(len(prompts), 2)
+        self.assertIn("only 0 article body words", prompts[1][0])
+        self.assertEqual(
+            autopublisher.article_payload_markdown({"body": complete_body}),
+            complete_body.strip(),
+        )
+        self.assertEqual(autopublisher.article_payload_markdown([]), "")
+        normalize.assert_called_once()
+
     def test_generate_approved_article_abandons_repeated_unsupported_claims(self):
         prompts = []
 

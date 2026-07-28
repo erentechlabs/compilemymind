@@ -3820,6 +3820,96 @@ Return JSON only with this shape:
 """.strip()
 
 
+def recovery_article_generation_prompt(
+    topic: dict[str, Any],
+    research: list[ResearchItem],
+    config: dict[str, Any],
+    feedback: str = "",
+) -> str:
+    """Use a compact schema for source-qualified historical recovery topics."""
+    required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
+    min_words = int(config.get("publishing", {}).get("min_words", 900))
+    target_words = max(min_words + 150, min(1200, int(config.get("publishing", {}).get("target_words", 1200))))
+    source_items = research_items_for_topic(
+        topic,
+        research,
+        limit=required_sources,
+        config=config,
+    )
+    source_snippet_characters = min(
+        700,
+        int(config.get("research", {}).get("article_prompt_snippet_characters", 900)),
+    )
+    return f"""
+Write one complete, original Compile My Mind article for this previously unpublished topic.
+Return a JSON object only. The article body is the primary deliverable; do not return an
+outline, planning notes, apology, empty body, or metadata-only response.
+
+Topic:
+{json.dumps({key: topic.get(key) for key in ["title", "slug", "categories", "tags", "search_intent", "article_type", "generation_constraints"]}, ensure_ascii=False, indent=2)}
+
+Source excerpts:
+{json.dumps(research_for_prompt(source_items, snippet_characters=source_snippet_characters), ensure_ascii=False, indent=2)}
+
+Article requirements:
+- Write at least {min_words} words in article_markdown; target about {target_words}.
+- Start at H2. Include a useful Markdown table and one safe, runnable code or command example.
+- Define the concrete workload and assumptions before making comparison recommendations.
+- Include at least three practical decisions, scenarios, validation steps, or failure modes.
+- Keep external URLs out of article_markdown and do not add a Sources section.
+- Use only claims supported by the excerpts. Avoid invented benchmarks and absolute language.
+- Give each of the {required_sources} exact source URLs at least one claim_evidence record.
+- Use a title distinct from the topic and source titles while retaining necessary product names.
+- Set verification_status to "Documentation reviewed"; do not claim hands-on testing.
+- Leave diagrams and charts as empty arrays. The publisher adds and positions its validated diagram.
+
+Previous response problem:
+{feedback or "No previous response. Produce the complete article now."}
+
+Return exactly this JSON shape:
+{{
+  "title": "reader-focused final title",
+  "slug": "{topic.get('slug', '')}",
+  "description": "145-180 character description",
+  "categories": {json.dumps(topic.get("categories", []), ensure_ascii=False)},
+  "tags": {json.dumps(topic.get("tags", []), ensure_ascii=False)},
+  "article_type": "{topic.get('article_type', 'conceptual')}",
+  "verification_status": "Documentation reviewed",
+  "version_context": "Documentation and product scope used by the article",
+  "test_metadata": {{}},
+  "article_markdown": "The complete {min_words}+ word Markdown article body",
+  "diagrams": [],
+  "charts": [],
+  "sources": [
+    {{"title": "exact source title", "url": "exact supplied URL"}}
+  ],
+  "claim_evidence": [
+    {{
+      "claim": "material claim used in the body",
+      "supporting_sources": ["exact supplied URL"],
+      "confidence": 0.9,
+      "verified_at": "{iso_z()}",
+      "version_context": "scope or version supported by the source"
+    }}
+  ]
+}}
+""".strip()
+
+
+def article_payload_markdown(article: Any) -> str:
+    """Read the body from the requested field or a common provider alias."""
+    if not isinstance(article, dict):
+        return ""
+    for key in ("article_markdown", "markdown", "body", "content"):
+        value = article.get(key)
+        if isinstance(value, str) and value.strip():
+            return value.strip()
+    nested = article.get("article")
+    if isinstance(nested, dict):
+        return article_payload_markdown(nested)
+    return ""
+
+
 def ensure_sources_section(markdown: str, sources: list[dict[str, Any]]) -> str:
     markdown = markdown.strip()
     if re.search(r"(?im)^##\s+Sources\b", markdown):
@@ -4866,7 +4956,8 @@ def normalize_article_payload(
                 }
             )
     article["claim_evidence"] = evidence
-    draft_markdown = str(article.get("article_markdown", ""))
+    draft_markdown = article_payload_markdown(article)
+    article["article_markdown"] = draft_markdown
     article["diagrams"] = [
         item for item in article.get("diagrams", []) if isinstance(item, dict)
     ] if isinstance(article.get("diagrams"), list) else []
@@ -5872,13 +5963,46 @@ def generate_approved_article(
     maximum_stalled_attempts = max(2, int(config.get("publishing", {}).get("max_stalled_repair_attempts", 2)))
     blocking_counts: Counter[str] = Counter()
     article_temperature = float(config.get("gemini", {}).get("article_temperature", 0.4))
+    recovery_topic = bool(topic.get("recovery_backlog"))
+    minimum_recovery_payload_words = max(
+        200,
+        int(config.get("publishing", {}).get("min_words", 900)) // 3,
+    )
     for attempt in range(1, attempts + 1):
         log.log("article_generation_started", attempt=attempt, title=topic.get("title"))
+        prompt = (
+            recovery_article_generation_prompt(topic, research, config, feedback)
+            if recovery_topic
+            else article_generation_prompt(topic, research, posts, config, feedback)
+        )
         raw_article = client.generate_json(
-            article_generation_prompt(topic, research, posts, config, feedback),
+            prompt,
             temperature=article_temperature,
             task="article_generation",
         )
+        if recovery_topic:
+            raw_body = article_payload_markdown(raw_article)
+            raw_body_words = word_count(raw_body)
+            if raw_body_words < minimum_recovery_payload_words:
+                feedback = (
+                    f"The previous JSON payload contained only {raw_body_words} article body words. "
+                    f"Return a complete replacement with at least "
+                    f"{int(config.get('publishing', {}).get('min_words', 900))} words in "
+                    "article_markdown, plus the requested table, code example, sources, and claim evidence."
+                )
+                log.log(
+                    "article_payload_incomplete",
+                    attempt=attempt,
+                    title=topic.get("title"),
+                    body_words=raw_body_words,
+                    minimum_integrity_words=minimum_recovery_payload_words,
+                    payload_keys=(
+                        sorted(str(key) for key in raw_article)[:20]
+                        if isinstance(raw_article, dict)
+                        else [type(raw_article).__name__]
+                    ),
+                )
+                continue
         article = normalize_article_payload(raw_article, topic, config, research, posts=posts)
         enrich_article_metadata(client, article, topic, config, log, posts)
         issues = deterministic_qa(article, topic, posts, config, research)
