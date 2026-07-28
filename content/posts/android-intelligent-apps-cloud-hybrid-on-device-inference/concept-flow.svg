@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1032" viewBox="0 0 1400 1032" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#f5f3ff"/><stop offset="1" stop-color="#fdf2f8"/></linearGradient>
+<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#7c3aed"/><stop offset="1" stop-color="#db2777"/></linearGradient>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#7c3aed"/></marker>
+</defs>
+<rect width="1400" height="1032" rx="32" fill="url(#bg)"/>
+<rect width="1400" height="1032" rx="32" fill="url(#dots)"/>
+<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
+<title id="title">Choosing Android AI Inference: On-Device, Cloud, or Hybrid: practical model</title>
+<desc id="desc">A detailed comparison diagram explaining Choosing Android AI Inference: On-Device, Cloud, or Hybrid: practical model.</desc>
+<rect x="1190" y="34" width="150" height="34" rx="17" fill="#ede9fe"/>
+<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#7c3aed">COMPARISON</text>
+<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Choosing Android AI Inference: On-Device, Cloud, or</text>
+<text x="72" y="102" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Hybrid: practical model</text>
+<text x="72" y="144" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">Choose an on-device, cloud, or hybrid inference architecture for an Android AI feature based on privacy,</text>
+<text x="72" y="167" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">connectivity, compatibility, and model capability.</text>
+<line x1="72" y1="186" x2="1328" y2="186" stroke="#7c3aed" stroke-opacity="0.18" stroke-width="2"/>
+<rect x="70" y="224" width="595" height="714" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="70" y="224" width="595" height="58" rx="28" fill="#ede9fe"/>
+<text x="100" y="261" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#7c3aed">Option A</text>
+<rect x="88" y="298" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="88" y="298" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="122" cy="332" r="18" fill="#ede9fe"/>
+<text x="122" y="338" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">1</text>
+<text x="152" y="337" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">INPUT</text>
+<text x="112" y="376" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Defining the Android AI Feature Workload</text>
+<text x="112" y="415" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Before comparing inference architectures, let&#x27;s define a</text>
+<text x="112" y="435" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">concrete workload: **contextual text summarization within a</text>
+<text x="112" y="455" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">note-taking Android app**. The app allows users to jot down…</text>
+<rect x="88" y="512" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="88" y="512" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="122" cy="546" r="18" fill="#ede9fe"/>
+<text x="122" y="552" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">2</text>
+<text x="152" y="551" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">ACTION</text>
+<text x="112" y="590" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Android Inference Modes: Overview</text>
+<text x="112" y="629" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Android developers can choose among three main inference</text>
+<text x="112" y="649" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">routes for AI features: **On-Device Inference**: The model</text>
+<text x="112" y="669" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">runs locally, using device resources. Supported by solutions…</text>
+<rect x="88" y="726" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="88" y="726" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="122" cy="760" r="18" fill="#ede9fe"/>
+<text x="122" y="766" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">3</text>
+<text x="152" y="765" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">ACTION</text>
+<text x="112" y="804" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Comparison Table: Inference Modes for Text</text>
+<text x="112" y="829" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Summarization</text>
+<text x="112" y="868" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569"></text>
+<rect x="735" y="224" width="595" height="714" rx="28" fill="#ffffff" fill-opacity="0.72" stroke="#cbd5e1" stroke-width="1.5"/>
+<rect x="735" y="224" width="595" height="58" rx="28" fill="#ede9fe"/>
+<text x="765" y="261" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#7c3aed">Option B</text>
+<rect x="753" y="298" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="753" y="298" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="787" cy="332" r="18" fill="#ede9fe"/>
+<text x="787" y="338" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">1</text>
+<text x="817" y="337" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">ACTION</text>
+<text x="777" y="376" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">On-Device Inference: Privacy and</text>
+<text x="777" y="401" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Responsiveness</text>
+<text x="777" y="440" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">On-device inference leverages local hardware to run AI models,</text>
+<text x="777" y="460" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">such as Gemini Nano, directly within the app. For text…</text>
+<rect x="753" y="512" width="559" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="753" y="512" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="787" cy="546" r="18" fill="#ede9fe"/>
+<text x="787" y="552" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#7c3aed">2</text>
+<text x="817" y="551" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#7c3aed">OUTPUT</text>
+<text x="777" y="590" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Cloud Inference: Maximizing Reach and Model</text>
+<text x="777" y="615" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Power</text>
+<text x="777" y="654" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Cloud inference sends user data (notes) to remote servers,</text>
+<text x="777" y="674" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">where large, sophisticated AI models generate summaries. This…</text>
+<circle cx="700" cy="253" r="26" fill="url(#accent)" stroke="#ffffff" stroke-width="4"/>
+<text x="700" y="259" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="900" fill="#ffffff">VS</text>
+<text x="72" y="960" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#7c3aed">TRANSITIONS</text>
+<text x="190" y="960" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">next boundary</text>
+<text x="72" y="994" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#7c3aed">TAKEAWAY</text>
+<text x="175" y="994" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">Choose an on-device, cloud, or hybrid inference architecture for an Android AI feature based on privacy, connectivity…</text>
+</svg>
