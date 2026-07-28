@@ -2233,15 +2233,24 @@
       "reason": "qa_failed",
       "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
       "attempts": 1
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-28T21:10:48.990761Z",
+      "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 890 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 890, \"headings\": [\"Defining the Android AI Feature Workload\", \"Workload Assumptions\", \"Overview of Android AI Inference Modes\", \"Comparing Inference Modes for Text Summarization\", \"On-Device Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Validation Step\", \"Troubleshooting\", \"Cloud Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Cloud API Example\", \"Hybrid Inference\"]}",
+      "attempts": 1
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-28T20:59:16.012358Z",
+      "time": "2026-07-28T21:10:48.991340Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "stage": "article_quality",
-      "next_retry_at": "2026-07-29T02:59:16.012090Z"
+      "next_retry_at": "2026-07-29T03:10:48.991091Z"
     },
     "maintain": {
       "time": "2026-07-27T06:05:44.669077Z",
@@ -2487,6 +2496,14 @@
       "reason": "qa_failed",
       "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
       "attempts": 1
+    },
+    {
+      "time": "2026-07-28T21:10:48.990761Z",
+      "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "reason": "qa_failed",
+      "detail": "Article is too short: 890 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 890, \"headings\": [\"Defining the Android AI Feature Workload\", \"Workload Assumptions\", \"Overview of Android AI Inference Modes\", \"Comparing Inference Modes for Text Summarization\", \"On-Device Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Validation Step\", \"Troubleshooting\", \"Cloud Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Cloud API Example\", \"Hybrid Inference\"]}",
+      "attempts": 1
     }
   ],
   "provider_cooldowns": {
@@ -2502,12 +2519,12 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-07-28T20:59:16.012084Z",
-    "next_retry_at": "2026-07-29T02:59:16.012090Z",
+    "scheduled_at": "2026-07-28T21:10:48.991084Z",
+    "next_retry_at": "2026-07-29T03:10:48.991091Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "Visual asset concept-flow.svg must appear inside the explanatory section it supports, not before the article structure or in a closing recap. Comparison article makes recommendations without defining workload or assumptions. Article is too short: 35 words, expected at least 900. Article should include at least one useful Markdown table. Article does not include enough reliable sources. Article needs at least 3 source-backed material-claim entries. Article provides 1 practical elements; at least 3 are required. Article provides 1 code or visual elements; at least 2 are required. Article provides 0 code examples; at least 1 are required. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 35, \"headings\": [\"Related guidance\", \"Sources\"]}",
-    "consecutive_attempts": 23,
+    "detail": "Article is too short: 890 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 890, \"headings\": [\"Defining the Android AI Feature Workload\", \"Workload Assumptions\", \"Overview of Android AI Inference Modes\", \"Comparing Inference Modes for Text Summarization\", \"On-Device Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Validation Step\", \"Troubleshooting\", \"Cloud Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Cloud API Example\", \"Hybrid Inference\"]}",
+    "consecutive_attempts": 24,
     "topic_attempts": 1,
     "topic": {
       "title": "Choosing Android AI Inference: On-Device, Cloud, or Hybrid",
@@ -2614,7 +2631,7 @@
     }
   },
   "recovery_backlog_attempts": {
-    "android-intelligent-apps-cloud-hybrid-on-device-inference": 1
+    "android-intelligent-apps-cloud-hybrid-on-device-inference": 2
   },
   "recovery_backlog_queued": [],
   "recovery_backlog_completed": []
