@@ -100,6 +100,9 @@ class AutopublisherTests(unittest.TestCase):
         config = autopublisher.load_config()
         topics = config["research"]["recovery_topics"]
         self.assertTrue(config["recovery_backlog"]["enabled"])
+        self.assertGreaterEqual(config["recovery_backlog"]["max_attempts_per_topic"], 5)
+        self.assertGreaterEqual(config["recovery_backlog"]["minimum_prompt_word_buffer"], 100)
+        self.assertGreaterEqual(config["recovery_backlog"]["near_minimum_repair_ratio"], 0.8)
         self.assertEqual(len(topics), 4)
         required = config["publishing"]["required_source_count"]
         historical_slugs = {
@@ -2281,9 +2284,43 @@ def process(value: int) -> int:
         self.assertLess(len(prompt), 12000)
         self.assertIn("The article body is the primary deliverable", prompt)
         self.assertIn('"article_markdown"', prompt)
-        self.assertIn("at least 900 words", prompt)
+        self.assertIn("at least 1050 words", prompt)
         for source in topic["seed_sources"]:
             self.assertIn(source["url"], prompt)
+
+    def test_near_minimum_recovery_article_gets_useful_review_boundary(self):
+        config = {
+            "publishing": {"min_words": 900},
+            "recovery_backlog": {"near_minimum_repair_ratio": 0.85},
+        }
+        topic = {
+            "title": "Choosing Android AI Inference",
+            "primary_category": "mobile-development",
+            "article_type": "comparison",
+            "recovery_backlog": True,
+        }
+        markdown = "## Existing guidance\n\n" + ("scope " * 885) + "\n\n## Sources\n"
+        article = {"article_markdown": markdown, "article_type": "comparison"}
+        original_words = autopublisher.word_count(markdown)
+        self.assertLess(original_words, 900)
+        self.assertGreaterEqual(original_words, int(900 * 0.85))
+
+        repaired = autopublisher.ensure_recovery_minimum_depth(
+            article,
+            topic,
+            config,
+            autopublisher.EventLog(),
+        )
+
+        self.assertGreaterEqual(
+            autopublisher.word_count(repaired["article_markdown"]),
+            900,
+        )
+        self.assertIn("## Implementation review boundary", repaired["article_markdown"])
+        self.assertLess(
+            repaired["article_markdown"].index("## Implementation review boundary"),
+            repaired["article_markdown"].index("## Sources"),
+        )
 
     def test_generate_approved_article_retries_empty_recovery_payload(self):
         prompts = []
@@ -2732,6 +2769,39 @@ def process(value: int) -> int:
         )
         self.assertFalse(result["approved"])
         self.assertEqual(result["score"], 0.0)
+
+    def test_ai_qa_does_not_invent_hands_on_or_benchmark_requirements(self):
+        prompts = []
+
+        class RecordingClient:
+            qa_model = "test"
+
+            def generate_json(self, prompt, **_kwargs):
+                prompts.append(prompt)
+                return {"approved": True, "score": 0.9}
+
+        result = autopublisher.ai_qa(
+            RecordingClient(),
+            {
+                "title": "Documentation-based comparison",
+                "description": "A" * 120,
+                "verification_status": "Documentation reviewed",
+                "categories": ["mobile-development"],
+                "tags": ["android"],
+                "sources": [],
+                "article_markdown": "## Comparison\n\nA qualified comparison.",
+            },
+            {"title": "Documentation-based comparison"},
+            self.config,
+            autopublisher.EventLog(),
+        )
+
+        self.assertTrue(result["approved"])
+        self.assertIn(
+            'Do not require hands-on test metadata when verification_status is "Documentation reviewed"',
+            prompts[0],
+        )
+        self.assertIn("Do not require benchmark numbers", prompts[0])
 
     def test_grounded_research_429_raises_quota_error(self):
         with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}), \

@@ -113,7 +113,9 @@
   },
   "recovery_backlog": {
     "enabled": true,
-    "max_attempts_per_topic": 3
+    "max_attempts_per_topic": 5,
+    "minimum_prompt_word_buffer": 150,
+    "near_minimum_repair_ratio": 0.85
   },
   "source_validation": {
     "max_document_bytes": 1500000,
