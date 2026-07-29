@@ -1798,9 +1798,8 @@ def process(value: int) -> int:
 
     def test_recovery_backlog_is_ordered_and_skips_exhausted_or_published_topics(self):
         config = autopublisher.load_config()
-        posts = autopublisher.load_posts(config)
         selected = autopublisher.choose_recovery_topic(
-            posts,
+            [],
             {},
             config,
             autopublisher.EventLog(),
@@ -1815,7 +1814,7 @@ def process(value: int) -> int:
             }
         }
         next_topic = autopublisher.choose_recovery_topic(
-            posts,
+            [],
             attempts,
             config,
             autopublisher.EventLog(),
@@ -1842,7 +1841,7 @@ def process(value: int) -> int:
         ]
         self.assertIsNone(
             autopublisher.choose_recovery_topic(
-                [*posts, published_alias],
+                [published_alias],
                 {},
                 fixture,
                 autopublisher.EventLog(),
