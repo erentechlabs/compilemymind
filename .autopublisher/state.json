@@ -1993,6 +1993,98 @@
       },
       "quality_score": 0.9173,
       "path": "content/posts/android-intelligent-apps-cloud-hybrid-on-device-inference/index.md"
+    },
+    {
+      "time": "2026-07-29T07:59:21.792127Z",
+      "title": "Designing Event-Driven S3 PII Detection with Amazon Macie Custom Identifiers and Step Functions",
+      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "categories": [
+        "systems-design"
+      ],
+      "tags": [
+        "system-design",
+        "pii-detection"
+      ],
+      "sources": [
+        {
+          "title": "Automate custom PII detection at scale with Amazon Macie and Step Functions",
+          "url": "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions"
+        },
+        {
+          "title": "Building custom data identifiers - Amazon Macie",
+          "url": "https://docs.aws.amazon.com/macie/latest/user/custom-data-identifiers.html"
+        },
+        {
+          "title": "Types of Macie findings",
+          "url": "https://docs.aws.amazon.com/macie/latest/user/findings-types.html"
+        }
+      ],
+      "qa": {
+        "approved": true,
+        "score": 9.2,
+        "technical_accuracy": 9.5,
+        "factual_confidence": 9.5,
+        "unsupported_claims": [],
+        "issues": [
+          {
+            "type": "Depth/Originality",
+            "detail": "The article avoids generic language and provides product-specific fields, commands, and interpretations. It does not repeat sentences or paragraphs, and each section is original and non-template-like."
+          },
+          {
+            "type": "Claim-to-Source Mapping",
+            "detail": "Every material claim is directly supported by the cited sources, with explicit mapping in the claim_evidence section."
+          },
+          {
+            "type": "Version Context",
+            "detail": "Version-specific context is provided, and product names, commands, and limitations are accurately referenced."
+          },
+          {
+            "type": "Troubleshooting and Validation",
+            "detail": "Troubleshooting scenarios, roles, permissions, evidence fields, expected and failure results, interpretation, and next checks are included and supported by source material."
+          },
+          {
+            "type": "Diagram Placement",
+            "detail": "The diagram is embedded in the explanatory section it supports, not collected at the end."
+          },
+          {
+            "type": "Compliance Qualification",
+            "detail": "The article responsibly qualifies that detection alone does not guarantee compliance, as required by the scope."
+          },
+          {
+            "type": "SEO and Structure",
+            "detail": "Readable structure, clear headings, and internal links are present. The article is tutorial-specific and not a repeated template."
+          }
+        ],
+        "required_fixes": [],
+        "reason": "The article meets all acceptance criteria: it is technically accurate, directly supported by cited sources, original, non-repetitive, and provides depth and educational value. All material claims are mapped to evidence, and the diagram is appropriately placed. No unsupported claims, broken formatting, or missing sources were found. No fixes required.",
+        "quality": {
+          "score": 0.9076,
+          "components": {
+            "topic_relevance": 0.815,
+            "originality": 0.7631,
+            "source_quality": 1.0,
+            "claim_support": 1.0,
+            "factual_confidence": 1.0,
+            "technical_accuracy": 1.0,
+            "search_intent_match": 0.7,
+            "practical_usefulness": 1.0,
+            "readability": 1.0,
+            "internal_linking": 1.0,
+            "duplicate_topic_risk": 0.7631,
+            "source_similarity": 0.3485,
+            "existing_content_similarity": 0.7631,
+            "outdated_information_risk": 1.0,
+            "metadata_completeness": 1.0,
+            "structured_data_validity": 1.0,
+            "code_validity": 1.0,
+            "version_confidence": 1.0,
+            "media_relevance": 1.0,
+            "editorial_specificity": 1.0
+          }
+        }
+      },
+      "quality_score": 0.9076,
+      "path": "content/posts/automate-pii-detection-amazon-macie-step-functions/index.md"
     }
   ],
   "maintenance_reviews": {
@@ -2310,8 +2402,10 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-28T21:22:41.082320Z",
-      "result": "published"
+      "time": "2026-07-29T07:59:21.792170Z",
+      "result": "published",
+      "source": "ready_queue",
+      "queue_depth": 0
     },
     "maintain": {
       "time": "2026-07-27T06:05:44.669077Z",
@@ -2580,115 +2674,14 @@
     }
   },
   "pending_publication": {},
-  "ready_publications": [
-    {
-      "queued_at": "2026-07-29T06:14:31.557570Z",
-      "slug": "automate-pii-detection-amazon-macie-step-functions",
-      "title": "Designing Event-Driven S3 PII Detection with Amazon Macie Custom Identifiers and Step Functions",
-      "bundle_path": ".autopublisher/queue/ready/automate-pii-detection-amazon-macie-step-functions",
-      "record": {
-        "time": "2026-07-29T06:14:31.557570Z",
-        "title": "Designing Event-Driven S3 PII Detection with Amazon Macie Custom Identifiers and Step Functions",
-        "slug": "automate-pii-detection-amazon-macie-step-functions",
-        "categories": [
-          "systems-design"
-        ],
-        "tags": [
-          "system-design",
-          "pii-detection"
-        ],
-        "sources": [
-          {
-            "title": "Automate custom PII detection at scale with Amazon Macie and Step Functions",
-            "url": "https://aws.amazon.com/blogs/architecture/automate-custom-pii-detection-at-scale-with-amazon-macie-and-step-functions"
-          },
-          {
-            "title": "Building custom data identifiers - Amazon Macie",
-            "url": "https://docs.aws.amazon.com/macie/latest/user/custom-data-identifiers.html"
-          },
-          {
-            "title": "Types of Macie findings",
-            "url": "https://docs.aws.amazon.com/macie/latest/user/findings-types.html"
-          }
-        ],
-        "qa": {
-          "approved": true,
-          "score": 9.2,
-          "technical_accuracy": 9.5,
-          "factual_confidence": 9.5,
-          "unsupported_claims": [],
-          "issues": [
-            {
-              "type": "Depth/Originality",
-              "detail": "The article avoids generic language and provides product-specific fields, commands, and interpretations. It does not repeat sentences or paragraphs, and each section is original and non-template-like."
-            },
-            {
-              "type": "Claim-to-Source Mapping",
-              "detail": "Every material claim is directly supported by the cited sources, with explicit mapping in the claim_evidence section."
-            },
-            {
-              "type": "Version Context",
-              "detail": "Version-specific context is provided, and product names, commands, and limitations are accurately referenced."
-            },
-            {
-              "type": "Troubleshooting and Validation",
-              "detail": "Troubleshooting scenarios, roles, permissions, evidence fields, expected and failure results, interpretation, and next checks are included and supported by source material."
-            },
-            {
-              "type": "Diagram Placement",
-              "detail": "The diagram is embedded in the explanatory section it supports, not collected at the end."
-            },
-            {
-              "type": "Compliance Qualification",
-              "detail": "The article responsibly qualifies that detection alone does not guarantee compliance, as required by the scope."
-            },
-            {
-              "type": "SEO and Structure",
-              "detail": "Readable structure, clear headings, and internal links are present. The article is tutorial-specific and not a repeated template."
-            }
-          ],
-          "required_fixes": [],
-          "reason": "The article meets all acceptance criteria: it is technically accurate, directly supported by cited sources, original, non-repetitive, and provides depth and educational value. All material claims are mapped to evidence, and the diagram is appropriately placed. No unsupported claims, broken formatting, or missing sources were found. No fixes required.",
-          "quality": {
-            "score": 0.9076,
-            "components": {
-              "topic_relevance": 0.815,
-              "originality": 0.7631,
-              "source_quality": 1.0,
-              "claim_support": 1.0,
-              "factual_confidence": 1.0,
-              "technical_accuracy": 1.0,
-              "search_intent_match": 0.7,
-              "practical_usefulness": 1.0,
-              "readability": 1.0,
-              "internal_linking": 1.0,
-              "duplicate_topic_risk": 0.7631,
-              "source_similarity": 0.3485,
-              "existing_content_similarity": 0.7631,
-              "outdated_information_risk": 1.0,
-              "metadata_completeness": 1.0,
-              "structured_data_validity": 1.0,
-              "code_validity": 1.0,
-              "version_confidence": 1.0,
-              "media_relevance": 1.0,
-              "editorial_specificity": 1.0
-            }
-          }
-        },
-        "quality_score": 0.9076,
-        "path": "content/posts/automate-pii-detection-amazon-macie-step-functions/index.md"
-      },
-      "recovery_backlog": true
-    }
-  ],
+  "ready_publications": [],
   "preparation_pending_publication": {},
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2
   },
-  "recovery_backlog_queued": [
-    "automate-pii-detection-amazon-macie-step-functions"
-  ],
+  "recovery_backlog_queued": [],
   "recovery_backlog_completed": [
-    "android-intelligent-apps-cloud-hybrid-on-device-inference"
+    "android-intelligent-apps-cloud-hybrid-on-device-inference",
+    "automate-pii-detection-amazon-macie-step-functions"
   ]
 }

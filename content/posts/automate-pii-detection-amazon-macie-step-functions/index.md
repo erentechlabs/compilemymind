@@ -1,7 +1,7 @@
 ---
 title: "Designing Event-Driven S3 PII Detection with Amazon Macie Custom Identifiers and Step Functions"
-date: "2026-07-29T09:14:30+03:00"
-lastmod: "2026-07-29T09:14:30+03:00"
+date: "2026-07-29T10:59:20+03:00"
+lastmod: "2026-07-29T10:59:20+03:00"
 description: "Architect an event-driven Amazon S3 workflow using Macie custom identifiers and Step Functions to automate scalable PII detection and classification for compliance."
 summary: "This article guides you through designing an automated S3 workflow with Amazon Macie custom identifiers and Step Functions to detect and classify organization-specific PII."
 tags: ["system-design", "pii-detection"]
@@ -11,8 +11,8 @@ draft: false
 autonomous: true
 last_reviewed: "2026-07-29"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-29T06:14:30.920657Z"
-verification_version: 1
+verification_date: "2026-07-29T07:59:20.903096Z"
+verification_version: "1"
 version_context: "Amazon Macie and Step Functions documentation as of 2024; scope limited to S3 event-driven workflows and Macie custom identifiers."
 recheck_after: "2026-09-27"
 ---
