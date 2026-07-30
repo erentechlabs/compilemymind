@@ -2413,9 +2413,9 @@
       "taxonomy_changes": 0
     },
     "prepare": {
-      "time": "2026-07-29T06:14:31.557570Z",
+      "time": "2026-07-30T04:19:00.858723Z",
       "result": "queued",
-      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "slug": "custom-metrics-exporter-kubernetes-guide",
       "queue_depth": 1
     }
   },
@@ -2674,12 +2674,86 @@
     }
   },
   "pending_publication": {},
-  "ready_publications": [],
+  "ready_publications": [
+    {
+      "queued_at": "2026-07-30T04:19:00.858723Z",
+      "slug": "custom-metrics-exporter-kubernetes-guide",
+      "title": "Step-by-Step: Exposing Custom Application Metrics to Kubernetes HPA with Prometheus Adapter",
+      "bundle_path": ".autopublisher/queue/ready/custom-metrics-exporter-kubernetes-guide",
+      "record": {
+        "time": "2026-07-30T04:19:00.858723Z",
+        "title": "Step-by-Step: Exposing Custom Application Metrics to Kubernetes HPA with Prometheus Adapter",
+        "slug": "custom-metrics-exporter-kubernetes-guide",
+        "categories": [
+          "developer-it-tools"
+        ],
+        "tags": [
+          "kubernetes",
+          "python",
+          "rbac"
+        ],
+        "sources": [
+          {
+            "title": "Horizontal Pod Autoscaling | Kubernetes",
+            "url": "https://kubernetes.io/docs/concepts/workloads/autoscaling/horizontal-pod-autoscale"
+          },
+          {
+            "title": "GitHub - kubernetes-sigs/prometheus-adapter: An implementation of the custom.metrics.k8s.io API using Prometheus · GitHub",
+            "url": "https://github.com/kubernetes-sigs/prometheus-adapter"
+          },
+          {
+            "title": "GitHub - prometheus/client_python: Prometheus instrumentation library for Python applications · GitHub",
+            "url": "https://github.com/prometheus/client_python"
+          }
+        ],
+        "qa": {
+          "approved": true,
+          "score": 9.5,
+          "technical_accuracy": 9.5,
+          "factual_confidence": 9.5,
+          "unsupported_claims": [],
+          "issues": [],
+          "required_fixes": [],
+          "reason": "The article is technically accurate, directly supported by official Kubernetes, Prometheus Adapter, and Prometheus Python client documentation. All material claims—including API versions, commands, RBAC, adapter rules, and troubleshooting—are mapped to cited sources. The tutorial is original, non-duplicative, and provides concrete examples (Python exporter, adapter rule, RBAC, HPA manifest), with a diagram embedded in the explanatory section. It avoids generic language, unsupported absolutes, and template repetition. Troubleshooting includes roles, evidence, commands, and interpretation. Comparison recommendations are workload-specific and qualified. Internal links and structure are appropriate for a tutorial. No broken formatting, missing sources, or unsupported claims found. No fixes required.",
+          "quality": {
+            "score": 0.9282,
+            "components": {
+              "topic_relevance": 0.85,
+              "originality": 0.7667,
+              "source_quality": 1.0,
+              "claim_support": 1.0,
+              "factual_confidence": 1.0,
+              "technical_accuracy": 1.0,
+              "search_intent_match": 0.8571,
+              "practical_usefulness": 1.0,
+              "readability": 1.0,
+              "internal_linking": 1.0,
+              "duplicate_topic_risk": 0.7667,
+              "source_similarity": 0.5575,
+              "existing_content_similarity": 0.7667,
+              "outdated_information_risk": 1.0,
+              "metadata_completeness": 1.0,
+              "structured_data_validity": 1.0,
+              "code_validity": 1.0,
+              "version_confidence": 1.0,
+              "media_relevance": 1.0,
+              "editorial_specificity": 1.0
+            }
+          }
+        },
+        "quality_score": 0.9282,
+        "path": "content/posts/custom-metrics-exporter-kubernetes-guide/index.md"
+      },
+      "recovery_backlog": true
+    }
+  ],
   "preparation_pending_publication": {},
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2
   },
-  "recovery_backlog_queued": [],
+  "recovery_backlog_queued": [
+    "custom-metrics-exporter-kubernetes-guide"
+  ],
   "recovery_backlog_completed": [
     "android-intelligent-apps-cloud-hybrid-on-device-inference",
     "automate-pii-detection-amazon-macie-step-functions"

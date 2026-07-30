@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1505" viewBox="0 0 1400 1505" role="img" aria-labelledby="title desc" data-text-collision-check="strict">
+<defs>
+<linearGradient id="bg" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ecfdf5"/><stop offset="1" stop-color="#f8fafc"/></linearGradient>
+<linearGradient id="accent" x1="0" x2="1"><stop offset="0" stop-color="#059669"/><stop offset="1" stop-color="#0f766e"/></linearGradient>
+<filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0f172a" flood-opacity="0.10"/></filter>
+<pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#94a3b8" opacity="0.20"/></pattern>
+<marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M1,1 L11,6 L1,11 z" fill="#059669"/></marker>
+</defs>
+<rect width="1400" height="1505" rx="32" fill="url(#bg)"/>
+<rect width="1400" height="1505" rx="32" fill="url(#dots)"/>
+<rect x="0" y="0" width="12" height="100%" rx="6" fill="url(#accent)"/>
+<title id="title">Expose Application Metrics to Kubernetes HPA with Prometheus Adapter: practical model</title>
+<desc id="desc">A detailed decision diagram explaining Expose Application Metrics to Kubernetes HPA with Prometheus Adapter: practical model.</desc>
+<rect x="1190" y="34" width="150" height="34" rx="17" fill="#d1fae5"/>
+<text x="1265" y="56" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#059669">DECISION</text>
+<text x="72" y="64" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Expose Application Metrics to Kubernetes HPA with</text>
+<text x="72" y="102" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="750" fill="#0f172a">Prometheus Adapter: practical model</text>
+<text x="72" y="144" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">Expose an application metric, map it through Prometheus Adapter, and verify that a Kubernetes autoscaling/v2</text>
+<text x="72" y="167" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="400" fill="#475569">HorizontalPodAutoscaler can consume it.</text>
+<line x1="72" y1="186" x2="1328" y2="186" stroke="#059669" stroke-opacity="0.18" stroke-width="2"/>
+<line x1="700" y1="321.0" x2="700" y2="1249.0" stroke="#059669" stroke-width="5" stroke-opacity="0.24"/>
+<line x1="700" y1="321.0" x2="612" y2="321.0" stroke="#059669" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>
+<circle cx="700" cy="321.0" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>
+<text x="700" y="327.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">1</text>
+<rect x="92" y="226" width="520" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="92" y="226" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="126" cy="260" r="18" fill="#d1fae5"/>
+<text x="126" y="266" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">1</text>
+<text x="156" y="265" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">INPUT</text>
+<text x="116" y="304" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Introduction</text>
+<text x="116" y="343" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Horizontal Pod Autoscaling (HPA) is a core feature in</text>
+<text x="116" y="363" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Kubernetes that automatically scales workloads based on</text>
+<text x="116" y="383" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">demand. While CPU and memory metrics are supported out of…</text>
+<line x1="700" y1="553.0" x2="788" y2="553.0" stroke="#059669" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>
+<circle cx="700" cy="553.0" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>
+<text x="700" y="559.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">2</text>
+<rect x="788" y="458" width="520" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="788" y="458" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="822" cy="492" r="18" fill="#d1fae5"/>
+<text x="822" y="498" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">2</text>
+<text x="852" y="497" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">DECISION</text>
+<text x="812" y="536" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Assumptions and Workload Definition</text>
+<text x="812" y="575" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">This guide assumes: You have a Kubernetes cluster (v1.6+</text>
+<text x="812" y="595" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">recommended for autoscaling/v2). Prometheus is deployed</text>
+<text x="812" y="615" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">and scraping application metrics. Prometheus Adapter is…</text>
+<line x1="700" y1="785.0" x2="612" y2="785.0" stroke="#059669" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>
+<circle cx="700" cy="785.0" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>
+<text x="700" y="791.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">3</text>
+<rect x="92" y="690" width="520" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="92" y="690" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="126" cy="724" r="18" fill="#d1fae5"/>
+<text x="126" y="730" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">3</text>
+<text x="156" y="729" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">ACTION</text>
+<text x="116" y="768" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Why Custom Metrics?</text>
+<text x="116" y="807" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">While CPU and memory scaling works for many workloads,</text>
+<text x="116" y="827" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">custom metrics allow scaling based on application-specific</text>
+<text x="116" y="847" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">signals. For example, scaling on request rate lets you…</text>
+<line x1="700" y1="1017.0" x2="788" y2="1017.0" stroke="#059669" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>
+<circle cx="700" cy="1017.0" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>
+<text x="700" y="1023.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">4</text>
+<rect x="788" y="922" width="520" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="788" y="922" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="822" cy="956" r="18" fill="#d1fae5"/>
+<text x="822" y="962" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">4</text>
+<text x="852" y="961" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">ACTION</text>
+<text x="812" y="1000" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Step 1: Minimal Python Exporter for</text>
+<text x="812" y="1025" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Prometheus</text>
+<text x="812" y="1064" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">We&#x27;ll use the official Prometheus Python client to expose</text>
+<text x="812" y="1084" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">a metric. The exporter increments a counter each time an…</text>
+<line x1="700" y1="1249.0" x2="612" y2="1249.0" stroke="#059669" stroke-width="3" stroke-opacity="0.55" marker-end="url(#arrow)"/>
+<circle cx="700" cy="1249.0" r="24" fill="url(#accent)" stroke="#ffffff" stroke-width="5"/>
+<text x="700" y="1255.0" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#ffffff">5</text>
+<rect x="92" y="1154" width="520" height="190" rx="22" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+<rect x="92" y="1154" width="8" height="190" rx="4" fill="url(#accent)"/>
+<circle cx="126" cy="1188" r="18" fill="#d1fae5"/>
+<text x="126" y="1194" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="800" fill="#059669">5</text>
+<text x="156" y="1193" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="750" letter-spacing="1.2" fill="#059669">OUTPUT</text>
+<text x="116" y="1232" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Step 2: Prometheus Adapter Rule for</text>
+<text x="116" y="1257" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="700" fill="#0f172a">Custom Metrics</text>
+<text x="116" y="1296" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">Prometheus Adapter exposes custom metrics to Kubernetes</text>
+<text x="116" y="1316" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">via API aggregation. You must map Prometheus metrics to…</text>
+<text x="72" y="1433" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#059669">TRANSITIONS</text>
+<text x="190" y="1433" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="400" fill="#475569">next boundary</text>
+<text x="72" y="1467" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" letter-spacing="1" fill="#059669">TAKEAWAY</text>
+<text x="175" y="1467" text-anchor="start" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#334155">Expose an application metric, map it through Prometheus Adapter, and verify that a Kubernetes autoscaling/v2…</text>
+</svg>
