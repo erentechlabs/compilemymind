@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-07-27T06:05:30.787325Z",
-  "articles_checked": 58,
+  "generated_at": "2026-07-30T05:24:38.916470Z",
+  "articles_checked": 60,
   "summary": {
     "high_risk": 0,
     "medium_risk": 42,
-    "low_risk": 16,
+    "low_risk": 18,
     "noindexed": 0,
     "unresolved": 42
   },
@@ -68,8 +68,28 @@
       "noindex": false
     },
     {
+      "slug": "android-intelligent-apps-cloud-hybrid-on-device-inference",
+      "title": "Architecting Android AI Features: Weighing On-Device, Cloud, and Hybrid Inference",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
       "slug": "audit-github-actions-token-permissions",
       "title": "How to Audit GitHub Actions Token Permissions",
+      "risk": "low",
+      "action": "none",
+      "issues": [],
+      "source_count": 3,
+      "numeric_claim_count": 0,
+      "noindex": false
+    },
+    {
+      "slug": "automate-pii-detection-amazon-macie-step-functions",
+      "title": "Designing Event-Driven S3 PII Detection with Amazon Macie Custom Identifiers and Step Functions",
       "risk": "low",
       "action": "none",
       "issues": [],

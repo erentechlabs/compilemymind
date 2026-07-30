@@ -2119,6 +2119,38 @@
       "broken_links": [],
       "validated_sources": 0,
       "verification_recorded": false
+    },
+    "component-vs-bean": {
+      "time": "2026-07-30T05:24:41.892703Z",
+      "action": "none",
+      "reason": "The article remains accurate, no facts are outdated, and there are no broken links. No meaningful update is needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "how-to-solve-leetcode-valid-parentheses-using-stack-in-java": {
+      "time": "2026-07-30T05:24:43.936079Z",
+      "action": "none",
+      "reason": "The article is still accurate, and the broken link list is empty. All technical claims are supported by the grounded research and current best practices. No update is needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "remove-duplicates-from-sorted-array": {
+      "time": "2026-07-30T05:24:46.640526Z",
+      "action": "none",
+      "reason": "The article is still accurate, no facts are outdated, and the broken link list is empty. No updates are needed.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "new-features-in-java-25": {
+      "time": "2026-07-30T05:25:08.301263Z",
+      "action": "none",
+      "reason": "The article is fully accurate with no broken links. All technical claims are supported by official OpenJDK sources and JEPs, and the grounded research does not indicate outdated information or missing updates.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
     }
   },
   "failures": [
@@ -2408,7 +2440,7 @@
       "queue_depth": 0
     },
     "maintain": {
-      "time": "2026-07-27T06:05:44.669077Z",
+      "time": "2026-07-30T05:25:08.301335Z",
       "result": "completed",
       "taxonomy_changes": 0
     },
