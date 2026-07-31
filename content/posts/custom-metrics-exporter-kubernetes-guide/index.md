@@ -1,7 +1,7 @@
 ---
 title: "Step-by-Step: Exposing Custom Application Metrics to Kubernetes HPA with Prometheus Adapter"
-date: "2026-07-30T07:19:00+03:00"
-lastmod: "2026-07-30T07:19:00+03:00"
+date: "2026-07-31T11:09:48+03:00"
+lastmod: "2026-07-31T11:09:48+03:00"
 description: "Learn how to expose custom Python application metrics to Kubernetes HPA using Prometheus Adapter, including mapping, RBAC setup, validation, and troubleshooting for autoscaling."
 summary: "This guide shows how to expose custom Python metrics to Kubernetes HPA via Prometheus Adapter, covering mapping, RBAC, validation, and diagnostics for reliable autoscaling."
 tags: ["kubernetes", "python", "rbac"]
@@ -9,12 +9,12 @@ categories: ["developer-it-tools"]
 publisher: "Compile My Mind"
 draft: false
 autonomous: true
-last_reviewed: "2026-07-30"
+last_reviewed: "2026-07-31"
 verification_status: "Documentation reviewed"
-verification_date: "2026-07-30T04:19:00.181663Z"
-verification_version: 1
+verification_date: "2026-07-31T08:09:48.263351Z"
+verification_version: "1"
 version_context: "Kubernetes autoscaling/v2 HPA, Prometheus Adapter, Python Prometheus client library, RBAC, API aggregation, and custom metrics discovery."
-recheck_after: "2026-09-28"
+recheck_after: "2026-09-29"
 ---
 
 ## Introduction
