@@ -2430,6 +2430,15 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 890 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 890, \"headings\": [\"Defining the Android AI Feature Workload\", \"Workload Assumptions\", \"Overview of Android AI Inference Modes\", \"Comparing Inference Modes for Text Summarization\", \"On-Device Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Validation Step\", \"Troubleshooting\", \"Cloud Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Cloud API Example\", \"Hybrid Inference\"]}",
       "attempts": 1
+    },
+    {
+      "mode": "publish",
+      "time": "2026-07-31T04:37:49.570460Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "last_runs": {
@@ -2445,9 +2454,9 @@
       "taxonomy_changes": 0
     },
     "prepare": {
-      "time": "2026-07-30T04:19:00.858723Z",
-      "result": "queued",
-      "slug": "custom-metrics-exporter-kubernetes-guide",
+      "time": "2026-07-31T04:37:49.577484Z",
+      "result": "retry_scheduled",
+      "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 1
     }
   },
@@ -2691,6 +2700,14 @@
       "reason": "qa_failed",
       "detail": "Article is too short: 890 words, expected at least 900. The previous draft was rejected. Return a complete replacement article, not an outline, summary, or apology. Preserve useful technical detail while fixing every listed issue. The replacement must satisfy the required word count and include a useful Markdown table when the configuration requires one. Rebuild it from the supplied research and this compact structural summary; do not paste or continue the previous body: {\"word_count\": 890, \"headings\": [\"Defining the Android AI Feature Workload\", \"Workload Assumptions\", \"Overview of Android AI Inference Modes\", \"Comparing Inference Modes for Text Summarization\", \"On-Device Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Validation Step\", \"Troubleshooting\", \"Cloud Inference\", \"Advantages\", \"Limitations\", \"Practical Scenario\", \"Cloud API Example\", \"Hybrid Inference\"]}",
       "attempts": 1
+    },
+    {
+      "time": "2026-07-31T04:37:49.570460Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "provider_cooldowns": {
@@ -2779,9 +2796,58 @@
       "recovery_backlog": true
     }
   ],
-  "preparation_pending_publication": {},
+  "preparation_pending_publication": {
+    "scheduled_at": "2026-07-31T04:37:49.570694Z",
+    "next_retry_at": "2026-07-31T10:37:49.570700Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+    "consecutive_attempts": 1,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "categories": [
+        "cybersecurity",
+        "software-engineering",
+        "developer-it-tools"
+      ],
+      "primary_category": "cybersecurity",
+      "tags": [
+        "cloud-run-functions",
+        "iam",
+        "serverless-security"
+      ],
+      "search_intent": "Secure second-generation Cloud Run functions by separating IAM authorization, invocation authentication, and network ingress restrictions.",
+      "article_type": "tutorial",
+      "needs_diagram": true,
+      "needs_chart": false,
+      "generation_constraints": "Scope the article to functions created with the Cloud Functions v2 API. Distinguish who may invoke from which network paths may reach the endpoint, use non-destructive gcloud inspection examples, and explain validation and rollback boundaries.",
+      "source_urls": [
+        "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam",
+        "https://docs.cloud.google.com/functions/docs/securing/authenticating",
+        "https://docs.cloud.google.com/run/docs/securing/ingress"
+      ],
+      "recovery_backlog": true,
+      "seed_sources": [
+        {
+          "title": "Authorize access with IAM - Cloud Run functions",
+          "url": "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam"
+        },
+        {
+          "title": "Authenticate for invocation - Cloud Run functions",
+          "url": "https://docs.cloud.google.com/functions/docs/securing/authenticating"
+        },
+        {
+          "title": "Restrict network endpoint ingress for Cloud Run services",
+          "url": "https://docs.cloud.google.com/run/docs/securing/ingress"
+        }
+      ]
+    }
+  },
   "recovery_backlog_attempts": {
-    "android-intelligent-apps-cloud-hybrid-on-device-inference": 2
+    "android-intelligent-apps-cloud-hybrid-on-device-inference": 2,
+    "harden-exposed-cloud-functions-security-guide": 1
   },
   "recovery_backlog_queued": [
     "custom-metrics-exporter-kubernetes-guide"
