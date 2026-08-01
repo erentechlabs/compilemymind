@@ -2503,6 +2503,15 @@
       "reason": "qa_failed",
       "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
       "attempts": 1
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-01T04:34:21.158911Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "last_runs": {
@@ -2518,10 +2527,10 @@
       "taxonomy_changes": 0
     },
     "prepare": {
-      "time": "2026-07-31T04:37:49.577484Z",
+      "time": "2026-08-01T04:34:21.166412Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
-      "queue_depth": 1
+      "queue_depth": 0
     }
   },
   "rejected_articles": [
@@ -2772,6 +2781,14 @@
       "reason": "qa_failed",
       "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
       "attempts": 1
+    },
+    {
+      "time": "2026-08-01T04:34:21.158911Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "provider_cooldowns": {
@@ -2789,12 +2806,12 @@
   "pending_publication": {},
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-07-31T04:37:49.570694Z",
-    "next_retry_at": "2026-07-31T10:37:49.570700Z",
+    "scheduled_at": "2026-08-01T04:34:21.159157Z",
+    "next_retry_at": "2026-08-01T10:34:21.159162Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
     "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
-    "consecutive_attempts": 1,
+    "consecutive_attempts": 2,
     "topic_attempts": 1,
     "topic": {
       "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
@@ -2839,7 +2856,7 @@
   },
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2,
-    "harden-exposed-cloud-functions-security-guide": 1
+    "harden-exposed-cloud-functions-security-guide": 2
   },
   "recovery_backlog_queued": [],
   "recovery_backlog_completed": [
