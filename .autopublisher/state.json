@@ -2215,6 +2215,38 @@
       "broken_links": [],
       "validated_sources": 0,
       "verification_recorded": false
+    },
+    "http-status-codes": {
+      "time": "2026-08-03T19:47:22.562673Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "internet-connectivity-and-cabling": {
+      "time": "2026-08-03T19:47:22.562956Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "internet-protocol-ip-basics": {
+      "time": "2026-08-03T19:47:22.563270Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "network-communication-basics": {
+      "time": "2026-08-03T19:47:22.563521Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
     }
   },
   "failures": [
@@ -2550,9 +2582,10 @@
       "next_retry_at": "2026-08-03T14:43:33.897827Z"
     },
     "maintain": {
-      "time": "2026-07-30T05:25:08.301335Z",
+      "time": "2026-08-03T19:47:22.563544Z",
       "result": "completed",
-      "taxonomy_changes": 0
+      "taxonomy_changes": 0,
+      "generation_mode": "deterministic_offline"
     },
     "prepare": {
       "time": "2026-08-03T04:45:53.849206Z",

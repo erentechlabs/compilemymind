@@ -1,6 +1,7 @@
 {
-  "generated_at": "2026-07-30T05:25:08.312417Z",
+  "generated_at": "2026-08-03T19:47:22.571148Z",
   "result": "completed",
+  "generation_mode": "deterministic_offline",
   "corrected_articles": [],
   "noindexed_articles": [],
   "unpublished_articles": [],
