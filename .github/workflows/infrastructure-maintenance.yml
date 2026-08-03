@@ -49,6 +49,10 @@ jobs:
           python -m unittest discover -s tools/ci -p "test_*.py"
           python -m unittest discover -s tools/maintenance -p "test_*.py"
 
+      - name: Preflight generative AI provider
+        id: provider
+        run: python tools/autopublisher/provider_health.py --github-output "$GITHUB_OUTPUT"
+
       - name: Install Hugo Extended
         shell: bash
         run: |
@@ -126,12 +130,12 @@ jobs:
 
       - name: Exercise autonomous publisher in dry-run mode
         id: publisher_dry_run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY != ''
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && steps.provider.outputs.available == 'true'
         run: python tools/autopublisher/autopublisher.py --mode publish --dry-run
 
       - name: Record unavailable provider dry run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY == ''
-        run: echo "Publisher compatibility is covered by deterministic tests; the live-provider dry run was skipped because no generation provider is configured."
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && steps.provider.outputs.available != 'true'
+        run: echo "Publisher compatibility is covered by deterministic tests; the live-provider dry run was deferred because the generation provider is unavailable."
 
       - name: Upload infrastructure report
         if: always()

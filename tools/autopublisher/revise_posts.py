@@ -279,7 +279,16 @@ def main() -> int:
     state = read_state()
     log = autopublisher.EventLog()
     client = autopublisher.GeminiClient(config, log)
-    client.require_key()
+    if not client.has_generation_provider():
+        log.log(
+            "revision_offline_deferred",
+            reason="a safe deterministic rewrite is not available",
+        )
+        print(
+            "No online generation provider is configured. Existing posts were left unchanged; "
+            "deterministic publishing and maintenance remain available."
+        )
+        return 0
     posts = autopublisher.load_posts(config)
     limit = args.max_posts or int(config.get("revision", {}).get("max_posts_per_run", 1))
     changed = False

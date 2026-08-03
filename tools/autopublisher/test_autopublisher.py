@@ -14,6 +14,7 @@ from unittest.mock import patch
 os.environ.setdefault("AUTOPUBLISHER_LOG_STDOUT", "0")
 sys.path.insert(0, str(Path(__file__).parent))
 import autopublisher  # noqa: E402
+import provider_health  # noqa: E402
 import revise_posts  # noqa: E402
 
 
@@ -26,8 +27,12 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["openai"]["required_tasks"], [])
         self.assertEqual(config["gemini"]["text_model"], "gemini-3.5-flash")
         self.assertEqual(config["gemini"]["qa_model"], "gemini-3.5-flash")
+        self.assertEqual(
+            config["gemini"]["fallback_models"],
+            ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite"],
+        )
         self.assertFalse(config["gemini"]["enable_google_search_grounding"])
-        self.assertFalse(config["gemini"]["model_upgrade"]["enabled"])
+        self.assertTrue(config["gemini"]["model_upgrade"]["enabled"])
         self.assertFalse(github_models["enabled"])
         self.assertEqual(github_models["model"], "openai/gpt-4.1")
         self.assertIn("openai/gpt-4.1-mini", github_models["fallback_models"])
@@ -49,7 +54,7 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(config["publishing"]["required_diagrams"], 1)
         self.assertEqual(config["publishing"]["required_code_examples"], 1)
         self.assertTrue(config["publishing"]["require_contextual_visuals"])
-        self.assertFalse(config["publishing"]["allow_offline_fallback"])
+        self.assertTrue(config["publishing"]["allow_offline_fallback"])
         self.assertEqual(config["publishing"]["required_diagram_detail_nodes"], 3)
         self.assertEqual(
             set(config["publishing"]["allowed_diagram_layouts"]),
@@ -249,6 +254,9 @@ class AutopublisherTests(unittest.TestCase):
             self.assertNotIn("GITHUB_MODELS_TOKEN:", workflow)
             self.assertNotIn("OPENAI_API_KEY:", workflow)
             self.assertIn("GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}", workflow)
+            self.assertIn("Preflight generative AI provider", workflow)
+            self.assertIn("provider_health.py --github-output", workflow)
+            self.assertIn("steps.provider.outputs.available", workflow)
         for workflow_name in ("autonomous-maintenance.yml", "revise-existing-posts.yml"):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
             self.assertIn("Synchronize with the latest main revision", workflow)
@@ -266,7 +274,7 @@ class AutopublisherTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
         self.assertIn('- cron: "31 2 * * 1,4"', maintenance_workflow)
         self.assertIn('- cron: "47 3 * * 2"', revision_workflow)
-        self.assertNotIn("schedule:", gemini_workflow)
+        self.assertIn('- cron: "23 4 * * 0"', gemini_workflow)
         self.assertLess(
             deploy_workflow.index("Run shared release gate"),
             deploy_workflow.index("Synchronize validated Hugo version with Cloudflare Pages"),
@@ -583,6 +591,83 @@ class AutopublisherTests(unittest.TestCase):
         self.assertEqual(result, 0)
         choose_topic.assert_not_called()
         self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+
+    def test_no_key_publish_uses_deterministic_evergreen_writer(self):
+        config = {
+            "gemini": {"enable_google_search_grounding": False},
+            "publishing": {
+                "required_source_count": 1,
+                "allow_offline_fallback": True,
+                "max_topic_attempts": 1,
+                "max_evergreen_topic_attempts": 0,
+            },
+            "cost_control": {"max_topic_selection_calls_per_run": 1},
+            "publication_queue": {"enabled": False},
+            "site": {"content_dir": "content/posts"},
+        }
+        state = {"generated_posts": [], "maintenance_reviews": {}, "failures": [], "last_runs": {}}
+        topic = {
+            "title": "Offline technical article",
+            "slug": "offline-technical-article",
+            "categories": ["software-engineering"],
+            "tags": ["testing"],
+            "offline_fallback": {"content_mode": "educational"},
+        }
+        source = autopublisher.ResearchItem(
+            "Official",
+            "Official documentation",
+            "https://example.test/docs",
+            "Supported source detail.",
+            "",
+            topic["categories"],
+            2.0,
+        )
+        article = {
+            **topic,
+            "description": "A deterministic offline technical article.",
+            "sources": [{"title": source.title, "url": source.url}],
+            "article_markdown": "## Verified guidance\n\nSource-bound article content.",
+        }
+        qa = {"approved": True, "quality": {"score": 1.0}}
+
+        class OfflineClient:
+            api_key = ""
+
+            def has_generation_provider(self):
+                return False
+
+        with patch.object(autopublisher, "load_config", return_value=config), patch.object(
+            autopublisher, "load_state", return_value=state
+        ), patch.object(autopublisher, "load_posts", return_value=[]), patch.object(
+            autopublisher, "collect_research", return_value=[source]
+        ), patch.object(autopublisher, "enrich_research_snippets"), patch.object(
+            autopublisher, "GeminiClient", return_value=OfflineClient()
+        ), patch.object(autopublisher, "choose_evergreen_topic", return_value=topic), patch.object(
+            autopublisher, "choose_topic"
+        ) as choose_topic, patch.object(
+            autopublisher, "collect_topic_research", return_value=[source]
+        ), patch.object(
+            autopublisher, "generate_approved_article"
+        ) as generate, patch.object(
+            autopublisher, "deterministic_evergreen_fallback", return_value=(article, qa, "")
+        ) as offline_writer, patch.object(
+            autopublisher,
+            "write_article_bundle",
+            return_value=autopublisher.ROOT / "content/posts/offline-technical-article/index.md",
+        ), patch.object(autopublisher, "save_state"), patch.object(
+            autopublisher, "write_publish_result"
+        ):
+            result = autopublisher.run_publish(SimpleNamespace(dry_run=True))
+
+        self.assertEqual(result, 0)
+        choose_topic.assert_not_called()
+        generate.assert_not_called()
+        offline_writer.assert_called_once()
+        self.assertEqual(state["last_runs"]["publish"]["result"], "dry_run")
+        self.assertEqual(
+            state["last_runs"]["publish"]["generation_mode"],
+            "deterministic_offline",
+        )
 
     def setUp(self):
         self.config = {
@@ -981,6 +1066,60 @@ def process(value: int) -> int:
             request.call_args.args[0],
         )
         self.assertNotIn("models.github.ai", request.call_args.args[0])
+
+    def test_gemini_retries_a_configured_fallback_when_primary_is_retired(self):
+        success = {
+            "candidates": [
+                {"content": {"parts": [{"text": '{"ok": true}'}]}}
+            ]
+        }
+        config = {
+            "gemini": {
+                "text_model": "gemini-retired-flash",
+                "fallback_models": ["gemini-supported-flash-lite"],
+                "model_upgrade": {"enabled": False},
+            },
+            "openai": {"enabled": False},
+            "github_models": {"enabled": False},
+        }
+        with patch.dict(
+            os.environ,
+            {"GEMINI_API_KEY": "gemini-key", "OPENAI_API_KEY": "", "GITHUB_MODELS_TOKEN": ""},
+            clear=False,
+        ), patch.object(
+            autopublisher,
+            "http_request",
+            side_effect=[(410, b"model retired", {}), (200, json.dumps(success).encode(), {})],
+        ) as request:
+            client = autopublisher.GeminiClient(config, autopublisher.EventLog())
+            result = client.generate_json("Health check", task="provider_health")
+
+        self.assertEqual(result, {"ok": True})
+        self.assertEqual(request.call_count, 2)
+        self.assertIn("/models/gemini-retired-flash:generateContent", request.call_args_list[0].args[0])
+        self.assertIn("/models/gemini-supported-flash-lite:generateContent", request.call_args_list[1].args[0])
+
+    def test_provider_preflight_enables_offline_mode_without_a_credential(self):
+        config = {
+            "gemini": {"model_upgrade": {"enabled": False}},
+            "openai": {"enabled": False},
+            "github_models": {"enabled": False},
+        }
+        with patch.dict(
+            os.environ,
+            {
+                "GEMINI_API_KEY": "",
+                "OPENAI_API_KEY": "",
+                "GITHUB_MODELS_TOKEN": "",
+                "GITHUB_TOKEN": "",
+            },
+            clear=False,
+        ):
+            result = provider_health.check_provider(config)
+
+        self.assertEqual(result["available"], "true")
+        self.assertEqual(result["online"], "false")
+        self.assertEqual(result["provider"], "offline")
 
     def test_topic_selection_uses_github_models_when_token_is_available(self):
         response = {"choices": [{"message": {"content": '{"topics": []}'}}]}
@@ -3621,8 +3760,8 @@ def process(value: int) -> int:
             text_model = "test"
             api_key = "gemini-key"
 
-            def require_key(self):
-                return None
+            def has_generation_provider(self):
+                return True
 
             def grounded_research(self, _prompt):
                 raise autopublisher.GeminiQuotaError("quota")
@@ -3648,6 +3787,64 @@ def process(value: int) -> int:
         self.assertEqual(report["failed_repairs"], [])
         self.assertEqual(state["maintenance_reviews"]["test-post"]["action"], "none")
         save_state.assert_called_once_with(state)
+
+    def test_maintenance_runs_deterministic_checks_without_any_provider_key(self):
+        state = {"maintenance_reviews": {}, "last_runs": {}}
+        post = autopublisher.Post(
+            path=Path("test-post.md"),
+            slug="test-post",
+            title="Test post",
+            description="A readable test article.",
+            date="2026-01-01",
+            body="A readable article body.",
+            tags=["testing"],
+            categories=["software-engineering"],
+            frontmatter={"title": "Test post", "description": "A readable test article."},
+        )
+        source = autopublisher.ResearchItem(
+            source="Official",
+            title="Official test documentation",
+            url="https://example.test/docs",
+            summary="Current supported behavior.",
+            published="",
+            categories=post.categories,
+            score=1.0,
+        )
+
+        class OfflineClient:
+            text_model = "offline"
+            api_key = ""
+
+            def has_generation_provider(self):
+                return False
+
+        with tempfile.TemporaryDirectory() as directory:
+            report_path = Path(directory) / "maintenance-latest.json"
+            config = {
+                "maintenance": {"max_articles_per_run": 1},
+                "publishing": {"required_source_count": 1},
+            }
+            with patch.object(autopublisher, "load_config", return_value=config), patch.object(
+                autopublisher, "load_state", return_value=state
+            ), patch.object(autopublisher, "load_posts", return_value=[post]), patch.object(
+                autopublisher, "select_posts_for_maintenance", return_value=[post]
+            ), patch.object(autopublisher, "GeminiClient", return_value=OfflineClient()), patch.object(
+                autopublisher, "refresh_existing_post_sources", return_value=[source]
+            ), patch.object(autopublisher, "mark_post_reviewed") as mark_reviewed, patch.object(
+                autopublisher, "run_hugo_build", return_value=True
+            ), patch.object(autopublisher, "MAINTENANCE_REPORT_PATH", report_path), patch.object(
+                autopublisher, "save_state"
+            ):
+                result = autopublisher.run_maintain(SimpleNamespace(max_articles=None, dry_run=False))
+
+        self.assertEqual(result, 0)
+        self.assertEqual(state["last_runs"]["maintain"]["result"], "completed")
+        self.assertEqual(
+            state["last_runs"]["maintain"]["generation_mode"],
+            "deterministic_offline",
+        )
+        self.assertTrue(state["maintenance_reviews"]["test-post"]["verification_recorded"])
+        mark_reviewed.assert_called_once_with(post, config, 1)
 
     def test_topic_relevance_accepts_approved_cluster_and_rejects_disallowed_topic(self):
         config = {

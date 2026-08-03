@@ -59,7 +59,12 @@ jobs:
           python -m unittest discover -s tools/ci -p "test_*.py"
           python -m unittest discover -s tools/maintenance -p "test_*.py"
 
+      - name: Preflight generative AI provider
+        id: provider
+        run: python tools/autopublisher/provider_health.py --github-output "$GITHUB_OUTPUT"
+
       - name: Install Hugo Extended
+        if: steps.provider.outputs.available == 'true'
         shell: bash
         run: |
           version="${{ steps.hugo-version.outputs.version }}"
@@ -71,13 +76,16 @@ jobs:
           echo "$RUNNER_TEMP/hugo" >> "$GITHUB_PATH"
 
       - name: Generate and validate one queue candidate
+        if: steps.provider.outputs.available == 'true'
         run: python tools/autopublisher/autopublisher.py --mode prepare
 
       - name: Run shared preparation gate
         id: preparation_gate
+        if: steps.provider.outputs.available == 'true'
         run: python tools/ci/release_gate.py --mode prepare
 
       - name: Commit approved queue bundle
+        if: steps.provider.outputs.available == 'true'
         shell: bash
         run: |
           git config user.name "compilemymind-autopublisher[bot]"

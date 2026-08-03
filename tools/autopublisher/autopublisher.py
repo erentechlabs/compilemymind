@@ -1230,21 +1230,33 @@ class GeminiClient:
             or active_models.get("grounded")
             or gemini_config.get("grounded_research_model", self.text_model)
         )
+        self.gemini_fallback_models = [
+            str(candidate).strip()
+            for candidate in gemini_config.get("fallback_models", []) or []
+            if str(candidate).strip()
+        ]
         self.image_model = os.environ.get("GEMINI_IMAGE_MODEL", "").strip() or gemini_config.get(
             "image_model", "gemini-3.1-flash-image"
         )
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
 
     def require_key(self) -> None:
-        if not (
-            (self.openai_enabled and self.openai_api_key)
-            or (self.github_models_enabled and self.github_models_token)
-            or self.api_key
-        ):
+        if not self.has_generation_provider():
             raise SystemExit(
                 "A generation provider is required. Configure OPENAI_API_KEY, "
                 "GITHUB_MODELS_TOKEN/GITHUB_TOKEN, or GEMINI_API_KEY."
             )
+
+    def has_generation_provider(self) -> bool:
+        """Return whether online model generation is both configured and enabled."""
+        force_offline = os.environ.get("AUTOPUBLISHER_FORCE_OFFLINE", "").strip().lower()
+        if force_offline in {"1", "true", "yes", "on"}:
+            return False
+        return bool(
+            (self.openai_enabled and self.openai_api_key)
+            or (self.github_models_enabled and self.github_models_token)
+            or self.api_key
+        )
 
     def generate_json(
         self,
@@ -1318,14 +1330,27 @@ class GeminiClient:
             "responseMimeType": "application/json",
             "maxOutputTokens": max_output_tokens or int(self.config.get("gemini", {}).get("max_output_tokens", 32768)),
         }
-        response = self._generate_content(selected_model, prompt, config)
-        text = self._extract_text(response)
-        try:
-            return parse_model_json(text)
-        except ValueError as error:
-            raise GeminiTransientError(
-                f"{selected_model} returned invalid or truncated JSON; the task will be retried safely: {error}"
-            ) from error
+        for gemini_model in self._gemini_models_for(selected_model):
+            try:
+                response = self._generate_content(gemini_model, prompt, config)
+                text = self._extract_text(response)
+                return parse_model_json(text)
+            except ValueError as error:
+                model_error = GeminiTransientError(
+                    f"{gemini_model} returned invalid or truncated JSON; "
+                    f"the task will be retried safely: {error}"
+                )
+                provider_errors.append(model_error)
+            except Exception as error:
+                provider_errors.append(error)
+            self.log.log(
+                "model_provider_fallback",
+                provider="gemini",
+                task=task or "unknown",
+                model=gemini_model,
+                error=str(provider_errors[-1]),
+            )
+        self._raise_generation_unavailable(task, provider_errors)
 
     def generate_text(
         self,
@@ -1398,8 +1423,28 @@ class GeminiClient:
             else float(self.config.get("gemini", {}).get("temperature", 0.55)),
             "maxOutputTokens": max_output_tokens or 8192,
         }
-        response = self._generate_content(selected_model, prompt, config)
-        return self._extract_text(response)
+        for gemini_model in self._gemini_models_for(selected_model):
+            try:
+                response = self._generate_content(gemini_model, prompt, config)
+                return self._extract_text(response)
+            except Exception as error:
+                provider_errors.append(error)
+                self.log.log(
+                    "model_provider_fallback",
+                    provider="gemini",
+                    task=task or "unknown",
+                    model=gemini_model,
+                    error=str(error),
+                )
+        self._raise_generation_unavailable(task, provider_errors)
+
+    def _gemini_models_for(self, selected_model: str) -> list[str]:
+        """Return the requested model followed by unique configured fallbacks."""
+        models = [selected_model]
+        for candidate in self.gemini_fallback_models:
+            if candidate not in models:
+                models.append(candidate)
+        return models
 
     @staticmethod
     def _raise_generation_unavailable(
@@ -7747,6 +7792,17 @@ def run_publish(args: argparse.Namespace) -> int:
             return 0
 
     client = GeminiClient(config, log, state)
+    online_generation = (
+        client.has_generation_provider()
+        if hasattr(client, "has_generation_provider")
+        else True
+    )
+    if not online_generation:
+        log.log(
+            "offline_generation_enabled",
+            reason="no_usable_generation_provider",
+            fallback="source_qualified_deterministic_articles",
+        )
     research = collect_research(config, log)
     if not research:
         log.log("publish_recovery_needed", reason="no_research_items", fallback="configured_evergreen_sources")
@@ -7767,7 +7823,8 @@ def run_publish(args: argparse.Namespace) -> int:
 
     previous_publish_result = str(state.get("last_runs", {}).get("publish", {}).get("result", ""))
     prioritize_evergreen = bool(
-        config.get("publishing", {}).get("prefer_source_qualified_evergreen_first", False)
+        not online_generation
+        or config.get("publishing", {}).get("prefer_source_qualified_evergreen_first", False)
         or (
             config.get("publishing", {}).get("prefer_evergreen_after_quota", True)
             and previous_publish_result in {"quota_limited", "qa_failed"}
@@ -7786,6 +7843,7 @@ def run_publish(args: argparse.Namespace) -> int:
     if (
         not prioritize_evergreen
         and not grounding_circuit_open
+        and online_generation
         and bool(getattr(client, "api_key", ""))
         and config.get("gemini", {}).get("enable_google_search_grounding", True)
     ):
@@ -7854,7 +7912,19 @@ def run_publish(args: argparse.Namespace) -> int:
     retrying_pending_topic = bool(topic)
     initial_topic_is_evergreen = False
     initial_topic_is_recovery = bool(topic and topic.get("recovery_backlog"))
-    if not topic:
+    if not online_generation and topic and not isinstance(topic.get("offline_fallback"), dict):
+        log.log(
+            "pending_topic_deferred",
+            slug=topic.get("slug", ""),
+            reason="online_generation_unavailable",
+        )
+        topic = None
+        retrying_pending_topic = False
+        initial_topic_is_recovery = False
+    if not online_generation and not topic:
+        topic = choose_evergreen_topic(posts, config, log)
+        initial_topic_is_evergreen = bool(topic)
+    if online_generation and not topic:
         topic = choose_recovery_topic(posts, state, config, log)
         if topic:
             initial_topic_is_recovery = True
@@ -7987,14 +8057,29 @@ def run_publish(args: argparse.Namespace) -> int:
                     feedback=feedback,
                 )
                 continue
-            final_article, final_qa, feedback = generate_approved_article(
-                client,
-                topic,
-                topic_research,
-                posts,
-                config,
-                log,
-            )
+            if online_generation:
+                final_article, final_qa, feedback = generate_approved_article(
+                    client,
+                    topic,
+                    topic_research,
+                    posts,
+                    config,
+                    log,
+                )
+            else:
+                final_article, final_qa, feedback = deterministic_evergreen_fallback(
+                    topic,
+                    topic_research,
+                    posts,
+                    config,
+                    log,
+                )
+                if final_article:
+                    log.log(
+                        "offline_recovery_selected",
+                        title=topic.get("title"),
+                        slug=topic.get("slug"),
+                    )
         except GeminiQuotaError as error:
             log.log("publish_quota_limited", stage="article_generation", attempt=topic_attempt, error=str(error))
             feedback = str(error)
@@ -8168,6 +8253,7 @@ def run_publish(args: argparse.Namespace) -> int:
             "sources": final_article.get("sources", []),
             "qa": final_qa,
             "quality_score": (final_qa or {}).get("quality", {}).get("score"),
+            "generation_mode": "online" if online_generation else "deterministic_offline",
             "path": str(index_path.relative_to(ROOT)),
         }
     )
@@ -8175,7 +8261,11 @@ def run_publish(args: argparse.Namespace) -> int:
         completed = state.setdefault("recovery_backlog_completed", [])
         if final_article["slug"] not in completed:
             completed.append(final_article["slug"])
-    state["last_runs"]["publish"] = {"time": iso_z(), "result": "published" if not args.dry_run else "dry_run"}
+    state["last_runs"]["publish"] = {
+        "time": iso_z(),
+        "result": "published" if not args.dry_run else "dry_run",
+        "generation_mode": "online" if online_generation else "deterministic_offline",
+    }
     state["pending_publication"] = {}
     save_state(state)
     write_publish_result(
@@ -8637,7 +8727,17 @@ def run_maintain(args: argparse.Namespace) -> int:
     state = load_state()
     log = EventLog()
     client = GeminiClient(config, log, state)
-    client.require_key()
+    online_generation = (
+        client.has_generation_provider()
+        if hasattr(client, "has_generation_provider")
+        else True
+    )
+    if not online_generation:
+        log.log(
+            "maintenance_offline_mode",
+            reason="no_usable_generation_provider",
+            fallback="link_source_and_taxonomy_checks",
+        )
     taxonomy_changed = 0
     if config.get("taxonomy", {}).get("controlled_tags"):
         taxonomy_changed = normalize_site_taxonomy(config, dry_run=args.dry_run, log=log)
@@ -8677,7 +8777,8 @@ def run_maintain(args: argparse.Namespace) -> int:
             "citations": dedupe_sources(existing_citations),
         }
         grounding_available = bool(
-            getattr(client, "api_key", "")
+            online_generation
+            and getattr(client, "api_key", "")
             and not provider_circuit_open(state, "gemini_grounded_research")
         )
         if grounding_available:
@@ -8707,22 +8808,31 @@ def run_maintain(args: argparse.Namespace) -> int:
                 reason="provider_unavailable_or_circuit_open",
                 fallback="existing_trusted_sources",
             )
-        try:
-            payload = client.generate_json(
-                maintenance_prompt(post, broken, grounded, config),
-                model=client.text_model,
-                task="maintenance_review",
-            )
-        except GeminiQuotaError as error:
-            log.log("maintenance_quota_limited", slug=post.slug, stage="maintenance_review", error=str(error))
-            quota_limited = True
-            failed_repairs.append({"slug": post.slug, "reason": "maintenance_review_quota_limited"})
-            break
-        except Exception as error:
-            log.log("maintenance_ai_failed", slug=post.slug, error=str(error))
-            exit_code = 1
-            failed_repairs.append({"slug": post.slug, "reason": "maintenance_model_failed"})
-            continue
+        if online_generation:
+            try:
+                payload = client.generate_json(
+                    maintenance_prompt(post, broken, grounded, config),
+                    model=client.text_model,
+                    task="maintenance_review",
+                )
+            except GeminiQuotaError as error:
+                log.log("maintenance_quota_limited", slug=post.slug, stage="maintenance_review", error=str(error))
+                quota_limited = True
+                failed_repairs.append({"slug": post.slug, "reason": "maintenance_review_quota_limited"})
+                break
+            except Exception as error:
+                log.log("maintenance_ai_failed", slug=post.slug, error=str(error))
+                exit_code = 1
+                failed_repairs.append({"slug": post.slug, "reason": "maintenance_model_failed"})
+                continue
+        else:
+            payload = {
+                "action": "none",
+                "reason": (
+                    "Deterministic maintenance completed link, trusted-source, taxonomy, "
+                    "and review-date checks; no unsupported prose rewrite was attempted."
+                ),
+            }
         action = str(payload.get("action", "none")).lower()
         if action != "update":
             required_sources = int(config.get("publishing", {}).get("required_source_count", 3))
@@ -8872,7 +8982,12 @@ def run_maintain(args: argparse.Namespace) -> int:
             "broken_links": broken,
         }
     result = "quota_limited" if quota_limited else ("completed_with_errors" if exit_code else "completed")
-    state["last_runs"]["maintain"] = {"time": iso_z(), "result": result, "taxonomy_changes": taxonomy_changed}
+    state["last_runs"]["maintain"] = {
+        "time": iso_z(),
+        "result": result,
+        "taxonomy_changes": taxonomy_changed,
+        "generation_mode": "online" if online_generation else "deterministic_offline",
+    }
     save_state(state)
     current_posts = load_posts(config)
     noindexed_articles = sorted(
@@ -8883,6 +8998,7 @@ def run_maintain(args: argparse.Namespace) -> int:
         {
             "generated_at": iso_z(),
             "result": result,
+            "generation_mode": "online" if online_generation else "deterministic_offline",
             "corrected_articles": sorted(corrected_articles),
             "noindexed_articles": noindexed_articles,
             "unpublished_articles": [],

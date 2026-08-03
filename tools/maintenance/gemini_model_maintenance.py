@@ -147,6 +147,16 @@ def current_models(config: dict[str, Any], state: dict[str, Any]) -> dict[str, s
     }
 
 
+def report(result: dict[str, Any]) -> int:
+    """Emit machine-readable status and make provider outages visible but non-fatal."""
+    print(json.dumps(result))
+    if result.get("status") == "deferred":
+        reason = str(result.get("reason", "provider unavailable"))
+        reason = reason.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
+        print(f"::warning title=Gemini model maintenance deferred::{reason}")
+    return 0
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dry-run", action="store_true", help="Discover and smoke-test without writing model state.")
@@ -154,7 +164,7 @@ def main() -> int:
 
     api_key = os.environ.get("GEMINI_API_KEY", "").strip()
     if not api_key:
-        raise SystemExit("GEMINI_API_KEY is required for Gemini model maintenance.")
+        return report({"status": "deferred", "reason": "GEMINI_API_KEY is not configured"})
 
     explicit_overrides = [
         os.environ.get("GEMINI_TEXT_MODEL", "").strip(),
@@ -162,53 +172,91 @@ def main() -> int:
         os.environ.get("GEMINI_GROUNDED_RESEARCH_MODEL", "").strip(),
     ]
     if any(explicit_overrides):
-        print(json.dumps({"status": "skipped", "reason": "explicit GEMINI_*_MODEL override is configured"}))
-        return 0
+        return report({"status": "skipped", "reason": "explicit GEMINI_*_MODEL override is configured"})
 
     config = read_json(CONFIG_PATH, {})
     settings = config.get("gemini", {}).get("model_upgrade", {})
     if not settings.get("enabled", True):
-        print(json.dumps({"status": "skipped", "reason": "model upgrade is disabled"}))
-        return 0
+        return report({"status": "skipped", "reason": "model upgrade is disabled"})
 
     state = read_json(MODEL_STATE_PATH, {})
     current = current_models(config, state)
     current_text_version = model_version(current["text"])
     if current_text_version is None:
-        print(json.dumps({"status": "skipped", "reason": f"current model is not a stable Flash model: {current['text']}"}))
-        return 0
+        return report({"status": "skipped", "reason": f"current model is not a stable Flash model: {current['text']}"})
 
-    candidates = [stable_flash_candidate(model, settings) for model in list_models(api_key)]
+    try:
+        listed_models = list_models(api_key)
+    except Exception as error:
+        return report({
+            "status": "deferred",
+            "reason": f"model discovery is temporarily unavailable: {str(error)[:500]}",
+        })
+    candidates = [stable_flash_candidate(model, settings) for model in listed_models]
     candidates = [candidate for candidate in candidates if candidate is not None]
     if not candidates:
-        print(json.dumps({"status": "unchanged", "reason": "no compatible stable Flash model was listed"}))
-        return 0
+        return report({"status": "deferred", "reason": "no compatible stable Flash model was listed"})
 
-    candidate, candidate_version = max(candidates, key=lambda item: item[1])
     max_major_jump = int(settings.get("max_major_jump", 1))
-    if candidate_version <= current_text_version:
-        print(json.dumps({"status": "unchanged", "current": current["text"], "latest_stable": candidate}))
-        return 0
-    if candidate_version[0] - current_text_version[0] > max_major_jump:
-        print(json.dumps({"status": "skipped", "reason": "candidate exceeds configured major-version jump", "candidate": candidate}))
-        return 0
+    allowed = [
+        item for item in candidates
+        if item[1][0] - current_text_version[0] <= max_major_jump
+    ]
+    allowed.sort(key=lambda item: item[1], reverse=True)
 
-    smoke_test(api_key, candidate)
+    try:
+        smoke_test(api_key, current["text"])
+        current_healthy = True
+        current_error = ""
+    except Exception as error:
+        current_healthy = False
+        current_error = str(error)[:500]
+
+    upgrade_candidates = [item for item in allowed if item[1] > current_text_version]
+    if current_healthy and not upgrade_candidates:
+        return report({
+            "status": "unchanged",
+            "current": current["text"],
+            "latest_stable": allowed[0][0] if allowed else current["text"],
+        })
+
+    attempted: list[dict[str, str]] = []
+    search = upgrade_candidates if current_healthy else [
+        item for item in allowed if item[0] != current["text"]
+    ]
+    candidate = ""
+    candidate_version: tuple[int, ...] = ()
+    for candidate_name, version in search:
+        try:
+            smoke_test(api_key, candidate_name)
+        except Exception as error:
+            attempted.append({"model": candidate_name, "error": str(error)[:300]})
+            continue
+        candidate, candidate_version = candidate_name, version
+        break
+    if not candidate:
+        reason = "no replacement model passed its smoke test"
+        if not current_healthy:
+            reason = f"current model is unavailable ({current_error}); {reason}"
+        return report({"status": "deferred", "reason": reason, "attempted": attempted})
+
     if args.dry_run:
-        print(json.dumps({"status": "ready", "current": current["text"], "candidate": candidate}))
-        return 0
+        return report({"status": "ready", "current": current["text"], "candidate": candidate})
 
     new_state = {
         "schema_version": 1,
         "active_models": {"text": candidate, "qa": candidate, "grounded": candidate},
         "previous_models": current,
         "updated_at": utc_now(),
-        "reason": "automatic stable Gemini Flash upgrade after model discovery and smoke test",
+        "reason": (
+            "automatic replacement of unavailable Gemini Flash model after discovery and smoke test"
+            if not current_healthy
+            else "automatic stable Gemini Flash upgrade after model discovery and smoke test"
+        ),
         "candidate_version": list(candidate_version),
     }
     write_json(MODEL_STATE_PATH, new_state)
-    print(json.dumps({"status": "updated", "previous": current, "active": new_state["active_models"]}))
-    return 0
+    return report({"status": "updated", "previous": current, "active": new_state["active_models"]})
 
 
 if __name__ == "__main__":

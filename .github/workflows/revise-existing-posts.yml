@@ -60,7 +60,12 @@ jobs:
           python -m unittest discover -s tools/ci -p "test_*.py"
           python -m unittest discover -s tools/maintenance -p "test_*.py"
 
+      - name: Preflight generative AI provider
+        id: provider
+        run: python tools/autopublisher/provider_health.py --github-output "$GITHUB_OUTPUT"
+
       - name: Install Hugo Extended
+        if: steps.provider.outputs.available == 'true'
         shell: bash
         run: |
           version="${{ steps.hugo-version.outputs.version }}"
@@ -73,13 +78,16 @@ jobs:
           "$RUNNER_TEMP/hugo/hugo" version
 
       - name: Rewrite one existing post with quality-first AI and QA
+        if: steps.provider.outputs.available == 'true'
         run: python tools/autopublisher/revise_posts.py --max-posts 1
 
       - name: Run shared release gate
+        if: steps.provider.outputs.available == 'true'
         run: python tools/ci/release_gate.py --mode revision
 
       - name: Commit and push approved revision
         id: commit
+        if: steps.provider.outputs.available == 'true'
         shell: bash
         run: |
           git config user.name "compilemymind-editorial[bot]"

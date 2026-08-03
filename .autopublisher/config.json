@@ -11,6 +11,10 @@
     "text_model": "gemini-3.5-flash",
     "qa_model": "gemini-3.5-flash",
     "grounded_research_model": "gemini-3.5-flash",
+    "fallback_models": [
+      "gemini-3.5-flash-lite",
+      "gemini-3.1-flash-lite"
+    ],
     "image_model": "gemini-3.1-flash-image",
     "temperature": 0.45,
     "article_temperature": 0.35,
@@ -20,7 +24,7 @@
     "grounded_research_fallback_to_feeds": true,
     "enable_image_generation": false,
     "model_upgrade": {
-      "enabled": false,
+      "enabled": true,
       "family": "flash",
       "stable_only": true,
       "max_major_jump": 1,
@@ -93,7 +97,7 @@
     "required_diagram_detail_nodes": 3,
     "allowed_diagram_layouts": ["sequence", "architecture", "decision", "comparison", "cycle"],
     "max_new_posts_per_run": 1,
-    "allow_offline_fallback": false
+    "allow_offline_fallback": true
   },
   "cost_control": {
     "max_topic_selection_calls_per_run": 2,
