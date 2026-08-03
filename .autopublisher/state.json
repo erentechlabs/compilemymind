@@ -2530,14 +2530,24 @@
       "reason": "qa_failed",
       "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
       "attempts": 1
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-03T08:43:33.897667Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-07-31T08:09:49.163350Z",
-      "result": "published",
-      "source": "ready_queue",
-      "queue_depth": 0
+      "time": "2026-08-03T08:43:33.898017Z",
+      "result": "retry_scheduled",
+      "reason": "all_drafts_failed_quality_gates",
+      "stage": "article_quality",
+      "next_retry_at": "2026-08-03T14:43:33.897827Z"
     },
     "maintain": {
       "time": "2026-07-30T05:25:08.301335Z",
@@ -2823,6 +2833,14 @@
       "reason": "qa_failed",
       "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
       "attempts": 1
+    },
+    {
+      "time": "2026-08-03T08:43:33.897667Z",
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "reason": "qa_failed",
+      "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+      "attempts": 1
     }
   ],
   "provider_cooldowns": {
@@ -2837,7 +2855,55 @@
       "reason": "billing_credit_depleted"
     }
   },
-  "pending_publication": {},
+  "pending_publication": {
+    "scheduled_at": "2026-08-03T08:43:33.897825Z",
+    "next_retry_at": "2026-08-03T14:43:33.897827Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
+    "consecutive_attempts": 1,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
+      "slug": "harden-exposed-cloud-functions-security-guide",
+      "categories": [
+        "cybersecurity",
+        "software-engineering",
+        "developer-it-tools"
+      ],
+      "primary_category": "cybersecurity",
+      "tags": [
+        "cloud-run-functions",
+        "iam",
+        "serverless-security"
+      ],
+      "search_intent": "Secure second-generation Cloud Run functions by separating IAM authorization, invocation authentication, and network ingress restrictions.",
+      "article_type": "tutorial",
+      "needs_diagram": true,
+      "needs_chart": false,
+      "generation_constraints": "Scope the article to functions created with the Cloud Functions v2 API. Distinguish who may invoke from which network paths may reach the endpoint, use non-destructive gcloud inspection examples, and explain validation and rollback boundaries.",
+      "source_urls": [
+        "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam",
+        "https://docs.cloud.google.com/functions/docs/securing/authenticating",
+        "https://docs.cloud.google.com/run/docs/securing/ingress"
+      ],
+      "recovery_backlog": true,
+      "seed_sources": [
+        {
+          "title": "Authorize access with IAM - Cloud Run functions",
+          "url": "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam"
+        },
+        {
+          "title": "Authenticate for invocation - Cloud Run functions",
+          "url": "https://docs.cloud.google.com/functions/docs/securing/authenticating"
+        },
+        {
+          "title": "Restrict network endpoint ingress for Cloud Run services",
+          "url": "https://docs.cloud.google.com/run/docs/securing/ingress"
+        }
+      ]
+    }
+  },
   "ready_publications": [],
   "preparation_pending_publication": {
     "scheduled_at": "2026-08-03T04:45:53.842546Z",
@@ -2890,7 +2956,7 @@
   },
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2,
-    "harden-exposed-cloud-functions-security-guide": 4
+    "harden-exposed-cloud-functions-security-guide": 5
   },
   "recovery_backlog_queued": [],
   "recovery_backlog_completed": [
