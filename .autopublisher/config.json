@@ -34,7 +34,7 @@
     "model": "gpt-5.6-sol",
     "fallback_models": ["gpt-5.6-terra"],
     "tasks": ["topic_selection", "article_generation", "quality_assurance", "metadata_enrichment", "maintenance_review", "revision"],
-    "required_tasks": ["article_generation", "quality_assurance", "maintenance_review", "revision"],
+    "required_tasks": [],
     "max_output_tokens": 32768,
     "max_input_characters": 60000,
     "reasoning_effort": {
@@ -47,7 +47,7 @@
     }
   },
   "github_models": {
-    "enabled": true,
+    "enabled": false,
     "endpoint": "https://models.github.ai/inference/chat/completions",
     "model": "openai/gpt-4.1",
     "fallback_models": ["openai/gpt-4.1-mini"],

@@ -13,7 +13,6 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
-  models: read
 
 jobs:
   maintain-infrastructure:
@@ -21,7 +20,7 @@ jobs:
     timeout-minutes: 30
     env:
       GITHUB_TOKEN: ${{ github.token }}
-      GITHUB_MODELS_TOKEN: ${{ github.token }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       CLOUDFLARE_PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
@@ -127,11 +126,11 @@ jobs:
 
       - name: Exercise autonomous publisher in dry-run mode
         id: publisher_dry_run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GITHUB_MODELS_TOKEN != ''
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY != ''
         run: python tools/autopublisher/autopublisher.py --mode publish --dry-run
 
       - name: Record unavailable provider dry run
-        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GITHUB_MODELS_TOKEN == ''
+        if: steps.infra.outcome == 'success' && steps.hugo_candidate.outcome == 'success' && steps.release_gate.outcome == 'success' && env.GEMINI_API_KEY == ''
         run: echo "Publisher compatibility is covered by deterministic tests; the live-provider dry run was skipped because no generation provider is configured."
 
       - name: Upload infrastructure report

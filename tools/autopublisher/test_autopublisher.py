@@ -23,13 +23,12 @@ class AutopublisherTests(unittest.TestCase):
         github_models = config["github_models"]
         self.assertEqual(config["openai"]["model"], "gpt-5.6-sol")
         self.assertFalse(config["openai"]["enabled"])
+        self.assertEqual(config["openai"]["required_tasks"], [])
+        self.assertEqual(config["gemini"]["text_model"], "gemini-3.5-flash")
+        self.assertEqual(config["gemini"]["qa_model"], "gemini-3.5-flash")
         self.assertFalse(config["gemini"]["enable_google_search_grounding"])
         self.assertFalse(config["gemini"]["model_upgrade"]["enabled"])
-        self.assertTrue(
-            {"article_generation", "quality_assurance", "maintenance_review", "revision"}.issubset(
-                config["openai"]["required_tasks"]
-            )
-        )
+        self.assertFalse(github_models["enabled"])
         self.assertEqual(github_models["model"], "openai/gpt-4.1")
         self.assertIn("openai/gpt-4.1-mini", github_models["fallback_models"])
         self.assertTrue(
@@ -246,10 +245,10 @@ class AutopublisherTests(unittest.TestCase):
             "infrastructure-maintenance.yml",
         ):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
-            self.assertIn("models: read", workflow)
-            self.assertIn("GITHUB_MODELS_TOKEN: ${{ github.token }}", workflow)
+            self.assertNotIn("models: read", workflow)
+            self.assertNotIn("GITHUB_MODELS_TOKEN:", workflow)
             self.assertNotIn("OPENAI_API_KEY:", workflow)
-            self.assertNotIn("GEMINI_API_KEY:", workflow)
+            self.assertIn("GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}", workflow)
         for workflow_name in ("autonomous-maintenance.yml", "revise-existing-posts.yml"):
             workflow = (autopublisher.ROOT / f".github/workflows/{workflow_name}").read_text(encoding="utf-8")
             self.assertIn("Synchronize with the latest main revision", workflow)
@@ -940,6 +939,48 @@ def process(value: int) -> int:
         client = autopublisher.GeminiClient({"gemini": {}}, autopublisher.EventLog())
         self.assertEqual(client.text_model, "gemini-3.5-flash")
         self.assertEqual(client.image_model, "gemini-3.1-flash-image")
+
+    def test_production_maintenance_routes_to_gemini(self):
+        response = {
+            "candidates": [
+                {
+                    "content": {
+                        "parts": [
+                            {"text": '{"action": "none", "reason": "Current."}'}
+                        ]
+                    }
+                }
+            ]
+        }
+        with patch.dict(
+            os.environ,
+            {
+                "OPENAI_API_KEY": "",
+                "GEMINI_API_KEY": "gemini-key",
+                "GITHUB_MODELS_TOKEN": "retired-token",
+                "GITHUB_TOKEN": "",
+            },
+            clear=False,
+        ), patch.object(
+            autopublisher,
+            "http_request",
+            return_value=(200, json.dumps(response).encode(), {}),
+        ) as request:
+            client = autopublisher.GeminiClient(
+                autopublisher.load_config(),
+                autopublisher.EventLog(),
+            )
+            result = client.generate_json(
+                "Review this article.",
+                task="maintenance_review",
+            )
+
+        self.assertEqual(result["action"], "none")
+        self.assertIn(
+            "/models/gemini-3.5-flash:generateContent",
+            request.call_args.args[0],
+        )
+        self.assertNotIn("models.github.ai", request.call_args.args[0])
 
     def test_topic_selection_uses_github_models_when_token_is_available(self):
         response = {"choices": [{"message": {"content": '{"topics": []}'}}]}
