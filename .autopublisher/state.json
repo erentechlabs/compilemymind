@@ -2588,9 +2588,9 @@
       "generation_mode": "deterministic_offline"
     },
     "prepare": {
-      "time": "2026-08-03T04:45:53.849206Z",
+      "time": "2026-08-04T04:29:34.609104Z",
       "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
+      "reason": "provider_quota_limited",
       "queue_depth": 0
     }
   },
@@ -2878,8 +2878,8 @@
   ],
   "provider_cooldowns": {
     "gemini_generation": {
-      "opened_at": "2026-07-18T19:36:24.310766Z",
-      "until": "2026-07-25T19:36:24.310786Z",
+      "opened_at": "2026-08-04T04:29:34.547275Z",
+      "until": "2026-08-11T04:29:34.547292Z",
       "reason": "billing_credit_depleted"
     },
     "gemini_grounded_research": {
@@ -2939,53 +2939,14 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-08-03T04:45:53.842546Z",
-    "next_retry_at": "2026-08-03T10:45:53.842551Z",
-    "reason": "all_drafts_failed_quality_gates",
-    "stage": "article_quality",
-    "detail": "No generation provider completed task article_generation: GitHub Models request failed: HTTP 410: b'{\"error\":{\"code\":\"github_models_retirement_brownout\",\"message\":\"GitHub Models is temporarily unavailable as part of a scheduled retirement brownout.\"}}\\n'",
-    "consecutive_attempts": 4,
-    "topic_attempts": 1,
-    "topic": {
-      "title": "Secure Cloud Run Functions with IAM, Authenticated Invocation, and Ingress Controls",
-      "slug": "harden-exposed-cloud-functions-security-guide",
-      "categories": [
-        "cybersecurity",
-        "software-engineering",
-        "developer-it-tools"
-      ],
-      "primary_category": "cybersecurity",
-      "tags": [
-        "cloud-run-functions",
-        "iam",
-        "serverless-security"
-      ],
-      "search_intent": "Secure second-generation Cloud Run functions by separating IAM authorization, invocation authentication, and network ingress restrictions.",
-      "article_type": "tutorial",
-      "needs_diagram": true,
-      "needs_chart": false,
-      "generation_constraints": "Scope the article to functions created with the Cloud Functions v2 API. Distinguish who may invoke from which network paths may reach the endpoint, use non-destructive gcloud inspection examples, and explain validation and rollback boundaries.",
-      "source_urls": [
-        "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam",
-        "https://docs.cloud.google.com/functions/docs/securing/authenticating",
-        "https://docs.cloud.google.com/run/docs/securing/ingress"
-      ],
-      "recovery_backlog": true,
-      "seed_sources": [
-        {
-          "title": "Authorize access with IAM - Cloud Run functions",
-          "url": "https://docs.cloud.google.com/functions/docs/securing/managing-access-iam"
-        },
-        {
-          "title": "Authenticate for invocation - Cloud Run functions",
-          "url": "https://docs.cloud.google.com/functions/docs/securing/authenticating"
-        },
-        {
-          "title": "Restrict network endpoint ingress for Cloud Run services",
-          "url": "https://docs.cloud.google.com/run/docs/securing/ingress"
-        }
-      ]
-    }
+    "scheduled_at": "2026-08-04T04:29:34.602381Z",
+    "next_retry_at": "2026-08-04T10:29:34.602387Z",
+    "reason": "provider_quota_limited",
+    "stage": "topic_selection",
+    "detail": "Gemini generation is paused because the billing-credit circuit is open; GitHub Models or a source-bound offline fallback may still complete the publication.",
+    "consecutive_attempts": 5,
+    "topic_attempts": 0,
+    "topic": {}
   },
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2,
