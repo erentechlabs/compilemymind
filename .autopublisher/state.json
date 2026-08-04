@@ -2580,15 +2580,24 @@
       "reason": "qa_failed",
       "detail": "No offline fallback is configured for this topic.",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-04T20:53:29.283263Z",
+      "title": "A Practical Workflow for Celebrating 5 years of Jetpack Compose: Setup, Validation, and Recovery",
+      "slug": "a-practical-workflow-for-celebrating-5-years-of-jetpack-compose-setup",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 3
     }
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-08-04T20:50:32.648286Z",
+      "time": "2026-08-04T20:53:29.283646Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "stage": "article_quality",
-      "next_retry_at": "2026-08-05T02:50:32.648075Z"
+      "next_retry_at": "2026-08-05T02:53:29.283444Z"
     },
     "maintain": {
       "time": "2026-08-03T19:47:22.563544Z",
@@ -2891,6 +2900,14 @@
       "reason": "qa_failed",
       "detail": "No offline fallback is configured for this topic.",
       "attempts": 3
+    },
+    {
+      "time": "2026-08-04T20:53:29.283263Z",
+      "title": "A Practical Workflow for Celebrating 5 years of Jetpack Compose: Setup, Validation, and Recovery",
+      "slug": "a-practical-workflow-for-celebrating-5-years-of-jetpack-compose-setup",
+      "reason": "qa_failed",
+      "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -2906,33 +2923,32 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-08-04T20:50:32.648071Z",
-    "next_retry_at": "2026-08-05T02:50:32.648075Z",
+    "scheduled_at": "2026-08-04T20:53:29.283439Z",
+    "next_retry_at": "2026-08-05T02:53:29.283444Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "No offline fallback is configured for this topic.",
-    "consecutive_attempts": 2,
+    "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
+    "consecutive_attempts": 3,
     "topic_attempts": 1,
     "topic": {
-      "title": "Diagnosing OWASP Dependency-Track 5.0 Is Now Generally Available: Evidence, Remediation, and Validation",
-      "slug": "diagnosing-owasp-dependency-track-5-0-is-now-generally-available",
-      "primary_category": "cybersecurity",
+      "title": "A Practical Workflow for Celebrating 5 years of Jetpack Compose: Setup, Validation, and Recovery",
+      "slug": "a-practical-workflow-for-celebrating-5-years-of-jetpack-compose-setup",
+      "primary_category": "mobile-development",
       "categories": [
-        "cybersecurity"
+        "mobile-development",
+        "programming-languages"
       ],
       "tags": [
-        "cybersecurity",
-        "owasp-news",
-        "owasp",
-        "dependency-track",
-        "5-0"
+        "mobile-development",
+        "android-developers-blog",
+        "celebrating",
+        "years",
+        "jetpack"
       ],
-      "search_intent": "Readers want a practical explanation of OWASP Dependency-Track 5.0 Is Now Generally Available and what it changes for technical teams.",
-      "why_now": "Based on a recent item from OWASP News: OWASP Dependency-Track 5.0 Is Now Generally Available",
+      "search_intent": "Readers want a practical explanation of Celebrating 5 years of Jetpack Compose and what it changes for technical teams.",
+      "why_now": "Based on a recent item from Android Developers Blog: Celebrating 5 years of Jetpack Compose",
       "source_urls": [
-        "https://owasp.org/blog/2026/06/09/dependency-track-v5",
-        "https://owasp.org/blog/2026/01/13/retiring-meetup",
-        "https://owasp.org/blog/2025/10/03/owasp-certified-secure-software-developer"
+        "https://android-developers.googleblog.com/2026/07/five-years-of-jetpack-compose.html"
       ],
       "needs_diagram": true,
       "needs_chart": false,
@@ -2944,16 +2960,8 @@
       },
       "seed_sources": [
         {
-          "title": "OWASP Dependency-Track 5.0 Is Now Generally Available",
-          "url": "https://owasp.org/blog/2026/06/09/dependency-track-v5"
-        },
-        {
-          "title": "Announcing the Retirement of OWASP Meetup Platform",
-          "url": "https://owasp.org/blog/2026/01/13/retiring-meetup"
-        },
-        {
-          "title": "OWASP Certified Secure Software Developer",
-          "url": "https://owasp.org/blog/2025/10/03/owasp-certified-secure-software-developer"
+          "title": "Celebrating 5 years of Jetpack Compose",
+          "url": "https://android-developers.googleblog.com/2026/07/five-years-of-jetpack-compose.html"
         }
       ]
     }
