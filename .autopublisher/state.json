@@ -2593,11 +2593,11 @@
   ],
   "last_runs": {
     "publish": {
-      "time": "2026-08-04T20:53:29.283646Z",
+      "time": "2026-08-05T07:49:40.699119Z",
       "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
-      "stage": "article_quality",
-      "next_retry_at": "2026-08-05T02:53:29.283444Z"
+      "reason": "provider_quota_limited",
+      "stage": "topic_selection",
+      "next_retry_at": "2026-08-05T13:49:40.699101Z"
     },
     "maintain": {
       "time": "2026-08-03T19:47:22.563544Z",
@@ -2923,48 +2923,14 @@
     }
   },
   "pending_publication": {
-    "scheduled_at": "2026-08-04T20:53:29.283439Z",
-    "next_retry_at": "2026-08-05T02:53:29.283444Z",
-    "reason": "all_drafts_failed_quality_gates",
-    "stage": "article_quality",
-    "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
-    "consecutive_attempts": 3,
-    "topic_attempts": 1,
-    "topic": {
-      "title": "A Practical Workflow for Celebrating 5 years of Jetpack Compose: Setup, Validation, and Recovery",
-      "slug": "a-practical-workflow-for-celebrating-5-years-of-jetpack-compose-setup",
-      "primary_category": "mobile-development",
-      "categories": [
-        "mobile-development",
-        "programming-languages"
-      ],
-      "tags": [
-        "mobile-development",
-        "android-developers-blog",
-        "celebrating",
-        "years",
-        "jetpack"
-      ],
-      "search_intent": "Readers want a practical explanation of Celebrating 5 years of Jetpack Compose and what it changes for technical teams.",
-      "why_now": "Based on a recent item from Android Developers Blog: Celebrating 5 years of Jetpack Compose",
-      "source_urls": [
-        "https://android-developers.googleblog.com/2026/07/five-years-of-jetpack-compose.html"
-      ],
-      "needs_diagram": true,
-      "needs_chart": false,
-      "series": {
-        "name": "",
-        "part": null,
-        "total_estimate": null,
-        "planned_next_parts": []
-      },
-      "seed_sources": [
-        {
-          "title": "Celebrating 5 years of Jetpack Compose",
-          "url": "https://android-developers.googleblog.com/2026/07/five-years-of-jetpack-compose.html"
-        }
-      ]
-    }
+    "scheduled_at": "2026-08-05T07:49:40.699096Z",
+    "next_retry_at": "2026-08-05T13:49:40.699101Z",
+    "reason": "provider_quota_limited",
+    "stage": "topic_selection",
+    "detail": "Gemini generation is paused because the billing-credit circuit is open; GitHub Models or a source-bound offline fallback may still complete the publication.",
+    "consecutive_attempts": 4,
+    "topic_attempts": 0,
+    "topic": {}
   },
   "ready_publications": [],
   "preparation_pending_publication": {
