@@ -2606,9 +2606,9 @@
       "generation_mode": "deterministic_offline"
     },
     "prepare": {
-      "time": "2026-08-05T04:27:58.194736Z",
+      "time": "2026-08-06T04:29:25.269982Z",
       "result": "retry_scheduled",
-      "reason": "all_drafts_failed_quality_gates",
+      "reason": "provider_quota_limited",
       "queue_depth": 0
     }
   },
