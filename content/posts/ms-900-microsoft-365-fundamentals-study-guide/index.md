@@ -7,6 +7,12 @@ tags: ["microsoft-365", "cloud", "ms-900", "azure"]
 categories: ["cloud-certifications"]
 publisher: "Compile My Mind"
 draft: false
+last_reviewed: "2026-08-06"
+verification_status: "Source reviewed"
+verification_date: "2026-08-06T05:34:38.620576Z"
+verification_version: 1
+version_context: "10 current trusted source pages were fetched and reviewed; no substantive correction was required."
+recheck_after: "2026-08-13"
 ---
 
 Microsoft 365 is easy to underestimate. To many users, it looks like Word, Excel, PowerPoint, Outlook, Teams, and OneDrive. To an administrator, it is also identity, endpoint management, compliance, threat protection, service health, billing, reporting, and a large set of policy engines that shape how modern work actually happens.

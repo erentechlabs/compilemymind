@@ -2247,6 +2247,38 @@
       "broken_links": [],
       "validated_sources": 0,
       "verification_recorded": false
+    },
+    "az-900-cheatsheet": {
+      "time": "2026-08-06T05:34:28.787181Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "heartbleed-vulnerability-analysis": {
+      "time": "2026-08-06T05:34:28.787558Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "comptia-tech-plus-cheatsheet": {
+      "time": "2026-08-06T05:34:29.689843Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "ms-900-microsoft-365-fundamentals-study-guide": {
+      "time": "2026-08-06T05:34:38.621134Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 10,
+      "verification_recorded": true
     }
   },
   "failures": [
@@ -2600,7 +2632,7 @@
       "next_retry_at": "2026-08-05T13:49:40.699101Z"
     },
     "maintain": {
-      "time": "2026-08-03T19:47:22.563544Z",
+      "time": "2026-08-06T05:34:38.621186Z",
       "result": "completed",
       "taxonomy_changes": 0,
       "generation_mode": "deterministic_offline"
