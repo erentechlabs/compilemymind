@@ -7,6 +7,12 @@ tags: ["cybersecurity", "identity", "mfa", "passkeys", "authentication"]
 categories: ["identity-access-management"]
 publisher: "Compile My Mind"
 draft: false
+last_reviewed: "2026-08-10"
+verification_status: "Source reviewed"
+verification_date: "2026-08-10T04:14:23.061926Z"
+verification_version: 1
+version_context: "3 current trusted source pages were fetched and reviewed; no substantive correction was required."
+recheck_after: "2026-08-24"
 ---
 
 Modern authentication is full of similar-sounding terms: **MFA**, **2FA**, **passwordless**, **FIDO2**, **WebAuthn**, **security keys**, and **passkeys**. They are related, but they are not interchangeable.

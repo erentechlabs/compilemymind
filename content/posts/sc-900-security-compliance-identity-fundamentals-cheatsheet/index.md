@@ -7,6 +7,12 @@ tags: ["azure", "identity", "sc-900", "study-guide"]
 categories: ["cloud-certifications"]
 publisher: "Compile My Mind"
 draft: false
+last_reviewed: "2026-08-10"
+verification_status: "Source reviewed"
+verification_date: "2026-08-10T04:14:20.525335Z"
+verification_version: 1
+version_context: "9 current trusted source pages were fetched and reviewed; no substantive correction was required."
+recheck_after: "2026-08-24"
 ---
 
 The **SC-900: Microsoft Security, Compliance, and Identity Fundamentals** exam is the best Microsoft fundamentals certification for learners who want to understand how modern organizations protect identities, secure cloud workloads, detect threats, and govern sensitive data.

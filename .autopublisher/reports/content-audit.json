@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-06T05:34:27.397552Z",
+  "generated_at": "2026-08-10T04:14:17.612925Z",
   "articles_checked": 61,
   "summary": {
     "high_risk": 0,
-    "medium_risk": 42,
-    "low_risk": 19,
+    "medium_risk": 41,
+    "low_risk": 20,
     "noindexed": 0,
-    "unresolved": 42
+    "unresolved": 41
   },
   "corrected_articles": [],
   "noindexed_articles": [],
@@ -31,7 +31,6 @@
     "mfa-vs-passwordless-vs-passkeys",
     "microsoft-entra-id-explained-users-groups-apps-roles-conditional-access",
     "model-context-protocol-explained-llms-real-world-data",
-    "ms-900-microsoft-365-fundamentals-study-guide",
     "network-communication-basics",
     "new-features-in-java-25",
     "operating-ai-ml-workloads-kubernetes",
@@ -399,11 +398,9 @@
     {
       "slug": "ms-900-microsoft-365-fundamentals-study-guide",
       "title": "MS-900 Microsoft 365 Fundamentals Study Guide: Cloud, Apps, Security, Licensing, and Support",
-      "risk": "medium",
-      "action": "revalidate",
-      "issues": [
-        "missing_technical_verification_date"
-      ],
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 17,
       "numeric_claim_count": 0,
       "noindex": false

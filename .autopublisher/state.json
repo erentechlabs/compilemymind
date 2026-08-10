@@ -2279,6 +2279,38 @@
       "broken_links": [],
       "validated_sources": 10,
       "verification_recorded": true
+    },
+    "sc-900-security-compliance-identity-fundamentals-cheatsheet": {
+      "time": "2026-08-10T04:14:20.525984Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 9,
+      "verification_recorded": true
+    },
+    "zero-trust-explained-real-world-examples": {
+      "time": "2026-08-10T04:14:21.853900Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 5,
+      "verification_recorded": true
+    },
+    "mfa-vs-passwordless-vs-passkeys": {
+      "time": "2026-08-10T04:14:23.062366Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 3,
+      "verification_recorded": true
+    },
+    "siem-vs-xdr-vs-soar": {
+      "time": "2026-08-10T04:14:24.354392Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 5,
+      "verification_recorded": true
     }
   },
   "failures": [
@@ -2632,7 +2664,7 @@
       "next_retry_at": "2026-08-05T13:49:40.699101Z"
     },
     "maintain": {
-      "time": "2026-08-06T05:34:38.621186Z",
+      "time": "2026-08-10T04:14:24.354472Z",
       "result": "completed",
       "taxonomy_changes": 0,
       "generation_mode": "deterministic_offline"
