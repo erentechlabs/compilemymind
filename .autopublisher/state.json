@@ -2653,6 +2653,15 @@
       "reason": "qa_failed",
       "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-11T03:11:01.953577Z",
+      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
+      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
+      "reason": "qa_failed",
+      "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 3
     }
   ],
   "last_runs": {
@@ -2670,9 +2679,9 @@
       "generation_mode": "deterministic_offline"
     },
     "prepare": {
-      "time": "2026-08-06T04:29:25.269982Z",
+      "time": "2026-08-11T03:11:01.960829Z",
       "result": "retry_scheduled",
-      "reason": "provider_quota_limited",
+      "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
     }
   },
@@ -2972,6 +2981,14 @@
       "reason": "qa_failed",
       "detail": "Only 1 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 3
+    },
+    {
+      "time": "2026-08-11T03:11:01.953577Z",
+      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
+      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
+      "reason": "qa_failed",
+      "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -2998,14 +3015,53 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-08-04T04:29:34.602381Z",
-    "next_retry_at": "2026-08-04T10:29:34.602387Z",
-    "reason": "provider_quota_limited",
-    "stage": "topic_selection",
-    "detail": "Gemini generation is paused because the billing-credit circuit is open; GitHub Models or a source-bound offline fallback may still complete the publication.",
-    "consecutive_attempts": 5,
-    "topic_attempts": 0,
-    "topic": {}
+    "scheduled_at": "2026-08-11T03:11:01.953763Z",
+    "next_retry_at": "2026-08-11T09:11:01.953767Z",
+    "reason": "all_drafts_failed_quality_gates",
+    "stage": "article_quality",
+    "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
+    "consecutive_attempts": 6,
+    "topic_attempts": 1,
+    "topic": {
+      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
+      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
+      "primary_category": "programming-languages",
+      "categories": [
+        "programming-languages",
+        "software-engineering"
+      ],
+      "tags": [
+        "programming-languages",
+        "rust-blog",
+        "enabling",
+        "next",
+        "iteration"
+      ],
+      "search_intent": "Readers want a practical explanation of Enabling the next iteration of the borrow checker on nightly and what it changes for technical teams.",
+      "why_now": "Based on a recent item from Rust Blog: Enabling the next iteration of the borrow checker on nightly",
+      "source_urls": [
+        "https://blog.rust-lang.org/2026/08/04/enabling-polonius-alpha-on-nightly",
+        "https://nodejs.org/en/blog/release/v26.6.0"
+      ],
+      "needs_diagram": true,
+      "needs_chart": true,
+      "series": {
+        "name": "",
+        "part": null,
+        "total_estimate": null,
+        "planned_next_parts": []
+      },
+      "seed_sources": [
+        {
+          "title": "Enabling the next iteration of the borrow checker on nightly",
+          "url": "https://blog.rust-lang.org/2026/08/04/enabling-polonius-alpha-on-nightly"
+        },
+        {
+          "title": "Next Node.js 26.6.0 (Current)",
+          "url": "https://nodejs.org/en/blog/release/v26.6.0"
+        }
+      ]
+    }
   },
   "recovery_backlog_attempts": {
     "android-intelligent-apps-cloud-hybrid-on-device-inference": 2,
