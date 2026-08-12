@@ -2662,6 +2662,15 @@
       "reason": "qa_failed",
       "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-12T03:29:37.637861Z",
+      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
+      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
+      "reason": "qa_failed",
+      "detail": "No offline fallback is configured for this topic.",
+      "attempts": 3
     }
   ],
   "last_runs": {
@@ -2679,7 +2688,7 @@
       "generation_mode": "deterministic_offline"
     },
     "prepare": {
-      "time": "2026-08-11T03:11:01.960829Z",
+      "time": "2026-08-12T03:29:37.645472Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
@@ -2989,6 +2998,14 @@
       "reason": "qa_failed",
       "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
       "attempts": 3
+    },
+    {
+      "time": "2026-08-12T03:29:37.637861Z",
+      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
+      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
+      "reason": "qa_failed",
+      "detail": "No offline fallback is configured for this topic.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -3015,12 +3032,12 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-08-11T03:11:01.953763Z",
-    "next_retry_at": "2026-08-11T09:11:01.953767Z",
+    "scheduled_at": "2026-08-12T03:29:37.638082Z",
+    "next_retry_at": "2026-08-12T09:29:37.638087Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
-    "detail": "Only 2 directly relevant validated sources were available; at least 3 are required.",
-    "consecutive_attempts": 6,
+    "detail": "No offline fallback is configured for this topic.",
+    "consecutive_attempts": 7,
     "topic_attempts": 1,
     "topic": {
       "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
@@ -3041,7 +3058,8 @@
       "why_now": "Based on a recent item from Rust Blog: Enabling the next iteration of the borrow checker on nightly",
       "source_urls": [
         "https://blog.rust-lang.org/2026/08/04/enabling-polonius-alpha-on-nightly",
-        "https://nodejs.org/en/blog/release/v26.6.0"
+        "https://nodejs.org/en/blog/release/v26.6.0",
+        "https://cloud.google.com/blog/topics/google-cloud-next"
       ],
       "needs_diagram": true,
       "needs_chart": true,
@@ -3059,6 +3077,10 @@
         {
           "title": "Next Node.js 26.6.0 (Current)",
           "url": "https://nodejs.org/en/blog/release/v26.6.0"
+        },
+        {
+          "title": "Google Cloud Next & Events",
+          "url": "https://cloud.google.com/blog/topics/google-cloud-next"
         }
       ]
     }
