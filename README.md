@@ -1,6 +1,6 @@
 # 🧠 Compile My Mind
 
-[![Hugo Version](https://img.shields.io/badge/Hugo-v0.164.0-8b5cf6?logo=hugo)](https://gohugo.io/)
+[![Hugo Version](https://img.shields.io/badge/Hugo-v0.165.0-8b5cf6?logo=hugo)](https://gohugo.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > **Deep dives into software engineering, networking, IT operations, cloud infrastructure, hardware, and the systems that power digital work.**
@@ -43,7 +43,7 @@ Blog content is not generated, revised, queued, or published by GitHub Actions. 
 
 ## 🛠️ Tech Stack
 
-*   **Framework:** [Hugo](https://gohugo.io/) v0.164.0 (Extended Edition)
+*   **Framework:** [Hugo](https://gohugo.io/) v0.165.0 (Extended Edition)
 *   **Theme:** [Mana Theme](https://github.com/Livour/hugo-mana-theme) (customized)
 *   **Hosting/Deployment:** [Cloudflare Pages](https://pages.cloudflare.com/)
 *   **Language:** Markdown / HTML / SCSS / Go Templates
