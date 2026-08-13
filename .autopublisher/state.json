@@ -2311,6 +2311,38 @@
       "broken_links": [],
       "validated_sources": 5,
       "verification_recorded": true
+    },
+    "tcp-vs-udp-explained-with-examples": {
+      "time": "2026-08-13T04:27:30.097926Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "why-identity-security-matters-more-ai-era": {
+      "time": "2026-08-13T04:27:32.030173Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 2,
+      "verification_recorded": false
+    },
+    "dns-explained-how-your-browser-finds-a-website": {
+      "time": "2026-08-13T04:27:32.030745Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 0,
+      "verification_recorded": false
+    },
+    "microsoft-entra-id-explained-users-groups-apps-roles-conditional-access": {
+      "time": "2026-08-13T04:27:33.718851Z",
+      "action": "none",
+      "reason": "Deterministic maintenance completed link, trusted-source, taxonomy, and review-date checks; no unsupported prose rewrite was attempted.",
+      "broken_links": [],
+      "validated_sources": 4,
+      "verification_recorded": true
     }
   },
   "failures": [
@@ -2700,7 +2732,7 @@
       "next_retry_at": "2026-08-12T12:42:07.592256Z"
     },
     "maintain": {
-      "time": "2026-08-10T04:14:24.354472Z",
+      "time": "2026-08-13T04:27:33.718912Z",
       "result": "completed",
       "taxonomy_changes": 0,
       "generation_mode": "deterministic_offline"

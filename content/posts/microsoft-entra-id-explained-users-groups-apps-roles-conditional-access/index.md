@@ -7,6 +7,12 @@ tags: ["azure", "identity", "microsoft-365", "conditional-access", "iam"]
 categories: ["entra-id"]
 publisher: "Compile My Mind"
 draft: false
+last_reviewed: "2026-08-13"
+verification_status: "Source reviewed"
+verification_date: "2026-08-13T04:27:33.718315Z"
+verification_version: 1
+version_context: "4 current trusted source pages were fetched and reviewed; no substantive correction was required."
+recheck_after: "2026-08-27"
 ---
 
 Microsoft Entra ID is one of those platforms that sounds simple until you actually administer it.

@@ -1,12 +1,12 @@
 {
-  "generated_at": "2026-08-10T04:14:17.612925Z",
+  "generated_at": "2026-08-13T04:27:29.880657Z",
   "articles_checked": 61,
   "summary": {
     "high_risk": 0,
-    "medium_risk": 41,
-    "low_risk": 20,
+    "medium_risk": 37,
+    "low_risk": 24,
     "noindexed": 0,
-    "unresolved": 41
+    "unresolved": 37
   },
   "corrected_articles": [],
   "noindexed_articles": [],
@@ -28,7 +28,6 @@
     "internet-connectivity-and-cabling",
     "internet-protocol-ip-basics",
     "jpa-vs-hibernate-vs-jdbc-what-is-the-difference",
-    "mfa-vs-passwordless-vs-passkeys",
     "microsoft-entra-id-explained-users-groups-apps-roles-conditional-access",
     "model-context-protocol-explained-llms-real-world-data",
     "network-communication-basics",
@@ -38,9 +37,7 @@
     "postgresql-indexes-types-tradeoffs-query-verification",
     "remove-duplicates-from-sorted-array",
     "rest-graphql-pagination-offset-cursor-link-strategies",
-    "sc-900-security-compliance-identity-fundamentals-cheatsheet",
     "securing-the-ai-supply-chain-on-gke-introducing-k8s-aibom-for-automated-ai-boms-pr",
-    "siem-vs-xdr-vs-soar",
     "spring-annotations-scheduling-async-component-service-configuration-bean",
     "spring-boot-layered-architecture",
     "tcp-vs-udp-explained-with-examples",
@@ -52,8 +49,7 @@
     "troubleshoot-windows-scheduled-tasks-powershell",
     "troubleshoot-windows-time-synchronization-w32tm",
     "why-i-like-java-more-than-python",
-    "why-identity-security-matters-more-ai-era",
-    "zero-trust-explained-real-world-examples"
+    "why-identity-security-matters-more-ai-era"
   ],
   "articles": [
     {
@@ -362,11 +358,9 @@
     {
       "slug": "mfa-vs-passwordless-vs-passkeys",
       "title": "MFA vs Passwordless vs Passkeys: What Is the Difference?",
-      "risk": "medium",
-      "action": "revalidate",
-      "issues": [
-        "missing_technical_verification_date"
-      ],
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 8,
       "numeric_claim_count": 0,
       "noindex": false
@@ -506,11 +500,9 @@
     {
       "slug": "sc-900-security-compliance-identity-fundamentals-cheatsheet",
       "title": "SC-900 Cheatsheet: Microsoft Security, Compliance, and Identity Fundamentals Study Guide",
-      "risk": "medium",
-      "action": "revalidate",
-      "issues": [
-        "missing_technical_verification_date"
-      ],
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 15,
       "numeric_claim_count": 0,
       "noindex": false
@@ -530,11 +522,9 @@
     {
       "slug": "siem-vs-xdr-vs-soar",
       "title": "SIEM vs XDR vs SOAR: What They Do and When to Use Each",
-      "risk": "medium",
-      "action": "revalidate",
-      "issues": [
-        "missing_technical_verification_date"
-      ],
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 7,
       "numeric_claim_count": 0,
       "noindex": false
@@ -760,11 +750,9 @@
     {
       "slug": "zero-trust-explained-real-world-examples",
       "title": "Zero Trust Explained With Real-World Examples",
-      "risk": "medium",
-      "action": "revalidate",
-      "issues": [
-        "missing_technical_verification_date"
-      ],
+      "risk": "low",
+      "action": "none",
+      "issues": [],
       "source_count": 7,
       "numeric_claim_count": 0,
       "noindex": false
