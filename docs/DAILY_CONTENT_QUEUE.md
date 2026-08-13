@@ -8,7 +8,7 @@ Every article must contain at least one original, locally stored, topic-specific
 
 ## Ordered backlog
 
-- [ ] 001 | software | What Is Software Architecture? A Beginner's Guide
+- [x] 001 | software | What Is Software Architecture? A Beginner's Guide | published 2026-08-13 | slug software-architecture-beginners-guide
 - [ ] 002 | systems | Process vs Thread: What Is the Difference?
 - [ ] 003 | networks | The OSI Model Explained Layer by Layer
 - [ ] 004 | cloud | What Is Cloud Computing? A Beginner's Guide
