@@ -218,10 +218,10 @@ def write_report(data: dict[str, Any]) -> Path:
         "",
         "## Decision",
         "",
-        f"- Manual review required: `{data.get('manual_review_required', False)}`",
-        f"- Safe changes: `{', '.join(data.get('safe_changes', [])) or 'none'}`",
-        f"- Review candidates: `{', '.join(data.get('review_changes', [])) or 'none'}`",
-        f"- Review reasons: {', '.join(data.get('manual_review_reasons', [])) or 'none'}",
+        "- Application policy: validated changes are committed automatically",
+        f"- Routine changes: `{', '.join(data.get('routine_changes', [])) or 'none'}`",
+        f"- Elevated-risk changes: `{', '.join(data.get('elevated_risk_changes', [])) or 'none'}`",
+        f"- Risk signals: {', '.join(data.get('risk_reasons', [])) or 'none'}",
         "",
         "## Hugo",
         "",
@@ -286,10 +286,9 @@ def main() -> int:
     }
     data: dict[str, Any] = {
         "validation": [],
-        "safe_changes": [],
-        "review_changes": [],
-        "manual_review_reasons": [],
-        "manual_review_required": False,
+        "routine_changes": [],
+        "elevated_risk_changes": [],
+        "risk_reasons": [],
         "inventory": infrastructure_inventory(),
     }
     current = version_path.read_text(encoding="utf-8").strip() if version_path.exists() else ""
@@ -303,8 +302,7 @@ def main() -> int:
     }
     data["validation"].append(baseline)
     if baseline["returncode"] != 0:
-        data["manual_review_required"] = True
-        data["manual_review_reasons"].append("baseline Hugo build failed")
+        data["risk_reasons"].append("baseline Hugo build failed")
 
     try:
         release = latest_hugo_release()
@@ -326,43 +324,40 @@ def main() -> int:
     if latest and parse_version(latest) > parse_version(current):
         safe_hugo = hugo_risk == "low" and not note_risks
         if not safe_hugo:
-            data["manual_review_required"] = True
-            data["manual_review_reasons"].append(
+            data["risk_reasons"].append(
                 f"Hugo {hugo_risk}-risk update {current} -> {latest}"
                 + (f"; release-note signals: {', '.join(note_risks)}" if note_risks else "")
             )
         if args.apply_updates and baseline["returncode"] == 0:
             version_path.write_text(latest + "\n", encoding="utf-8")
             update_readme_hugo_version(latest, readme_path)
-            target = "safe_changes" if safe_hugo else "review_changes"
+            target = "routine_changes" if safe_hugo else "elevated_risk_changes"
             data[target].append(f"Hugo {current} -> {latest}")
 
     data["theme"] = theme_dependency_summary()
     theme_updates = data["theme"].get("updates", [])
     risky_theme = [item for item in theme_updates if item.get("risk") in {"medium", "high"}]
     if risky_theme:
-        data["manual_review_required"] = True
-        data["manual_review_reasons"].append(
-            "Mana theme dependency upgrades require review: "
+        data["risk_reasons"].append(
+            "Elevated-risk Mana theme dependency upgrades: "
             + ", ".join(item["name"] for item in risky_theme)
         )
     if args.apply_updates and baseline["returncode"] == 0 and theme_updates:
         result = apply_theme_candidates(theme_updates)
         data["validation"].append(result)
         if result.get("returncode") != 0:
-            data["manual_review_required"] = True
-            data["manual_review_reasons"].append("theme dependency update command failed")
+            data["risk_reasons"].append("theme dependency update command failed")
             restore(package_path, originals[package_path])
             restore(lock_path, originals[lock_path])
         else:
-            target = "review_changes" if risky_theme else "safe_changes"
+            target = "elevated_risk_changes" if risky_theme else "routine_changes"
             data[target].append("Mana theme dependency updates")
 
     if any(check.get("returncode") != 0 for check in data["validation"]):
         for path, original in originals.items():
             restore(path, original)
-        data["safe_changes"] = []
-        data["review_changes"] = []
+        data["routine_changes"] = []
+        data["elevated_risk_changes"] = []
         data["rollback"] = "candidate files were restored after validation failed"
 
     report_path = write_report(data)

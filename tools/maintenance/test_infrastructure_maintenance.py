@@ -33,7 +33,7 @@ class InfrastructureMaintenanceTests(unittest.TestCase):
         self.assertEqual(maintenance.version_risk("0.164.0", "0.165.0"), "medium")
         self.assertEqual(maintenance.version_risk("0.164.0", "1.0.0"), "high")
 
-    def test_release_note_risk_terms_require_review(self):
+    def test_release_note_risk_terms_are_detected(self):
         self.assertEqual(
             maintenance.release_note_risk_terms("Removed a deprecated API; migration required."),
             ["removed", "deprecated", "migration"],

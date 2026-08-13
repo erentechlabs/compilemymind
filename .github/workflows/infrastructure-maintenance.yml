@@ -11,7 +11,6 @@ concurrency:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   maintain-infrastructure:
@@ -67,14 +66,6 @@ jobs:
           python tools/maintenance/infrastructure_maintenance.py --apply-updates > infra-result.json
           status=$?
           cat infra-result.json
-          if test -s infra-result.json; then
-            manual_review=$(python -c 'import json; print(str(json.load(open("infra-result.json", encoding="utf-8")).get("manual_review_required", False)).lower())')
-            report=$(python -c 'import json; print(json.load(open("infra-result.json", encoding="utf-8")).get("report", ""))')
-            echo "manual_review=$manual_review" >> "$GITHUB_OUTPUT"
-            echo "report=$report" >> "$GITHUB_OUTPUT"
-          else
-            echo "manual_review=false" >> "$GITHUB_OUTPUT"
-          fi
           exit $status
 
       - name: Install and validate selected Hugo and theme candidates
@@ -100,36 +91,9 @@ jobs:
 
           python tools/maintenance/validate_infrastructure_changes.py
 
-      - name: Prepare a draft review PR for higher-risk updates
-        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && steps.updates.outputs.manual_review == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          branch="automation/infrastructure-review-${GITHUB_RUN_ID}"
-          git config user.name "compilemymind-infrastructure[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
-          git add -- .maintenance/reports .hugo-version README.md themes/mana/package.json
-          if test -e themes/mana/package-lock.json || git ls-files --error-unmatch themes/mana/package-lock.json >/dev/null 2>&1; then
-            git add --all -- themes/mana/package-lock.json
-          fi
-          if git diff --cached --quiet; then
-            echo "No infrastructure review changes were produced."
-            exit 0
-          fi
-          git commit -m "chore(infra): prepare Hugo and theme upgrade review"
-          git push --set-upstream origin "$branch"
-          gh pr create \
-            --draft \
-            --base "${{ github.event.repository.default_branch }}" \
-            --head "$branch" \
-            --title "Hugo and theme maintenance review (${GITHUB_RUN_ID})" \
-            --body-file "${{ steps.updates.outputs.report }}"
-
-      - name: Commit validated low-risk infrastructure updates
+      - name: Commit validated infrastructure updates
         id: commit
-        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && steps.updates.outputs.manual_review != 'true'
+        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success'
         shell: bash
         run: |
           git config user.name "compilemymind-infrastructure[bot]"
@@ -148,11 +112,11 @@ jobs:
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Synchronize Hugo version with Cloudflare Pages
-        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && steps.updates.outputs.manual_review != 'true' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
+        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && env.CLOUDFLARE_PAGES_PROJECT != ''
         run: python tools/maintenance/sync_cloudflare_hugo.py
 
       - name: Report incomplete Cloudflare configuration
-        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && steps.updates.outputs.manual_review != 'true' && (env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == '')
+        if: steps.updates.outcome == 'success' && steps.validation.outcome == 'success' && (env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' || env.CLOUDFLARE_PAGES_PROJECT == '')
         run: echo "Hugo and theme validation passed; Cloudflare synchronization was skipped because its settings are incomplete."
 
       - name: Upload infrastructure report

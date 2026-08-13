@@ -35,7 +35,7 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 
 ## Infrastructure maintenance
 
-The repository has one GitHub Actions workflow, dedicated to infrastructure maintenance. It checks for Hugo and Mana theme dependency updates, validates candidates with a complete Hugo build, routes higher-risk upgrades through a draft pull request, applies low-risk updates automatically, and synchronizes the validated Hugo version with Cloudflare Pages.
+The repository has one GitHub Actions workflow, dedicated to infrastructure maintenance. It checks for Hugo and Mana theme dependency updates, validates candidates with a complete Hugo build, commits every validated update automatically, and synchronizes the validated Hugo version with Cloudflare Pages.
 
 Blog content is not generated, revised, queued, or published by GitHub Actions. See [docs/INFRASTRUCTURE_MAINTENANCE.md](docs/INFRASTRUCTURE_MAINTENANCE.md) for the schedule, safety policy, and required Cloudflare settings.
 
