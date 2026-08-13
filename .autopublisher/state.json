@@ -2680,6 +2680,15 @@
       "reason": "qa_failed",
       "detail": "No offline fallback is configured for this topic.",
       "attempts": 3
+    },
+    {
+      "mode": "publish",
+      "time": "2026-08-13T03:33:08.530668Z",
+      "title": "Diagnosing Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management: Evidence, Remediation, and Validation",
+      "slug": "diagnosing-shaping-the-nvd-for-the-future-we-need-your-feedback-on-ai",
+      "reason": "qa_failed",
+      "detail": "No offline fallback is configured for this topic.",
+      "attempts": 3
     }
   ],
   "last_runs": {
@@ -2697,7 +2706,7 @@
       "generation_mode": "deterministic_offline"
     },
     "prepare": {
-      "time": "2026-08-12T03:29:37.645472Z",
+      "time": "2026-08-13T03:33:08.536477Z",
       "result": "retry_scheduled",
       "reason": "all_drafts_failed_quality_gates",
       "queue_depth": 0
@@ -3023,6 +3032,14 @@
       "reason": "qa_failed",
       "detail": "No offline fallback is configured for this topic.",
       "attempts": 3
+    },
+    {
+      "time": "2026-08-13T03:33:08.530668Z",
+      "title": "Diagnosing Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management: Evidence, Remediation, and Validation",
+      "slug": "diagnosing-shaping-the-nvd-for-the-future-we-need-your-feedback-on-ai",
+      "reason": "qa_failed",
+      "detail": "No offline fallback is configured for this topic.",
+      "attempts": 3
     }
   ],
   "provider_cooldowns": {
@@ -3093,37 +3110,36 @@
   },
   "ready_publications": [],
   "preparation_pending_publication": {
-    "scheduled_at": "2026-08-12T03:29:37.638082Z",
-    "next_retry_at": "2026-08-12T09:29:37.638087Z",
+    "scheduled_at": "2026-08-13T03:33:08.530821Z",
+    "next_retry_at": "2026-08-13T09:33:08.530824Z",
     "reason": "all_drafts_failed_quality_gates",
     "stage": "article_quality",
     "detail": "No offline fallback is configured for this topic.",
-    "consecutive_attempts": 7,
+    "consecutive_attempts": 8,
     "topic_attempts": 1,
     "topic": {
-      "title": "Enabling the next iteration of the borrow checker on nightly: Architecture Choices, Trade-offs, and Decision Criteria",
-      "slug": "enabling-the-next-iteration-of-the-borrow-checker-on-nightly",
-      "primary_category": "programming-languages",
+      "title": "Diagnosing Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management: Evidence, Remediation, and Validation",
+      "slug": "diagnosing-shaping-the-nvd-for-the-future-we-need-your-feedback-on-ai",
+      "primary_category": "cybersecurity",
       "categories": [
-        "programming-languages",
-        "software-engineering"
+        "cybersecurity"
       ],
       "tags": [
-        "programming-languages",
-        "rust-blog",
-        "enabling",
-        "next",
-        "iteration"
+        "cybersecurity",
+        "nist-cybersecurity-insights",
+        "shaping",
+        "nvd",
+        "future"
       ],
-      "search_intent": "Readers want a practical explanation of Enabling the next iteration of the borrow checker on nightly and what it changes for technical teams.",
-      "why_now": "Based on a recent item from Rust Blog: Enabling the next iteration of the borrow checker on nightly",
+      "search_intent": "Readers want a practical explanation of Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management and what it changes for technical teams.",
+      "why_now": "Based on a recent item from NIST Cybersecurity Insights: Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management",
       "source_urls": [
-        "https://blog.rust-lang.org/2026/08/04/enabling-polonius-alpha-on-nightly",
-        "https://nodejs.org/en/blog/release/v26.6.0",
-        "https://cloud.google.com/blog/topics/google-cloud-next"
+        "https://nist.gov/blogs/cybersecurity-insights/shaping-nvd-future-we-need-your-feedback-ai-enabled-vulnerability",
+        "https://nist.gov/cybersecurity-and-privacy",
+        "https://nist.gov/blogs/cybersecurity-insights"
       ],
       "needs_diagram": true,
-      "needs_chart": true,
+      "needs_chart": false,
       "series": {
         "name": "",
         "part": null,
@@ -3132,16 +3148,16 @@
       },
       "seed_sources": [
         {
-          "title": "Enabling the next iteration of the borrow checker on nightly",
-          "url": "https://blog.rust-lang.org/2026/08/04/enabling-polonius-alpha-on-nightly"
+          "title": "Shaping the NVD for the Future: We Need Your Feedback on AI-Enabled Vulnerability Management",
+          "url": "https://nist.gov/blogs/cybersecurity-insights/shaping-nvd-future-we-need-your-feedback-ai-enabled-vulnerability"
         },
         {
-          "title": "Next Node.js 26.6.0 (Current)",
-          "url": "https://nodejs.org/en/blog/release/v26.6.0"
+          "title": "Cybersecurity and Privacy",
+          "url": "https://nist.gov/cybersecurity-and-privacy"
         },
         {
-          "title": "Google Cloud Next & Events",
-          "url": "https://cloud.google.com/blog/topics/google-cloud-next"
+          "title": "Cybersecurity Insights",
+          "url": "https://nist.gov/blogs/cybersecurity-insights"
         }
       ]
     }
