@@ -19,11 +19,6 @@ Thumbs.db
 __pycache__/
 *.py[cod]
 
-# Per-run autonomous publication artifacts. Durable state, configuration, and
-# stable reports remain tracked so scheduled runs can resume safely.
-.autopublisher/publish-result.json
-.autopublisher/prepare-result.json
-.autopublisher/release-gate-result.json
-.autopublisher/dashboard.json
-.autopublisher/logs/*.jsonl
+# Per-run infrastructure maintenance output. Markdown reports under
+# .maintenance/reports are intentionally tracked when updates are committed.
 infra-result.json

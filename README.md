@@ -11,7 +11,7 @@
 
 ## 🎯 Overview
 
-Welcome to the source code repository for **Compile My Mind**, an autonomous technical publishing and knowledge website.
+Welcome to the source code repository for **Compile My Mind**, a Hugo-based technical knowledge website.
 
 This repository houses the Markdown content, Hugo templates, and configuration that generate the live website. It is built for fast performance and a clean reading experience, focusing on practical technical topics across software, infrastructure, operations, and systems.
 
@@ -33,11 +33,11 @@ This repository houses the Markdown content, Hugo templates, and configuration t
 - **Dark/Light Mode:** Seamless switching to match user preference.
 - **SEO Optimized:** Automatic sitemap generation, structured data, and meta tags.
 
-## Autonomous publishing
+## Infrastructure maintenance
 
-The site can publish and maintain technical content without a user-supplied AI API key. GitHub Actions uses its automatic `GITHUB_TOKEN` with OpenAI GPT-4.1 through the free, rate-limited GitHub Models service. The automation researches trusted current sources, avoids duplicate reader intent, maps material claims to evidence, generates long-form Hugo page bundles with useful visuals, applies deterministic and AI quality gates, checks links and stale facts, and pushes only validated changes.
+The repository has one GitHub Actions workflow, dedicated to infrastructure maintenance. It checks for Hugo and Mana theme dependency updates, validates candidates with a complete Hugo build, routes higher-risk upgrades through a draft pull request, applies low-risk updates automatically, and synchronizes the validated Hugo version with Cloudflare Pages.
 
-See [docs/AUTONOMOUS_PUBLISHING.md](docs/AUTONOMOUS_PUBLISHING.md) for setup, schedules, safety gates, monitoring, and local validation commands.
+Blog content is not generated, revised, queued, or published by GitHub Actions. See [docs/INFRASTRUCTURE_MAINTENANCE.md](docs/INFRASTRUCTURE_MAINTENANCE.md) for the schedule, safety policy, and required Cloudflare settings.
 
 ---
 
@@ -62,12 +62,6 @@ compilemymind/
 ├── themes/          # The Mana theme module
 └── hugo.toml        # Main Hugo configuration file
 ```
-
----
-
-## Publisher
-
-Articles use the site-level publisher identity **Compile My Mind**. The automated system does not create individual author profiles, personal biographies, or claims of manual review.
 
 ---
 
