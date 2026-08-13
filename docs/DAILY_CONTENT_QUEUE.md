@@ -2,7 +2,7 @@
 
 This queue is consumed in order by the daily Codex publishing automation. Exactly one unchecked topic may be published per run.
 
-After an article passes research, content, visual, and Hugo validation, change its marker from `[ ]` to `[x]` and append its publication date, slug, and commit. Do not mark a topic complete when publication or validation fails.
+After an article passes research, content, visual, and Hugo validation, change its marker from `[ ]` to `[x]` and append its publication date and slug. The Git history records the publishing commit. Do not mark a topic complete when publication or validation fails.
 
 Every article must contain at least one original, locally stored, topic-specific picture, diagram, or graph with useful alternative text. Prefer an SVG architecture diagram, comparison graphic, flow, timeline, or annotated concept map. Include tested code, commands, tables, or configuration only when they materially improve the explanation.
 
