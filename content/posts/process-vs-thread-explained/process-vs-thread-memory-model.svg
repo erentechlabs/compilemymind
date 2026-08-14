@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Process and thread memory model</title>
+  <desc id="desc">Two separate process boundaries contain their own code, data, heap, and resources. Process A contains two threads. Each thread has private registers and a stack but shares the process memory. An IPC channel connects the processes.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07152d"/>
+      <stop offset="1" stop-color="#102b45"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020817" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"/>
+    </marker>
+    <style>
+      .label { font-family: Inter, Segoe UI, Arial, sans-serif; fill: #f8fafc; }
+      .muted { fill: #cbd5e1; }
+      .small { font-size: 20px; }
+      .medium { font-size: 24px; font-weight: 650; }
+      .large { font-size: 30px; font-weight: 750; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="720" rx="28" fill="url(#background)"/>
+  <text x="600" y="52" text-anchor="middle" class="label large">Processes isolate resources; threads share a process</text>
+  <text x="600" y="84" text-anchor="middle" class="label muted small">Private execution state inside deliberately chosen boundaries</text>
+
+  <g filter="url(#shadow)">
+    <rect x="55" y="120" width="510" height="515" rx="24" fill="#10243b" stroke="#38bdf8" stroke-width="3"/>
+    <rect x="635" y="120" width="510" height="515" rx="24" fill="#10243b" stroke="#a78bfa" stroke-width="3"/>
+  </g>
+
+  <text x="85" y="164" class="label large">Process A</text>
+  <text x="535" y="162" text-anchor="end" class="label muted small">private address space</text>
+  <text x="665" y="164" class="label large">Process B</text>
+  <text x="1115" y="162" text-anchor="end" class="label muted small">private address space</text>
+
+  <rect x="85" y="190" width="450" height="145" rx="18" fill="#0b3852" stroke="#67e8f9" stroke-width="2"/>
+  <text x="310" y="226" text-anchor="middle" class="label medium">Shared inside Process A</text>
+  <g class="label small" text-anchor="middle">
+    <rect x="108" y="250" width="120" height="55" rx="12" fill="#075985"/>
+    <text x="168" y="285">Code</text>
+    <rect x="250" y="250" width="120" height="55" rx="12" fill="#075985"/>
+    <text x="310" y="285">Data + heap</text>
+    <rect x="392" y="250" width="120" height="55" rx="12" fill="#075985"/>
+    <text x="452" y="285">Resources</text>
+  </g>
+
+  <rect x="665" y="190" width="450" height="145" rx="18" fill="#30265c" stroke="#c4b5fd" stroke-width="2"/>
+  <text x="890" y="226" text-anchor="middle" class="label medium">Shared inside Process B</text>
+  <g class="label small" text-anchor="middle">
+    <rect x="688" y="250" width="120" height="55" rx="12" fill="#5b4b9a"/>
+    <text x="748" y="285">Code</text>
+    <rect x="830" y="250" width="120" height="55" rx="12" fill="#5b4b9a"/>
+    <text x="890" y="285">Data + heap</text>
+    <rect x="972" y="250" width="120" height="55" rx="12" fill="#5b4b9a"/>
+    <text x="1032" y="285">Resources</text>
+  </g>
+
+  <g>
+    <rect x="85" y="370" width="210" height="205" rx="18" fill="#123c55" stroke="#38bdf8" stroke-width="2"/>
+    <text x="190" y="410" text-anchor="middle" class="label medium">Thread A1</text>
+    <rect x="110" y="435" width="160" height="48" rx="10" fill="#075985"/>
+    <text x="190" y="466" text-anchor="middle" class="label small">Private stack</text>
+    <rect x="110" y="500" width="160" height="48" rx="10" fill="#075985"/>
+    <text x="190" y="531" text-anchor="middle" class="label small">Registers + ID</text>
+
+    <rect x="325" y="370" width="210" height="205" rx="18" fill="#123c55" stroke="#38bdf8" stroke-width="2"/>
+    <text x="430" y="410" text-anchor="middle" class="label medium">Thread A2</text>
+    <rect x="350" y="435" width="160" height="48" rx="10" fill="#075985"/>
+    <text x="430" y="466" text-anchor="middle" class="label small">Private stack</text>
+    <rect x="350" y="500" width="160" height="48" rx="10" fill="#075985"/>
+    <text x="430" y="531" text-anchor="middle" class="label small">Registers + ID</text>
+
+    <rect x="740" y="370" width="300" height="205" rx="18" fill="#362d62" stroke="#a78bfa" stroke-width="2"/>
+    <text x="890" y="410" text-anchor="middle" class="label medium">Thread B1</text>
+    <rect x="775" y="435" width="230" height="48" rx="10" fill="#5b4b9a"/>
+    <text x="890" y="466" text-anchor="middle" class="label small">Private stack</text>
+    <rect x="775" y="500" width="230" height="48" rx="10" fill="#5b4b9a"/>
+    <text x="890" y="531" text-anchor="middle" class="label small">Registers + ID</text>
+  </g>
+
+  <path d="M 550 600 C 620 675, 580 675, 650 600" fill="none" stroke="#fbbf24" stroke-width="5" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="490" y="643" width="220" height="48" rx="24" fill="#713f12" stroke="#fbbf24" stroke-width="2"/>
+  <text x="600" y="675" text-anchor="middle" class="label medium">Explicit IPC</text>
+</svg>
