@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Cloud computing operating model</title>
+  <desc id="desc">A consumer requests a service through a control plane. The control plane allocates pooled compute, storage, and networking resources, scales capacity with demand, and meters usage.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="control" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0891b2"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity="0.38"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#67e8f9"/>
+    </marker>
+    <style>
+      .heading { font-family: Arial, Helvetica, sans-serif; font-size: 30px; font-weight: 700; fill: #f8fafc; }
+      .label { font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; fill: #f8fafc; }
+      .body { font-family: Arial, Helvetica, sans-serif; font-size: 17px; font-weight: 500; fill: #cbd5e1; }
+      .small { font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 600; fill: #bae6fd; }
+      .card { fill: #111c33; stroke: #475569; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" rx="28" fill="url(#background)"/>
+  <text x="600" y="54" text-anchor="middle" class="heading">Cloud computing is a service loop, not just a remote server</text>
+
+  <g filter="url(#shadow)">
+    <rect x="54" y="126" width="240" height="190" rx="20" class="card"/>
+    <circle cx="174" cy="174" r="28" fill="#1d4ed8"/>
+    <path d="M157 176h34M180 163l13 13-13 13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="174" y="228" text-anchor="middle" class="label">Consumer request</text>
+    <text x="174" y="258" text-anchor="middle" class="body">Console • API • automation</text>
+    <text x="174" y="286" text-anchor="middle" class="small">ON-DEMAND SELF-SERVICE</text>
+  </g>
+
+  <path d="M294 220 H374" stroke="#67e8f9" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="386" y="104" width="428" height="236" rx="24" fill="url(#control)"/>
+    <text x="600" y="153" text-anchor="middle" class="label">Cloud service control plane</text>
+    <text x="600" y="186" text-anchor="middle" class="body">Authenticates • applies policy • allocates capacity</text>
+    <rect x="430" y="218" width="145" height="72" rx="14" fill="#0f2447" stroke="#7dd3fc"/>
+    <rect x="625" y="218" width="145" height="72" rx="14" fill="#0f2447" stroke="#7dd3fc"/>
+    <text x="503" y="248" text-anchor="middle" class="small">NETWORK</text>
+    <text x="503" y="271" text-anchor="middle" class="body">standard access</text>
+    <text x="698" y="248" text-anchor="middle" class="small">POLICY</text>
+    <text x="698" y="271" text-anchor="middle" class="body">identity + limits</text>
+  </g>
+
+  <path d="M814 220 H894" stroke="#67e8f9" stroke-width="5" fill="none" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="906" y="126" width="240" height="190" rx="20" class="card"/>
+    <text x="1026" y="174" text-anchor="middle" class="label">Resource pool</text>
+    <rect x="942" y="201" width="64" height="48" rx="8" fill="#1d4ed8"/>
+    <rect x="1018" y="201" width="64" height="48" rx="8" fill="#0e7490"/>
+    <rect x="1056" y="261" width="64" height="28" rx="8" fill="#6d28d9"/>
+    <rect x="980" y="261" width="64" height="28" rx="8" fill="#7c3aed"/>
+    <text x="974" y="232" text-anchor="middle" class="small">CPU</text>
+    <text x="1050" y="232" text-anchor="middle" class="small">NET</text>
+    <text x="1026" y="307" text-anchor="middle" class="small">POOLED CAPACITY</text>
+  </g>
+
+  <path d="M1026 316 V404 H780" stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M174 316 V404 H420" stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="86" y="438" width="310" height="208" rx="22" class="card"/>
+    <text x="241" y="487" text-anchor="middle" class="label">Demand changes</text>
+    <path d="M135 586 L188 552 L232 570 L286 505 L346 530" fill="none" stroke="#a78bfa" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="286" cy="505" r="8" fill="#c4b5fd"/>
+    <text x="241" y="620" text-anchor="middle" class="small">RAPID ELASTICITY</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="445" y="438" width="310" height="208" rx="22" class="card"/>
+    <text x="600" y="487" text-anchor="middle" class="label">Capacity adjusts</text>
+    <rect x="490" y="522" width="62" height="62" rx="10" fill="#1d4ed8"/>
+    <rect x="569" y="522" width="62" height="62" rx="10" fill="#0e7490"/>
+    <rect x="648" y="522" width="62" height="62" rx="10" fill="#6d28d9"/>
+    <path d="M521 603h158" stroke="#67e8f9" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+    <text x="600" y="628" text-anchor="middle" class="small">SCALE OUT • SCALE IN</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="804" y="438" width="310" height="208" rx="22" class="card"/>
+    <text x="959" y="487" text-anchor="middle" class="label">Usage is measured</text>
+    <path d="M856 583h206" stroke="#64748b" stroke-width="3"/>
+    <rect x="876" y="544" width="30" height="39" rx="4" fill="#38bdf8"/>
+    <rect x="925" y="520" width="30" height="63" rx="4" fill="#22d3ee"/>
+    <rect x="974" y="536" width="30" height="47" rx="4" fill="#38bdf8"/>
+    <rect x="1023" y="501" width="30" height="82" rx="4" fill="#22d3ee"/>
+    <text x="959" y="620" text-anchor="middle" class="small">METER • REPORT • OPTIMIZE</text>
+  </g>
+
+  <path d="M396 542 H434" stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M755 542 H793" stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+  <path d="M959 646 V694 H600 V658" stroke="#67e8f9" stroke-width="4" fill="none" marker-end="url(#arrow)"/>
+
+  <text x="600" y="730" text-anchor="middle" class="body">Broad network access connects the loop; software turns shared infrastructure into a measurable service.</text>
+</svg>

@@ -11,7 +11,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 001 | software | What Is Software Architecture? A Beginner's Guide | published 2026-08-13 | slug software-architecture-beginners-guide
 - [x] 002 | systems | Process vs Thread: What Is the Difference? | published 2026-08-14 | slug process-vs-thread-explained
 - [x] 003 | networks | The OSI Model Explained Layer by Layer | published 2026-08-15 | slug osi-model-explained
-- [ ] 004 | cloud | What Is Cloud Computing? A Beginner's Guide
+- [x] 004 | cloud | What Is Cloud Computing? A Beginner's Guide | published 2026-08-16 | slug what-is-cloud-computing
 - [ ] 005 | cybersecurity | The CIA Triad Explained: Confidentiality, Integrity, and Availability
 - [ ] 006 | ai | Artificial Intelligence vs Machine Learning vs Deep Learning
 - [ ] 007 | software | Object-Oriented Programming Explained: The Four Core Principles
