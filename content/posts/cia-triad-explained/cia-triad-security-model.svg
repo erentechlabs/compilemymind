@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800" role="img" aria-labelledby="title desc">
+  <title id="title">CIA triad security model</title>
+  <desc id="desc">A protected business service sits between confidentiality, integrity, and availability. Each security objective shows a central question, example threats, and supporting controls.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#7c3aed"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="12" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrowC" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arrowI" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#a78bfa"/>
+    </marker>
+    <marker id="arrowA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#34d399"/>
+    </marker>
+    <style>
+      .heading { font-family: Arial, Helvetica, sans-serif; font-size: 32px; font-weight: 700; fill: #f8fafc; }
+      .subtitle { font-family: Arial, Helvetica, sans-serif; font-size: 18px; font-weight: 500; fill: #cbd5e1; }
+      .card-title { font-family: Arial, Helvetica, sans-serif; font-size: 26px; font-weight: 700; fill: #f8fafc; }
+      .question { font-family: Arial, Helvetica, sans-serif; font-size: 17px; font-weight: 700; fill: #f8fafc; }
+      .label { font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: 700; letter-spacing: 0.8px; }
+      .body { font-family: Arial, Helvetica, sans-serif; font-size: 15px; font-weight: 500; fill: #dbeafe; }
+      .core-title { font-family: Arial, Helvetica, sans-serif; font-size: 25px; font-weight: 700; fill: #ffffff; }
+      .core-body { font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 500; fill: #e0e7ff; }
+      .card { fill: #101c31; stroke-width: 3; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="800" rx="28" fill="url(#background)"/>
+  <text x="600" y="52" text-anchor="middle" class="heading">The CIA triad turns “secure” into three testable outcomes</text>
+  <text x="600" y="82" text-anchor="middle" class="subtitle">Begin with the asset and impact, then choose controls for each objective</text>
+
+  <path d="M386 262 C470 292 490 318 520 350" fill="none" stroke="#22d3ee" stroke-width="5" marker-end="url(#arrowC)"/>
+  <path d="M814 262 C730 292 710 318 680 350" fill="none" stroke="#a78bfa" stroke-width="5" marker-end="url(#arrowI)"/>
+  <path d="M600 618 V550" fill="none" stroke="#34d399" stroke-width="5" marker-end="url(#arrowA)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="54" y="126" width="390" height="234" rx="22" class="card" stroke="#22d3ee"/>
+    <circle cx="99" cy="173" r="24" fill="#0e7490"/>
+    <path d="M88 173 v-8 a11 11 0 0 1 22 0 v8 M84 173 h30 v26 h-30 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <text x="137" y="181" class="card-title">Confidentiality</text>
+    <text x="84" y="224" class="question">Who is allowed to know?</text>
+    <text x="84" y="264" class="label" fill="#67e8f9">THREATS</text>
+    <text x="184" y="264" class="body">Disclosure • eavesdropping • leaks</text>
+    <text x="84" y="302" class="label" fill="#67e8f9">CONTROLS</text>
+    <text x="184" y="302" class="body">Access • encryption • classification</text>
+    <text x="84" y="335" class="body">Outcome: only authorized access and disclosure</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="756" y="126" width="390" height="234" rx="22" class="card" stroke="#a78bfa"/>
+    <circle cx="801" cy="173" r="24" fill="#6d28d9"/>
+    <path d="M790 173 l8 8 16-18 M784 151 h34 v44 h-34 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <text x="839" y="181" class="card-title">Integrity</text>
+    <text x="786" y="224" class="question">Can we trust this?</text>
+    <text x="786" y="264" class="label" fill="#c4b5fd">THREATS</text>
+    <text x="876" y="264" class="body">Tampering • corruption • bad changes</text>
+    <text x="786" y="302" class="label" fill="#c4b5fd">CONTROLS</text>
+    <text x="876" y="302" class="body">Validation • signatures • audit logs</text>
+    <text x="786" y="335" class="body">Outcome: improper changes are blocked or found</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <circle cx="600" cy="431" r="126" fill="url(#core)" stroke="#bfdbfe" stroke-width="4"/>
+    <path d="M556 420 h88 v58 h-88 z M570 420 v-28 h60 v28 M580 445 h12 M608 445 h12" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="600" y="508" text-anchor="middle" class="core-title">Protected service</text>
+    <text x="600" y="534" text-anchor="middle" class="core-body">data • systems • business operations</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="405" y="612" width="390" height="150" rx="22" class="card" stroke="#34d399"/>
+    <circle cx="450" cy="658" r="24" fill="#047857"/>
+    <path d="M434 667 a18 18 0 1 1 31 5 M469 656 v18 h-18" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="488" y="666" class="card-title">Availability</text>
+    <text x="435" y="708" class="question">Can authorized users use it when needed?</text>
+    <text x="435" y="739" class="body">Outages • denial of service  →  resilience • recovery</text>
+  </g>
+</svg>
