@@ -13,7 +13,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 003 | networks | The OSI Model Explained Layer by Layer | published 2026-08-15 | slug osi-model-explained
 - [x] 004 | cloud | What Is Cloud Computing? A Beginner's Guide | published 2026-08-16 | slug what-is-cloud-computing
 - [x] 005 | cybersecurity | The CIA Triad Explained: Confidentiality, Integrity, and Availability | published 2026-08-17 | slug cia-triad-explained
-- [ ] 006 | ai | Artificial Intelligence vs Machine Learning vs Deep Learning
+- [x] 006 | ai | Artificial Intelligence vs Machine Learning vs Deep Learning | published 2026-08-18 | slug ai-vs-machine-learning-vs-deep-learning
 - [ ] 007 | software | Object-Oriented Programming Explained: The Four Core Principles
 - [ ] 008 | systems | Concurrency vs Parallelism Explained
 - [ ] 009 | networks | OSI Model vs TCP/IP Model

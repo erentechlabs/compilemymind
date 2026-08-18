@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="900" viewBox="0 0 800 900" role="img" aria-labelledby="title desc">
+  <title id="title">Artificial intelligence, machine learning, and deep learning hierarchy</title>
+  <desc id="desc">A nested diagram showing machine learning inside artificial intelligence and deep learning inside machine learning. Rule-based systems and search sit in the artificial intelligence area outside machine learning.</desc>
+  <defs>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#17324d" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="900" rx="28" fill="#f7fafc"/>
+  <text x="40" y="54" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" fill="#102a43">One hierarchy, three scopes</text>
+  <text x="40" y="84" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#486581">Each inner area is a family within the area around it.</text>
+
+  <rect x="28" y="112" width="744" height="694" rx="30" fill="#e7f2ff" stroke="#1877c9" stroke-width="3" filter="url(#shadow)"/>
+  <text x="58" y="158" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#0b5d9f">ARTIFICIAL INTELLIGENCE</text>
+  <text x="58" y="189" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#234e70">Systems that infer useful outputs for objectives</text>
+
+  <rect x="58" y="230" width="310" height="154" rx="20" fill="#ffffff" stroke="#7aa7cf" stroke-width="2"/>
+  <text x="84" y="272" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#183b56">AI outside ML</text>
+  <text x="84" y="311" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" fill="#486581">Rules and expert systems</text>
+  <text x="84" y="344" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" fill="#486581">Search and planning</text>
+
+  <rect x="126" y="414" width="610" height="348" rx="28" fill="#e8f8ef" stroke="#27865b" stroke-width="3"/>
+  <text x="158" y="460" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="25" font-weight="700" fill="#17633f">MACHINE LEARNING</text>
+  <text x="158" y="491" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#315c49">Models learn useful patterns from data</text>
+
+  <rect x="158" y="528" width="248" height="178" rx="20" fill="#ffffff" stroke="#77b994" stroke-width="2"/>
+  <text x="181" y="568" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="20" font-weight="700" fill="#214e34">Classic ML</text>
+  <text x="181" y="605" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#486581">Linear models</text>
+  <text x="181" y="636" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#486581">Decision trees</text>
+  <text x="181" y="667" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17" fill="#486581">Clustering</text>
+
+  <rect x="434" y="514" width="270" height="208" rx="24" fill="#f2eaff" stroke="#7357b5" stroke-width="3"/>
+  <text x="458" y="557" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="22" font-weight="700" fill="#553c9a">DEEP LEARNING</text>
+  <text x="458" y="591" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" fill="#51406f">Multilayer neural networks</text>
+  <text x="458" y="617" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" fill="#51406f">learn representations</text>
+
+  <circle cx="487" cy="668" r="10" fill="#9f7aea"/>
+  <circle cx="537" cy="651" r="10" fill="#9f7aea"/>
+  <circle cx="537" cy="686" r="10" fill="#9f7aea"/>
+  <circle cx="587" cy="668" r="10" fill="#9f7aea"/>
+  <line x1="497" y1="668" x2="527" y2="651" stroke="#7357b5" stroke-width="3"/>
+  <line x1="497" y1="668" x2="527" y2="686" stroke="#7357b5" stroke-width="3"/>
+  <line x1="547" y1="651" x2="577" y2="668" stroke="#7357b5" stroke-width="3"/>
+  <line x1="547" y1="686" x2="577" y2="668" stroke="#7357b5" stroke-width="3"/>
+  <text x="611" y="675" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15" fill="#51406f">layers</text>
+
+  <text x="40" y="850" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#102a43">All deep learning is ML, but not all ML is deep learning.</text>
+  <text x="40" y="877" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" fill="#102a43">Not all artificial intelligence uses machine learning.</text>
+</svg>
