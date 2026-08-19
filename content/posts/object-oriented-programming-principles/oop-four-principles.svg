@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1060" role="img" aria-labelledby="title desc">
+  <title id="title">The four principles of object-oriented programming</title>
+  <desc id="desc">A mobile-friendly vertical concept map connects an object boundary to abstraction, encapsulation, inheritance, and polymorphism.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+    </marker>
+  </defs>
+
+  <rect width="760" height="1060" rx="28" fill="url(#background)"/>
+  <text x="380" y="54" text-anchor="middle" fill="#f8fafc" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="30" font-weight="700">Four principles, one boundary</text>
+  <text x="380" y="84" text-anchor="middle" fill="#cbd5e1" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17">Each principle controls a different kind of change</text>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="116" width="520" height="148" rx="24" fill="#f8fafc" stroke="#38bdf8" stroke-width="4"/>
+    <rect x="158" y="140" width="444" height="44" rx="12" fill="#e0f2fe"/>
+    <text x="380" y="170" text-anchor="middle" fill="#0c4a6e" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="23" font-weight="700">OBJECT BOUNDARY</text>
+    <text x="380" y="215" text-anchor="middle" fill="#0f172a" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="20" font-weight="700">State + behavior</text>
+    <text x="380" y="242" text-anchor="middle" fill="#475569" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17">Own the rule · expose a clear contract</text>
+  </g>
+
+  <g fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M 380 265 L 380 294"/>
+    <path d="M 380 458 L 380 482"/>
+    <path d="M 380 646 L 380 670"/>
+    <path d="M 380 834 L 380 858"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="Inter,Segoe UI,Arial,sans-serif">
+    <rect x="62" y="296" width="636" height="162" rx="22" fill="#082f49" stroke="#38bdf8" stroke-width="3"/>
+    <circle cx="112" cy="346" r="25" fill="#38bdf8"/>
+    <text x="112" y="355" text-anchor="middle" fill="#082f49" font-size="25" font-weight="800">A</text>
+    <text x="157" y="355" fill="#f0f9ff" font-size="27" font-weight="700">Abstraction</text>
+    <text x="96" y="403" fill="#bae6fd" font-size="20">What should callers see?</text>
+    <text x="96" y="433" fill="#e0f2fe" font-size="20" font-weight="600">Expose the useful promise.</text>
+
+    <rect x="62" y="484" width="636" height="162" rx="22" fill="#3b0764" stroke="#c084fc" stroke-width="3"/>
+    <circle cx="112" cy="534" r="25" fill="#c084fc"/>
+    <text x="112" y="543" text-anchor="middle" fill="#3b0764" font-size="25" font-weight="800">E</text>
+    <text x="157" y="543" fill="#faf5ff" font-size="27" font-weight="700">Encapsulation</text>
+    <text x="96" y="591" fill="#e9d5ff" font-size="20">What must stay protected?</text>
+    <text x="96" y="621" fill="#f3e8ff" font-size="20" font-weight="600">Guard state and invariants.</text>
+
+    <rect x="62" y="672" width="636" height="162" rx="22" fill="#052e16" stroke="#4ade80" stroke-width="3"/>
+    <circle cx="112" cy="722" r="25" fill="#4ade80"/>
+    <text x="112" y="731" text-anchor="middle" fill="#052e16" font-size="25" font-weight="800">I</text>
+    <text x="157" y="731" fill="#f0fdf4" font-size="27" font-weight="700">Inheritance</text>
+    <text x="96" y="779" fill="#bbf7d0" font-size="20">Is this truly a subtype?</text>
+    <text x="96" y="809" fill="#dcfce7" font-size="20" font-weight="600">Share an honest relationship.</text>
+
+    <rect x="62" y="860" width="636" height="162" rx="22" fill="#431407" stroke="#fb923c" stroke-width="3"/>
+    <circle cx="112" cy="910" r="25" fill="#fb923c"/>
+    <text x="112" y="919" text-anchor="middle" fill="#431407" font-size="25" font-weight="800">P</text>
+    <text x="157" y="919" fill="#fff7ed" font-size="27" font-weight="700">Polymorphism</text>
+    <text x="96" y="967" fill="#fed7aa" font-size="20">Where may behavior vary?</text>
+    <text x="96" y="997" fill="#ffedd5" font-size="20" font-weight="600">One contract, many forms.</text>
+  </g>
+
+  <text x="380" y="1045" text-anchor="middle" fill="#e2e8f0" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="17" font-weight="600">Goal: keep a local change local</text>
+</svg>
