@@ -15,7 +15,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 005 | cybersecurity | The CIA Triad Explained: Confidentiality, Integrity, and Availability | published 2026-08-17 | slug cia-triad-explained
 - [x] 006 | ai | Artificial Intelligence vs Machine Learning vs Deep Learning | published 2026-08-18 | slug ai-vs-machine-learning-vs-deep-learning
 - [x] 007 | software | Object-Oriented Programming Explained: The Four Core Principles | published 2026-08-19 | slug object-oriented-programming-principles
-- [ ] 008 | systems | Concurrency vs Parallelism Explained
+- [x] 008 | systems | Concurrency vs Parallelism Explained | published 2026-08-20 | slug concurrency-vs-parallelism
 - [ ] 009 | networks | OSI Model vs TCP/IP Model
 - [ ] 010 | cloud | IaaS vs PaaS vs SaaS Explained
 - [ ] 011 | cybersecurity | Authentication vs Authorization
