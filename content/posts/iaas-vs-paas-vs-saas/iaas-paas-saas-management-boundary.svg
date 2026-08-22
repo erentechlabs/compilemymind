@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 1050" role="img" aria-labelledby="title desc">
+  <title id="title">IaaS, PaaS, and SaaS management boundary</title>
+  <desc id="desc">Three stacked comparison cards show that the provider manages progressively more of the technology stack from IaaS to PaaS to SaaS, while the customer always retains responsibility for data, identity, access, configuration, and use.</desc>
+  <defs>
+    <style>
+      .title { font: 700 30px Inter, Segoe UI, Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 17px Inter, Segoe UI, Arial, sans-serif; fill: #475569; }
+      .card-title { font: 700 26px Inter, Segoe UI, Arial, sans-serif; fill: #0f172a; }
+      .card-subtitle { font: 600 15px Inter, Segoe UI, Arial, sans-serif; fill: #475569; }
+      .label { font: 700 16px Inter, Segoe UI, Arial, sans-serif; }
+      .item { font: 500 15px Inter, Segoe UI, Arial, sans-serif; fill: #1e293b; }
+      .small { font: 600 14px Inter, Segoe UI, Arial, sans-serif; fill: #334155; }
+      .note { font: 700 17px Inter, Segoe UI, Arial, sans-serif; fill: #0f172a; }
+      .note-small { font: 500 15px Inter, Segoe UI, Arial, sans-serif; fill: #334155; }
+    </style>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="1050" rx="24" fill="#f8fafc"/>
+  <text x="300" y="50" text-anchor="middle" class="title">Where does your management end?</text>
+  <text x="300" y="80" text-anchor="middle" class="subtitle">The provider-managed boundary grows from IaaS to SaaS.</text>
+
+  <circle cx="165" cy="115" r="8" fill="#2563eb"/>
+  <text x="181" y="120" class="small">Provider manages</text>
+  <circle cx="350" cy="115" r="8" fill="#7c3aed"/>
+  <text x="366" y="120" class="small">You manage</text>
+
+  <g filter="url(#shadow)">
+    <rect x="24" y="145" width="552" height="235" rx="18" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <text x="48" y="185" class="card-title">IaaS</text>
+  <text x="137" y="183" class="card-subtitle">Rent the computing building blocks</text>
+  <rect x="48" y="205" width="504" height="16" rx="8" fill="#7c3aed"/>
+  <rect x="48" y="205" width="176" height="16" rx="8" fill="#2563eb"/>
+  <text x="48" y="251" class="label" fill="#1d4ed8">PROVIDER</text>
+  <text x="316" y="251" class="label" fill="#6d28d9">YOU</text>
+  <text x="48" y="280" class="item">Datacenter + physical network</text>
+  <text x="48" y="306" class="item">Hosts + storage hardware</text>
+  <text x="48" y="332" class="item">Virtualization</text>
+  <text x="316" y="280" class="item">Network configuration + OS</text>
+  <text x="316" y="306" class="item">Runtime + dependencies</text>
+  <text x="316" y="332" class="item">Application + data + access</text>
+  <text x="48" y="361" class="small">Highest low-level control • Most stack operations</text>
+
+  <g filter="url(#shadow)">
+    <rect x="24" y="405" width="552" height="235" rx="18" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <text x="48" y="445" class="card-title">PaaS</text>
+  <text x="140" y="443" class="card-subtitle">Deploy code to a managed platform</text>
+  <rect x="48" y="465" width="504" height="16" rx="8" fill="#7c3aed"/>
+  <rect x="48" y="465" width="328" height="16" rx="8" fill="#2563eb"/>
+  <text x="48" y="511" class="label" fill="#1d4ed8">PROVIDER</text>
+  <text x="316" y="511" class="label" fill="#6d28d9">YOU</text>
+  <text x="48" y="540" class="item">Infrastructure + operating system</text>
+  <text x="48" y="566" class="item">Runtime + middleware</text>
+  <text x="48" y="592" class="item">Platform patching + scaling tools</text>
+  <text x="316" y="540" class="item">Application code + dependencies</text>
+  <text x="316" y="566" class="item">Data + identity + access</text>
+  <text x="316" y="592" class="item">Service configuration + behavior</text>
+  <text x="48" y="621" class="small">Focus on the application • Accept platform constraints</text>
+
+  <g filter="url(#shadow)">
+    <rect x="24" y="665" width="552" height="235" rx="18" fill="#ffffff" stroke="#cbd5e1"/>
+  </g>
+  <text x="48" y="705" class="card-title">SaaS</text>
+  <text x="140" y="703" class="card-subtitle">Configure and use finished software</text>
+  <rect x="48" y="725" width="504" height="16" rx="8" fill="#7c3aed"/>
+  <rect x="48" y="725" width="430" height="16" rx="8" fill="#2563eb"/>
+  <text x="48" y="771" class="label" fill="#1d4ed8">PROVIDER</text>
+  <text x="352" y="771" class="label" fill="#6d28d9">YOU</text>
+  <text x="48" y="800" class="item">Infrastructure + platform</text>
+  <text x="48" y="826" class="item">Application + updates</text>
+  <text x="48" y="852" class="item">Service availability mechanisms</text>
+  <text x="352" y="800" class="item">Users + access</text>
+  <text x="352" y="826" class="item">Data governance</text>
+  <text x="352" y="852" class="item">Settings + use</text>
+  <text x="48" y="881" class="small">Fastest path to a finished capability • Least stack control</text>
+
+  <rect x="24" y="925" width="552" height="101" rx="18" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="300" y="960" text-anchor="middle" class="note">Customer responsibility never reaches zero</text>
+  <text x="300" y="989" text-anchor="middle" class="note-small">Protect data, identities, access, configuration, endpoints,</text>
+  <text x="300" y="1012" text-anchor="middle" class="note-small">and every workload component you control.</text>
+</svg>

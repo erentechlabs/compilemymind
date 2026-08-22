@@ -17,7 +17,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 007 | software | Object-Oriented Programming Explained: The Four Core Principles | published 2026-08-19 | slug object-oriented-programming-principles
 - [x] 008 | systems | Concurrency vs Parallelism Explained | published 2026-08-20 | slug concurrency-vs-parallelism
 - [x] 009 | networks | OSI Model vs TCP/IP Model | published 2026-08-21 | slug osi-vs-tcp-ip-model
-- [ ] 010 | cloud | IaaS vs PaaS vs SaaS Explained
+- [x] 010 | cloud | IaaS vs PaaS vs SaaS Explained | published 2026-08-22 | slug iaas-vs-paas-vs-saas
 - [ ] 011 | cybersecurity | Authentication vs Authorization
 - [ ] 012 | ai | What Is Machine Learning and How Does It Work?
 - [ ] 013 | software | SOLID Principles Explained with Simple Examples
