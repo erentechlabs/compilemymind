@@ -18,7 +18,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 008 | systems | Concurrency vs Parallelism Explained | published 2026-08-20 | slug concurrency-vs-parallelism
 - [x] 009 | networks | OSI Model vs TCP/IP Model | published 2026-08-21 | slug osi-vs-tcp-ip-model
 - [x] 010 | cloud | IaaS vs PaaS vs SaaS Explained | published 2026-08-22 | slug iaas-vs-paas-vs-saas
-- [ ] 011 | cybersecurity | Authentication vs Authorization
+- [x] 011 | cybersecurity | Authentication vs Authorization | published 2026-08-23 | slug authentication-vs-authorization
 - [ ] 012 | ai | What Is Machine Learning and How Does It Work?
 - [ ] 013 | software | SOLID Principles Explained with Simple Examples
 - [ ] 014 | systems | What Is Load Balancing and How Does It Work?

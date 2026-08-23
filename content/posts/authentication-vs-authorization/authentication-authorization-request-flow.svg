@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1040" viewBox="0 0 720 1040" role="img" aria-labelledby="title desc">
+  <title id="title">Authentication and authorization request flow</title>
+  <desc id="desc">A request first passes authentication, which validates a session or authenticator and establishes a subject. Authorization then evaluates the subject, action, resource, and context against policy before enforcement allows or denies the request.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <linearGradient id="authn" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0284c7"/>
+      <stop offset="1" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="authz" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#9333ea"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      .heading { font: 700 30px Inter, Segoe UI, Arial, sans-serif; fill: #f8fafc; }
+      .subtitle { font: 500 17px Inter, Segoe UI, Arial, sans-serif; fill: #cbd5e1; }
+      .step { font: 700 14px Inter, Segoe UI, Arial, sans-serif; letter-spacing: 1.2px; fill: #bae6fd; }
+      .card-title { font: 700 25px Inter, Segoe UI, Arial, sans-serif; fill: #ffffff; }
+      .body { font: 500 17px Inter, Segoe UI, Arial, sans-serif; fill: #e2e8f0; }
+      .small { font: 500 15px Inter, Segoe UI, Arial, sans-serif; fill: #cbd5e1; }
+      .input-label { font: 700 14px Inter, Segoe UI, Arial, sans-serif; letter-spacing: 0.7px; }
+      .input-value { font: 600 16px Inter, Segoe UI, Arial, sans-serif; fill: #f8fafc; }
+      .result { font: 700 20px Inter, Segoe UI, Arial, sans-serif; fill: #ffffff; }
+      .result-small { font: 600 15px Inter, Segoe UI, Arial, sans-serif; }
+    </style>
+  </defs>
+
+  <rect width="720" height="1040" rx="26" fill="url(#bg)"/>
+  <text x="360" y="48" text-anchor="middle" class="heading">Two questions protect every request</text>
+  <text x="360" y="78" text-anchor="middle" class="subtitle">Establish the subject, then decide access to the exact resource</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="112" width="580" height="100" rx="18" fill="#101c31" stroke="#475569" stroke-width="2"/>
+  </g>
+  <circle cx="118" cy="162" r="27" fill="#334155"/>
+  <path d="M106 163 h24 M118 151 v24" stroke="#f8fafc" stroke-width="4" stroke-linecap="round"/>
+  <text x="162" y="153" class="card-title">Incoming request</text>
+  <text x="162" y="181" class="body">GET /invoices/1041 + protected session</text>
+
+  <path d="M360 212 V252" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="264" width="580" height="170" rx="20" fill="url(#authn)"/>
+  </g>
+  <text x="104" y="299" class="step">QUESTION 1</text>
+  <text x="104" y="337" class="card-title">Authentication: who are you?</text>
+  <text x="104" y="374" class="body">Validate the authenticator or session.</text>
+  <text x="104" y="402" class="body">Output: subject = customer C-27</text>
+  <circle cx="586" cy="349" r="36" fill="#075985" stroke="#7dd3fc" stroke-width="3"/>
+  <path d="M570 347 v-11 a16 16 0 0 1 32 0 v11 M565 347 h42 v34 h-42 z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+
+  <path d="M360 434 V474" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="40" y="486" width="640" height="315" rx="20" fill="url(#authz)"/>
+  </g>
+  <text x="74" y="521" class="step" fill="#e9d5ff">QUESTION 2</text>
+  <text x="74" y="559" class="card-title">Authorization: may you do this?</text>
+  <text x="74" y="590" class="body">Evaluate the request against policy.</text>
+
+  <rect x="74" y="620" width="274" height="66" rx="13" fill="#3b0764" stroke="#c4b5fd"/>
+  <text x="94" y="646" class="input-label" fill="#d8b4fe">SUBJECT</text>
+  <text x="94" y="671" class="input-value">customer C-27</text>
+  <rect x="372" y="620" width="274" height="66" rx="13" fill="#3b0764" stroke="#c4b5fd"/>
+  <text x="392" y="646" class="input-label" fill="#d8b4fe">ACTION</text>
+  <text x="392" y="671" class="input-value">invoice:read</text>
+  <rect x="74" y="704" width="274" height="66" rx="13" fill="#3b0764" stroke="#c4b5fd"/>
+  <text x="94" y="730" class="input-label" fill="#d8b4fe">RESOURCE</text>
+  <text x="94" y="755" class="input-value">invoice 1041 → owner C-19</text>
+  <rect x="372" y="704" width="274" height="66" rx="13" fill="#3b0764" stroke="#c4b5fd"/>
+  <text x="392" y="730" class="input-label" fill="#d8b4fe">CONTEXT</text>
+  <text x="392" y="755" class="input-value">tenant + account state</text>
+
+  <path d="M360 801 V841" stroke="#94a3b8" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="360" y="832" text-anchor="middle" class="small">enforce the policy decision</text>
+
+  <g filter="url(#shadow)">
+    <rect x="40" y="853" width="302" height="130" rx="18" fill="#064e3b" stroke="#34d399" stroke-width="3"/>
+    <rect x="378" y="853" width="302" height="130" rx="18" fill="#7f1d1d" stroke="#f87171" stroke-width="3"/>
+  </g>
+  <circle cx="87" cy="906" r="24" fill="#047857"/>
+  <path d="M75 906 l8 8 17-19" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="126" y="900" class="result">ALLOW</text>
+  <text x="126" y="928" class="result-small" fill="#a7f3d0">Only when policy matches</text>
+  <text x="126" y="952" class="result-small" fill="#d1fae5">Return the resource</text>
+
+  <circle cx="425" cy="906" r="24" fill="#b91c1c"/>
+  <path d="M414 895 l22 22 M436 895 l-22 22" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+  <text x="464" y="900" class="result">DENY</text>
+  <text x="464" y="928" class="result-small" fill="#fecaca">Owner does not match</text>
+  <text x="464" y="952" class="result-small" fill="#fee2e2">Reveal no protected data</text>
+
+  <text x="360" y="1015" text-anchor="middle" class="subtitle">A valid login never replaces a resource-level permission check.</text>
+</svg>
