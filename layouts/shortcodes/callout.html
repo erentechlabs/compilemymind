@@ -1,0 +1,6 @@
+{{ $type := .Get "type" | default "note" }}
+{{ $title := .Get "title" | default "Note" }}
+<aside class="infralab-callout infralab-callout--{{ $type }}">
+  <span class="infralab-callout__title">{{ $title }}</span>
+  <div>{{ .Inner | markdownify }}</div>
+</aside>

@@ -1,0 +1,14 @@
+{{ $leftName := .Get "left" }}
+{{ $rightName := .Get "right" }}
+{{ $left := .Page.Resources.GetMatch $leftName }}
+{{ $right := .Page.Resources.GetMatch $rightName }}
+<div class="infralab-image-row">
+  <figure>
+    <img loading="lazy" src="{{ if $left }}{{ $left.RelPermalink }}{{ else }}{{ $leftName }}{{ end }}" alt="{{ .Get "leftCaption" }}">
+    {{ with .Get "leftCaption" }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
+  <figure>
+    <img loading="lazy" src="{{ if $right }}{{ $right.RelPermalink }}{{ else }}{{ $rightName }}{{ end }}" alt="{{ .Get "rightCaption" }}">
+    {{ with .Get "rightCaption" }}<figcaption>{{ . }}</figcaption>{{ end }}
+  </figure>
+</div>

@@ -79,6 +79,13 @@
 </noscript>
 {{ partial "head/css.html" . }}
 
+{{ if .HasShortcode "mermaid" }}
+  {{ $mermaidLibrary := resources.Get "lib/mermaid/mermaid.min.js" }}
+  {{ $mermaidInitializer := resources.Get "js/mermaid-init.js" | minify }}
+  {{ $mermaidBundle := slice $mermaidLibrary $mermaidInitializer | resources.Concat "js/mermaid.js" | fingerprint }}
+  <script src="{{ $mermaidBundle.RelPermalink }}" defer></script>
+{{ end }}
+
 {{ partial "head/favicon.html" . }}
 
 {{ range .AlternativeOutputFormats }}

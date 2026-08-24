@@ -1,0 +1,9 @@
+<section class="infralab-intro">
+  {{ with .Get "kicker" }}<p class="infralab-intro__kicker">{{ . }}</p>{{ end }}
+  {{ with .Get "summary" }}<p class="infralab-intro__summary">{{ . }}</p>{{ end }}
+  {{ with .Get "chips" }}
+    <div class="infralab-chip-row">
+      {{ range (split . ";") }}<span class="infralab-chip">{{ strings.TrimSpace . }}</span>{{ end }}
+    </div>
+  {{ end }}
+</section>

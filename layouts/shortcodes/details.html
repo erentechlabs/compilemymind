@@ -1,0 +1,4 @@
+<details class="infralab-details">
+  <summary>{{ .Get "summary" | default "Show details" }}</summary>
+  <div class="infralab-details__body">{{ .Inner | markdownify }}</div>
+</details>
