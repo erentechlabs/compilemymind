@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" role="img" aria-labelledby="title desc">
+  <title id="title">The machine-learning lifecycle</title>
+  <desc id="desc">A vertical flow from measurable goal through representative data, training, validation and testing, then inference. Production monitoring loops back to the goal and data stages.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <marker id="blue-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#93c5fd"/>
+    </marker>
+    <marker id="green-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#34d399"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#020617" flood-opacity="0.38"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="1100" rx="28" fill="url(#background)"/>
+  <text x="54" y="62" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34" font-weight="700">Machine learning is a controlled loop</text>
+  <text x="54" y="96" fill="#bfdbfe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="17">Training creates parameters. Evaluation and monitoring test whether they stay useful.</text>
+
+  <g fill="none" stroke="#93c5fd" stroke-width="4" marker-end="url(#blue-arrow)">
+    <path d="M400 260 V284"/>
+    <path d="M400 415 V439"/>
+    <path d="M400 570 V594"/>
+    <path d="M400 725 V749"/>
+    <path d="M400 880 V904"/>
+  </g>
+
+  <g filter="url(#shadow)" font-family="Inter, Segoe UI, Arial, sans-serif">
+    <g>
+      <rect x="72" y="130" width="656" height="130" rx="20" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
+      <circle cx="124" cy="195" r="27" fill="#dbeafe"/>
+      <text x="124" y="204" text-anchor="middle" fill="#1e3a8a" font-size="25" font-weight="700">1</text>
+      <text x="174" y="184" fill="#f8fafc" font-size="27" font-weight="700">Frame a measurable goal</text>
+      <text x="174" y="219" fill="#dbeafe" font-size="18">Define the decision, error costs, success metric, and baseline.</text>
+    </g>
+
+    <g>
+      <rect x="72" y="285" width="656" height="130" rx="20" fill="#164e63" stroke="#67e8f9" stroke-width="2"/>
+      <circle cx="124" cy="350" r="27" fill="#cffafe"/>
+      <text x="124" y="359" text-anchor="middle" fill="#155e75" font-size="25" font-weight="700">2</text>
+      <text x="174" y="339" fill="#f8fafc" font-size="27" font-weight="700">Prepare representative data</text>
+      <text x="174" y="374" fill="#cffafe" font-size="18">Create examples and features; keep future evaluation data separate.</text>
+    </g>
+
+    <g>
+      <rect x="72" y="440" width="656" height="130" rx="20" fill="#3b1764" stroke="#c084fc" stroke-width="2"/>
+      <circle cx="124" cy="505" r="27" fill="#f3e8ff"/>
+      <text x="124" y="514" text-anchor="middle" fill="#6b21a8" font-size="25" font-weight="700">3</text>
+      <text x="174" y="494" fill="#f8fafc" font-size="27" font-weight="700">Train the model</text>
+      <text x="174" y="529" fill="#f3e8ff" font-size="18">Adjust parameters to reduce loss on the training examples.</text>
+    </g>
+
+    <g>
+      <rect x="72" y="595" width="656" height="130" rx="20" fill="#713f12" stroke="#facc15" stroke-width="2"/>
+      <circle cx="124" cy="660" r="27" fill="#fef9c3"/>
+      <text x="124" y="669" text-anchor="middle" fill="#854d0e" font-size="25" font-weight="700">4</text>
+      <text x="174" y="649" fill="#f8fafc" font-size="27" font-weight="700">Validate, tune, then test</text>
+      <text x="174" y="684" fill="#fef9c3" font-size="18">Compare choices, then confirm once on untouched examples.</text>
+    </g>
+
+    <g>
+      <rect x="72" y="750" width="656" height="130" rx="20" fill="#14532d" stroke="#4ade80" stroke-width="2"/>
+      <circle cx="124" cy="815" r="27" fill="#dcfce7"/>
+      <text x="124" y="824" text-anchor="middle" fill="#166534" font-size="25" font-weight="700">5</text>
+      <text x="174" y="804" fill="#f8fafc" font-size="27" font-weight="700">Serve new inputs through inference</text>
+      <text x="174" y="839" fill="#dcfce7" font-size="18">Apply the same features, preprocessing, and decision policy.</text>
+    </g>
+  </g>
+
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <rect x="72" y="905" width="656" height="140" rx="22" fill="#064e3b" stroke="#34d399" stroke-width="3" filter="url(#shadow)"/>
+    <text x="112" y="951" fill="#ecfdf5" font-size="26" font-weight="700">Monitor outcomes and changing data</text>
+    <text x="112" y="985" fill="#a7f3d0" font-size="18">Watch input quality, predictions, real-world errors, latency,</text>
+    <text x="112" y="1013" fill="#a7f3d0" font-size="18">and the product result the model was meant to improve.</text>
+  </g>
+
+  <path d="M728 975 H760 V195 H734" fill="none" stroke="#34d399" stroke-width="5" stroke-dasharray="11 9" marker-end="url(#green-arrow)"/>
+  <text x="753" y="559" transform="rotate(-90 753 559)" text-anchor="middle" fill="#6ee7b7" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16" font-weight="600">Investigate, then revise the goal, data, policy, or model</text>
+
+  <text x="400" y="1080" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">A production ML system is the model, data pipeline, decision policy, and monitoring together.</text>
+</svg>
