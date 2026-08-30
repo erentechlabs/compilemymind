@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1040" viewBox="0 0 800 1040" role="img" aria-labelledby="title desc">
+  <title id="title">How the five SOLID principles keep software changes local</title>
+  <desc id="desc">A vertical flow through Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, and Dependency Inversion, ending with a change that stays local.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071A2B"/>
+      <stop offset="1" stop-color="#102A43"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#020A12" flood-opacity="0.34"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#7DD3FC"/>
+    </marker>
+    <style>
+      .heading { font: 700 34px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #F8FAFC; }
+      .subheading { font: 400 19px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #C7D7E5; }
+      .letter { font: 800 38px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #071A2B; }
+      .principle { font: 700 25px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #F8FAFC; }
+      .question { font: 400 23px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #D9E7F2; }
+      .outcome { font: 750 27px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #071A2B; }
+      .outcomeSmall { font: 500 18px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #17324A; }
+    </style>
+  </defs>
+  <rect width="800" height="1040" rx="28" fill="url(#background)"/>
+  <circle cx="690" cy="92" r="94" fill="#0EA5E9" opacity="0.12"/>
+  <circle cx="102" cy="884" r="128" fill="#34D399" opacity="0.09"/>
+
+  <text x="400" y="70" text-anchor="middle" class="heading">SOLID keeps change local</text>
+  <text x="400" y="105" text-anchor="middle" class="subheading">Five design questions, one calmer codebase</text>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="148" width="648" height="118" rx="20" fill="#123A56" stroke="#38BDF8" stroke-width="2"/>
+    <circle cx="142" cy="207" r="35" fill="#7DD3FC"/>
+    <text x="142" y="220" text-anchor="middle" class="letter">S</text>
+    <text x="200" y="186" class="principle">Single Responsibility</text>
+    <text x="200" y="219" class="question">Which kind of change should</text>
+    <text x="200" y="247" class="question">this module own?</text>
+  </g>
+  <path d="M400 266 V294" stroke="#7DD3FC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="306" width="648" height="118" rx="20" fill="#153B4A" stroke="#34D399" stroke-width="2"/>
+    <circle cx="142" cy="365" r="35" fill="#6EE7B7"/>
+    <text x="142" y="378" text-anchor="middle" class="letter">O</text>
+    <text x="200" y="344" class="principle">Open-Closed</text>
+    <text x="200" y="377" class="question">Where should recurring variation</text>
+    <text x="200" y="405" class="question">be extended?</text>
+  </g>
+  <path d="M400 424 V452" stroke="#7DD3FC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="464" width="648" height="118" rx="20" fill="#2B325B" stroke="#A78BFA" stroke-width="2"/>
+    <circle cx="142" cy="523" r="35" fill="#C4B5FD"/>
+    <text x="142" y="536" text-anchor="middle" class="letter">L</text>
+    <text x="200" y="502" class="principle">Liskov Substitution</text>
+    <text x="200" y="535" class="question">Can every implementation honor</text>
+    <text x="200" y="563" class="question">the same promise?</text>
+  </g>
+  <path d="M400 582 V610" stroke="#7DD3FC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="622" width="648" height="118" rx="20" fill="#49313F" stroke="#FB7185" stroke-width="2"/>
+    <circle cx="142" cy="681" r="35" fill="#FDA4AF"/>
+    <text x="142" y="694" text-anchor="middle" class="letter">I</text>
+    <text x="200" y="660" class="principle">Interface Segregation</text>
+    <text x="200" y="693" class="question">Does each client depend only on</text>
+    <text x="200" y="721" class="question">what it uses?</text>
+  </g>
+  <path d="M400 740 V768" stroke="#7DD3FC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="76" y="780" width="648" height="118" rx="20" fill="#4A3B22" stroke="#FBBF24" stroke-width="2"/>
+    <circle cx="142" cy="839" r="35" fill="#FCD34D"/>
+    <text x="142" y="852" text-anchor="middle" class="letter">D</text>
+    <text x="200" y="818" class="principle">Dependency Inversion</text>
+    <text x="200" y="851" class="question">Does policy point toward stable</text>
+    <text x="200" y="879" class="question">abstractions?</text>
+  </g>
+  <path d="M400 898 V926" stroke="#7DD3FC" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="160" y="938" width="480" height="76" rx="38" fill="#A7F3D0"/>
+    <text x="400" y="973" text-anchor="middle" class="outcome">The next change stays local</text>
+    <text x="400" y="997" text-anchor="middle" class="outcomeSmall">Less blast radius • clearer intent • safer tests</text>
+  </g>
+</svg>
