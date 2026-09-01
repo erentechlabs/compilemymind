@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1120" role="img" aria-labelledby="title desc">
+  <title id="title">Router, switch, and modem traffic path</title>
+  <desc id="desc">A vertical network diagram showing an internet provider connected to a modem or optical terminal, then a router, then an Ethernet switch and local devices. Each device is labeled with its distinct decision.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity="0.4"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#93c5fd"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="1120" rx="32" fill="url(#background)"/>
+  <text x="450" y="64" text-anchor="middle" fill="#f8fafc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700">Three devices, three different decisions</text>
+  <text x="450" y="98" text-anchor="middle" fill="#cbd5e1" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">Follow an internet-bound packet from the provider to the local network</text>
+
+  <g filter="url(#shadow)">
+    <rect x="250" y="135" width="400" height="112" rx="24" fill="#1e3a8a" stroke="#60a5fa" stroke-width="2"/>
+    <text x="450" y="181" text-anchor="middle" fill="#dbeafe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="600" letter-spacing="2">OUTSIDE THE PREMISES</text>
+    <text x="450" y="218" text-anchor="middle" fill="#ffffff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28" font-weight="700">Internet provider network</text>
+  </g>
+
+  <path d="M450 250 L450 309" fill="none" stroke="#93c5fd" stroke-width="5" marker-end="url(#arrow)"/>
+  <text x="478" y="286" fill="#bfdbfe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">coax · copper · fiber · radio</text>
+
+  <g filter="url(#shadow)">
+    <rect x="150" y="320" width="600" height="160" rx="24" fill="#164e63" stroke="#22d3ee" stroke-width="3"/>
+    <circle cx="222" cy="400" r="38" fill="#083344" stroke="#67e8f9" stroke-width="3"/>
+    <path d="M205 408 C214 379 230 379 239 408 M202 396 C214 368 230 368 242 396" fill="none" stroke="#a5f3fc" stroke-width="4" stroke-linecap="round"/>
+    <text x="282" y="374" fill="#a5f3fc" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="1">MODEM OR ONT</text>
+    <text x="282" y="410" fill="#ffffff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="27" font-weight="700">Terminates the access link</text>
+    <text x="282" y="442" fill="#cffafe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">“How does data cross the provider medium?”</text>
+  </g>
+
+  <path d="M450 483 L450 542" fill="none" stroke="#93c5fd" stroke-width="5" marker-end="url(#arrow)"/>
+  <text x="478" y="519" fill="#bfdbfe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">provider handoff, often Ethernet</text>
+
+  <g filter="url(#shadow)">
+    <rect x="150" y="553" width="600" height="160" rx="24" fill="#3f1d76" stroke="#a78bfa" stroke-width="3"/>
+    <circle cx="222" cy="633" r="38" fill="#2e1065" stroke="#c4b5fd" stroke-width="3"/>
+    <path d="M203 633 H241 M222 614 V652 M203 633 L211 625 M203 633 L211 641 M241 633 L233 625 M241 633 L233 641 M222 614 L214 622 M222 614 L230 622 M222 652 L214 644 M222 652 L230 644" fill="none" stroke="#ddd6fe" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="282" y="607" fill="#ddd6fe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="1">ROUTER</text>
+    <text x="282" y="643" fill="#ffffff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="27" font-weight="700">Forwards between IP networks</text>
+    <text x="282" y="675" fill="#ede9fe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">“Which network and next hop come next?”</text>
+  </g>
+
+  <path d="M450 716 L450 775" fill="none" stroke="#93c5fd" stroke-width="5" marker-end="url(#arrow)"/>
+  <text x="478" y="752" fill="#bfdbfe" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="16">LAN connection</text>
+
+  <g filter="url(#shadow)">
+    <rect x="150" y="786" width="600" height="160" rx="24" fill="#14532d" stroke="#4ade80" stroke-width="3"/>
+    <rect x="184" y="830" width="76" height="72" rx="12" fill="#052e16" stroke="#86efac" stroke-width="3"/>
+    <g fill="#86efac">
+      <rect x="198" y="846" width="12" height="10" rx="2"/><rect x="216" y="846" width="12" height="10" rx="2"/><rect x="234" y="846" width="12" height="10" rx="2"/>
+      <rect x="198" y="869" width="12" height="10" rx="2"/><rect x="216" y="869" width="12" height="10" rx="2"/><rect x="234" y="869" width="12" height="10" rx="2"/>
+    </g>
+    <text x="282" y="840" fill="#bbf7d0" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" letter-spacing="1">ETHERNET SWITCH</text>
+    <text x="282" y="876" fill="#ffffff" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="27" font-weight="700">Forwards within the local LAN</text>
+    <text x="282" y="908" fill="#dcfce7" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="18">“Which local port leads to this MAC address?”</text>
+  </g>
+
+  <path d="M450 949 L450 991 M450 967 L260 1012 M450 967 L640 1012" fill="none" stroke="#93c5fd" stroke-width="4"/>
+  <g font-family="Inter, Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <rect x="160" y="1000" width="200" height="76" rx="18" fill="#1f2937" stroke="#64748b" stroke-width="2"/>
+    <text x="260" y="1032" fill="#ffffff" font-size="20" font-weight="700">Local devices</text>
+    <text x="260" y="1058" fill="#cbd5e1" font-size="16">PC · printer · server</text>
+    <rect x="540" y="1000" width="200" height="76" rx="18" fill="#1f2937" stroke="#64748b" stroke-width="2"/>
+    <text x="640" y="1032" fill="#ffffff" font-size="20" font-weight="700">Access points</text>
+    <text x="640" y="1058" fill="#cbd5e1" font-size="16">phones · laptops · IoT</text>
+  </g>
+  <text x="450" y="1100" text-anchor="middle" fill="#94a3b8" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="15">A consumer gateway may combine all three functions in one enclosure.</text>
+</svg>

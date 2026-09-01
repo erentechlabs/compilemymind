@@ -22,7 +22,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 012 | ai | What Is Machine Learning and How Does It Work? | published 2026-08-24 | slug what-is-machine-learning
 - [x] 013 | software | SOLID Principles Explained with Simple Examples | published 2026-08-30 | slug solid-principles-explained
 - [x] 014 | systems | What Is Load Balancing and How Does It Work? | published 2026-08-31 | slug what-is-load-balancing
-- [ ] 015 | networks | Router vs Switch vs Modem: What Is the Difference?
+- [x] 015 | networks | Router vs Switch vs Modem: What Is the Difference? | published 2026-09-01 | slug router-vs-switch-vs-modem
 - [ ] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud
 - [ ] 017 | cybersecurity | Encryption vs Hashing vs Encoding
 - [ ] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning
