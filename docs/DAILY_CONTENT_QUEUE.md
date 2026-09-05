@@ -23,7 +23,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 013 | software | SOLID Principles Explained with Simple Examples | published 2026-08-30 | slug solid-principles-explained
 - [x] 014 | systems | What Is Load Balancing and How Does It Work? | published 2026-08-31 | slug what-is-load-balancing
 - [x] 015 | networks | Router vs Switch vs Modem: What Is the Difference? | published 2026-09-01 | slug router-vs-switch-vs-modem
-- [ ] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud
+- [x] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud | published 2026-09-05 | slug public-cloud-vs-private-cloud-vs-hybrid-cloud
 - [ ] 017 | cybersecurity | Encryption vs Hashing vs Encoding
 - [ ] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning
 - [ ] 019 | software | What Is a REST API and How Does It Work?

@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1200" role="img" aria-labelledby="title desc">
+  <title id="title">Public, private, and hybrid cloud boundaries</title>
+  <desc id="desc">A vertical comparison showing public cloud as a provider-operated pool open to many customers, private cloud as an exclusive environment for one organization, and hybrid cloud as distinct public and private environments joined through networking, identity, data, and operations.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="public" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#164e63"/>
+      <stop offset="1" stop-color="#155e75"/>
+    </linearGradient>
+    <linearGradient id="private" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3b1d65"/>
+      <stop offset="1" stop-color="#5b21b6"/>
+    </linearGradient>
+    <filter id="shadow" x="-15%" y="-15%" width="130%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020617" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#fbbf24"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="1200" rx="32" fill="url(#bg)"/>
+  <g font-family="Inter, Segoe UI, Arial, sans-serif">
+    <text x="450" y="58" text-anchor="middle" fill="#f8fafc" font-size="34" font-weight="700">Cloud models are operating boundaries</text>
+    <text x="450" y="94" text-anchor="middle" fill="#cbd5e1" font-size="21">The building matters less than who uses the cloud and how it connects</text>
+
+    <g filter="url(#shadow)">
+      <rect x="70" y="130" width="760" height="250" rx="26" fill="url(#public)" stroke="#22d3ee" stroke-width="3"/>
+      <circle cx="150" cy="212" r="48" fill="#083344" stroke="#67e8f9" stroke-width="3"/>
+      <path d="M122 220 C125 200 142 192 155 202 C165 181 199 190 199 214 C216 218 217 244 196 246 H128 C109 245 106 224 122 220Z" fill="none" stroke="#a5f3fc" stroke-width="5" stroke-linejoin="round"/>
+      <text x="226" y="180" fill="#a5f3fc" font-size="20" font-weight="700" letter-spacing="2">PUBLIC CLOUD</text>
+      <text x="226" y="220" fill="#ffffff" font-size="29" font-weight="700">A provider-operated service pool</text>
+      <text x="226" y="254" fill="#cffafe" font-size="22">Provisioned for open use by many customers</text>
+
+      <rect x="110" y="294" width="196" height="58" rx="14" fill="#083344" stroke="#67e8f9" stroke-width="2"/>
+      <rect x="352" y="294" width="196" height="58" rx="14" fill="#083344" stroke="#67e8f9" stroke-width="2"/>
+      <rect x="594" y="294" width="196" height="58" rx="14" fill="#083344" stroke="#67e8f9" stroke-width="2"/>
+      <text x="208" y="330" text-anchor="middle" fill="#ecfeff" font-size="21" font-weight="600">Customer A</text>
+      <text x="450" y="330" text-anchor="middle" fill="#ecfeff" font-size="21" font-weight="600">Customer B</text>
+      <text x="692" y="330" text-anchor="middle" fill="#ecfeff" font-size="21" font-weight="600">Customer C</text>
+    </g>
+
+    <g filter="url(#shadow)">
+      <rect x="70" y="416" width="760" height="250" rx="26" fill="url(#private)" stroke="#c4b5fd" stroke-width="3"/>
+      <circle cx="150" cy="500" r="48" fill="#2e1065" stroke="#c4b5fd" stroke-width="3"/>
+      <rect x="125" y="494" width="50" height="36" rx="5" fill="none" stroke="#ddd6fe" stroke-width="5"/>
+      <path d="M134 494 V479 C134 459 166 459 166 479 V494" fill="none" stroke="#ddd6fe" stroke-width="5" stroke-linecap="round"/>
+      <text x="226" y="466" fill="#ddd6fe" font-size="20" font-weight="700" letter-spacing="2">PRIVATE CLOUD</text>
+      <text x="226" y="506" fill="#ffffff" font-size="29" font-weight="700">An exclusive cloud environment</text>
+      <text x="226" y="540" fill="#ede9fe" font-size="22">Provisioned for one organization only</text>
+
+      <rect x="110" y="580" width="680" height="58" rx="14" fill="#2e1065" stroke="#c4b5fd" stroke-width="2"/>
+      <text x="450" y="606" text-anchor="middle" fill="#ffffff" font-size="21" font-weight="700">One organization · on premises or hosted elsewhere</text>
+      <text x="450" y="630" text-anchor="middle" fill="#ddd6fe" font-size="18">Owned or operated by the organization, a third party, or both</text>
+    </g>
+
+    <g filter="url(#shadow)">
+      <rect x="70" y="702" width="760" height="358" rx="26" fill="#713f12" stroke="#fbbf24" stroke-width="3"/>
+      <text x="450" y="752" text-anchor="middle" fill="#fde68a" font-size="20" font-weight="700" letter-spacing="2">HYBRID CLOUD</text>
+      <text x="450" y="790" text-anchor="middle" fill="#ffffff" font-size="29" font-weight="700">Distinct environments that work together</text>
+
+      <rect x="108" y="830" width="246" height="112" rx="20" fill="#164e63" stroke="#67e8f9" stroke-width="3"/>
+      <text x="231" y="876" text-anchor="middle" fill="#ffffff" font-size="25" font-weight="700">Public cloud</text>
+      <text x="231" y="910" text-anchor="middle" fill="#cffafe" font-size="20">Elastic services</text>
+
+      <rect x="546" y="830" width="246" height="112" rx="20" fill="#3b1d65" stroke="#c4b5fd" stroke-width="3"/>
+      <text x="669" y="876" text-anchor="middle" fill="#ffffff" font-size="25" font-weight="700">Private cloud</text>
+      <text x="669" y="910" text-anchor="middle" fill="#ede9fe" font-size="20">Exclusive environment</text>
+
+      <path d="M362 886 H538" fill="none" stroke="#fbbf24" stroke-width="6" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+      <circle cx="450" cy="886" r="38" fill="#422006" stroke="#fcd34d" stroke-width="3"/>
+      <path d="M431 886 H469 M450 867 V905" stroke="#fef3c7" stroke-width="5" stroke-linecap="round"/>
+
+      <rect x="108" y="976" width="684" height="56" rx="14" fill="#422006" stroke="#fcd34d" stroke-width="2"/>
+      <text x="450" y="1011" text-anchor="middle" fill="#fef3c7" font-size="21" font-weight="600">Network · identity · data · deployment · monitoring · recovery</text>
+    </g>
+
+    <text x="450" y="1115" text-anchor="middle" fill="#f8fafc" font-size="27" font-weight="700">Choose per workload, then design the connections</text>
+    <text x="450" y="1151" text-anchor="middle" fill="#cbd5e1" font-size="21">Latency · location · control · skills · elasticity · cost · failure modes</text>
+  </g>
+</svg>
