@@ -24,7 +24,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 014 | systems | What Is Load Balancing and How Does It Work? | published 2026-08-31 | slug what-is-load-balancing
 - [x] 015 | networks | Router vs Switch vs Modem: What Is the Difference? | published 2026-09-01 | slug router-vs-switch-vs-modem
 - [x] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud | published 2026-09-05 | slug public-cloud-vs-private-cloud-vs-hybrid-cloud
-- [ ] 017 | cybersecurity | Encryption vs Hashing vs Encoding
+- [x] 017 | cybersecurity | Encryption vs Hashing vs Encoding | published 2026-09-18 | slug encryption-vs-hashing-vs-encoding
 - [ ] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning
 - [ ] 019 | software | What Is a REST API and How Does It Work?
 - [ ] 020 | systems | What Is a Reverse Proxy?

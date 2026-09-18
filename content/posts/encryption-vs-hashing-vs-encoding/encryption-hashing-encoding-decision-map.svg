@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1160" viewBox="0 0 1000 1160" role="img" aria-labelledby="title desc">
+  <title id="title">Encryption, hashing, and encoding decision map</title>
+  <desc id="desc">Three vertical paths compare encryption for key-controlled recovery, hashing for one-way verification, and encoding for public reversible representation.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f172a"/>
+      <stop offset="1" stop-color="#172554"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#38bdf8"/></marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#fbbf24"/></marker>
+    <marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#34d399"/></marker>
+    <style>
+      .title{font:700 38px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#f8fafc;text-anchor:middle}.subtitle{font:400 19px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#cbd5e1;text-anchor:middle}.laneTitle{font:700 27px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#f8fafc}.laneSub{font:500 17px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#cbd5e1}.label{font:700 18px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#f8fafc;text-anchor:middle}.body{font:400 17px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#dbeafe;text-anchor:middle}.chip{font:700 16px system-ui,-apple-system,"Segoe UI",sans-serif;text-anchor:middle}.foot{font:600 19px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#e2e8f0;text-anchor:middle}.arrow{fill:none;stroke-width:4;stroke-linecap:round}
+    </style>
+  </defs>
+  <rect width="1000" height="1160" rx="34" fill="url(#bg)"/>
+  <text x="500" y="64" class="title">Same input. Three different promises.</text>
+  <text x="500" y="99" class="subtitle">Choose by what must happen to the original data later.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="65" y="145" width="870" height="282" rx="24" fill="#102a43" stroke="#38bdf8" stroke-width="3"/>
+    <rect x="65" y="145" width="14" height="282" rx="7" fill="#38bdf8"/>
+    <text x="105" y="190" class="laneTitle">ENCRYPTION</text>
+    <text x="105" y="219" class="laneSub">Confidentiality with authorized recovery</text>
+    <rect x="112" y="260" width="195" height="76" rx="16" fill="#1e3a5f" stroke="#7dd3fc"/>
+    <text x="210" y="292" class="label">PLAINTEXT</text><text x="210" y="317" class="body">invoice.pdf</text>
+    <path d="M 320 298 L 445 298" class="arrow" stroke="#38bdf8" marker-end="url(#arrowBlue)"/>
+    <rect x="350" y="250" width="90" height="32" rx="16" fill="#bae6fd"/><text x="395" y="272" class="chip" fill="#0c4a6e">KEY</text>
+    <rect x="464" y="260" width="195" height="76" rx="16" fill="#1e3a5f" stroke="#7dd3fc"/>
+    <text x="562" y="292" class="label">CIPHERTEXT</text><text x="562" y="317" class="body">unreadable bytes</text>
+    <path d="M 674 298 L 799 298" class="arrow" stroke="#38bdf8" marker-end="url(#arrowBlue)"/>
+    <rect x="694" y="250" width="90" height="32" rx="16" fill="#bae6fd"/><text x="739" y="272" class="chip" fill="#0c4a6e">KEY</text>
+    <rect x="812" y="260" width="88" height="76" rx="16" fill="#0c4a6e" stroke="#7dd3fc"/>
+    <text x="856" y="292" class="label">READ</text><text x="856" y="317" class="body">again</text>
+    <text x="500" y="383" class="foot">Secret key material controls the return path</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="65" y="458" width="870" height="282" rx="24" fill="#3b2a13" stroke="#fbbf24" stroke-width="3"/>
+    <rect x="65" y="458" width="14" height="282" rx="7" fill="#fbbf24"/>
+    <text x="105" y="503" class="laneTitle">HASHING</text>
+    <text x="105" y="532" class="laneSub">One-way digest for comparison or verification</text>
+    <rect x="112" y="573" width="195" height="76" rx="16" fill="#4a3518" stroke="#fde68a"/>
+    <text x="210" y="605" class="label">INPUT</text><text x="210" y="630" class="body">invoice.pdf</text>
+    <path d="M 320 611 L 452 611" class="arrow" stroke="#fbbf24" marker-end="url(#arrowAmber)"/>
+    <rect x="464" y="573" width="235" height="76" rx="16" fill="#4a3518" stroke="#fde68a"/>
+    <text x="582" y="605" class="label">FIXED-SIZE DIGEST</text><text x="582" y="630" class="body">9b71d2…c3a5</text>
+    <path d="M 712 611 L 806 611" class="arrow" stroke="#fbbf24" marker-end="url(#arrowAmber)"/>
+    <rect x="817" y="573" width="83" height="76" rx="16" fill="#78350f" stroke="#fde68a"/>
+    <text x="858" y="605" class="label">MATCH?</text><text x="858" y="630" class="body">yes / no</text>
+    <path d="M 582 660 L 582 685" class="arrow" stroke="#fca5a5"/>
+    <text x="582" y="712" class="foot" fill="#fecaca">No designed recovery path</text>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="65" y="771" width="870" height="282" rx="24" fill="#12372f" stroke="#34d399" stroke-width="3"/>
+    <rect x="65" y="771" width="14" height="282" rx="7" fill="#34d399"/>
+    <text x="105" y="816" class="laneTitle">ENCODING</text>
+    <text x="105" y="845" class="laneSub">Compatible representation with public reversal</text>
+    <rect x="112" y="886" width="195" height="76" rx="16" fill="#164e3f" stroke="#6ee7b7"/>
+    <text x="210" y="918" class="label">BYTES</text><text x="210" y="943" class="body">invoice.pdf</text>
+    <path d="M 320 924 L 452 924" class="arrow" stroke="#34d399" marker-end="url(#arrowGreen)"/>
+    <rect x="464" y="886" width="235" height="76" rx="16" fill="#164e3f" stroke="#6ee7b7"/>
+    <text x="582" y="918" class="label">BASE64 TEXT</text><text x="582" y="943" class="body">aW52b2ljZS…</text>
+    <path d="M 712 924 L 806 924" class="arrow" stroke="#34d399" marker-end="url(#arrowGreen)"/>
+    <rect x="817" y="886" width="83" height="76" rx="16" fill="#065f46" stroke="#6ee7b7"/>
+    <text x="858" y="918" class="label">BYTES</text><text x="858" y="943" class="body">again</text>
+    <text x="500" y="1009" class="foot">The format is the instruction—no secret required</text>
+  </g>
+
+  <rect x="150" y="1085" width="700" height="46" rx="23" fill="#f8fafc"/>
+  <text x="500" y="1115" class="chip" fill="#0f172a">Recover securely → encrypt  •  Verify → hash  •  Represent → encode</text>
+</svg>
