@@ -25,7 +25,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 015 | networks | Router vs Switch vs Modem: What Is the Difference? | published 2026-09-01 | slug router-vs-switch-vs-modem
 - [x] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud | published 2026-09-05 | slug public-cloud-vs-private-cloud-vs-hybrid-cloud
 - [x] 017 | cybersecurity | Encryption vs Hashing vs Encoding | published 2026-09-18 | slug encryption-vs-hashing-vs-encoding
-- [ ] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning
+- [x] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning | published 2026-09-19 | slug supervised-vs-unsupervised-vs-reinforcement-learning
 - [ ] 019 | software | What Is a REST API and How Does It Work?
 - [ ] 020 | systems | What Is a Reverse Proxy?
 - [ ] 021 | networks | LAN vs WAN vs VLAN Explained
