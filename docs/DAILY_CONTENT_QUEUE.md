@@ -26,7 +26,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 016 | cloud | Public Cloud vs Private Cloud vs Hybrid Cloud | published 2026-09-05 | slug public-cloud-vs-private-cloud-vs-hybrid-cloud
 - [x] 017 | cybersecurity | Encryption vs Hashing vs Encoding | published 2026-09-18 | slug encryption-vs-hashing-vs-encoding
 - [x] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning | published 2026-09-19 | slug supervised-vs-unsupervised-vs-reinforcement-learning
-- [ ] 019 | software | What Is a REST API and How Does It Work?
+- [x] 019 | software | What Is a REST API and How Does It Work? | published 2026-09-20 | slug what-is-a-rest-api
 - [ ] 020 | systems | What Is a Reverse Proxy?
 - [ ] 021 | networks | LAN vs WAN vs VLAN Explained
 - [ ] 022 | cloud | Virtual Machines vs Containers

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="1240" viewBox="0 0 960 1240" role="img" aria-labelledby="title desc">
+  <title id="title">How one REST API interaction works</title>
+  <desc id="desc">A vertical flow from a client through HTTP layers to an order resource and back as a representation, highlighting a uniform interface, stateless requests, caching, and hypermedia links.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081426"/>
+      <stop offset="1" stop-color="#102742"/>
+    </linearGradient>
+    <linearGradient id="request" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="response" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#c084fc"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#020617" flood-opacity="0.35"/>
+    </filter>
+    <marker id="arrowCyan" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arrowPurple" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0 L12 6 L0 12 Z" fill="#c084fc"/>
+    </marker>
+    <style>
+      .sans { font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+      .mono { font-family: "Cascadia Code", "SFMono-Regular", Consolas, monospace; }
+      .muted { fill: #b8c7da; }
+      .small { font-size: 24px; }
+      .label { font-size: 22px; font-weight: 700; letter-spacing: 1.2px; }
+    </style>
+  </defs>
+
+  <rect width="960" height="1240" rx="36" fill="url(#background)"/>
+  <circle cx="850" cy="95" r="190" fill="#22d3ee" opacity="0.06"/>
+  <circle cx="90" cy="1120" r="230" fill="#a78bfa" opacity="0.07"/>
+
+  <text x="480" y="72" text-anchor="middle" class="sans" font-size="38" font-weight="800" fill="#f8fafc">One resource, one uniform interface</text>
+  <text x="480" y="111" text-anchor="middle" class="sans muted" font-size="23">The message explains the interaction from request to next action</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="154" width="800" height="152" rx="24" fill="#122f4b" stroke="#38bdf8" stroke-width="2"/>
+    <rect x="104" y="180" width="142" height="100" rx="18" fill="#0a1d31"/>
+    <circle cx="175" cy="217" r="20" fill="#38bdf8"/>
+    <path d="M140 267c4-24 19-36 35-36s31 12 35 36" fill="#38bdf8"/>
+    <text x="276" y="192" class="sans label" fill="#7dd3fc">CLIENT INTENT</text>
+    <text x="276" y="232" class="mono" font-size="28" font-weight="700" fill="#f8fafc">GET /orders/42</text>
+    <text x="276" y="269" class="mono small" fill="#cbd5e1">Accept: application/json</text>
+  </g>
+
+  <path d="M480 318 V382" stroke="url(#request)" stroke-width="8" stroke-linecap="round" marker-end="url(#arrowCyan)"/>
+  <text x="506" y="357" class="sans" font-size="21" font-weight="700" fill="#67e8f9">SELF-CONTAINED REQUEST</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="396" width="800" height="160" rx="24" fill="#17253b" stroke="#64748b" stroke-width="2"/>
+    <text x="112" y="432" class="sans label" fill="#cbd5e1">HTTP LAYERS</text>
+    <g class="sans" font-size="23" font-weight="700" text-anchor="middle">
+      <rect x="112" y="458" width="156" height="62" rx="15" fill="#243b53"/>
+      <text x="190" y="497" fill="#f8fafc">Gateway</text>
+      <rect x="286" y="458" width="156" height="62" rx="15" fill="#243b53"/>
+      <text x="364" y="497" fill="#f8fafc">Auth</text>
+      <rect x="460" y="458" width="156" height="62" rx="15" fill="#243b53"/>
+      <text x="538" y="497" fill="#f8fafc">Cache</text>
+      <rect x="634" y="458" width="214" height="62" rx="15" fill="#243b53"/>
+      <text x="741" y="497" fill="#f8fafc">Load balancer</text>
+    </g>
+    <text x="480" y="544" text-anchor="middle" class="sans" font-size="19" fill="#aebed1">The client does not need to know which layer answers</text>
+  </g>
+
+  <path d="M480 568 V632" stroke="url(#request)" stroke-width="8" stroke-linecap="round" marker-end="url(#arrowCyan)"/>
+  <text x="506" y="607" class="sans" font-size="21" font-weight="700" fill="#67e8f9">STANDARD SEMANTICS</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="646" width="800" height="190" rx="24" fill="#16352f" stroke="#34d399" stroke-width="2"/>
+    <text x="112" y="684" class="sans label" fill="#6ee7b7">ORIGIN SERVER</text>
+    <rect x="112" y="708" width="304" height="92" rx="18" fill="#0b2521"/>
+    <text x="136" y="745" class="sans" font-size="24" font-weight="700" fill="#f8fafc">Resource identity</text>
+    <text x="136" y="778" class="mono" font-size="23" fill="#a7f3d0">/orders/42</text>
+    <rect x="436" y="708" width="412" height="92" rx="18" fill="#0b2521"/>
+    <text x="460" y="745" class="sans" font-size="24" font-weight="700" fill="#f8fafc">Current server state</text>
+    <text x="460" y="778" class="mono" font-size="23" fill="#a7f3d0">status = pending</text>
+    <text x="480" y="822" text-anchor="middle" class="sans" font-size="19" fill="#b7d8cf">Business rules select a representation; HTTP does not define the order</text>
+  </g>
+
+  <path d="M455 848 V910" stroke="url(#response)" stroke-width="8" stroke-linecap="round" marker-end="url(#arrowPurple)"/>
+  <text x="480" y="884" text-anchor="end" class="sans" font-size="21" font-weight="700" fill="#d8b4fe">SELF-DESCRIPTIVE RESPONSE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="80" y="924" width="800" height="206" rx="24" fill="#2a2145" stroke="#c084fc" stroke-width="2"/>
+    <text x="112" y="960" class="sans label" fill="#d8b4fe">REPRESENTATION</text>
+    <text x="112" y="1001" class="mono" font-size="25" font-weight="700" fill="#f8fafc">200 OK · application/json</text>
+    <text x="112" y="1038" class="mono small" fill="#ddd6fe">Cache-Control: private, max-age=60</text>
+    <text x="112" y="1073" class="mono small" fill="#ddd6fe">ETag: "order-42-v7"</text>
+    <rect x="600" y="970" width="236" height="124" rx="17" fill="#17132b"/>
+    <text x="624" y="1004" class="sans" font-size="20" font-weight="700" fill="#f8fafc">Links describe</text>
+    <text x="624" y="1034" class="sans" font-size="20" font-weight="700" fill="#f8fafc">possible next steps</text>
+    <text x="624" y="1072" class="mono" font-size="21" fill="#d8b4fe">self · cancel</text>
+  </g>
+
+  <g class="sans" text-anchor="middle">
+    <rect x="80" y="1162" width="246" height="48" rx="24" fill="#083344" stroke="#22d3ee"/>
+    <text x="203" y="1194" font-size="20" font-weight="800" fill="#a5f3fc">STATELESS REQUEST</text>
+    <rect x="357" y="1162" width="246" height="48" rx="24" fill="#3b1d57" stroke="#c084fc"/>
+    <text x="480" y="1194" font-size="20" font-weight="800" fill="#e9d5ff">CACHE-AWARE</text>
+    <rect x="634" y="1162" width="246" height="48" rx="24" fill="#13372f" stroke="#34d399"/>
+    <text x="757" y="1194" font-size="20" font-weight="800" fill="#a7f3d0">LINKED TRANSITIONS</text>
+  </g>
+</svg>
