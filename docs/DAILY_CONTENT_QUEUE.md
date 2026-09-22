@@ -28,7 +28,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 018 | ai | Supervised vs Unsupervised vs Reinforcement Learning | published 2026-09-19 | slug supervised-vs-unsupervised-vs-reinforcement-learning
 - [x] 019 | software | What Is a REST API and How Does It Work? | published 2026-09-20 | slug what-is-a-rest-api
 - [x] 020 | systems | What Is a Reverse Proxy? | published 2026-09-21 | slug what-is-a-reverse-proxy
-- [ ] 021 | networks | LAN vs WAN vs VLAN Explained
+- [x] 021 | networks | LAN vs WAN vs VLAN Explained | published 2026-09-22 | slug lan-vs-wan-vs-vlan
 - [ ] 022 | cloud | Virtual Machines vs Containers
 - [ ] 023 | cybersecurity | Symmetric vs Asymmetric Encryption
 - [ ] 024 | ai | What Is Generative AI?
