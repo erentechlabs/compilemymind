@@ -1,7 +1,7 @@
 ---
 title: "Debrief: Building a Copilot Studio Agent That Knows What to Leave Out"
 date: "2026-09-23T22:29:22+03:00"
-lastmod: "2026-09-23T22:29:22+03:00"
+lastmod: "2026-09-23T23:39:28+03:00"
 description: "How I built and hardened a Copilot Studio agent that turns scattered closeout material into a traceable bilingual executive brief without leaking internal context."
 summary: "Debrief turns transcripts, recap notes, email threads, and engineering findings into a two-page executive brief in English and Turkish. The hard part was not writing; it was building evidence, privacy, and delivery guardrails that fail closed."
 image: "cover.png"
@@ -11,10 +11,10 @@ publisher: "Compile My Mind"
 draft: false
 last_reviewed: "2026-09-23"
 verification_status: "Project artifacts and official documentation reviewed"
-verification_date: "2026-09-23T19:29:22Z"
-verification_version: 1
-version_context: "Personal Microsoft Global Hackathon 2026 project write-up. Copilot Studio publishing, Work IQ preview, Teams and Microsoft 365 channels, and custom-connector behavior were checked against Microsoft Learn documentation available in September 2026."
-privacy_review: "Completed. Assets exposing account identity were excluded; every customer, person, figure, filename, and document shown in the included demo material is synthetic."
+verification_date: "2026-09-23T20:39:28Z"
+verification_version: 2
+version_context: "Personal Microsoft Global Hackathon 2026 project write-up. Copilot Studio publishing, Work IQ preview, Teams and Microsoft 365 channels, custom-connector behavior, and the public Debrief reference implementation at commit 6e0562d were reviewed in September 2026."
+privacy_review: "Completed. The included Copilot Studio screenshot masks the account name; assets that still expose account identity were excluded. Every customer, person, figure, filename, and document shown in the demo material is synthetic."
 recheck_after: "2027-03-23"
 ---
 
@@ -98,6 +98,8 @@ The agent's procedures live in four focused skills:
 
 Keeping these jobs separate made failures easier to reproduce. It also stopped unrelated changes from turning the main instructions into an unreadable wall of exceptions.
 
+{{< figure src="copilot-studio-build-redacted.png" alt="Debrief agent configuration in Copilot Studio with the account name redacted" caption="The working Copilot Studio configuration: one instruction set, four focused skills, Work IQ, four knowledge sources, and the Teams + Microsoft 365 channel. The account name is masked for privacy." >}}
+
 ## The deterministic half
 
 I wrote the renderer before tuning the agent instructions.
@@ -152,6 +154,61 @@ The examples in this article are synthetic, but the rules are real:
 - **Output is deliberate.** The rendering directory contains only the intended customer artifact, because host systems may attach everything they find there.
 
 The renderer became the least exciting part of the system, which is exactly what I wanted. The same valid payload produces the same shape. Invalid input stops before a PDF exists.
+
+## Run the public reference implementation
+
+The complete synthetic reference implementation is available in the [Debrief GitHub repository](https://github.com/erentechlabs/Debrief). It contains more than the screenshots used in this article:
+
+| Path | What it contains |
+|---|---|
+| `agent/instructions.md` | The main Copilot Studio instruction set |
+| `agent/skills/` | The four focused skills used by the agent |
+| `renderer/executive_brief.py` | The offline schema validator and PDF renderer |
+| `examples/` | English and Turkish payloads plus example PDFs |
+| `demo/northwind-energy/` | A fully synthetic closeout pack for manual testing |
+| `tests/packs/kuzey-enerji/` | A second synthetic, Turkish regression pack |
+| `hours-bridge/samples/` | Example CSV snapshots for the contract-hours bridge |
+| `images/` and `media/` | The diagrams, screenshots, and demo video |
+
+The repository is a reference implementation, not a one-click Copilot Studio solution package. You still need to create the agent in your own environment, configure the permitted knowledge and tools, add Work IQ where available, connect the Teams and Microsoft 365 channel, and follow your tenant's approval policies. The repository supplies the behavior, deterministic renderer, synthetic evidence packs, and reproducible examples.
+
+### Install the renderer locally
+
+The renderer requires Python 3.10 or newer, ReportLab, and pypdf. The following PowerShell workflow keeps the dependencies inside a virtual environment:
+
+```powershell
+git clone https://github.com/erentechlabs/Debrief.git
+Set-Location Debrief
+
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install reportlab pypdf
+```
+
+Create an empty output directory and render the English synthetic example:
+
+```powershell
+New-Item -ItemType Directory -Path .\output\en
+
+.\.venv\Scripts\python.exe -B .\renderer\executive_brief.py `
+  .\examples\northwind-energy.en.json `
+  --output-dir .\output\en `
+  --filename northwind-en-draft.pdf
+```
+
+The renderer prints a small JSON result containing the filename, byte size, page count, renderer version, and SHA-256 digest. On the reviewed repository commit, the example completed as a two-page PDF. Use a separate empty output directory for each artifact so stale or unrelated files cannot be mistaken for deliverables.
+
+### Verify the embedded skill source
+
+The fixed-renderer skill embeds the renderer source and its SHA-256. This read-only check confirms that the embedded copy, stated hash, and source file still agree:
+
+```powershell
+.\.venv\Scripts\python.exe .\agent\build_skills.py
+```
+
+If you intentionally modify the renderer, review the change first and then use `--write` to refresh the embedded code and hash. Running the check without `--write` is the safer default for CI and review.
+
+Once the local example passes, copy the main instructions and four skill definitions into the corresponding Copilot Studio agent configuration. Add only knowledge sources and connections that your users are authorized to access. The synthetic packs are safe for initial evaluation; replace them with real material only inside an approved environment with the same evidence and classification boundaries.
 
 ## The guardrails became the product
 
@@ -263,6 +320,7 @@ For related architecture and security ideas, see [What Is Software Architecture?
 
 ## Sources
 
+- [GitHub: Debrief public reference implementation](https://github.com/erentechlabs/Debrief)
 - [Microsoft Learn: Work IQ in Microsoft Copilot Studio](https://learn.microsoft.com/en-us/microsoft-copilot-studio/add-work-iq)
 - [Microsoft Learn: Publish an agent](https://learn.microsoft.com/en-us/microsoft-copilot-studio/agents-experience/publication-publish-agent)
 - [Microsoft Learn: Connect an agent to Teams and Microsoft 365 Copilot](https://learn.microsoft.com/en-us/microsoft-copilot-studio/publication-add-bot-to-microsoft-teams)
