@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1060" viewBox="0 0 720 1060" role="img" aria-labelledby="title desc">
+  <title id="title">Virtual machine and container architecture comparison</title>
+  <desc id="desc">The virtual machine stack has a hypervisor and two virtual machines, each with its own guest kernel. The container stack has one host operating system and kernel shared by three isolated application containers.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+      .hardware { fill: #0f172a; }
+      .platform { fill: #1d4ed8; }
+      .kernel { fill: #7c3aed; }
+      .app { fill: #0f766e; }
+      .boundary { fill: none; stroke: #64748b; stroke-width: 2; stroke-dasharray: 8 6; }
+      .title { font: 700 30px system-ui, sans-serif; fill: #0f172a; }
+      .section { font: 700 25px system-ui, sans-serif; fill: #0f172a; }
+      .label { font: 700 18px system-ui, sans-serif; fill: #ffffff; }
+      .dark-label { font: 700 18px system-ui, sans-serif; fill: #0f172a; }
+      .small { font: 500 16px system-ui, sans-serif; fill: #334155; }
+      .note { font: 600 16px system-ui, sans-serif; fill: #5b21b6; }
+    </style>
+  </defs>
+  <rect class="bg" width="720" height="1060" rx="24"/>
+  <text class="title" x="360" y="52" text-anchor="middle">Where the isolation boundary sits</text>
+
+  <rect class="panel" x="35" y="82" width="650" height="420" rx="20"/>
+  <text class="section" x="65" y="122">Virtual machines</text>
+  <text class="small" x="65" y="150">Each VM boots its own guest operating system and kernel.</text>
+
+  <rect class="boundary" x="70" y="176" width="270" height="190" rx="16"/>
+  <text class="dark-label" x="205" y="205" text-anchor="middle">VM A boundary</text>
+  <rect class="app" x="92" y="222" width="226" height="54" rx="10"/>
+  <text class="label" x="205" y="256" text-anchor="middle">Application A</text>
+  <rect class="kernel" x="92" y="290" width="226" height="54" rx="10"/>
+  <text class="label" x="205" y="324" text-anchor="middle">Guest OS + kernel</text>
+
+  <rect class="boundary" x="380" y="176" width="270" height="190" rx="16"/>
+  <text class="dark-label" x="515" y="205" text-anchor="middle">VM B boundary</text>
+  <rect class="app" x="402" y="222" width="226" height="54" rx="10"/>
+  <text class="label" x="515" y="256" text-anchor="middle">Application B</text>
+  <rect class="kernel" x="402" y="290" width="226" height="54" rx="10"/>
+  <text class="label" x="515" y="324" text-anchor="middle">Guest OS + kernel</text>
+
+  <rect class="platform" x="70" y="382" width="580" height="48" rx="10"/>
+  <text class="label" x="360" y="413" text-anchor="middle">Hypervisor: virtual CPU, memory, disk, network</text>
+  <rect class="hardware" x="70" y="442" width="580" height="38" rx="9"/>
+  <text class="label" x="360" y="468" text-anchor="middle">Physical hardware</text>
+
+  <rect class="panel" x="35" y="530" width="650" height="485" rx="20"/>
+  <text class="section" x="65" y="570">Containers</text>
+  <text class="small" x="65" y="598">Containers isolate processes but normally share the host kernel.</text>
+
+  <rect class="boundary" x="65" y="630" width="180" height="150" rx="16"/>
+  <text class="dark-label" x="155" y="660" text-anchor="middle">Container A</text>
+  <rect class="app" x="82" y="683" width="146" height="70" rx="10"/>
+  <text class="label" x="155" y="712" text-anchor="middle">App A</text>
+  <text class="label" x="155" y="737" text-anchor="middle">+ libraries</text>
+
+  <rect class="boundary" x="270" y="630" width="180" height="150" rx="16"/>
+  <text class="dark-label" x="360" y="660" text-anchor="middle">Container B</text>
+  <rect class="app" x="287" y="683" width="146" height="70" rx="10"/>
+  <text class="label" x="360" y="712" text-anchor="middle">App B</text>
+  <text class="label" x="360" y="737" text-anchor="middle">+ libraries</text>
+
+  <rect class="boundary" x="475" y="630" width="180" height="150" rx="16"/>
+  <text class="dark-label" x="565" y="660" text-anchor="middle">Container C</text>
+  <rect class="app" x="492" y="683" width="146" height="70" rx="10"/>
+  <text class="label" x="565" y="712" text-anchor="middle">App C</text>
+  <text class="label" x="565" y="737" text-anchor="middle">+ libraries</text>
+
+  <rect class="platform" x="70" y="800" width="580" height="48" rx="10"/>
+  <text class="label" x="360" y="831" text-anchor="middle">Container runtime</text>
+  <rect class="kernel" x="70" y="860" width="580" height="58" rx="10"/>
+  <text class="label" x="360" y="886" text-anchor="middle">Host operating system + shared kernel</text>
+  <text class="label" x="360" y="909" text-anchor="middle">namespaces • cgroups • security controls</text>
+  <rect class="hardware" x="70" y="930" width="580" height="38" rx="9"/>
+  <text class="label" x="360" y="956" text-anchor="middle">Physical or virtual hardware</text>
+  <text class="note" x="360" y="995" text-anchor="middle">VMs virtualize a machine; containers isolate an application process.</text>
+</svg>
