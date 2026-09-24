@@ -30,7 +30,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 020 | systems | What Is a Reverse Proxy? | published 2026-09-21 | slug what-is-a-reverse-proxy
 - [x] 021 | networks | LAN vs WAN vs VLAN Explained | published 2026-09-22 | slug lan-vs-wan-vs-vlan
 - [x] 022 | cloud | Virtual Machines vs Containers | published 2026-09-23 | slug virtual-machines-vs-containers
-- [ ] 023 | cybersecurity | Symmetric vs Asymmetric Encryption
+- [x] 023 | cybersecurity | Symmetric vs Asymmetric Encryption | published 2026-09-24 | slug symmetric-vs-asymmetric-encryption
 - [ ] 024 | ai | What Is Generative AI?
 - [ ] 025 | software | Monolithic Architecture vs Microservices
 - [ ] 026 | systems | Message Queues Explained: How Asynchronous Systems Work

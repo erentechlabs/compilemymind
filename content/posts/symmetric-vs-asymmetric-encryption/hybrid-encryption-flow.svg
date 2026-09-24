@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 860" role="img" aria-labelledby="title desc">
+  <title id="title">How asymmetric and symmetric cryptography work together</title>
+  <desc id="desc">A three-stage flow shows two endpoints using asymmetric authentication and key establishment, deriving matching session key material, then protecting application data with symmetric authenticated encryption.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#20133a"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7c3aed"/>
+      <stop offset="1" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#0891b2"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#c4b5fd"/>
+    </marker>
+    <style>
+      .heading{font:700 31px Inter,Segoe UI,Arial,sans-serif;fill:#fff}.sub{font:400 17px Inter,Segoe UI,Arial,sans-serif;fill:#d8b4fe}.stage{font:700 13px Inter,Segoe UI,Arial,sans-serif;fill:#f5f3ff;letter-spacing:1.4px}.label{font:700 20px Inter,Segoe UI,Arial,sans-serif;fill:#fff}.body{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#e5e7eb}.small{font:400 13px Inter,Segoe UI,Arial,sans-serif;fill:#cbd5e1}.darksmall{font:500 13px Inter,Segoe UI,Arial,sans-serif;fill:#475569}.chip{font:700 14px Inter,Segoe UI,Arial,sans-serif;fill:#111827}.mono{font:600 14px Consolas,monospace;fill:#ecfeff}
+    </style>
+  </defs>
+  <rect width="900" height="860" rx="28" fill="url(#bg)"/>
+  <text x="54" y="68" class="heading">Why secure systems combine both</text>
+  <text x="54" y="98" class="sub">Asymmetric capabilities establish trust; symmetric keys carry the data.</text>
+
+  <rect x="46" y="132" width="808" height="226" rx="22" fill="#1f2937" stroke="#8b5cf6" stroke-width="2"/>
+  <rect x="66" y="151" width="270" height="28" rx="14" fill="url(#purple)"/>
+  <text x="83" y="170" class="stage">1  AUTHENTICATE + ESTABLISH</text>
+  <rect x="76" y="205" width="205" height="105" rx="16" fill="#312e81" stroke="#a78bfa"/>
+  <text x="178" y="237" text-anchor="middle" class="label">Endpoint A</text>
+  <text x="178" y="264" text-anchor="middle" class="body">Private values stay local</text>
+  <text x="178" y="288" text-anchor="middle" class="small">Public values may be shared</text>
+  <rect x="619" y="205" width="205" height="105" rx="16" fill="#312e81" stroke="#a78bfa"/>
+  <text x="721" y="237" text-anchor="middle" class="label">Endpoint B</text>
+  <text x="721" y="264" text-anchor="middle" class="body">Private values stay local</text>
+  <text x="721" y="288" text-anchor="middle" class="small">Public values may be shared</text>
+  <path d="M291 230 H600" stroke="#c4b5fd" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M609 281 H300" stroke="#c4b5fd" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="450" y="218" text-anchor="middle" class="small">Public keys, key shares, certificates</text>
+  <text x="450" y="307" text-anchor="middle" class="small">Authentication and key confirmation</text>
+  <text x="450" y="336" text-anchor="middle" class="body">Goal: agree on secret keying material—not encrypt the whole payload</text>
+
+  <path d="M450 359 V395" stroke="#c4b5fd" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="46" y="402" width="808" height="166" rx="22" fill="#172554" stroke="#60a5fa" stroke-width="2"/>
+  <rect x="66" y="421" width="220" height="28" rx="14" fill="#2563eb"/>
+  <text x="83" y="440" class="stage">2  DERIVE SESSION KEYS</text>
+  <rect x="90" y="472" width="285" height="62" rx="15" fill="#1e3a8a" stroke="#93c5fd"/>
+  <text x="232" y="497" text-anchor="middle" class="mono">traffic key material A</text>
+  <text x="232" y="519" text-anchor="middle" class="small">derived for defined purposes</text>
+  <rect x="525" y="472" width="285" height="62" rx="15" fill="#1e3a8a" stroke="#93c5fd"/>
+  <text x="667" y="497" text-anchor="middle" class="mono">traffic key material B</text>
+  <text x="667" y="519" text-anchor="middle" class="small">matching protocol state</text>
+  <path d="M387 503 H513" stroke="#93c5fd" stroke-width="3" stroke-dasharray="8 7"/>
+  <text x="450" y="548" text-anchor="middle" class="body">The protocol can derive separate keys by direction and use.</text>
+
+  <path d="M450 569 V605" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrow)"/>
+  <rect x="46" y="612" width="808" height="196" rx="22" fill="#083344" stroke="#22d3ee" stroke-width="2"/>
+  <rect x="66" y="631" width="300" height="28" rx="14" fill="url(#cyan)"/>
+  <text x="83" y="650" class="stage">3  PROTECT APPLICATION DATA</text>
+  <rect x="86" y="686" width="150" height="76" rx="14" fill="#164e63" stroke="#67e8f9"/>
+  <text x="161" y="716" text-anchor="middle" class="label">Plaintext</text>
+  <text x="161" y="742" text-anchor="middle" class="small">requests, files</text>
+  <rect x="343" y="676" width="214" height="96" rx="16" fill="#ecfeff"/>
+  <text x="450" y="709" text-anchor="middle" class="chip">Symmetric AEAD</text>
+  <text x="450" y="734" text-anchor="middle" class="chip">encrypt + authenticate</text>
+  <text x="450" y="758" text-anchor="middle" class="darksmall">efficient repeated protection</text>
+  <rect x="664" y="686" width="150" height="76" rx="14" fill="#164e63" stroke="#67e8f9"/>
+  <text x="739" y="716" text-anchor="middle" class="label">Ciphertext</text>
+  <text x="739" y="742" text-anchor="middle" class="small">plus auth tag</text>
+  <path d="M248 724 H329" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrow)"/>
+  <path d="M570 724 H650" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="450" y="795" text-anchor="middle" class="body">Confidentiality and tamper detection for the actual data flow</text>
+  <text x="450" y="837" text-anchor="middle" class="small">Conceptual hybrid pattern • exact messages and key roles depend on the protocol</text>
+</svg>
