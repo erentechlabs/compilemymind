@@ -32,7 +32,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 022 | cloud | Virtual Machines vs Containers | published 2026-09-23 | slug virtual-machines-vs-containers
 - [x] 023 | cybersecurity | Symmetric vs Asymmetric Encryption | published 2026-09-24 | slug symmetric-vs-asymmetric-encryption
 - [x] 024 | ai | What Is Generative AI? | published 2026-09-27 | slug what-is-generative-ai
-- [ ] 025 | software | Monolithic Architecture vs Microservices
+- [x] 025 | software | Monolithic Architecture vs Microservices | published 2026-10-04 | slug monolithic-architecture-vs-microservices
 - [ ] 026 | systems | Message Queues Explained: How Asynchronous Systems Work
 - [ ] 027 | networks | What Is ARP and How Does It Work?
 - [ ] 028 | cloud | What Is Serverless Computing?
