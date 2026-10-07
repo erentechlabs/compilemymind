@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 1100" role="img" aria-labelledby="title desc">
+  <title id="title">Message queue delivery lifecycle</title>
+  <desc id="desc">A producer publishes a message to a durable queue, a consumer claims it, successful work is acknowledged and removed, temporary failure returns it for retry, and repeated failure sends it to a dead-letter queue.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155"/>
+    </marker>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#b91c1c"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .heading { font: 700 34px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subheading { font: 500 19px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #475569; }
+      .label { font: 700 24px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .body { font: 500 18px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #334155; }
+      .small { font: 600 16px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #475569; }
+      .badge { font: 700 15px system-ui, -apple-system, "Segoe UI", sans-serif; letter-spacing: .04em; }
+      .arrow { fill: none; stroke: #334155; stroke-width: 4; marker-end: url(#arrow); }
+      .arrow-blue { fill: none; stroke: #2563eb; stroke-width: 4; marker-end: url(#arrowBlue); }
+      .arrow-red { fill: none; stroke: #b91c1c; stroke-width: 4; marker-end: url(#arrowRed); }
+    </style>
+  </defs>
+
+  <rect width="920" height="1100" rx="28" fill="#f8fafc"/>
+  <text x="460" y="62" text-anchor="middle" class="heading">One message, two possible endings</text>
+  <text x="460" y="96" text-anchor="middle" class="subheading">Acknowledgement closes the happy path; bounded retries expose failure.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="260" y="135" width="400" height="120" rx="20" fill="#ffffff" stroke="#93c5fd" stroke-width="3"/>
+  </g>
+  <rect x="288" y="157" width="104" height="28" rx="14" fill="#dbeafe"/>
+  <text x="340" y="177" text-anchor="middle" class="badge" fill="#1d4ed8">PRODUCER</text>
+  <text x="460" y="215" text-anchor="middle" class="label">Checkout service</text>
+  <text x="460" y="240" text-anchor="middle" class="body">publishes job_id = order-7842:invoice-v1</text>
+
+  <path d="M 460 255 L 460 328" class="arrow-blue"/>
+  <text x="480" y="296" class="small" fill="#1d4ed8">broker confirms acceptance</text>
+
+  <g filter="url(#shadow)">
+    <rect x="170" y="330" width="580" height="190" rx="24" fill="#eff6ff" stroke="#2563eb" stroke-width="3"/>
+  </g>
+  <rect x="200" y="355" width="92" height="28" rx="14" fill="#2563eb"/>
+  <text x="246" y="375" text-anchor="middle" class="badge" fill="#ffffff">QUEUE</text>
+  <text x="460" y="419" text-anchor="middle" class="label">Durable waiting room</text>
+  <g>
+    <rect x="250" y="450" width="122" height="42" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="399" y="450" width="122" height="42" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <rect x="548" y="450" width="122" height="42" rx="10" fill="#ffffff" stroke="#93c5fd" stroke-width="2"/>
+    <text x="311" y="477" text-anchor="middle" class="small">message 1</text>
+    <text x="460" y="477" text-anchor="middle" class="small">message 2</text>
+    <text x="609" y="477" text-anchor="middle" class="small">message 3</text>
+  </g>
+
+  <path d="M 460 520 L 460 596" class="arrow"/>
+  <text x="480" y="561" class="small">claim + temporary lock</text>
+
+  <g filter="url(#shadow)">
+    <rect x="260" y="598" width="400" height="126" rx="20" fill="#ffffff" stroke="#a78bfa" stroke-width="3"/>
+  </g>
+  <rect x="288" y="620" width="112" height="28" rx="14" fill="#ede9fe"/>
+  <text x="344" y="640" text-anchor="middle" class="badge" fill="#6d28d9">CONSUMER</text>
+  <text x="460" y="680" text-anchor="middle" class="label">Invoice worker</text>
+  <text x="460" y="706" text-anchor="middle" class="body">performs an idempotent operation</text>
+
+  <path d="M 372 724 C 270 770, 225 812, 225 858" class="arrow-blue"/>
+  <path d="M 548 724 C 650 770, 695 812, 695 858" class="arrow-red"/>
+  <rect x="160" y="770" width="130" height="32" rx="16" fill="#dcfce7"/>
+  <text x="225" y="792" text-anchor="middle" class="badge" fill="#166534">SUCCESS</text>
+  <rect x="630" y="770" width="130" height="32" rx="16" fill="#fee2e2"/>
+  <text x="695" y="792" text-anchor="middle" class="badge" fill="#991b1b">FAILURE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="860" width="310" height="120" rx="20" fill="#f0fdf4" stroke="#22c55e" stroke-width="3"/>
+    <rect x="540" y="860" width="310" height="120" rx="20" fill="#fff7ed" stroke="#f97316" stroke-width="3"/>
+  </g>
+  <text x="225" y="906" text-anchor="middle" class="label">Acknowledge</text>
+  <text x="225" y="936" text-anchor="middle" class="body">Broker removes message</text>
+  <text x="225" y="962" text-anchor="middle" class="small">durable effect already committed</text>
+  <text x="695" y="906" text-anchor="middle" class="label">Retry with a limit</text>
+  <text x="695" y="936" text-anchor="middle" class="body">Lock expires or work is rejected</text>
+  <text x="695" y="962" text-anchor="middle" class="small">backoff before another delivery</text>
+
+  <path d="M 695 980 L 695 1022 L 460 1022" class="arrow-red"/>
+  <rect x="270" y="1000" width="190" height="54" rx="18" fill="#fee2e2" stroke="#b91c1c" stroke-width="3"/>
+  <text x="365" y="1023" text-anchor="middle" class="badge" fill="#991b1b">ATTEMPTS EXHAUSTED</text>
+  <text x="365" y="1045" text-anchor="middle" class="small" fill="#991b1b">dead-letter queue</text>
+
+  <path d="M 820 900 C 884 820, 874 500, 758 450" fill="none" stroke="#f97316" stroke-width="3" stroke-dasharray="10 9" marker-end="url(#arrow)"/>
+  <text x="846" y="680" transform="rotate(-90 846 680)" text-anchor="middle" class="small" fill="#9a3412">temporary failure returns message to the queue</text>
+
+  <text x="460" y="1082" text-anchor="middle" class="subheading">At-least-once delivery means the consumer must be safe to run twice.</text>
+</svg>

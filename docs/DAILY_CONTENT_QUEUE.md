@@ -33,7 +33,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 023 | cybersecurity | Symmetric vs Asymmetric Encryption | published 2026-09-24 | slug symmetric-vs-asymmetric-encryption
 - [x] 024 | ai | What Is Generative AI? | published 2026-09-27 | slug what-is-generative-ai
 - [x] 025 | software | Monolithic Architecture vs Microservices | published 2026-10-04 | slug monolithic-architecture-vs-microservices
-- [ ] 026 | systems | Message Queues Explained: How Asynchronous Systems Work
+- [x] 026 | systems | Message Queues Explained: How Asynchronous Systems Work | published 2026-10-07 | slug message-queues-explained
 - [ ] 027 | networks | What Is ARP and How Does It Work?
 - [ ] 028 | cloud | What Is Serverless Computing?
 - [ ] 029 | cybersecurity | What Is Public Key Infrastructure?
