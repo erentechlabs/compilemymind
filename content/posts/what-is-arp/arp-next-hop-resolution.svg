@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1120" viewBox="0 0 900 1120" role="img" aria-labelledby="title desc">
+  <title id="title">How ARP resolves the next local IPv4 hop</title>
+  <desc id="desc">A host first checks whether an IPv4 destination is local. A local destination is resolved directly, while a remote destination uses the default gateway. The host broadcasts an ARP request, receives a direct reply, caches the IP to MAC mapping, and sends the Ethernet frame.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2563eb"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .card { fill: #ffffff; stroke: #334155; stroke-width: 2; }
+      .decision { fill: #eff6ff; stroke: #2563eb; stroke-width: 3; }
+      .local { fill: #ecfdf5; stroke: #047857; stroke-width: 2.5; }
+      .remote { fill: #fff7ed; stroke: #c2410c; stroke-width: 2.5; }
+      .step { fill: #ffffff; stroke: #2563eb; stroke-width: 2.5; }
+      .title { font: 700 34px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 19px Arial, sans-serif; fill: #475569; }
+      .heading { font: 700 22px Arial, sans-serif; fill: #0f172a; }
+      .body { font: 400 17px Arial, sans-serif; fill: #334155; }
+      .small { font: 600 15px Arial, sans-serif; fill: #475569; }
+      .label { font: 700 15px Arial, sans-serif; fill: #1d4ed8; }
+      .line { fill: none; stroke: #2563eb; stroke-width: 3; marker-end: url(#arrow); }
+      .branch { fill: none; stroke-width: 3; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" width="900" height="1120" rx="24"/>
+  <text class="title" x="450" y="55" text-anchor="middle">ARP resolves the next local hop</text>
+  <text class="subtitle" x="450" y="88" text-anchor="middle">Routing chooses the IPv4 target; ARP finds its link-layer address.</text>
+
+  <rect class="card" x="235" y="120" width="430" height="92" rx="18"/>
+  <text class="heading" x="450" y="157" text-anchor="middle">Host wants to send an IPv4 packet</text>
+  <text class="body" x="450" y="187" text-anchor="middle">Destination: 203.0.113.20 or 192.168.10.80</text>
+
+  <path class="line" d="M450 212 L450 260"/>
+  <path class="decision" d="M450 258 L665 345 L450 432 L235 345 Z"/>
+  <text class="heading" x="450" y="335" text-anchor="middle">Is the destination on</text>
+  <text class="heading" x="450" y="365" text-anchor="middle">the local IPv4 subnet?</text>
+
+  <path d="M237 345 L105 345 L105 465" class="branch" stroke="#047857"/>
+  <text class="label" x="165" y="328" text-anchor="middle" fill="#047857">YES</text>
+  <rect class="local" x="35" y="465" width="300" height="130" rx="18"/>
+  <text class="heading" x="185" y="502" text-anchor="middle">Resolve the peer</text>
+  <text class="body" x="185" y="535" text-anchor="middle">Next hop: 192.168.10.80</text>
+  <text class="small" x="185" y="567" text-anchor="middle">ARP asks for the printer's MAC</text>
+
+  <path d="M663 345 L795 345 L795 465" class="branch" stroke="#c2410c"/>
+  <text class="label" x="735" y="328" text-anchor="middle" fill="#c2410c">NO</text>
+  <rect class="remote" x="565" y="465" width="300" height="130" rx="18"/>
+  <text class="heading" x="715" y="502" text-anchor="middle">Resolve the gateway</text>
+  <text class="body" x="715" y="535" text-anchor="middle">Next hop: 192.168.10.1</text>
+  <text class="small" x="715" y="567" text-anchor="middle">Not the remote server's MAC</text>
+
+  <path d="M185 595 L185 635 L450 635 L450 675" class="line"/>
+  <path d="M715 595 L715 635 L450 635" fill="none" stroke="#2563eb" stroke-width="3"/>
+
+  <rect class="step" x="155" y="675" width="590" height="100" rx="18"/>
+  <circle cx="205" cy="725" r="25" fill="#2563eb"/>
+  <text x="205" y="732" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">1</text>
+  <text class="heading" x="250" y="712">Broadcast ARP Request</text>
+  <text class="body" x="250" y="744">“Who has the chosen next-hop IPv4 address?”</text>
+
+  <path class="line" d="M450 775 L450 815"/>
+  <rect class="step" x="155" y="815" width="590" height="100" rx="18"/>
+  <circle cx="205" cy="865" r="25" fill="#2563eb"/>
+  <text x="205" y="872" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">2</text>
+  <text class="heading" x="250" y="852">Receive ARP Reply</text>
+  <text class="body" x="250" y="884">The owner returns its link-layer address directly.</text>
+
+  <path class="line" d="M450 915 L450 955"/>
+  <rect class="step" x="155" y="955" width="590" height="115" rx="18"/>
+  <circle cx="205" cy="1012" r="25" fill="#2563eb"/>
+  <text x="205" y="1019" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#ffffff">3</text>
+  <text class="heading" x="250" y="993">Cache the mapping and send</text>
+  <text class="body" x="250" y="1025">IPv4 next hop → MAC address</text>
+  <text class="small" x="250" y="1053">The Ethernet frame now has a local destination.</text>
+</svg>
