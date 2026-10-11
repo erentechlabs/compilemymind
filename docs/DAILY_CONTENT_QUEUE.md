@@ -35,7 +35,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 025 | software | Monolithic Architecture vs Microservices | published 2026-10-04 | slug monolithic-architecture-vs-microservices
 - [x] 026 | systems | Message Queues Explained: How Asynchronous Systems Work | published 2026-10-07 | slug message-queues-explained
 - [x] 027 | networks | What Is ARP and How Does It Work? | published 2026-10-09 | slug what-is-arp
-- [ ] 028 | cloud | What Is Serverless Computing?
+- [x] 028 | cloud | What Is Serverless Computing? | published 2026-10-11 | slug what-is-serverless-computing
 - [ ] 029 | cybersecurity | What Is Public Key Infrastructure?
 - [ ] 030 | ai | What Is a Large Language Model?
 - [ ] 031 | software | Unit Testing vs Integration Testing vs End-to-End Testing
