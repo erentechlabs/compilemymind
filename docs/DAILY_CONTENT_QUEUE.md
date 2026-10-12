@@ -36,7 +36,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 026 | systems | Message Queues Explained: How Asynchronous Systems Work | published 2026-10-07 | slug message-queues-explained
 - [x] 027 | networks | What Is ARP and How Does It Work? | published 2026-10-09 | slug what-is-arp
 - [x] 028 | cloud | What Is Serverless Computing? | published 2026-10-11 | slug what-is-serverless-computing
-- [ ] 029 | cybersecurity | What Is Public Key Infrastructure?
+- [x] 029 | cybersecurity | What Is Public Key Infrastructure? | published 2026-10-12 | slug what-is-public-key-infrastructure
 - [ ] 030 | ai | What Is a Large Language Model?
 - [ ] 031 | software | Unit Testing vs Integration Testing vs End-to-End Testing
 - [ ] 032 | systems | Message Queue vs Publish-Subscribe

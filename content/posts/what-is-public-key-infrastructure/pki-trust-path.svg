@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="980" viewBox="0 0 760 980" role="img" aria-labelledby="title desc">
+  <title id="title">Public key infrastructure trust path and validation checks</title>
+  <desc id="desc">A root trust anchor signs an intermediate certificate authority, which signs a leaf certificate for a service. A relying client validates the chain, identity, time, permitted use, constraints, and status before accepting the public key.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081a2c"/>
+      <stop offset="1" stop-color="#102f45"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#020a12" flood-opacity="0.32"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#67d5ff"/>
+    </marker>
+    <style>
+      .heading { font: 700 29px Inter, Segoe UI, Arial, sans-serif; fill: #f5fbff; }
+      .subheading { font: 400 16px Inter, Segoe UI, Arial, sans-serif; fill: #b8d7e8; }
+      .card-title { font: 700 20px Inter, Segoe UI, Arial, sans-serif; fill: #ffffff; }
+      .card-copy { font: 400 15px Inter, Segoe UI, Arial, sans-serif; fill: #c9e1ed; }
+      .badge { font: 700 13px Inter, Segoe UI, Arial, sans-serif; fill: #062235; letter-spacing: .5px; }
+      .flow-label { font: 600 14px Inter, Segoe UI, Arial, sans-serif; fill: #8be1ff; }
+      .check { font: 600 15px Inter, Segoe UI, Arial, sans-serif; fill: #eaf8ff; }
+      .footer { font: 600 14px Inter, Segoe UI, Arial, sans-serif; fill: #9bc4d8; }
+    </style>
+  </defs>
+
+  <rect width="760" height="980" rx="28" fill="url(#background)"/>
+  <circle cx="690" cy="86" r="118" fill="#174764" opacity="0.28"/>
+  <circle cx="72" cy="900" r="142" fill="#0d6673" opacity="0.18"/>
+
+  <text x="380" y="54" text-anchor="middle" class="heading">A PKI trust path is a chain of decisions</text>
+  <text x="380" y="82" text-anchor="middle" class="subheading">Signatures connect the certificates; policy decides whether to trust them.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="116" width="520" height="142" rx="20" fill="#163f59" stroke="#72dcff" stroke-width="2"/>
+    <rect x="144" y="140" width="112" height="28" rx="14" fill="#72dcff"/>
+    <text x="200" y="159" text-anchor="middle" class="badge">TRUST ANCHOR</text>
+    <text x="144" y="199" class="card-title">Root CA</text>
+    <text x="144" y="225" class="card-copy">Accepted because it is securely placed in a trust store</text>
+    <path d="M572 159 l13 13 26 -31" fill="none" stroke="#82efb0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <line x1="380" y1="258" x2="380" y2="306" stroke="#67d5ff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="398" y="289" class="flow-label">signs and constrains</text>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="318" width="520" height="142" rx="20" fill="#164b5a" stroke="#62dec5" stroke-width="2"/>
+    <rect x="144" y="342" width="130" height="28" rx="14" fill="#62dec5"/>
+    <text x="209" y="361" text-anchor="middle" class="badge">ISSUING LAYER</text>
+    <text x="144" y="401" class="card-title">Intermediate CA</text>
+    <text x="144" y="427" class="card-copy">Performs routine issuance while the root stays protected</text>
+    <path d="M574 359 h32 v32 h-32 z M581 353 v-8 a9 9 0 0 1 18 0 v8" fill="none" stroke="#8ff0d8" stroke-width="5" stroke-linejoin="round"/>
+  </g>
+
+  <line x1="380" y1="460" x2="380" y2="508" stroke="#67d5ff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="398" y="491" class="flow-label">signs after validation</text>
+
+  <g filter="url(#shadow)">
+    <rect x="120" y="520" width="520" height="142" rx="20" fill="#1b3e5b" stroke="#a7bdfc" stroke-width="2"/>
+    <rect x="144" y="544" width="125" height="28" rx="14" fill="#a7bdfc"/>
+    <text x="206.5" y="563" text-anchor="middle" class="badge">END ENTITY</text>
+    <text x="144" y="603" class="card-title">Leaf certificate: inventory.corp.example</text>
+    <text x="144" y="629" class="card-copy">Binds the service name and allowed use to its public key</text>
+    <circle cx="589" cy="581" r="24" fill="none" stroke="#c8d4ff" stroke-width="5"/>
+    <path d="M589 605 v22 M577 619 h24" stroke="#c8d4ff" stroke-width="5" stroke-linecap="round"/>
+  </g>
+
+  <line x1="380" y1="662" x2="380" y2="710" stroke="#67d5ff" stroke-width="4" marker-end="url(#arrow)"/>
+  <text x="398" y="693" class="flow-label">presented to the relying client</text>
+
+  <g filter="url(#shadow)">
+    <rect x="74" y="722" width="612" height="198" rx="22" fill="#0d2b3d" stroke="#f0bf68" stroke-width="2"/>
+    <text x="104" y="758" class="card-title">Client validation gates</text>
+    <g transform="translate(104 786)">
+      <circle cx="8" cy="0" r="8" fill="#82efb0"/><path d="M4 0 l3 3 6 -7" fill="none" stroke="#08352a" stroke-width="2.5"/>
+      <text x="26" y="5" class="check">Trusted chain and valid signatures</text>
+      <circle cx="8" cy="38" r="8" fill="#82efb0"/><path d="M4 38 l3 3 6 -7" fill="none" stroke="#08352a" stroke-width="2.5"/>
+      <text x="26" y="43" class="check">Correct identity, time, and permitted purpose</text>
+      <circle cx="8" cy="76" r="8" fill="#82efb0"/><path d="M4 76 l3 3 6 -7" fill="none" stroke="#08352a" stroke-width="2.5"/>
+      <text x="26" y="81" class="check">Constraints, policy, algorithms, and status accepted</text>
+      <circle cx="8" cy="114" r="8" fill="#82efb0"/><path d="M4 114 l3 3 6 -7" fill="none" stroke="#08352a" stroke-width="2.5"/>
+      <text x="26" y="119" class="check">Only then is the subject public key trusted</text>
+    </g>
+  </g>
+
+  <text x="380" y="953" text-anchor="middle" class="footer">A signature proves linkage—not unlimited identity, purpose, or safety.</text>
+</svg>
