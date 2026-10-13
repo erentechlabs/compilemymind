@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1040" role="img" aria-labelledby="title desc">
+  <title id="title">How a large language model generates text one token at a time</title>
+  <desc id="desc">A vertical flow from prompt and context through tokenization, embeddings, Transformer layers, next-token probabilities, token selection, and a loop that appends the token before repeating.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="760" height="1040" rx="28" fill="#f8fafc"/>
+  <text x="380" y="58" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" fill="#0f172a">How an LLM builds a response</text>
+  <text x="380" y="88" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="16" fill="#475569">One next-token prediction becomes context for the next</text>
+
+  <rect x="100" y="125" width="560" height="104" rx="18" fill="#dbeafe" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <text x="132" y="162" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#1d4ed8">1 · PROMPT + AVAILABLE CONTEXT</text>
+  <text x="132" y="194" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="600" fill="#0f172a">“Why did the deployment fail?”</text>
+
+  <path d="M380 229 L380 269" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="100" y="278" width="560" height="118" rx="18" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" filter="url(#shadow)"/>
+  <text x="132" y="315" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#6d28d9">2 · TOKENIZE + EMBED</text>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="15" font-weight="600" fill="#4c1d95">
+    <rect x="132" y="338" width="70" height="34" rx="8" fill="#ddd6fe"/><text x="167" y="360" text-anchor="middle">Why</text>
+    <rect x="212" y="338" width="68" height="34" rx="8" fill="#ddd6fe"/><text x="246" y="360" text-anchor="middle">did</text>
+    <rect x="290" y="338" width="104" height="34" rx="8" fill="#ddd6fe"/><text x="342" y="360" text-anchor="middle">deploy</text>
+    <rect x="404" y="338" width="76" height="34" rx="8" fill="#ddd6fe"/><text x="442" y="360" text-anchor="middle">ment</text>
+    <rect x="490" y="338" width="76" height="34" rx="8" fill="#ddd6fe"/><text x="528" y="360" text-anchor="middle">fail</text>
+    <rect x="576" y="338" width="40" height="34" rx="8" fill="#ddd6fe"/><text x="596" y="360" text-anchor="middle">?</text>
+  </g>
+
+  <path d="M380 396 L380 436" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="100" y="445" width="560" height="196" rx="18" fill="#dcfce7" stroke="#16a34a" stroke-width="2" filter="url(#shadow)"/>
+  <text x="132" y="482" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#15803d">3 · TRANSFORMER LAYERS</text>
+  <rect x="140" y="507" width="480" height="48" rx="12" fill="#bbf7d0" stroke="#22c55e"/>
+  <text x="380" y="537" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="650" fill="#14532d">Self-attention connects relevant tokens</text>
+  <rect x="140" y="568" width="480" height="48" rx="12" fill="#bbf7d0" stroke="#22c55e"/>
+  <text x="380" y="598" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="650" fill="#14532d">Feed-forward networks transform each position</text>
+  <text x="380" y="628" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" fill="#166534">Repeated across many learned layers and parameters</text>
+
+  <path d="M380 641 L380 681" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="100" y="690" width="560" height="147" rx="18" fill="#ffedd5" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text x="132" y="727" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#c2410c">4 · SCORE POSSIBLE NEXT TOKENS</text>
+  <text x="150" y="770" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="17" font-weight="700" fill="#7c2d12">“The”</text>
+  <rect x="225" y="754" width="292" height="22" rx="11" fill="#fed7aa"/>
+  <rect x="225" y="754" width="204" height="22" rx="11" fill="#f97316"/>
+  <text x="535" y="770" font-family="Inter, Arial, sans-serif" font-size="15" fill="#7c2d12">high</text>
+  <text x="150" y="809" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="17" font-weight="700" fill="#7c2d12">“A”</text>
+  <rect x="225" y="793" width="292" height="22" rx="11" fill="#fed7aa"/>
+  <rect x="225" y="793" width="92" height="22" rx="11" fill="#fb923c"/>
+  <text x="535" y="809" font-family="Inter, Arial, sans-serif" font-size="15" fill="#7c2d12">lower</text>
+
+  <path d="M380 837 L380 877" stroke="#334155" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="180" y="886" width="400" height="78" rx="18" fill="#ccfbf1" stroke="#0d9488" stroke-width="2" filter="url(#shadow)"/>
+  <text x="380" y="917" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" fill="#0f766e">5 · SELECT AND APPEND A TOKEN</text>
+  <text x="380" y="946" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="18" font-weight="700" fill="#134e4a">Response: “The”</text>
+
+  <path d="M180 925 C66 925 58 724 58 548 C58 350 62 177 100 177" fill="none" stroke="#0f766e" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrow)"/>
+  <rect x="20" y="498" width="76" height="72" rx="12" fill="#f0fdfa" stroke="#0d9488"/>
+  <text x="58" y="526" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#0f766e">APPEND</text>
+  <text x="58" y="547" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#0f766e">AND</text>
+  <text x="58" y="568" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="700" fill="#0f766e">REPEAT</text>
+
+  <text x="380" y="1007" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="14" fill="#475569">Generation ends at a stop condition or output limit.</text>
+</svg>
