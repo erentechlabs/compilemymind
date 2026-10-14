@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 1040" role="img" aria-labelledby="title desc">
+  <title id="title">Unit, integration, and end-to-end testing boundaries</title>
+  <desc id="desc">A vertical comparison showing unit tests around one business rule, integration tests around an application and database, and end-to-end tests across a browser, application, database, and payment sandbox. Feedback gets slower upward while production fidelity increases.</desc>
+  <defs>
+    <marker id="arrow-navy" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#334155"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .title { font: 700 29px Inter, Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px Inter, Arial, sans-serif; fill: #475569; }
+      .kicker { font: 700 14px Inter, Arial, sans-serif; letter-spacing: 1px; }
+      .heading { font: 700 22px Inter, Arial, sans-serif; fill: #0f172a; }
+      .label { font: 650 16px Inter, Arial, sans-serif; fill: #0f172a; }
+      .small { font: 500 14px Inter, Arial, sans-serif; fill: #334155; }
+      .tiny { font: 600 13px Inter, Arial, sans-serif; fill: #475569; }
+    </style>
+  </defs>
+
+  <rect width="760" height="1040" rx="28" fill="#f8fafc"/>
+  <text class="title" x="380" y="52" text-anchor="middle">Three tests, three confidence boundaries</text>
+  <text class="subtitle" x="380" y="82" text-anchor="middle">Use the narrowest boundary that can reveal the risk</text>
+
+  <rect x="126" y="112" width="508" height="242" rx="20" fill="#fff7ed" stroke="#ea580c" stroke-width="2" filter="url(#shadow)"/>
+  <text class="kicker" x="158" y="148" fill="#c2410c">END-TO-END TEST</text>
+  <text class="heading" x="158" y="179">Can the shopper complete checkout?</text>
+  <rect x="158" y="208" width="100" height="58" rx="12" fill="#ffedd5" stroke="#ea580c"/>
+  <text class="label" x="208" y="243" text-anchor="middle">Browser</text>
+  <path d="M258 237 H286" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <rect x="296" y="208" width="100" height="58" rx="12" fill="#ffedd5" stroke="#ea580c"/>
+  <text class="label" x="346" y="243" text-anchor="middle">App</text>
+  <path d="M396 237 H424" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <rect x="434" y="208" width="74" height="58" rx="12" fill="#ffedd5" stroke="#ea580c"/>
+  <text class="label" x="471" y="243" text-anchor="middle">DB</text>
+  <path d="M508 237 H536" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <rect x="546" y="208" width="56" height="58" rx="12" fill="#ffedd5" stroke="#ea580c"/>
+  <text class="small" x="574" y="232" text-anchor="middle">Pay</text>
+  <text class="small" x="574" y="251" text-anchor="middle">fake</text>
+  <text class="tiny" x="380" y="300" text-anchor="middle">Highest journey fidelity • broadest failure surface</text>
+  <text class="small" x="380" y="329" text-anchor="middle">A few critical paths through the assembled system</text>
+
+  <rect x="126" y="386" width="508" height="238" rx="20" fill="#eff6ff" stroke="#2563eb" stroke-width="2" filter="url(#shadow)"/>
+  <text class="kicker" x="158" y="422" fill="#1d4ed8">INTEGRATION TEST</text>
+  <text class="heading" x="158" y="453">Do the application and database agree?</text>
+  <rect x="196" y="482" width="150" height="66" rx="12" fill="#dbeafe" stroke="#2563eb"/>
+  <text class="label" x="271" y="510" text-anchor="middle">HTTP app</text>
+  <text class="small" x="271" y="532" text-anchor="middle">real routing + logic</text>
+  <path d="M346 515 H404" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <rect x="414" y="482" width="150" height="66" rx="12" fill="#dbeafe" stroke="#2563eb"/>
+  <text class="label" x="489" y="510" text-anchor="middle">Test database</text>
+  <text class="small" x="489" y="532" text-anchor="middle">real schema + driver</text>
+  <text class="tiny" x="380" y="579" text-anchor="middle">Focused boundary fidelity • controlled infrastructure</text>
+  <text class="small" x="380" y="605" text-anchor="middle">Enough cases to prove important contracts</text>
+
+  <rect x="126" y="656" width="508" height="222" rx="20" fill="#ecfdf5" stroke="#059669" stroke-width="2" filter="url(#shadow)"/>
+  <text class="kicker" x="158" y="692" fill="#047857">UNIT TEST</text>
+  <text class="heading" x="158" y="723">Is the discount rule correct?</text>
+  <rect x="220" y="752" width="320" height="62" rx="12" fill="#d1fae5" stroke="#059669"/>
+  <text class="label" x="380" y="779" text-anchor="middle">discountFor(orderTotal)</text>
+  <text class="small" x="380" y="801" text-anchor="middle">in memory • dependencies replaced</text>
+  <text class="tiny" x="380" y="846" text-anchor="middle">Fastest feedback • smallest and clearest failure surface</text>
+
+  <path d="M82 846 V180" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <text class="small" x="52" y="518" text-anchor="middle" transform="rotate(-90 52 518)">More production fidelity</text>
+
+  <path d="M678 180 V846" stroke="#334155" stroke-width="3" marker-end="url(#arrow-navy)"/>
+  <text class="small" x="708" y="518" text-anchor="middle" transform="rotate(90 708 518)">Faster, more specific feedback</text>
+
+  <rect x="126" y="914" width="508" height="78" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text class="label" x="380" y="946" text-anchor="middle">Confidence comes from the portfolio</text>
+  <text class="small" x="380" y="972" text-anchor="middle">Many narrow checks • focused boundaries • a few journeys</text>
+</svg>
