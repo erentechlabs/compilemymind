@@ -40,7 +40,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 030 | ai | What Is a Large Language Model? | published 2026-10-13 | slug what-is-a-large-language-model
 - [x] 031 | software | Unit Testing vs Integration Testing vs End-to-End Testing | published 2026-10-14 | slug unit-testing-vs-integration-testing-vs-end-to-end-testing
 - [x] 032 | systems | Message Queue vs Publish-Subscribe | published 2026-10-15 | slug message-queue-vs-publish-subscribe
-- [ ] 033 | networks | What Is a VPN and How Does It Work?
+- [x] 033 | networks | What Is a VPN and How Does It Work? | published 2026-10-16 | slug what-is-a-vpn
 - [ ] 034 | cloud | Cloud Regions vs Availability Zones
 - [ ] 035 | cybersecurity | How Do Digital Certificates Work?
 - [ ] 036 | ai | AI Training vs AI Inference

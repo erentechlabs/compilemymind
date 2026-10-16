@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 640" role="img" aria-labelledby="title desc">
+  <title id="title">How a VPN tunnel carries a packet</title>
+  <desc id="desc">A device creates an original packet, encrypts and encapsulates it in an outer packet for travel across an untrusted network, and a VPN gateway verifies and unwraps it before forwarding it to the destination.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="1" stop-color="#102b46"/>
+    </linearGradient>
+    <linearGradient id="tunnel" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#153a58"/>
+      <stop offset="0.5" stop-color="#1d4f70"/>
+      <stop offset="1" stop-color="#153a58"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-30%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#020817" flood-opacity="0.45"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#67e8f9"/>
+    </marker>
+  </defs>
+
+  <rect width="900" height="640" rx="28" fill="url(#bg)"/>
+  <text x="450" y="50" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="27" font-weight="700">A VPN protects one part of the route</text>
+  <text x="450" y="80" text-anchor="middle" fill="#bae6fd" font-family="Arial, sans-serif" font-size="16">The tunnel ends at the gateway; application protection may continue beyond it</text>
+
+  <rect x="55" y="122" width="210" height="128" rx="18" fill="#0f2740" stroke="#38bdf8" stroke-width="2" filter="url(#shadow)"/>
+  <circle cx="100" cy="167" r="23" fill="#38bdf8"/>
+  <rect x="84" y="194" width="32" height="7" rx="3.5" fill="#38bdf8"/>
+  <text x="135" y="160" fill="#f8fafc" font-family="Arial, sans-serif" font-size="21" font-weight="700">Your device</text>
+  <text x="135" y="188" fill="#bae6fd" font-family="Arial, sans-serif" font-size="15">VPN client + routes</text>
+  <text x="160" y="228" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">Creates the original IP packet</text>
+
+  <rect x="635" y="122" width="210" height="128" rx="18" fill="#0f2740" stroke="#a78bfa" stroke-width="2" filter="url(#shadow)"/>
+  <path d="M675 151h47v38h-47zM681 157h35v26h-35z" fill="#a78bfa" fill-rule="evenodd"/>
+  <path d="M683 198h31v8h-31z" fill="#a78bfa"/>
+  <text x="735" y="160" fill="#f8fafc" font-family="Arial, sans-serif" font-size="21" font-weight="700">VPN gateway</text>
+  <text x="735" y="188" fill="#ddd6fe" font-family="Arial, sans-serif" font-size="15">Verifies + decrypts</text>
+  <text x="740" y="228" text-anchor="middle" fill="#cbd5e1" font-family="Arial, sans-serif" font-size="14">Forwards the inner packet</text>
+
+  <rect x="286" y="118" width="328" height="144" rx="72" fill="url(#tunnel)" stroke="#67e8f9" stroke-width="2" stroke-dasharray="9 7"/>
+  <text x="450" y="139" text-anchor="middle" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="12" font-weight="700" letter-spacing="1">ENCRYPTED TUNNEL</text>
+  <text x="450" y="155" text-anchor="middle" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="0.8">OVER AN UNTRUSTED NETWORK</text>
+  <line x1="300" y1="205" x2="594" y2="205" stroke="#67e8f9" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(355 170)">
+    <rect width="174" height="70" rx="12" fill="#082f49" stroke="#22d3ee" stroke-width="2"/>
+    <rect x="10" y="10" width="154" height="18" rx="5" fill="#0e7490"/>
+    <text x="87" y="24" text-anchor="middle" fill="#ecfeff" font-family="Arial, sans-serif" font-size="11" font-weight="700">OUTER HEADER: TO GATEWAY</text>
+    <rect x="23" y="37" width="128" height="23" rx="6" fill="#164e63" stroke="#67e8f9"/>
+    <text x="87" y="53" text-anchor="middle" fill="#cffafe" font-family="Arial, sans-serif" font-size="12">protected inner packet</text>
+  </g>
+
+  <text x="450" y="303" text-anchor="middle" fill="#f8fafc" font-family="Arial, sans-serif" font-size="20" font-weight="700">What happens to one outbound packet</text>
+
+  <g font-family="Arial, sans-serif">
+    <circle cx="112" cy="367" r="27" fill="#0284c7"/>
+    <text x="112" y="374" text-anchor="middle" fill="#fff" font-size="21" font-weight="700">1</text>
+    <text x="155" y="361" fill="#f8fafc" font-size="18" font-weight="700">Route policy selects traffic</text>
+    <text x="155" y="385" fill="#cbd5e1" font-size="15">Full tunnel selects the default route; split tunnel selects named prefixes.</text>
+
+    <circle cx="112" cy="449" r="27" fill="#0891b2"/>
+    <text x="112" y="456" text-anchor="middle" fill="#fff" font-size="21" font-weight="700">2</text>
+    <text x="155" y="443" fill="#f8fafc" font-size="18" font-weight="700">The client protects and encapsulates</text>
+    <text x="155" y="467" fill="#cbd5e1" font-size="15">Encryption and integrity protect the inner packet; an outer header enables delivery.</text>
+
+    <circle cx="112" cy="531" r="27" fill="#7c3aed"/>
+    <text x="112" y="538" text-anchor="middle" fill="#fff" font-size="21" font-weight="700">3</text>
+    <text x="155" y="525" fill="#f8fafc" font-size="18" font-weight="700">The gateway unwraps and forwards</text>
+    <text x="155" y="549" fill="#cbd5e1" font-size="15">VPN protection ends here; HTTPS or another end-to-end layer may continue.</text>
+  </g>
+
+  <line x1="740" y1="270" x2="740" y2="565" stroke="#64748b" stroke-width="2" stroke-dasharray="6 7"/>
+  <rect x="660" y="576" width="160" height="36" rx="18" fill="#172554" stroke="#818cf8"/>
+  <text x="740" y="600" text-anchor="middle" fill="#e0e7ff" font-family="Arial, sans-serif" font-size="14" font-weight="700">Tunnel endpoint</text>
+</svg>
