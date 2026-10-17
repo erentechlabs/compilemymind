@@ -41,7 +41,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 031 | software | Unit Testing vs Integration Testing vs End-to-End Testing | published 2026-10-14 | slug unit-testing-vs-integration-testing-vs-end-to-end-testing
 - [x] 032 | systems | Message Queue vs Publish-Subscribe | published 2026-10-15 | slug message-queue-vs-publish-subscribe
 - [x] 033 | networks | What Is a VPN and How Does It Work? | published 2026-10-16 | slug what-is-a-vpn
-- [ ] 034 | cloud | Cloud Regions vs Availability Zones
+- [x] 034 | cloud | Cloud Regions vs Availability Zones | published 2026-10-17 | slug cloud-regions-vs-availability-zones
 - [ ] 035 | cybersecurity | How Do Digital Certificates Work?
 - [ ] 036 | ai | AI Training vs AI Inference
 - [ ] 037 | software | Git Merge vs Rebase: What Is the Difference?
