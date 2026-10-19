@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 760" role="img" aria-labelledby="title desc">
+  <title id="title">Git merge compared with Git rebase</title>
+  <desc id="desc">Both examples begin with a feature branch and main branch that diverged after commit B. Merge adds commit M with two parents and preserves feature commits C and F. Rebase creates new commits C prime and F prime after commits D and E, allowing a linear fast-forward history.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+      .title { fill: #0f172a; font: 700 28px system-ui, sans-serif; }
+      .subtitle { fill: #334155; font: 500 17px system-ui, sans-serif; }
+      .label { fill: #334155; font: 600 16px system-ui, sans-serif; }
+      .small { fill: #475569; font: 500 14px system-ui, sans-serif; }
+      .line-main { fill: none; stroke: #2563eb; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .line-feature { fill: none; stroke: #d97706; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .line-merge { fill: none; stroke: #7c3aed; stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+      .commit-main { fill: #dbeafe; stroke: #2563eb; stroke-width: 4; }
+      .commit-feature { fill: #ffedd5; stroke: #d97706; stroke-width: 4; }
+      .commit-merge { fill: #ede9fe; stroke: #7c3aed; stroke-width: 4; }
+      .commit-text { fill: #0f172a; font: 700 16px system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }
+      .pill-main { fill: #2563eb; }
+      .pill-feature { fill: #d97706; }
+      .pill-text { fill: #ffffff; font: 700 14px system-ui, sans-serif; text-anchor: middle; dominant-baseline: central; }
+    </style>
+    <marker id="arrowPurple" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#7c3aed"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="760" height="760" rx="24"/>
+  <text class="title" x="42" y="54">Same changes, different history</text>
+  <text class="subtitle" x="42" y="84">Both paths integrate feature work after main has advanced.</text>
+
+  <rect class="panel" x="30" y="116" width="700" height="270" rx="20"/>
+  <text class="title" x="58" y="158">Merge preserves the branch</text>
+  <text class="subtitle" x="58" y="187">M has two parents: E from main and F from feature.</text>
+
+  <path class="line-main" d="M85 286 H195 H305 H415"/>
+  <path class="line-feature" d="M195 286 C230 286 235 230 270 230 H380"/>
+  <path class="line-merge" d="M380 230 C455 230 470 286 525 286"/>
+  <path class="line-merge" d="M415 286 H525"/>
+
+  <circle class="commit-main" cx="85" cy="286" r="24"/><text class="commit-text" x="85" y="286">A</text>
+  <circle class="commit-main" cx="195" cy="286" r="24"/><text class="commit-text" x="195" y="286">B</text>
+  <circle class="commit-main" cx="305" cy="286" r="24"/><text class="commit-text" x="305" y="286">D</text>
+  <circle class="commit-main" cx="415" cy="286" r="24"/><text class="commit-text" x="415" y="286">E</text>
+  <circle class="commit-feature" cx="270" cy="230" r="24"/><text class="commit-text" x="270" y="230">C</text>
+  <circle class="commit-feature" cx="380" cy="230" r="24"/><text class="commit-text" x="380" y="230">F</text>
+  <circle class="commit-merge" cx="525" cy="286" r="27"/><text class="commit-text" x="525" y="286">M</text>
+
+  <rect class="pill-main" x="570" y="268" width="92" height="36" rx="18"/><text class="pill-text" x="616" y="286">main</text>
+  <rect class="pill-feature" x="402" y="204" width="104" height="36" rx="18"/><text class="pill-text" x="454" y="222">feature</text>
+  <text class="small" x="58" y="352">Original commit identities stay intact; the join remains visible.</text>
+
+  <rect class="panel" x="30" y="410" width="700" height="308" rx="20"/>
+  <text class="title" x="58" y="452">Rebase rebuilds the feature line</text>
+  <text class="subtitle" x="58" y="481">C and F are replayed as new commits C′ and F′ after E.</text>
+
+  <path class="line-main" d="M85 586 H175 H265 H355 H455 H555"/>
+  <circle class="commit-main" cx="85" cy="586" r="24"/><text class="commit-text" x="85" y="586">A</text>
+  <circle class="commit-main" cx="175" cy="586" r="24"/><text class="commit-text" x="175" y="586">B</text>
+  <circle class="commit-main" cx="265" cy="586" r="24"/><text class="commit-text" x="265" y="586">D</text>
+  <circle class="commit-main" cx="355" cy="586" r="24"/><text class="commit-text" x="355" y="586">E</text>
+  <circle class="commit-feature" cx="455" cy="586" r="26"/><text class="commit-text" x="455" y="586">C′</text>
+  <circle class="commit-feature" cx="555" cy="586" r="26"/><text class="commit-text" x="555" y="586">F′</text>
+
+  <path d="M322 530 C360 505 410 505 448 540" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#arrowPurple)"/>
+  <rect x="328" y="495" width="160" height="30" rx="15" fill="#ffffff"/>
+  <text class="small" x="342" y="516">replay onto new base</text>
+  <rect class="pill-main" x="310" y="628" width="92" height="36" rx="18"/><text class="pill-text" x="356" y="646">main</text>
+  <rect class="pill-feature" x="590" y="568" width="104" height="36" rx="18"/><text class="pill-text" x="642" y="586">feature</text>
+  <text class="small" x="58" y="686">The result is linear, but rewritten commits have new identities.</text>
+</svg>

@@ -44,7 +44,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 034 | cloud | Cloud Regions vs Availability Zones | published 2026-10-17 | slug cloud-regions-vs-availability-zones
 - [x] 035 | cybersecurity | How Do Digital Certificates Work? | satisfied by existing slug what-is-public-key-infrastructure
 - [x] 036 | ai | AI Training vs AI Inference | published 2026-10-18 | slug ai-training-vs-ai-inference
-- [ ] 037 | software | Git Merge vs Rebase: What Is the Difference?
+- [x] 037 | software | Git Merge vs Rebase: What Is the Difference? | published 2026-10-19 | slug git-merge-vs-rebase
 - [ ] 038 | systems | Stateless vs Stateful Applications
 - [ ] 039 | networks | Forward Proxy vs Reverse Proxy
 - [ ] 040 | cloud | High Availability vs Disaster Recovery
