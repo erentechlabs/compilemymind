@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
+  <title id="title">Stateless and stateful application boundaries</title>
+  <desc id="desc">The top panel shows a load balancer sending self-contained requests to interchangeable application instances that use an external state store. The bottom panel shows routing to instances with stable identities, each connected to persistent storage and replication.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#0d1b2e"/>
+    </linearGradient>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#f59e0b"/>
+    </marker>
+    <marker id="arrowViolet" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0L10 5L0 10Z" fill="#a78bfa"/>
+    </marker>
+    <style>
+      .heading{font:700 27px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#f8fafc}
+      .sub{font:500 16px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#cbd5e1}
+      .label{font:700 18px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#f8fafc}
+      .small{font:500 14px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#cbd5e1}
+      .tiny{font:600 13px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#e2e8f0}
+      .node{fill:#14243a;stroke:#475569;stroke-width:2}
+    </style>
+  </defs>
+
+  <rect width="900" height="900" rx="28" fill="url(#background)"/>
+  <text x="450" y="42" text-anchor="middle" class="heading">Where state lives changes the architecture</text>
+
+  <rect x="34" y="70" width="832" height="356" rx="22" fill="#0f1e32" stroke="#0ea5e9" stroke-width="2"/>
+  <text x="62" y="108" class="heading" fill="#7dd3fc">Stateless compute</text>
+  <text x="62" y="134" class="sub">Any healthy instance can handle the next request</text>
+
+  <rect x="62" y="192" width="126" height="76" rx="14" class="node"/>
+  <text x="125" y="222" text-anchor="middle" class="label">Client</text>
+  <text x="125" y="247" text-anchor="middle" class="small">identity + request</text>
+
+  <rect x="242" y="192" width="144" height="76" rx="14" fill="#10324a" stroke="#38bdf8" stroke-width="2"/>
+  <text x="314" y="222" text-anchor="middle" class="label">Load balancer</text>
+  <text x="314" y="247" text-anchor="middle" class="small">route to any replica</text>
+
+  <rect x="446" y="158" width="156" height="66" rx="14" fill="#123c4d" stroke="#22d3ee" stroke-width="2"/>
+  <text x="524" y="186" text-anchor="middle" class="label">App A</text>
+  <text x="524" y="207" text-anchor="middle" class="small">interchangeable</text>
+  <rect x="446" y="250" width="156" height="66" rx="14" fill="#123c4d" stroke="#22d3ee" stroke-width="2"/>
+  <text x="524" y="278" text-anchor="middle" class="label">App B</text>
+  <text x="524" y="299" text-anchor="middle" class="small">interchangeable</text>
+
+  <rect x="678" y="190" width="154" height="82" rx="14" fill="#252044" stroke="#a78bfa" stroke-width="2"/>
+  <text x="755" y="220" text-anchor="middle" class="label">Shared state</text>
+  <text x="755" y="243" text-anchor="middle" class="small">database / cache</text>
+  <text x="755" y="260" text-anchor="middle" class="tiny">authoritative data</text>
+
+  <path d="M188 230H232" fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M386 218C414 218 415 191 436 191" fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M386 242C414 242 415 283 436 283" fill="none" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrowBlue)"/>
+  <path d="M602 191C635 191 642 218 668 218" fill="none" stroke="#a78bfa" stroke-width="3" marker-end="url(#arrowViolet)"/>
+  <path d="M602 283C635 283 642 244 668 244" fill="none" stroke="#a78bfa" stroke-width="3" marker-end="url(#arrowViolet)"/>
+
+  <rect x="92" y="344" width="716" height="50" rx="13" fill="#0b2b3b"/>
+  <text x="450" y="367" text-anchor="middle" class="label">Failure response: route elsewhere</text>
+  <text x="450" y="387" text-anchor="middle" class="small">Compute is replaceable; shared state remains available</text>
+
+  <rect x="34" y="454" width="832" height="412" rx="22" fill="#211b16" stroke="#f59e0b" stroke-width="2"/>
+  <text x="62" y="493" class="heading" fill="#fbbf24">Stateful compute</text>
+  <text x="62" y="519" class="sub">Identity, storage, or ordering binds work to an owner</text>
+
+  <rect x="62" y="578" width="126" height="76" rx="14" class="node"/>
+  <text x="125" y="608" text-anchor="middle" class="label">Client</text>
+  <text x="125" y="633" text-anchor="middle" class="small">continuing work</text>
+
+  <rect x="242" y="578" width="144" height="76" rx="14" fill="#3d2b13" stroke="#f59e0b" stroke-width="2"/>
+  <text x="314" y="608" text-anchor="middle" class="label">Router</text>
+  <text x="314" y="633" text-anchor="middle" class="small">find the owner</text>
+
+  <rect x="446" y="550" width="156" height="76" rx="14" fill="#422b16" stroke="#fbbf24" stroke-width="2"/>
+  <text x="524" y="579" text-anchor="middle" class="label">Instance 0</text>
+  <text x="524" y="603" text-anchor="middle" class="small">stable identity</text>
+  <rect x="446" y="682" width="156" height="76" rx="14" fill="#422b16" stroke="#fbbf24" stroke-width="2"/>
+  <text x="524" y="711" text-anchor="middle" class="label">Instance 1</text>
+  <text x="524" y="735" text-anchor="middle" class="small">stable identity</text>
+
+  <g transform="translate(688 536)">
+    <ellipse cx="62" cy="16" rx="62" ry="16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <path d="M0 16V82C0 91 28 98 62 98S124 91 124 82V16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <ellipse cx="62" cy="82" rx="62" ry="16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <text x="62" y="49" text-anchor="middle" class="label">Volume 0</text>
+    <text x="62" y="70" text-anchor="middle" class="small">persistent</text>
+  </g>
+  <g transform="translate(688 668)">
+    <ellipse cx="62" cy="16" rx="62" ry="16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <path d="M0 16V82C0 91 28 98 62 98S124 91 124 82V16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <ellipse cx="62" cy="82" rx="62" ry="16" fill="#332f55" stroke="#a78bfa" stroke-width="2"/>
+    <text x="62" y="49" text-anchor="middle" class="label">Volume 1</text>
+    <text x="62" y="70" text-anchor="middle" class="small">persistent</text>
+  </g>
+
+  <path d="M188 616H232" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowAmber)"/>
+  <path d="M386 606C420 606 415 588 436 588" fill="none" stroke="#f59e0b" stroke-width="3" marker-end="url(#arrowAmber)"/>
+  <path d="M602 588H678" fill="none" stroke="#a78bfa" stroke-width="3" marker-end="url(#arrowViolet)"/>
+  <path d="M602 720H678" fill="none" stroke="#a78bfa" stroke-width="3" marker-end="url(#arrowViolet)"/>
+  <path d="M524 636V672" fill="none" stroke="#f59e0b" stroke-width="3" stroke-dasharray="7 7" marker-end="url(#arrowAmber)"/>
+  <text x="548" y="660" class="tiny">replicate / fail over</text>
+
+  <rect x="92" y="792" width="716" height="50" rx="13" fill="#382912"/>
+  <text x="450" y="815" text-anchor="middle" class="label">Failure response: recover or move ownership</text>
+  <text x="450" y="835" text-anchor="middle" class="small">Identity, data, ordering, and consistency must be preserved</text>
+</svg>
