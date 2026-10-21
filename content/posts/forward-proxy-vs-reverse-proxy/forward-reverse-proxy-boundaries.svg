@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 900" role="img" aria-labelledby="title desc">
+  <title id="title">Forward proxy and reverse proxy network boundaries</title>
+  <desc id="desc">Two request flows compare a forward proxy selected for clients with a reverse proxy presented as the public service for private backends.</desc>
+  <defs>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#2563eb"/>
+    </marker>
+    <marker id="arrowOrange" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#d97706"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .heading{font:700 28px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#0f172a}
+      .subheading{font:600 17px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#334155}
+      .label{font:700 17px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#0f172a}
+      .small{font:500 14px system-ui,-apple-system,"Segoe UI",sans-serif;fill:#475569}
+      .flow{font:700 14px system-ui,-apple-system,"Segoe UI",sans-serif}
+      .card{fill:#ffffff;stroke:#cbd5e1;stroke-width:2;rx:14;filter:url(#shadow)}
+    </style>
+  </defs>
+
+  <rect width="760" height="900" rx="24" fill="#f8fafc"/>
+  <text x="380" y="48" text-anchor="middle" class="heading">Same relay, opposite boundary</text>
+
+  <rect x="30" y="76" width="700" height="360" rx="20" fill="#eff6ff" stroke="#93c5fd" stroke-width="2"/>
+  <text x="58" y="114" class="heading" fill="#1d4ed8">Forward proxy</text>
+  <text x="58" y="142" class="subheading">Represents clients on the outbound path</text>
+
+  <rect x="58" y="182" width="160" height="118" class="card"/>
+  <text x="138" y="217" text-anchor="middle" class="label">Known clients</text>
+  <circle cx="98" cy="255" r="13" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="138" cy="255" r="13" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+  <circle cx="178" cy="255" r="13" fill="#bfdbfe" stroke="#2563eb" stroke-width="2"/>
+  <text x="138" y="284" text-anchor="middle" class="small">browser · app · device</text>
+
+  <rect x="300" y="182" width="160" height="118" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="3" filter="url(#shadow)"/>
+  <text x="380" y="220" text-anchor="middle" class="label">Forward proxy</text>
+  <text x="380" y="250" text-anchor="middle" class="small">chosen by client</text>
+  <text x="380" y="276" text-anchor="middle" class="small">egress policy</text>
+
+  <rect x="542" y="166" width="160" height="150" class="card"/>
+  <text x="622" y="202" text-anchor="middle" class="label">Destinations</text>
+  <text x="622" y="236" text-anchor="middle" class="small">docs.example</text>
+  <text x="622" y="262" text-anchor="middle" class="small">api.example</text>
+  <text x="622" y="288" text-anchor="middle" class="small">many origins</text>
+
+  <line x1="218" y1="241" x2="290" y2="241" stroke="#2563eb" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <line x1="460" y1="241" x2="532" y2="241" stroke="#2563eb" stroke-width="4" marker-end="url(#arrowBlue)"/>
+  <text x="254" y="224" text-anchor="middle" class="flow" fill="#1d4ed8">selects</text>
+  <text x="496" y="224" text-anchor="middle" class="flow" fill="#1d4ed8">contacts</text>
+
+  <rect x="58" y="340" width="644" height="66" rx="12" fill="#ffffff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="380" y="368" text-anchor="middle" class="label">Controlled side: clients</text>
+  <text x="380" y="392" text-anchor="middle" class="small">Destination sees the proxy as its immediate network peer</text>
+
+  <rect x="30" y="464" width="700" height="406" rx="20" fill="#fff7ed" stroke="#fdba74" stroke-width="2"/>
+  <text x="58" y="502" class="heading" fill="#b45309">Reverse proxy</text>
+  <text x="58" y="530" class="subheading">Represents servers on the inbound path</text>
+
+  <rect x="58" y="574" width="160" height="118" class="card"/>
+  <text x="138" y="609" text-anchor="middle" class="label">Public clients</text>
+  <circle cx="98" cy="647" r="13" fill="#fed7aa" stroke="#d97706" stroke-width="2"/>
+  <circle cx="138" cy="647" r="13" fill="#fed7aa" stroke="#d97706" stroke-width="2"/>
+  <circle cx="178" cy="647" r="13" fill="#fed7aa" stroke="#d97706" stroke-width="2"/>
+  <text x="138" y="676" text-anchor="middle" class="small">ordinary requests</text>
+
+  <rect x="300" y="574" width="160" height="118" rx="14" fill="#ffedd5" stroke="#d97706" stroke-width="3" filter="url(#shadow)"/>
+  <text x="380" y="612" text-anchor="middle" class="label">Reverse proxy</text>
+  <text x="380" y="642" text-anchor="middle" class="small">public endpoint</text>
+  <text x="380" y="668" text-anchor="middle" class="small">ingress policy</text>
+
+  <rect x="542" y="558" width="160" height="150" class="card"/>
+  <text x="622" y="594" text-anchor="middle" class="label">Private backends</text>
+  <rect x="572" y="618" width="100" height="22" rx="5" fill="#fed7aa" stroke="#d97706"/>
+  <rect x="572" y="650" width="100" height="22" rx="5" fill="#fed7aa" stroke="#d97706"/>
+  <text x="622" y="698" text-anchor="middle" class="small">configured origins</text>
+
+  <line x1="218" y1="633" x2="290" y2="633" stroke="#d97706" stroke-width="4" marker-end="url(#arrowOrange)"/>
+  <line x1="460" y1="633" x2="532" y2="633" stroke="#d97706" stroke-width="4" marker-end="url(#arrowOrange)"/>
+  <text x="254" y="616" text-anchor="middle" class="flow" fill="#b45309">addresses</text>
+  <text x="496" y="616" text-anchor="middle" class="flow" fill="#b45309">routes</text>
+
+  <rect x="58" y="748" width="644" height="88" rx="12" fill="#ffffff" stroke="#fed7aa" stroke-width="2"/>
+  <text x="380" y="779" text-anchor="middle" class="label">Controlled side: servers</text>
+  <text x="380" y="805" text-anchor="middle" class="small">Client treats the proxy as the service</text>
+  <text x="380" y="827" text-anchor="middle" class="small">Backend topology can change behind it</text>
+</svg>
