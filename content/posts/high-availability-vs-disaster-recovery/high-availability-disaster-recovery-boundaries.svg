@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="980" viewBox="0 0 960 980" role="img" aria-labelledby="title desc">
+  <title id="title">High availability and disaster recovery protect different failure boundaries</title>
+  <desc id="desc">The top panel shows a load balancer automatically routing around a failed application instance across two availability zones. The lower panel shows a regional disaster crossing the high availability boundary, followed by an orchestrated recovery into a separate region using replicated data, backups, and a recovery runbook.</desc>
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+      .region { fill: #eff6ff; stroke: #2563eb; stroke-width: 2; }
+      .standby { fill: #f0fdf4; stroke: #15803d; stroke-width: 2; }
+      .zone { fill: #ffffff; stroke: #93c5fd; stroke-width: 2; stroke-dasharray: 8 6; }
+      .node { fill: #dbeafe; stroke: #1d4ed8; stroke-width: 2; }
+      .healthy { fill: #dcfce7; stroke: #15803d; stroke-width: 2; }
+      .failed { fill: #fee2e2; stroke: #b91c1c; stroke-width: 2; }
+      .data { fill: #fef3c7; stroke: #b45309; stroke-width: 2; }
+      .runbook { fill: #f3e8ff; stroke: #7e22ce; stroke-width: 2; }
+      .arrow { fill: none; stroke: #334155; stroke-width: 3; marker-end: url(#arrow); }
+      .green-arrow { fill: none; stroke: #15803d; stroke-width: 4; marker-end: url(#greenArrow); }
+      .red-line { fill: none; stroke: #b91c1c; stroke-width: 4; stroke-dasharray: 11 8; }
+      .replication { fill: none; stroke: #b45309; stroke-width: 3; stroke-dasharray: 8 6; marker-end: url(#amberArrow); }
+      .title { font: 700 28px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .heading { font: 700 22px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .label { font: 600 17px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #0f172a; }
+      .small { font: 500 15px system-ui, -apple-system, "Segoe UI", sans-serif; fill: #334155; }
+      .white { fill: #ffffff; }
+      .red { fill: #991b1b; }
+      .green { fill: #166534; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#334155"/>
+    </marker>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#15803d"/>
+    </marker>
+    <marker id="amberArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="960" height="980" rx="24"/>
+  <text x="480" y="48" text-anchor="middle" class="title">One service, two resilience jobs</text>
+
+  <rect x="38" y="75" width="884" height="385" rx="20" class="panel"/>
+  <text x="68" y="113" class="heading">High availability: keep serving</text>
+  <text x="68" y="140" class="small">Automatic response inside the designed failure boundary</text>
+
+  <rect x="70" y="165" width="820" height="260" rx="18" class="region"/>
+  <text x="92" y="197" class="label">Primary region</text>
+
+  <rect x="98" y="223" width="298" height="166" rx="14" class="zone"/>
+  <text x="247" y="252" text-anchor="middle" class="small">Availability zone A</text>
+  <rect x="142" y="279" width="210" height="74" rx="12" class="failed"/>
+  <text x="247" y="309" text-anchor="middle" class="label red">App instance failed</text>
+  <text x="247" y="334" text-anchor="middle" class="small">removed from rotation</text>
+
+  <rect x="566" y="223" width="296" height="166" rx="14" class="zone"/>
+  <text x="714" y="252" text-anchor="middle" class="small">Availability zone B</text>
+  <rect x="610" y="279" width="208" height="74" rx="12" class="healthy"/>
+  <text x="714" y="309" text-anchor="middle" class="label green">Healthy instance</text>
+  <text x="714" y="334" text-anchor="middle" class="small">continues serving</text>
+
+  <rect x="411" y="210" width="134" height="74" rx="37" class="node"/>
+  <text x="478" y="241" text-anchor="middle" class="label">Load</text>
+  <text x="478" y="264" text-anchor="middle" class="label">balancer</text>
+  <path d="M411 247 C380 247 367 284 352 304" class="arrow"/>
+  <path d="M545 247 C576 247 588 284 610 304" class="green-arrow"/>
+  <path d="M372 294 L357 320 M357 294 L372 320" stroke="#b91c1c" stroke-width="5"/>
+  <text x="480" y="405" text-anchor="middle" class="small">A local failure occurs; the service stays available.</text>
+
+  <path d="M52 505 H908" class="red-line"/>
+  <rect x="330" y="482" width="300" height="46" rx="23" class="failed"/>
+  <text x="480" y="511" text-anchor="middle" class="label red">Regional outage crosses the HA boundary</text>
+
+  <rect x="38" y="550" width="884" height="390" rx="20" class="panel"/>
+  <text x="68" y="588" class="heading">Disaster recovery: restore service</text>
+  <text x="68" y="615" class="small">Orchestrated recovery in a separate failure domain</text>
+
+  <rect x="70" y="650" width="238" height="220" rx="16" class="region"/>
+  <text x="189" y="683" text-anchor="middle" class="label">Primary region</text>
+  <rect x="105" y="718" width="168" height="84" rx="12" class="failed"/>
+  <text x="189" y="752" text-anchor="middle" class="label red">Unavailable</text>
+  <text x="189" y="778" text-anchor="middle" class="small">or untrusted</text>
+
+  <rect x="360" y="672" width="240" height="94" rx="14" class="runbook"/>
+  <text x="480" y="707" text-anchor="middle" class="label">Recovery runbook</text>
+  <text x="480" y="733" text-anchor="middle" class="small">declare · restore · validate</text>
+  <text x="480" y="756" text-anchor="middle" class="small">redirect · communicate</text>
+
+  <rect x="360" y="798" width="240" height="92" rx="14" class="data"/>
+  <text x="480" y="833" text-anchor="middle" class="label">Recovery data</text>
+  <text x="480" y="860" text-anchor="middle" class="small">replica + isolated backups</text>
+
+  <rect x="652" y="650" width="238" height="220" rx="16" class="standby"/>
+  <text x="771" y="683" text-anchor="middle" class="label">Recovery region</text>
+  <rect x="687" y="718" width="168" height="84" rx="12" class="healthy"/>
+  <text x="771" y="752" text-anchor="middle" class="label green">Service restored</text>
+  <text x="771" y="778" text-anchor="middle" class="small">within RTO / RPO</text>
+
+  <path d="M308 760 C330 760 337 728 360 720" class="arrow"/>
+  <path d="M600 720 C625 726 632 755 652 760" class="green-arrow"/>
+  <path d="M600 844 C632 838 640 806 671 790" class="replication"/>
+  <text x="480" y="920" text-anchor="middle" class="small">HA reduces interruption. DR restores a trustworthy operating state.</text>
+</svg>

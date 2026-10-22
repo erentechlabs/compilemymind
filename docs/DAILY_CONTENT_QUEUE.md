@@ -47,7 +47,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 037 | software | Git Merge vs Rebase: What Is the Difference? | published 2026-10-19 | slug git-merge-vs-rebase
 - [x] 038 | systems | Stateless vs Stateful Applications | published 2026-10-20 | slug stateless-vs-stateful-applications
 - [x] 039 | networks | Forward Proxy vs Reverse Proxy | published 2026-10-21 | slug forward-proxy-vs-reverse-proxy
-- [ ] 040 | cloud | High Availability vs Disaster Recovery
+- [x] 040 | cloud | High Availability vs Disaster Recovery | published 2026-10-22 | slug high-availability-vs-disaster-recovery
 - [ ] 041 | cybersecurity | What Is Phishing and How Can You Prevent It?
 - [ ] 042 | ai | LLM Tokens, Context Windows, and Temperature Explained
 - [ ] 043 | software | MVC vs MVP vs MVVM: Architecture Patterns Compared
