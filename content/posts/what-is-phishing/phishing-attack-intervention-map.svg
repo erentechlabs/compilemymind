@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 720" role="img" aria-labelledby="title desc">
+  <title id="title">Phishing attack path and intervention points</title>
+  <desc id="desc">A flowchart shows an impersonation message reaching a person. Independent verification and reporting stop the attack. If the person interacts, phishing-resistant authentication and endpoint controls can block access or malware. If compromise occurs, monitoring and rapid incident response contain the damage.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#10152a"/>
+      <stop offset="1" stop-color="#21183a"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#070a16" flood-opacity="0.5"/>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#c7b8e6"/>
+    </marker>
+    <marker id="safeArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#55d6be"/>
+    </marker>
+    <style>
+      .title{font:700 30px Inter,Segoe UI,Arial,sans-serif;fill:#f7f3ff}.subtitle{font:16px Inter,Segoe UI,Arial,sans-serif;fill:#c7b8e6}.node-title{font:700 18px Inter,Segoe UI,Arial,sans-serif;fill:#f7f3ff}.node-copy{font:14px Inter,Segoe UI,Arial,sans-serif;fill:#d8d0e8}.label{font:700 13px Inter,Segoe UI,Arial,sans-serif}.step{font:700 13px Inter,Segoe UI,Arial,sans-serif;fill:#10152a}.line{fill:none;stroke:#c7b8e6;stroke-width:3;marker-end:url(#arrow)}.safe{fill:none;stroke:#55d6be;stroke-width:4;marker-end:url(#safeArrow)}
+    </style>
+  </defs>
+  <rect width="960" height="720" rx="28" fill="url(#bg)"/>
+  <text x="52" y="62" class="title">Where a phishing attack can be stopped</text>
+  <text x="52" y="90" class="subtitle">No single control is perfect. Each layer removes another path from message to damage.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="55" y="150" width="205" height="112" rx="18" fill="#3d2148" stroke="#f08aa5" stroke-width="2"/>
+    <circle cx="84" cy="178" r="16" fill="#f08aa5"/><text x="84" y="183" text-anchor="middle" class="step">1</text>
+    <text x="111" y="183" class="node-title">Impersonation</text>
+    <text x="78" y="216" class="node-copy">Email, text, call, QR code,</text>
+    <text x="78" y="238" class="node-copy">or collaboration message</text>
+
+    <rect x="377" y="150" width="205" height="112" rx="18" fill="#272343" stroke="#9e8de0" stroke-width="2"/>
+    <circle cx="406" cy="178" r="16" fill="#c7b8e6"/><text x="406" y="183" text-anchor="middle" class="step">2</text>
+    <text x="433" y="183" class="node-title">Pressure to act</text>
+    <text x="400" y="216" class="node-copy">Sign in, open, approve,</text>
+    <text x="400" y="238" class="node-copy">pay, share, or install</text>
+
+    <rect x="700" y="150" width="205" height="112" rx="18" fill="#3d2148" stroke="#f08aa5" stroke-width="2"/>
+    <circle cx="729" cy="178" r="16" fill="#f08aa5"/><text x="729" y="183" text-anchor="middle" class="step">3</text>
+    <text x="756" y="183" class="node-title">Attacker’s goal</text>
+    <text x="723" y="216" class="node-copy">Credentials, money, data,</text>
+    <text x="723" y="238" class="node-copy">malware, or account access</text>
+  </g>
+
+  <path d="M260 206 H365" class="line"/>
+  <path d="M582 206 H688" class="line"/>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="353" width="244" height="130" rx="18" fill="#123d42" stroke="#55d6be" stroke-width="2"/>
+    <text x="94" y="386" class="node-title">Pause and verify</text>
+    <text x="94" y="415" class="node-copy">Use a known website, number,</text>
+    <text x="94" y="437" class="node-copy">or separate trusted channel.</text>
+    <text x="94" y="463" class="label" fill="#55d6be">Stops the decision path</text>
+
+    <rect x="358" y="353" width="244" height="130" rx="18" fill="#123d42" stroke="#55d6be" stroke-width="2"/>
+    <text x="382" y="386" class="node-title">Report the message</text>
+    <text x="382" y="415" class="node-copy">Enable blocking, removal,</text>
+    <text x="382" y="437" class="node-copy">warning, and investigation.</text>
+    <text x="382" y="463" class="label" fill="#55d6be">Protects other recipients</text>
+
+    <rect x="646" y="353" width="244" height="130" rx="18" fill="#123d42" stroke="#55d6be" stroke-width="2"/>
+    <text x="670" y="386" class="node-title">Block stolen access</text>
+    <text x="670" y="415" class="node-copy">Use phishing-resistant auth,</text>
+    <text x="670" y="437" class="node-copy">least privilege, and controls.</text>
+    <text x="670" y="463" class="label" fill="#55d6be">Limits a successful lure</text>
+  </g>
+
+  <path d="M480 262 V320 H192 V341" class="safe"/>
+  <path d="M480 262 V341" class="safe"/>
+  <path d="M700 262 V320 H768 V341" class="safe"/>
+  <text x="493" y="305" class="label" fill="#55d6be">INTERVENE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="183" y="565" width="594" height="98" rx="18" fill="#31233f" stroke="#f2b46d" stroke-width="2"/>
+    <text x="214" y="599" class="node-title">If interaction already happened: respond quickly</text>
+    <text x="214" y="628" class="node-copy">Report details, revoke sessions, reset exposed credentials, isolate affected devices,</text>
+    <text x="214" y="650" class="node-copy">review account changes, protect payments, and preserve evidence for investigation.</text>
+  </g>
+  <path d="M768 483 V540 H480 V553" fill="none" stroke="#f2b46d" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="785" y="526" class="label" fill="#f2b46d" text-anchor="end">CONTAIN</text>
+</svg>
