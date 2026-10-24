@@ -49,7 +49,7 @@ Every article must contain at least one original, locally stored, topic-specific
 - [x] 039 | networks | Forward Proxy vs Reverse Proxy | published 2026-10-21 | slug forward-proxy-vs-reverse-proxy
 - [x] 040 | cloud | High Availability vs Disaster Recovery | published 2026-10-22 | slug high-availability-vs-disaster-recovery
 - [x] 041 | cybersecurity | What Is Phishing and How Can You Prevent It? | published 2026-10-23 | slug what-is-phishing
-- [ ] 042 | ai | LLM Tokens, Context Windows, and Temperature Explained
+- [x] 042 | ai | LLM Tokens, Context Windows, and Temperature Explained | published 2026-10-24 | slug llm-tokens-context-windows-temperature
 - [ ] 043 | software | MVC vs MVP vs MVVM: Architecture Patterns Compared
 - [ ] 044 | systems | Horizontal Scaling vs Vertical Scaling
 - [ ] 045 | networks | HTTP vs HTTPS: What Is the Difference?
